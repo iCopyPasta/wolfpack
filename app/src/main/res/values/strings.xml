@@ -16,4 +16,7 @@
         completions."
     </string>
     <string name="register">Register for an Account</string>
+    <string name="results_go">Results</string>
+    <string name="pending_invites">Pending Invites</string>
+    <string name="class_id">Class ID</string>
 </resources>
