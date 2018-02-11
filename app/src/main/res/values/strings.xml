@@ -19,4 +19,23 @@
     <string name="results_go">Results</string>
     <string name="pending_invites">Pending Invites</string>
     <string name="class_id">Class ID</string>
+
+    <!-- Strings for Student Page -->
+    <string name="tab_classes">Classes</string>
+    <!--<string name="tab_classes">Classes</string>
+        <string name="tab_classes">Classes</string>
+    -->
+    <string-array name="classesEnrolled">
+        <item>CMPSC 475</item>
+        <item>COMP 524</item>
+        <item>CMPSC 470</item>
+    </string-array>
+
+
+    <!-- Strings for Class Session Page -->
+    <string name="session_history">Session History</string>
+
+
+
+
 </resources>

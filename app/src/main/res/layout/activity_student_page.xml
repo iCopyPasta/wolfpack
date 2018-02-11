@@ -34,23 +34,12 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <ScrollView
+                    <ListView
+                        android:id="@+id/classListView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical" >
-
-                            <TextView
-                                android:id="@+id/textView17"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/textview" />
-
-                        </LinearLayout>
-                    </ScrollView>
+                        android:layout_height="match_parent"
+                        tools:layout_editor_absoluteX="8dp"
+                        tools:layout_editor_absoluteY="56dp" />
                 </LinearLayout>
 
                 <LinearLayout

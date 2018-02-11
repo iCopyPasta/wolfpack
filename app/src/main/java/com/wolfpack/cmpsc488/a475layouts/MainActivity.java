@@ -30,9 +30,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
+    protected void onDestroy() { super.onDestroy(); }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -40,7 +38,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onLogin(View view){
-        Intent intent = new Intent(this, LoginActivity.class);
+        //quick access to demo student page
+        Intent intent = new Intent(this, StudentPage.class);
+
+        //Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 

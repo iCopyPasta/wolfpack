@@ -349,7 +349,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 Log.i(TAG, "what do we do know? lol");
-                Intent intent = new Intent(getApplicationContext(), AddClassPage.class);
+
+                //if new student or student does not have any courses, move them to add_class_page
+                Intent intent = new Intent(getApplicationContext(), StudentPage.class);
                 startActivity(intent);
 
             } else {
