@@ -26,9 +26,17 @@ import static android.os.Environment.getExternalStoragePublicDirectory;
 
 /**
  * Created by pablo on 2/11/18.
+ * This is a mostly complete, but unfinished example of using the camera application.
+ * We can use this to get results back from the camera, and avoid implementation ourselves
+ * I suspect this process will be similar for external library calls such as GPS
+ * Worth reading up on permissions, intents, and callbacks for different applications
+ * has NO code to save instances!!!!!
  */
 
 //TODO: Figure out how to implement usage with PUBLIC DIRECTORY
+    //the problem is that the call to INSERT CALL requires that the URI have content!
+    //most tutorials have file:// as the tag, which will cause newer versions of Android to crash,
+    //starting with Android 6 I believe
 public class CameraExample extends AppCompatActivity {
 
     public static final String MAIN_ACTIVITY = "CameraExample";
@@ -46,6 +54,13 @@ public class CameraExample extends AppCompatActivity {
 
     }
 
+    /**
+     * Get the necessary calls in place
+     * This was used as a placeholder for other trial attempts to experiment calling another app
+     * There is the "Choose Once" vs. "Always" method and a more general always choose the app type
+     *
+     * @param view
+     */
     public void getCameraAction(View view){
         Log.i(MAIN_ACTIVITY, "button clicked successfully registered");
 
@@ -80,6 +95,13 @@ public class CameraExample extends AppCompatActivity {
     }
 
 
+    /**
+     * Callback code that is used by another application. in this case, our camera application
+     * will use this method then
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -101,6 +123,13 @@ public class CameraExample extends AppCompatActivity {
         }
     }
 
+    /**
+     * Create a file to overwrite, file is NOT passed back in Intent data's
+     * Camera intent needs to pass URI that represents the file
+     * This is set by Android's "Strict Mode"
+     * @return File location which Camera will overwrite with informaiton
+     * @throws IOException
+     */
     private File createImageFile() throws IOException {
 
         // Create an image file name
@@ -120,6 +149,11 @@ public class CameraExample extends AppCompatActivity {
         return image;
     }
 
+    /**
+     * Should always seek permissions before running a "dangerous" permission-level process
+     * Users (while not likely), have the ability to revoke permissions.
+     * We should not assume we are guaranteed permissions forever
+     */
     protected void requestPermissions(){
         Log.i(MAIN_ACTIVITY, "entering requestPermissions:");
 
@@ -143,7 +177,6 @@ public class CameraExample extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_REQUEST_WRITE_PUBLIC_DIRECTORY);
-
             }
         }
 
@@ -151,6 +184,11 @@ public class CameraExample extends AppCompatActivity {
             dispatchTakePictureIntent();
         }
     }
+
+    /**
+     * Go through with the process of taking a picture
+     * Will startActivityForResults to a registered camera application
+     */
 
     protected void dispatchTakePictureIntent() {
 
@@ -189,6 +227,10 @@ public class CameraExample extends AppCompatActivity {
         }
     }
 
+    /**
+     * callback: this is the callback from Android framkework and user pressing "allow"/"deny"
+     * if this is the first time, JUST FOR THIS TIME, we can run the dispathTakePictureIntent
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
