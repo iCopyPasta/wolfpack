@@ -65,6 +65,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private View mNaDEMOView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +98,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
     }
+
+
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -299,10 +303,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Allow a new user to create & register their account with our service
      * @param view
      */
+    //TODO: SET XML REGISTERATION
     public void onRegister(View view){
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
 
+    }
+
+
+    public void onNADemo(View view){
+        Log.i(TAG, "onNADemo is called");
+        Intent intent = new Intent(this, CameraExample.class);
+        startActivity(intent);
     }
 
     /**

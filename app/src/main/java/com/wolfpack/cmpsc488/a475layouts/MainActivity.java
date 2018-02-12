@@ -3,9 +3,11 @@ package com.wolfpack.cmpsc488.a475layouts;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void onLogin(View view){
         Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+
+    public void onNADemo(View view){
+        Log.i(TAG, "onNADemo is called");
+        Intent intent = new Intent(this, CameraExample.class);
         startActivity(intent);
     }
 
