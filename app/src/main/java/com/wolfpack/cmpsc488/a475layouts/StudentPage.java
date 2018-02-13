@@ -1,19 +1,27 @@
 package com.wolfpack.cmpsc488.a475layouts;
 
 import android.content.Intent;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
+
+import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class StudentPage extends AppCompatActivity {
 
-    public static final String TAG = "StudentPage";
+    private static final String TAG = "StudentPage";
 
-    private ListView listView;
+    private StudentPageAdapter mStudentPageAdapter;
+    private ViewPager mViewPager;
+
+
+    //private ListView listView;
 
 
     @Override
@@ -21,33 +29,40 @@ public class StudentPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_page);
 
+        //Log.d(TAG, "onCreate: Starting");
 
 
-        //populate list view
-        /* TODO: Use database to find classes that the student is enrolled
-            Currently it is displaying a hard coded list for demonstrating purposes
-            */
-        listView = (ListView) findViewById(R.id.classListView);
+        //set up the viewpager with the sections adapter
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        setupViewPager(mViewPager);
 
-        ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(getApplicationContext(),
-                android.R.layout.simple_list_item_1,
-                getResources().getStringArray(R.array.classesEnrolled));
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
 
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
-                Intent intent = new Intent(StudentPage.this, SessionPage.class);
-                intent.putExtra("ClassName", listView.getItemAtPosition(i).toString());
-                Log.i(TAG, "hello from onItemClick");
-
-                startActivity(intent);
-            }
-        });
-
-        listView.setAdapter(mAdapter);
 
     }
 
 
+    private void setupViewPager(ViewPager viewPager){
+        StudentPageAdapter adapter = new StudentPageAdapter(getSupportFragmentManager());
+        adapter.addFragment(new StudentPageTab1Classlist(), getResources().getString(R.string.student_page_tab1_classlist));
+        adapter.addFragment(new StudentPageTab2AddClass(), getResources().getString(R.string.student_page_tab2_addclass));
+        viewPager.setAdapter(adapter);
+    }
+
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+

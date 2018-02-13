@@ -1,6 +1,7 @@
 package com.wolfpack.cmpsc488.a475layouts;
 
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.media.session.MediaSessionManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +17,8 @@ public class SessionPage extends AppCompatActivity implements ActiveSessionDialo
 
     public static final String TAG = "SessionPage";
 
+    private String className;
+
 
     // TODO: set to false and assign activeSession based on if there is an active session currently
     boolean activeSession = true;
@@ -26,9 +29,11 @@ public class SessionPage extends AppCompatActivity implements ActiveSessionDialo
         setContentView(R.layout.activity_class_session_page);
 
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null){
-            Log.i(TAG,"SessionPage got getIntent().getExtras() successfully");
+        if (bundle == null){
+            Log.i(TAG,"SessionPage got getIntent().getExtras() Failed");
         }
+
+        className = (String) bundle.get("ClassName");
 
 
     }
@@ -54,13 +59,17 @@ public class SessionPage extends AppCompatActivity implements ActiveSessionDialo
     @Override
     public void onPositiveClick(){
         // TODO: take user to (active) question page
-        Toast.makeText(getApplicationContext(), "Hello from onPositiveClick", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), "Hello from onPositiveClick", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(getApplicationContext(), QuestionPage.class);
+        intent.putExtra("ClassName", className);
+        startActivity(intent);
+
     }
 
     @Override
     public void onNegativeClick(){
         // TODO: keep user on session page
-        Toast.makeText(getApplicationContext(), "Hello from onNegativeClick", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), "Hello from onNegativeClick", Toast.LENGTH_LONG).show();
     }
 
 }

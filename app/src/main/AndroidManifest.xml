@@ -14,20 +14,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainPage"
+            android:label="@string/title_activity_main_page">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StudentPage" />
-        <activity android:name=".AddClassPage" />
-        <activity android:name=".QuestionPage" />
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"/>
-        <activity android:name=".SessionPage" />
+            android:name=".QuestionPage"
+            android:label="@string/title_activity_question_page"/>
+        <activity
+            android:name=".LoginPage"
+            android:label="@string/title_activity_login_page" />
+        <activity
+            android:name=".SessionPage"
+            android:label="@string/title_activity_session_page"/>
+        <activity
+            android:name=".StudentPage"
+            android:label="@string/title_activity_student_page"/>
+            <!--android:theme="@style/AppTheme.NoActionBar"-->
+
     </application>
 
 </manifest>
