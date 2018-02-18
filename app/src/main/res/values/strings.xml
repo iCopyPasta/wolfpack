@@ -12,8 +12,7 @@
     <!-- Titles of tabs -->
     <string name="student_page_tab1_classlist">Class List</string>
     <string name="student_page_tab2_addclass">Add Class</string>
-
-
+    <string name="student_page_tab3_settings">Settings</string>
 
 
 

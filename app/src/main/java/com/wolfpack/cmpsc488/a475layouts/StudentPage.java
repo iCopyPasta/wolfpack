@@ -47,6 +47,7 @@ public class StudentPage extends AppCompatActivity {
         StudentPageAdapter adapter = new StudentPageAdapter(getSupportFragmentManager());
         adapter.addFragment(new StudentPageTab1Classlist(), getResources().getString(R.string.student_page_tab1_classlist));
         adapter.addFragment(new StudentPageTab2AddClass(), getResources().getString(R.string.student_page_tab2_addclass));
+        adapter.addFragment(new StudentPageTab3Settings(), getResources().getString(R.string.student_page_tab3_settings));
         viewPager.setAdapter(adapter);
     }
 

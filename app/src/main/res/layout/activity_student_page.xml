@@ -45,6 +45,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/student_page_tab2_addclass" />
 
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/student_page_tab3_settings" />
+
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>
 
