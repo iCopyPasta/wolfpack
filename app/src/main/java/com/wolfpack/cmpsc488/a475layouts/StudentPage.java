@@ -1,23 +1,16 @@
 package com.wolfpack.cmpsc488.a475layouts;
 
-import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 public class StudentPage extends AppCompatActivity {
 
     private static final String TAG = "StudentPage";
 
-    private StudentPageAdapter mStudentPageAdapter;
+    private TabAdapter mTabAdapter;
     private ViewPager mViewPager;
 
 
@@ -33,10 +26,10 @@ public class StudentPage extends AppCompatActivity {
 
 
         //set up the viewpager with the sections adapter
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = (ViewPager) findViewById(R.id.studentPageViewPager);
         setupViewPager(mViewPager);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.studentPageTabs);
         tabLayout.setupWithViewPager(mViewPager);
 
 
@@ -44,7 +37,7 @@ public class StudentPage extends AppCompatActivity {
 
 
     private void setupViewPager(ViewPager viewPager){
-        StudentPageAdapter adapter = new StudentPageAdapter(getSupportFragmentManager());
+        TabAdapter adapter = new TabAdapter(getSupportFragmentManager());
         adapter.addFragment(new StudentPageTab1Classlist(), getResources().getString(R.string.student_page_tab1_classlist));
         adapter.addFragment(new StudentPageTab2AddClass(), getResources().getString(R.string.student_page_tab2_addclass));
         adapter.addFragment(new StudentPageTab3Settings(), getResources().getString(R.string.student_page_tab3_settings));

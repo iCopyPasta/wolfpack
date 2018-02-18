@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentPageAdapter extends FragmentPagerAdapter {
+public class TabAdapter extends FragmentPagerAdapter {
 
 
     private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -20,7 +20,7 @@ public class StudentPageAdapter extends FragmentPagerAdapter {
     }
 
 
-    public StudentPageAdapter(FragmentManager fm){
+    public TabAdapter(FragmentManager fm){
         super(fm);
     }
 

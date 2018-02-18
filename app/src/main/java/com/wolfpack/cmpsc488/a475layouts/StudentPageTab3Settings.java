@@ -11,10 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import com.wolfpack.cmpsc488.a475layouts.MainPage;
-import com.wolfpack.cmpsc488.a475layouts.R;
 
 public class StudentPageTab3Settings extends Fragment {
 
@@ -26,7 +22,7 @@ public class StudentPageTab3Settings extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.student_page_tab3_settings_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_student_page_tab3_settings, container, false);
 
         mListViewSettings = (ListView) rootView.findViewById(R.id.settingsListView);
 
