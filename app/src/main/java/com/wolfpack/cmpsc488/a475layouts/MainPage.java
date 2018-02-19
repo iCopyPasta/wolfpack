@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 public class MainPage extends AppCompatActivity {
 
@@ -39,10 +40,18 @@ public class MainPage extends AppCompatActivity {
 
     public void onLogin(View view){
         //quick access to demo student page
-        //Intent intent = new Intent(this, StudentPageOld.class);
-        Intent intent = new Intent(this, StudentPage.class);
+        //Intent intent = new Intent(this, StudentPage.class);
 
-        //Intent intent = new Intent(this, LoginPage.class);
+        Intent intent = new Intent(this, LoginPage.class);
+
+        /*
+        Button b = (Button) view;
+
+        //if(b.getBack)
+        intent.putExtra("color", b.getDrawingCacheBackgroundColor());
+        */
+
+
         startActivity(intent);
     }
 

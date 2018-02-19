@@ -21,16 +21,17 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_weight="1"
-            android:background="?attr/colorPrimary"
+            android:background="@color/colorStudentPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/title_activity_student_page"/>
+            app:title="@string/title_activity_student_page" />
 
 
         <android.support.design.widget.TabLayout
             android:id="@+id/studentPageTabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/colorStudentPrimary">
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tabClassList"

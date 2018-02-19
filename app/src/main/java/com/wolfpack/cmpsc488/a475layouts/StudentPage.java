@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
+import android.support.v7.widget.Toolbar;
 
 public class StudentPage extends AppCompatActivity {
 
@@ -22,16 +24,12 @@ public class StudentPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_page);
 
-        //Log.d(TAG, "onCreate: Starting");
-
-
         //set up the viewpager with the sections adapter
         mViewPager = (ViewPager) findViewById(R.id.studentPageViewPager);
         setupViewPager(mViewPager);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.studentPageTabs);
         tabLayout.setupWithViewPager(mViewPager);
-
 
     }
 

@@ -29,7 +29,7 @@ public class ClassPage extends AppCompatActivity implements ActiveSessionDialog.
 
 
     // TODO: set to false and assign activeSession based on if there is an active session currently
-    boolean activeSession = false;
+    boolean activeSession = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
