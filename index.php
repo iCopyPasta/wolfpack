@@ -1,48 +1,69 @@
-<?php
-    $page_title = "Pollato";
-    $page_description = "";
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="" >
+    <meta name="author" content="">
+  
+
+    <title>Pollato</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <style>
     
-    include("includes/header.php");
-?> 
+        body {
+        padding-top: 3.5rem;
+        }
+    </style>
+  </head>
 
-<main role="main">
+  <body>   
+    <?php
+        include("includes/header.php");
+    ?> 
 
-  <!-- Main jumbotron for a primary marketing message or call to action -->
-  <div class="jumbotron">
-    <div class="container">
-      <h1 class="display-3">iClicker++</h1>
-      <h5 style="padding-left:2rem">A new way to teach.</h5>
-      <p><a class="btn btn-primary btn-lg" href="Sign_up.php" role="button">Sign up &raquo;</a></p>
-    </div>
-  </div>
+    <main role="main">
 
-  <div class="container">
-    <!-- Example row of columns -->
-    <div class="row">
-      <div class="col-md-6">
-        <h2>Instructors</h2>
-        <p>Explore the classroom of the future.</p>
-        <p><a class="btn btn-secondary" href="Sign_in_teacher.html" role="button">Sign in as Teacher &raquo;</a></p>
-      </div>
-      <div class="col-md-6">
-        <h2>Students</h2>
-        <p>Learn like never before.</p>
-        <p><a class="btn btn-secondary" href="Sign_in_student.php" role="button">Sign in as Student &raquo;</a></p>
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <div class="container">
+          <h1 class="display-3">Pollato</h1>
+          <h5 style="padding-left:2rem">A new way to teach.</h5>
+          <p><a class="btn btn-primary btn-lg" href="Sign_up.php" role="button">Sign up &raquo;</a></p>
+        </div>
       </div>
 
-    </div>
+      <div class="container">
+        <!-- Example row of columns -->
+        <div class="row">
+          <div class="col-md-6">
+            <h2>Instructors</h2>
+            <p>Explore the classroom of the future.</p>
+            <p><a class="btn btn-secondary" href="Sign_in_teacher.php" role="button">Sign in as Teacher &raquo;</a></p>
+          </div>
+          <div class="col-md-6">
+            <h2>Students</h2>
+            <p>Learn like never before.</p>
+            <p><a class="btn btn-secondary" href="Sign_in_student.php" role="button">Sign in as Student &raquo;</a></p>
+          </div>
 
-    <hr>
+        </div>
 
-  </div> <!-- /container -->
+        <hr>
 
-</main>
+      </div> <!-- /container -->
 
-<?php
-    $page_footer_text = "Credit: Twitter bootstrap 4.0 documentation. Working Demo.";
-    
-    include("includes/footer.php");
-?>
+    </main>
+
+    <?php
+        $page_footer_text = "Credit: Twitter bootstrap 4.0 documentation. Working Demo.";
+
+        include("includes/footer.php");
+    ?>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
