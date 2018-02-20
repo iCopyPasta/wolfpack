@@ -5,16 +5,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
-    public static final String TAG = "MainActivity";
+
+public class MainPage extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_page);
 
-        //TODO: Add logic in order to skip MainActivity if the user already authenticated
+        //TODO: Add logic in order to skip MainPage if the user already authenticated
     }
 
     protected void onPause() {
@@ -32,9 +33,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
+    protected void onDestroy() { super.onDestroy(); }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -42,13 +41,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onLogin(View view){
-        Intent intent = new Intent(this, LoginActivity.class);
+        //quick access to demo student page
+        //Intent intent = new Intent(this, StudentPage.class);
+
+        Intent intent = new Intent(this, LoginPage.class);
+
+        /*
+        Button b = (Button) view;
+
+        //if(b.getBack)
+        intent.putExtra("color", b.getDrawingCacheBackgroundColor());
+        */
+
+
         startActivity(intent);
     }
 
 
     public void onNADemo(View view){
-        Log.i(TAG, "onNADemo is called");
+        Log.i("Main Page", "onNADemo is called");
         Intent intent = new Intent(this, CameraExample.class);
         startActivity(intent);
     }

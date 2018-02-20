@@ -17,52 +17,87 @@
 
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbarStudentPage"
+            android:id="@+id/toolbarClassPage"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_weight="1"
             android:background="@color/colorStudentPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/title_activity_student_page" />
+            app:title="@string/title_activity_class_page">
+
+        </android.support.v7.widget.Toolbar>
 
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/studentPageTabs"
+            android:id="@+id/sessionPageTabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorStudentPrimary">
 
             <android.support.design.widget.TabItem
-                android:id="@+id/tabClassList"
+                android:id="@+id/tabSessionList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/student_page_tab1_classlist" />
+                android:text="@string/class_page_tab1_session" />
 
             <android.support.design.widget.TabItem
-                android:id="@+id/tabAddClass"
+                android:id="@+id/tabClassInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/student_page_tab2_addclass" />
+                android:text="@string/class_page_tab2_classinfo" />
 
-            <android.support.design.widget.TabItem
-                android:id="@+id/tabSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/student_page_tab3_settings" />
 
         </android.support.design.widget.TabLayout>
-
-
 
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/studentPageViewPager"
+        android:id="@+id/sessionPageViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>
+<!---->
 
 
+
+
+
+
+<!--
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:contecom.wolfpack.cmpsc488.a475layouts.ClassPagege">
+
+    <TextView
+        android:id="@+id/classDisplayName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/class_display_name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ListView
+        android:id="@+id/sessionList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/background_light"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/classDisplayName" />
+</android.support.constraint.ConstraintLayout>
+-->

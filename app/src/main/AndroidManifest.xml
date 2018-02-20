@@ -17,20 +17,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
+        <activity
+            android:name=".MainPage"
+            android:label="@string/title_activity_main_page">
+            <intent-filter
+                android:label="@string/app_name">
+
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CameraExample"/>
-        <activity android:name=".StudentPage" />
-        <activity android:name=".AddClassPage" />
-        <activity android:name=".QuestionPage" />
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"/>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.wolfpack.cmpsc488.a475layouts.FileProvider"
@@ -40,6 +38,21 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
         </provider>
+<activity
+            android:name=".QuestionPage"
+            android:label="@string/title_activity_question_page"/>
+        <activity
+            android:name=".LoginPage"
+            android:label="@string/title_activity_login_page" />
+        <activity
+            android:name=".ClassPage"
+            android:label="@string/title_activity_class_page"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".StudentPage"
+            android:label="@string/title_activity_student_page"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
     </application>
 
 </manifest>
