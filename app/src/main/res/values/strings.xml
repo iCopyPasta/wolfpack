@@ -61,6 +61,7 @@
     <string name="create_account">Create Account</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
+    <string name="error_missing_permissions">Cannot start without required permissions</string>
 
 
 </resources>

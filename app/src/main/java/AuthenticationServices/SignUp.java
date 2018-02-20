@@ -1,12 +1,16 @@
 package AuthenticationServices;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -20,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,6 +51,14 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers sign-up via email/password.
  */
 public class SignUp extends AppCompatActivity {
+
+    private static final int REQUEST_CODE_REQUIRED_PERMISSIONS = 1;
+
+    private static final String[] REQUIRED_PERMISSIONS =
+            new String[]{
+                    Manifest.permission.INTERNET
+            };
+    private static final String TAG = "SignUpActivity";
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -149,10 +162,20 @@ public class SignUp extends AppCompatActivity {
             String the_password = ((EditText) findViewById(R.id.password)).
                     getText().toString();
 
+            //Request Permission for Internet
+            Log.i("SignUp", "about to send data over");
 
-            showProgress(true);
-            mAuthTask = new UserLoginTask();
-            mAuthTask.execute(first_name, last_name, the_email, the_password);
+            if (!hasPermissions(this, REQUIRED_PERMISSIONS)) {
+                Log.i("SignUp", "We dont have permissions!!");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_REQUIRED_PERMISSIONS);
+                }
+            }else{
+                Log.i("SignUp", "We have permissions!!");
+                showProgress(true);
+                mAuthTask = new UserLoginTask();
+                mAuthTask.execute(first_name, last_name, the_email, the_password);
+            }
         }
     }
 
@@ -213,18 +236,29 @@ public class SignUp extends AppCompatActivity {
         protected Boolean doInBackground(String... params) {
 
             try {
+                Log.i(TAG, "About to try network request out");
                 // TODO: attempt authentication against a network service.
 
                 WolfpackClient webService =
                         WolfpackClient.retrofit.create(WolfpackClient.class);
 
+
+                Log.i(TAG, "setting call with parameters");
                 Call<LoginDetails[]> call =
                         webService.attemptLogin(params[0], params[1], params[2], params[3]);
 
 
-                loginDetails = call.execute().body();
+                Log.i(TAG, "waiting on potential values");
+                //loginDetails = call.execute().isSuccessful();
 
-                return loginDetails == null;
+                loginDetails = call.execute().body();
+                    Log.i("SignUp", "Supposed finished");
+
+                return loginDetails.length > 0;
+                //boolean result = loginDetails == null;
+                //Log.i(TAG, "loginDetails is null? = " + result );
+
+
             } catch (IOException e) {
 
 
@@ -249,6 +283,9 @@ public class SignUp extends AppCompatActivity {
                 startActivity(intent);
 
             } else {
+                //String message = loginDetails[0].getMessage();
+
+                Toast.makeText(SignUp.this, "No", Toast.LENGTH_SHORT).show();
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
@@ -259,6 +296,38 @@ public class SignUp extends AppCompatActivity {
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    /** Returns true if the app was granted all the permissions. Otherwise, returns false. */
+    private static boolean hasPermissions(Context context, String... permissions) {
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(context, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Handles user acceptance (or denial) of our permission request. */
+    @CallSuper
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode != REQUEST_CODE_REQUIRED_PERMISSIONS) {
+            return;
+        }
+
+        for (int grantResult : grantResults) {
+            if (grantResult == PackageManager.PERMISSION_DENIED) {
+                Toast.makeText(this, R.string.error_missing_permissions, Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }
+        }
+        recreate();
     }
 }
 
