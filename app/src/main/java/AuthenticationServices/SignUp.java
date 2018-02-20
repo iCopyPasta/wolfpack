@@ -230,7 +230,7 @@ public class SignUp extends AppCompatActivity {
      * the user.
      */
     public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
-        LoginDetails[] loginDetails;
+        List<LoginDetails> loginDetails;
 
         @Override
         protected Boolean doInBackground(String... params) {
@@ -244,24 +244,25 @@ public class SignUp extends AppCompatActivity {
 
 
                 Log.i(TAG, "setting call with parameters");
-                Call<LoginDetails[]> call =
-                        webService.attemptLogin(params[0], params[1], params[2], params[3]);
-
+                /*Call<LoginDetails[]> call =
+                        webService.attemptLogin(params[0], params[1], params[2], params[3]);*/
+                Call<List<LoginDetails>> call = webService.dataItems();
 
                 Log.i(TAG, "waiting on potential values");
                 //loginDetails = call.execute().isSuccessful();
 
+                //Log.i(TAG, "call.execute = " + call.execute().toString());
+
                 loginDetails = call.execute().body();
                     Log.i("SignUp", "Supposed finished");
 
-                return loginDetails.length > 0;
+                return !loginDetails.isEmpty();
                 //boolean result = loginDetails == null;
                 //Log.i(TAG, "loginDetails is null? = " + result );
 
 
             } catch (IOException e) {
-
-
+                Log.e(TAG, e.getMessage());
                 return false;
             }
 
@@ -275,7 +276,7 @@ public class SignUp extends AppCompatActivity {
             if (success) {
                 //TODO: Add Value into Shared Prefrences Indicating User logged in
 
-                String message = loginDetails[0].getMessage();
+                String message = loginDetails.get(0).getItemName();
 
                 Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show();
 
