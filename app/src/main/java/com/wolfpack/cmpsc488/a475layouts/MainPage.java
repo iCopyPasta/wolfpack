@@ -5,7 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+
+import AuthenticationServices.LoginPage;
+import AuthenticationServices.SignUp;
 
 
 public class MainPage extends AppCompatActivity {
@@ -54,6 +56,11 @@ public class MainPage extends AppCompatActivity {
         */
 
 
+        startActivity(intent);
+    }
+
+    public void onSignUp(View view){
+        Intent intent = new Intent(this, SignUp.class);
         startActivity(intent);
     }
 

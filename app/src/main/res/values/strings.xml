@@ -46,10 +46,7 @@
     <string name="class_page_tab2_classinfo">Information</string>
 
 
-
-
     <string name="section_format">Hello World from section: %1$d</string>
-
 
 
     <!-- Strings for Question Page -->
@@ -59,10 +56,11 @@
     <string name="countdown">00:00</string>
 
     <string name="action_settings">what?</string>
-
-
-
-
+    <string name="signup">Sign Up</string>
+    <string name="title_activity_sign_up">Sign in</string>
+    <string name="create_account">Create Account</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
 
 
 </resources>
