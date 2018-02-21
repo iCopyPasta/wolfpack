@@ -42,8 +42,10 @@ import com.wolfpack.cmpsc488.a475layouts.StudentPage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import retrofit2.Call;
+import retrofit2.Response;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -230,7 +232,9 @@ public class SignUp extends AppCompatActivity {
      * the user.
      */
     public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
-        List<LoginDetails> loginDetails;
+        LoginDetails loginDetails;
+        Response<LoginDetails> response;
+
 
         @Override
         protected Boolean doInBackground(String... params) {
@@ -244,24 +248,21 @@ public class SignUp extends AppCompatActivity {
 
 
                 Log.i(TAG, "setting call with parameters");
-                /*Call<LoginDetails[]> call =
-                        webService.attemptLogin(params[0], params[1], params[2], params[3]);*/
-                Call<List<LoginDetails>> call = webService.dataItems();
+                Call<LoginDetails> call =
+                        webService.attemptLogin(params[0], params[1], params[2], params[3]);
+
 
                 Log.i(TAG, "waiting on potential values");
-                //loginDetails = call.execute().isSuccessful();
-
-                //Log.i(TAG, "call.execute = " + call.execute().toString());
-
-                loginDetails = call.execute().body();
-                    Log.i("SignUp", "Supposed finished");
-
-                return !loginDetails.isEmpty();
-                //boolean result = loginDetails == null;
-                //Log.i(TAG, "loginDetails is null? = " + result );
 
 
-            } catch (IOException e) {
+                //TODO: ADD SECURE TRY-CATCH BLOCKS FOR VARIOUS POSSIBILITIES!
+                response = call.execute();
+                Log.i(TAG, response.body().toString());
+                loginDetails = response.body();
+                Log.i("SignUp", "Finished");
+
+                return loginDetails != null;
+            } catch (Exception e){
                 Log.e(TAG, e.getMessage());
                 return false;
             }
@@ -276,7 +277,7 @@ public class SignUp extends AppCompatActivity {
             if (success) {
                 //TODO: Add Value into Shared Prefrences Indicating User logged in
 
-                String message = loginDetails.get(0).getItemName();
+                String message = loginDetails.getMessage();
 
                 Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show();
 
@@ -284,9 +285,12 @@ public class SignUp extends AppCompatActivity {
                 startActivity(intent);
 
             } else {
-                //String message = loginDetails[0].getMessage();
+                if(loginDetails == null)
+                    Toast.makeText(SignUp.this, "Null", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(SignUp.this, loginDetails.toString(), Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(SignUp.this, "No", Toast.LENGTH_SHORT).show();
+                //String message = loginDetails[0].getMessage();
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
