@@ -1,6 +1,8 @@
 package com.wolfpack.cmpsc488.a475layouts;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,12 +14,16 @@ import AuthenticationServices.SignUp;
 
 public class MainPage extends AppCompatActivity {
 
+    public static final String USER_LOGGED_IN = "USER_LOGGED_IN";
+    public static final String USER_MODE_PROFESSOR = "PROFESSOR";
+    public static final String USER_MODE_STUDENT = "STUDENT";
+    public static final String BUTTON_CALLED = "BUTTON_CALLED";
+    public static String USER_MODE = "none";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
-
-        //TODO: Add logic in order to skip MainPage if the user already authenticated
     }
 
     protected void onPause() {
@@ -25,13 +31,31 @@ public class MainPage extends AppCompatActivity {
     }
 
     protected void onStop() {
-
         super.onStop();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        Context context = this;
+
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+        String mode = sharedPref.getString(USER_MODE, "none");
+        Boolean loggedIn = sharedPref.getBoolean(USER_LOGGED_IN, false);
+
+        if(loggedIn){
+            if(mode.equals(USER_MODE_PROFESSOR))
+                //TODO: add link to professor landing page for android
+                //Intent intent = new Intent(this, SOMETHING.class);
+                //startActivity(intent);
+                ;
+            if(mode.equals(USER_MODE_STUDENT)){
+                Intent intent = new Intent(this, StudentPage.class);
+                startActivity(intent);
+            }
+        }
     }
 
     @Override
@@ -43,19 +67,19 @@ public class MainPage extends AppCompatActivity {
     }
 
     public void onLogin(View view){
-        //quick access to demo student page
-        //Intent intent = new Intent(this, StudentPage.class);
+
+        int id = view.getId();
 
         Intent intent = new Intent(this, LoginPage.class);
 
-        /*
-        Button b = (Button) view;
-
-        //if(b.getBack)
-        intent.putExtra("color", b.getDrawingCacheBackgroundColor());
-        */
-
-
+        switch(id){
+            case R.id.professorSigninButton:
+                intent.putExtra(BUTTON_CALLED, USER_MODE_PROFESSOR);
+                break;
+            case R.id.studentSigninButton:
+                intent.putExtra(BUTTON_CALLED, USER_MODE_STUDENT);
+                break;
+        }
         startActivity(intent);
     }
 

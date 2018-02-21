@@ -11,7 +11,7 @@ import java.text.NumberFormat;
 
 public class LoginDetails {
 
-    /*@SerializedName("success")
+    @SerializedName("success")
     private int status;
     @SerializedName("message")
     private String message;
@@ -39,9 +39,15 @@ public class LoginDetails {
 
     public void setMessage(String message) {
         this.message = message;
-    }*/
+    }
 
-    private String itemName;
+    @Override
+    public String toString(){
+        return "JSON OBJ: message = " + this.getMessage()
+                + " status = " + this.getStatus();
+    }
+
+    /*private String itemName;
     private double price;
 
     public String getItemName() {
@@ -64,6 +70,6 @@ public class LoginDetails {
     public String toString() {
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
         return itemName + " (" + numberFormat.format(price) + ")";
-    }
+    }*/
 
 }
