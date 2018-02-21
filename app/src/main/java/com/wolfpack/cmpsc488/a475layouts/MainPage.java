@@ -17,6 +17,7 @@ public class MainPage extends AppCompatActivity {
     public static final String USER_LOGGED_IN = "USER_LOGGED_IN";
     public static final String USER_MODE_PROFESSOR = "PROFESSOR";
     public static final String USER_MODE_STUDENT = "STUDENT";
+    public static final String BUTTON_CALLED = "BUTTON_CALLED";
     public static String USER_MODE = "none";
 
     @Override
@@ -67,8 +68,18 @@ public class MainPage extends AppCompatActivity {
 
     public void onLogin(View view){
 
+        int id = view.getId();
+
         Intent intent = new Intent(this, LoginPage.class);
 
+        switch(id){
+            case R.id.professorSigninButton:
+                intent.putExtra(BUTTON_CALLED, USER_MODE_PROFESSOR);
+                break;
+            case R.id.studentSigninButton:
+                intent.putExtra(BUTTON_CALLED, USER_MODE_STUDENT);
+                break;
+        }
         startActivity(intent);
     }
 

@@ -32,6 +32,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.wolfpack.cmpsc488.a475layouts.CameraExample;
+import com.wolfpack.cmpsc488.a475layouts.MainPage;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.StudentPage;
 
@@ -281,38 +282,55 @@ public class LoginPage extends AppCompatActivity implements LoaderCallbacks<Curs
 
         @Override
         protected Boolean doInBackground(String... params) {
-            // TODO: attempt authentication against a network service.
 
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
 
+                Log.i(TAG, "About to try network request out");
+                // TODO: attempt authentication against a network service.
+                WolfpackClient webService =
+                        WolfpackClient.retrofit.create(WolfpackClient.class);
 
+                // TODO: DEFINE CALL BASED ON EXPECTED PHP CALL
 
-
-
-
-            } catch (InterruptedException e) {
+                // TODO: Add more exceptional cases
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
                 return false;
             }
-
-
 
             return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
+
+            String buttonName;
+
+            Intent caller = getIntent();
+            Intent intent;
+            if(caller != null){
+                buttonName = caller.getStringExtra(MainPage.BUTTON_CALLED);
+                Log.i(TAG, "button name is: "  + buttonName);
+
+                if(buttonName.equals(MainPage.USER_MODE_STUDENT)){
+                    intent = new Intent(getApplicationContext(), StudentPage.class);
+                }
+
+                if(buttonName.equals(MainPage.USER_MODE_PROFESSOR)){
+                    //intent = new Intent(getApplicationContext(), SOMETHING.class)
+
+                }
+            }
+
             mAuthTask = null;
             showProgress(false);
+
 
             if (success) {
                 Log.i(TAG, "successful login, onto student class page");
 
                 //TODO: Update Shared Preferences that we logged in successfully
 
-                Intent intent = new Intent(getApplicationContext(), StudentPage.class);
-                startActivity(intent);
 
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

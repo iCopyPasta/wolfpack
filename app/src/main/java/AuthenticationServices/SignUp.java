@@ -249,7 +249,7 @@ public class SignUp extends AppCompatActivity {
 
                 Log.i(TAG, "setting call with parameters");
                 Call<LoginDetails> call =
-                        webService.attemptLogin(params[0], params[1], params[2], params[3]);
+                        webService.attemptRegister(params[0], params[1], params[2], params[3]);
 
 
                 Log.i(TAG, "waiting on potential values");
@@ -275,7 +275,7 @@ public class SignUp extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
-                //TODO: Add Value into Shared Prefrences Indicating User logged in
+                //TODO: Add Value into Shared Preferences Indicating User logged in
 
                 String message = loginDetails.getMessage();
 
