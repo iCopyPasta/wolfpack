@@ -21,6 +21,7 @@ public interface WolfpackClient{
     //String BASE_URL = "http://192.168.1.57";
     //String FEED = "/Sign_up.php";
     String FEED = "pablo_test_android/Sign_up.php";
+    String LOGIN = "pablo_test_android/Sign_in_student.php";
 
     Gson gson = new GsonBuilder()
             .setLenient()
@@ -31,12 +32,16 @@ public interface WolfpackClient{
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build();
 
-    /*@GET(FEED)
-    Call<List<LoginDetails>> dataItems();*/
+    @FormUrlEncoded
+    @POST(LOGIN)
+    Call<LoginDetails> attemptLogin(
+            @Field("inputEmail") String email,
+            @Field("inputPassword") String password
+    );
 
     @FormUrlEncoded
     @POST(FEED)
-    Call<LoginDetails> attemptRegister(
+    Call<LoginDetails> attemptLogin(
             @Field("inputFirstName") String first_name,
             @Field("inputLastName") String last_name,
             @Field("inputEmail") String email,

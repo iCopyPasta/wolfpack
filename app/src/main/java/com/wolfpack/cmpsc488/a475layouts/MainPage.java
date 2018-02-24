@@ -14,11 +14,9 @@ import AuthenticationServices.SignUp;
 
 public class MainPage extends AppCompatActivity {
 
-    public static final String USER_LOGGED_IN = "USER_LOGGED_IN";
     public static final String USER_MODE_PROFESSOR = "PROFESSOR";
     public static final String USER_MODE_STUDENT = "STUDENT";
     public static final String BUTTON_CALLED = "BUTTON_CALLED";
-    public static String USER_MODE = "none";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +40,8 @@ public class MainPage extends AppCompatActivity {
         SharedPreferences sharedPref = context.getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-        String mode = sharedPref.getString(USER_MODE, "none");
-        Boolean loggedIn = sharedPref.getBoolean(USER_LOGGED_IN, false);
+        String mode = sharedPref.getString(getString(R.string.USER_MODE), "none");
+        Boolean loggedIn = sharedPref.getBoolean(getString(R.string.SKIP_LOGIN), false);
 
         if(loggedIn){
             if(mode.equals(USER_MODE_PROFESSOR))
