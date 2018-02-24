@@ -3,7 +3,9 @@ package AuthenticationServices;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -33,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.CameraExample;
+import com.wolfpack.cmpsc488.a475layouts.MainPage;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.StudentPage;
 
@@ -49,14 +52,10 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginPage extends AppCompatActivity {
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
-
     public static final String TAG = "LoginPage";
 
     private UserLoginTask mAuthTask = null;
+    private String mode = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -64,13 +63,13 @@ public class LoginPage extends AppCompatActivity {
     private View mProgressView;
     private View mLoginFormView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        //populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -84,6 +83,9 @@ public class LoginPage extends AppCompatActivity {
                 return false;
             }
         });
+
+        Intent intent = getIntent();
+        mode = intent.getStringExtra(MainPage.BUTTON_CALLED);
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -242,9 +244,6 @@ public class LoginPage extends AppCompatActivity {
                 return false;
             }
 
-
-
-            return true;
         }
 
         @Override
@@ -253,8 +252,10 @@ public class LoginPage extends AppCompatActivity {
             String buttonName;
 
             Intent caller = getIntent();
-            Intent intent;
+            Intent intent = null;
             if(caller != null){
+
+
                 buttonName = caller.getStringExtra(MainPage.BUTTON_CALLED);
                 Log.i(TAG, "button name is: "  + buttonName);
 
@@ -273,17 +274,28 @@ public class LoginPage extends AppCompatActivity {
 
 
             if (success) {
-                Log.i(TAG, "successful login, onto student class page");
+                Log.i(TAG, "successful login");
 
-                //TODO: Update Shared Preferences that we logged in successfully
+                //SHARED PREFERENCES UPDATE
+                Context context = getApplicationContext();
+                SharedPreferences sharedPref = context.getSharedPreferences(
+                        getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean(getString(R.string.SKIP_LOGIN), true);
+                editor.putString(getString(R.string.USER_MODE), mode);
+
+                editor.apply(); //dedicate to persistant storage in background thread
+
+                //FEEDBACK FROM SERVER
                 String message = loginDetails.getMessage();
 
                 Toast.makeText(LoginPage.this, message, Toast.LENGTH_SHORT).show();
 
+                if(intent != null)
+                    startActivity(intent);
 
 
-                Intent intent = new Intent(getApplicationContext(), StudentPage.class);
-                startActivity(intent);
 
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
