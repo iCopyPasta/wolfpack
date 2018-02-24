@@ -241,12 +241,36 @@ public class LoginPage extends AppCompatActivity {
                 Log.e(TAG, e.getMessage());
                 return false;
             }
+
+
+
+            return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
+
+            String buttonName;
+
+            Intent caller = getIntent();
+            Intent intent;
+            if(caller != null){
+                buttonName = caller.getStringExtra(MainPage.BUTTON_CALLED);
+                Log.i(TAG, "button name is: "  + buttonName);
+
+                if(buttonName.equals(MainPage.USER_MODE_STUDENT)){
+                    intent = new Intent(getApplicationContext(), StudentPage.class);
+                }
+
+                if(buttonName.equals(MainPage.USER_MODE_PROFESSOR)){
+                    //intent = new Intent(getApplicationContext(), SOMETHING.class)
+
+                }
+            }
+
             mAuthTask = null;
             showProgress(false);
+
 
             if (success) {
                 Log.i(TAG, "successful login, onto student class page");

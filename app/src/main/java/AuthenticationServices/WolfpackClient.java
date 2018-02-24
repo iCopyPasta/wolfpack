@@ -41,11 +41,13 @@ public interface WolfpackClient{
 
     @FormUrlEncoded
     @POST(FEED)
-    Call<LoginDetails> attemptLogin(
+    Call<LoginDetails> attemptRegister(
             @Field("inputFirstName") String first_name,
             @Field("inputLastName") String last_name,
             @Field("inputEmail") String email,
             @Field("inputPassword") String password
     );
+
+    //TODO: DEFINE CALL HERE BASED FOR LOGIN
 
 }
