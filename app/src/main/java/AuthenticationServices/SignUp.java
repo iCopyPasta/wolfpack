@@ -275,7 +275,7 @@ public class SignUp extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
-                //TODO: Add Value into Shared Prefrences Indicating User logged in
+                //TODO: Logic to jump into login b/c we are assuming an email is returned
 
                 String message = loginDetails.getMessage();
 

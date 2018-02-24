@@ -30,6 +30,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.CameraExample;
 import com.wolfpack.cmpsc488.a475layouts.R;
@@ -38,12 +39,15 @@ import com.wolfpack.cmpsc488.a475layouts.StudentPage;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginPage extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginPage extends AppCompatActivity {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -141,8 +145,8 @@ public class LoginPage extends AppCompatActivity implements LoaderCallbacks<Curs
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute();
+            mAuthTask = new UserLoginTask();
+            mAuthTask.execute(email, password);
         }
     }
 
@@ -153,7 +157,7 @@ public class LoginPage extends AppCompatActivity implements LoaderCallbacks<Curs
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 10;
+        return password.length() > 4;
     }
 
     /**
@@ -192,72 +196,6 @@ public class LoginPage extends AppCompatActivity implements LoaderCallbacks<Curs
         }
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
-
-        addEmailsToAutoComplete(emails);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
-
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginPage.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mEmailView.setAdapter(adapter);
-    }
-
-
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
-
-    /**
-     * Allow a new user to create & register their account with our service
-     * @param view
-     */
-    //TODO: SET XML REGISTERATION
-    public void onRegister(View view){
-        Intent intent = new Intent(this, LoginPage.class);
-        startActivity(intent);
-
-    }
-
-
     public void onNADemo(View view){
         Log.i(TAG, "onNADemo is called");
         Intent intent = new Intent(this, CameraExample.class);
@@ -270,35 +208,39 @@ public class LoginPage extends AppCompatActivity implements LoaderCallbacks<Curs
      */
     public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
 
-        private final String mEmail;
-        private final String mPassword;
-
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
+        LoginDetails loginDetails;
+        Response<LoginDetails> response;
 
         @Override
         protected Boolean doInBackground(String... params) {
             // TODO: attempt authentication against a network service.
 
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
+                Log.i(TAG, "About to try network request out");
+                // TODO: attempt authentication against a network service.
+
+                WolfpackClient webService =
+                        WolfpackClient.retrofit.create(WolfpackClient.class);
 
 
+                Log.i(TAG, "setting call with parameters");
+                Call<LoginDetails> call =
+                        webService.attemptLogin(params[0], params[1]);
 
 
+                Log.i(TAG, "waiting on potential values");
 
+                //TODO: ADD SECURE TRY-CATCH BLOCKS FOR VARIOUS POSSIBILITIES!
+                response = call.execute();
+                Log.i(TAG, response.body().toString());
+                loginDetails = response.body();
+                Log.i("Sign_in", "Finished");
 
-            } catch (InterruptedException e) {
+                return loginDetails != null;
+            } catch (Exception e){
+                Log.e(TAG, e.getMessage());
                 return false;
             }
-
-
-
-            return true;
         }
 
         @Override
@@ -310,6 +252,11 @@ public class LoginPage extends AppCompatActivity implements LoaderCallbacks<Curs
                 Log.i(TAG, "successful login, onto student class page");
 
                 //TODO: Update Shared Preferences that we logged in successfully
+                String message = loginDetails.getMessage();
+
+                Toast.makeText(LoginPage.this, message, Toast.LENGTH_SHORT).show();
+
+
 
                 Intent intent = new Intent(getApplicationContext(), StudentPage.class);
                 startActivity(intent);
