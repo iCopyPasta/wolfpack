@@ -30,6 +30,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.CameraExample;
 import com.wolfpack.cmpsc488.a475layouts.MainPage;
@@ -308,7 +309,11 @@ public class LoginPage extends AppCompatActivity implements LoaderCallbacks<Curs
 
             Intent caller = getIntent();
             Intent intent;
+
+
+
             if(caller != null){
+                Toast.makeText(LoginPage.this, "HELLO", Toast.LENGTH_SHORT).show();
                 buttonName = caller.getStringExtra(MainPage.BUTTON_CALLED);
                 Log.i(TAG, "button name is: "  + buttonName);
 
@@ -317,7 +322,8 @@ public class LoginPage extends AppCompatActivity implements LoaderCallbacks<Curs
                 }
 
                 if(buttonName.equals(MainPage.USER_MODE_PROFESSOR)){
-                    //intent = new Intent(getApplicationContext(), SOMETHING.class)
+                    intent = new Intent(getApplicationContext(), MainPage.class);
+                    startActivity(intent);
 
                 }
             }

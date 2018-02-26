@@ -51,7 +51,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="AuthenticationServices.SignUp"
-            android:label="@string/title_activity_sign_up"></activity>
+            android:label="@string/title_activity_sign_up" />
+        <activity android:name=".professorPage"></activity>
     </application>
 
 </manifest>
