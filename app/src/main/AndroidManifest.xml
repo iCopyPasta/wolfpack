@@ -39,7 +39,7 @@
             android:name=".QuestionPage"
             android:label="@string/title_activity_question_page" />
         <activity
-            android:name="AuthenticationServices.LoginPage"
+            android:name="authentication_services.LoginPage"
             android:label="@string/title_activity_login_page" />
         <activity
             android:name=".ClassPage"
@@ -49,10 +49,16 @@
             android:name=".StudentPage"
             android:label="@string/title_activity_student_page"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
-            android:name="AuthenticationServices.SignUp"
+            android:name=".ProfessorPage"
+            android:label="@string/title_activity_professor_page"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+
+        <activity
+            android:name="authentication_services.SignUp"
             android:label="@string/title_activity_sign_up" />
-        <activity android:name=".professorPage"></activity>
     </application>
 
 </manifest>

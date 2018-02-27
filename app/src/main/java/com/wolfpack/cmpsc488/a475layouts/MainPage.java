@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import AuthenticationServices.LoginPage;
-import AuthenticationServices.SignUp;
+import authentication_services.LoginPage;
+import authentication_services.SignUp;
 
 
 public class MainPage extends AppCompatActivity {
@@ -95,4 +95,21 @@ public class MainPage extends AppCompatActivity {
         startActivity(intent);
     }
 
+
+
+
+
+
+    /* MUST REMOVE LATER */
+    public void onToStudent(View view){
+        Log.i("Main Page", "onToStudent is called");
+        Intent intent = new Intent(this, StudentPage.class);
+        startActivity(intent);
+    }
+
+    public void onToProfessor(View view){
+        Log.i("Main Page", "onToProfessor is called");
+        Intent intent = new Intent(this, ProfessorPage.class);
+        startActivity(intent);
+    }
 }

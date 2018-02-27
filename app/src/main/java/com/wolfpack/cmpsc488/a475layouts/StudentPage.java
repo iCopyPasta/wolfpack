@@ -15,10 +15,6 @@ public class StudentPage extends AppCompatActivity {
     private TabAdapter mTabAdapter;
     private ViewPager mViewPager;
 
-
-    //private ListView listView;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

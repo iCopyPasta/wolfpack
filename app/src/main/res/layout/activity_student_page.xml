@@ -9,17 +9,16 @@
     tools:context="com.wolfpack.cmpsc488.a475layouts.StudentPage">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+        android:id="@+id/appbarStudentPage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/appbar_padding_top"
         android:theme="@style/AppTheme.AppBarOverlay">
 
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbarStudentPage"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/colorStudentPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
@@ -52,7 +51,6 @@
                 android:text="@string/student_page_tab3_settings" />
 
         </android.support.design.widget.TabLayout>
-
 
 
     </android.support.design.widget.AppBarLayout>

@@ -11,21 +11,24 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
-public class StudentPageTab3Settings extends Fragment {
+public class ProfessorPageTab3Settings extends Fragment {
 
-    private static final String TAG = "SPTab3Settings";
+    private static final String TAG = "PPTab3Settings";
 
     private ListView mListViewSettings;
     //TODO: we could move settingsListTemp array into the strings.xml file as it is a static list pertaining to the particular page
-    private static String[] settingsListTemp = {"User Information", "Help", "About", "Logout"};
+    private static String[] settingsListTemp = {"User Information", "Help", "About", "Logout", "We are on the Professor Side"};
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_student_page_tab3_settings, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_professor_page_tab3_settings, container, false);
 
-        mListViewSettings = (ListView) rootView.findViewById(R.id.settingsListView);
+        Log.i(TAG, "onCreateView");
+
+        mListViewSettings = (ListView) rootView.findViewById(R.id.profSettingsListView);
 
         ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
                 getActivity(),
@@ -43,10 +46,9 @@ public class StudentPageTab3Settings extends Fragment {
                 //Activity to start depends on what is clicked
                 switch (settingsListTemp[position]) {
                     case "User Information":
-                        break;
                     case "Help":
-                        break;
                     case "About":
+                        Toast.makeText(getActivity(), settingsListTemp[position], Toast.LENGTH_SHORT).show();
                         break;
                     case "Logout":
                         //Not the correct way to logout (back button still works)
@@ -67,6 +69,9 @@ public class StudentPageTab3Settings extends Fragment {
 
         return rootView;
     }
+
+
+
 
 
 

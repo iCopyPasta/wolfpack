@@ -1,16 +1,9 @@
-package AuthenticationServices;
+package authentication_services;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -36,35 +29,26 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wolfpack.cmpsc488.a475layouts.CameraExample;
+import com.wolfpack.cmpsc488.a475layouts.MainPage;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.StudentPage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-
-import retrofit2.Call;
-import retrofit2.Response;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
- * A login screen that offers sign-up via email/password.
+ * A login screen that offers login via email/password.
  */
-public class SignUp extends AppCompatActivity {
-
-    private static final int REQUEST_CODE_REQUIRED_PERMISSIONS = 1;
-
-    private static final String[] REQUIRED_PERMISSIONS =
-            new String[]{
-                    Manifest.permission.INTERNET
-            };
-    private static final String TAG = "SignUpActivity";
+public class LoginPage extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     /**
-     * Keep track of the login task to ensure we can cancel it if requested.
+     * Id to identity READ_CONTACTS permission request.
      */
+    private static final int REQUEST_READ_CONTACTS = 0;
+
+    public static final String TAG = "LoginPage";
+
     private UserLoginTask mAuthTask = null;
 
     // UI references.
@@ -76,9 +60,10 @@ public class SignUp extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_login_page);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        //populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -86,6 +71,7 @@ public class SignUp extends AppCompatActivity {
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                     attemptLogin();
+                    Log.i(TAG, "finished with attemptLogin");
                     return true;
                 }
                 return false;
@@ -102,6 +88,7 @@ public class SignUp extends AppCompatActivity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
     }
 
     /**
@@ -150,34 +137,9 @@ public class SignUp extends AppCompatActivity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-
-            //get values to execute on
-            String first_name = ((AutoCompleteTextView) findViewById(R.id.firstName)).
-                    getText().toString();
-
-            String last_name = ((AutoCompleteTextView) findViewById(R.id.lastName)).
-                    getText().toString();
-
-            String the_email = ((AutoCompleteTextView) findViewById(R.id.email)).
-                    getText().toString();
-
-            String the_password = ((EditText) findViewById(R.id.password)).
-                    getText().toString();
-
-            //Request Permission for Internet
-            Log.i("SignUp", "about to send data over");
-
-            if (!hasPermissions(this, REQUIRED_PERMISSIONS)) {
-                Log.i("SignUp", "We dont have permissions!!");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_REQUIRED_PERMISSIONS);
-                }
-            }else{
-                Log.i("SignUp", "We have permissions!!");
-                showProgress(true);
-                mAuthTask = new UserLoginTask();
-                mAuthTask.execute(first_name, last_name, the_email, the_password);
-            }
+            showProgress(true);
+            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask.execute();
         }
     }
 
@@ -227,70 +189,151 @@ public class SignUp extends AppCompatActivity {
         }
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return new CursorLoader(this,
+                // Retrieve data rows for the device user's 'profile' contact.
+                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
+                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
+
+                // Select only email addresses.
+                ContactsContract.Contacts.Data.MIMETYPE +
+                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
+                .CONTENT_ITEM_TYPE},
+
+                // Show primary email addresses first. Note that there won't be
+                // a primary email address if the user hasn't specified one.
+                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        List<String> emails = new ArrayList<>();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            emails.add(cursor.getString(ProfileQuery.ADDRESS));
+            cursor.moveToNext();
+        }
+
+        addEmailsToAutoComplete(emails);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+
+    }
+
+    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
+        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(LoginPage.this,
+                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
+
+        mEmailView.setAdapter(adapter);
+    }
+
+
+    private interface ProfileQuery {
+        String[] PROJECTION = {
+                ContactsContract.CommonDataKinds.Email.ADDRESS,
+                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
+        };
+
+        int ADDRESS = 0;
+        int IS_PRIMARY = 1;
+    }
+
+    /**
+     * Allow a new user to create & register their account with our service
+     * @param view
+     */
+    //TODO: SET XML REGISTERATION
+    public void onRegister(View view){
+        Intent intent = new Intent(this, LoginPage.class);
+        startActivity(intent);
+
+    }
+
+
+    public void onNADemo(View view){
+        Log.i(TAG, "onNADemo is called");
+        Intent intent = new Intent(this, CameraExample.class);
+        startActivity(intent);
+    }
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
     public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
-        LoginDetails loginDetails;
-        Response<LoginDetails> response;
 
+        private final String mEmail;
+        private final String mPassword;
+
+
+        UserLoginTask(String email, String password) {
+            mEmail = email;
+            mPassword = password;
+        }
 
         @Override
         protected Boolean doInBackground(String... params) {
 
             try {
+
                 Log.i(TAG, "About to try network request out");
                 // TODO: attempt authentication against a network service.
-
                 WolfpackClient webService =
                         WolfpackClient.retrofit.create(WolfpackClient.class);
 
+                // TODO: DEFINE CALL BASED ON EXPECTED PHP CALL
 
-                Log.i(TAG, "setting call with parameters");
-                Call<LoginDetails> call =
-                        webService.attemptRegister(params[0], params[1], params[2], params[3]);
-
-
-                Log.i(TAG, "waiting on potential values");
-
-
-                //TODO: ADD SECURE TRY-CATCH BLOCKS FOR VARIOUS POSSIBILITIES!
-                response = call.execute();
-                Log.i(TAG, response.body().toString());
-                loginDetails = response.body();
-                Log.i("SignUp", "Finished");
-
-                return loginDetails != null;
-            } catch (Exception e){
+                // TODO: Add more exceptional cases
+            } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
                 return false;
             }
 
+            return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
+
+            String buttonName;
+
+            Intent caller = getIntent();
+            Intent intent;
+
+
+
+            if(caller != null){
+                Toast.makeText(LoginPage.this, "HELLO", Toast.LENGTH_SHORT).show();
+                buttonName = caller.getStringExtra(MainPage.BUTTON_CALLED);
+                Log.i(TAG, "button name is: "  + buttonName);
+
+                if(buttonName.equals(MainPage.USER_MODE_STUDENT)){
+                    intent = new Intent(getApplicationContext(), StudentPage.class);
+                }
+
+                if(buttonName.equals(MainPage.USER_MODE_PROFESSOR)){
+                    intent = new Intent(getApplicationContext(), MainPage.class);
+                    startActivity(intent);
+
+                }
+            }
+
             mAuthTask = null;
             showProgress(false);
 
+
             if (success) {
-                //TODO: Add Value into Shared Preferences Indicating User logged in
+                Log.i(TAG, "successful login, onto student class page");
 
-                String message = loginDetails.getMessage();
+                //TODO: Update Shared Preferences that we logged in successfully
 
-                Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(getApplicationContext(), StudentPage.class);
-                startActivity(intent);
 
             } else {
-                if(loginDetails == null)
-                    Toast.makeText(SignUp.this, "Null", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(SignUp.this, loginDetails.toString(), Toast.LENGTH_SHORT).show();
-
-                //String message = loginDetails[0].getMessage();
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
@@ -301,38 +344,6 @@ public class SignUp extends AppCompatActivity {
             mAuthTask = null;
             showProgress(false);
         }
-    }
-
-    /** Returns true if the app was granted all the permissions. Otherwise, returns false. */
-    private static boolean hasPermissions(Context context, String... permissions) {
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(context, permission)
-                    != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /** Handles user acceptance (or denial) of our permission request. */
-    @CallSuper
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode != REQUEST_CODE_REQUIRED_PERMISSIONS) {
-            return;
-        }
-
-        for (int grantResult : grantResults) {
-            if (grantResult == PackageManager.PERMISSION_DENIED) {
-                Toast.makeText(this, R.string.error_missing_permissions, Toast.LENGTH_LONG).show();
-                finish();
-                return;
-            }
-        }
-        recreate();
     }
 }
 
