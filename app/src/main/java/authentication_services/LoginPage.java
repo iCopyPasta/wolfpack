@@ -248,7 +248,7 @@ public class LoginPage extends AppCompatActivity {
                     intent = new Intent(getApplicationContext(), StudentPage.class);
                 }
 
-                if(buttonName.equals(MainPage.USER_MODE_PROFESSOR)){
+                if(buttonName.equals(MainPage.USER_MODE_TEACHER)){
                     //intent = new Intent(getApplicationContext(), SOMETHING.class)
 
                 }

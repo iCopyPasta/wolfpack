@@ -15,16 +15,16 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@color/colorProfessorPrimary"
+        android:backgroundTint="@color/colorTeacherPrimary"
         android:elevation="0dp"
         android:onClick="onSignUp"
         android:text="@string/signup"
         android:textColorLink="@color/colorAccent"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/professorSigninButton"
+        app:layout_constraintEnd_toEndOf="@+id/teacherSigninButton"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/professorSigninButton"
+        app:layout_constraintStart_toStartOf="@+id/teacherSigninButton"
         app:layout_constraintTop_toBottomOf="@+id/signInText" />
 
     <TextView
@@ -61,17 +61,17 @@
         app:layout_constraintTop_toBottomOf="@+id/singupText" />
 
     <Button
-        android:id="@+id/professorSigninButton"
+        android:id="@+id/teacherSigninButton"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="250dp"
         android:layout_height="60dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
-        android:backgroundTint="@color/colorProfessorPrimary"
+        android:backgroundTint="@color/colorTeacherPrimary"
         android:elevation="0dp"
         android:onClick="onLogin"
-        android:text="@string/professor_sign_in_button"
+        android:text="@string/teacher_sign_in_button"
         android:textColorLink="@color/colorAccent"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -91,6 +91,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/professorSigninButton" />
+        app:layout_constraintTop_toBottomOf="@+id/teacherSigninButton" />
 
 </android.support.constraint.ConstraintLayout>

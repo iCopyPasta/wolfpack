@@ -13,7 +13,7 @@ public class ClassPageTab2Classinfo extends Fragment {
     private static final String TAG = "CPTab1Classinfo";
 
     private ListView mListViewClassinfo;
-    private static String[] classinfoTemp = {"Class ID", "Professor"};
+    private static String[] classinfoTemp = {"Class ID", "Teacher"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -50,7 +50,9 @@ public class StudentPageTab3Settings extends Fragment {
                     case "Logout":
                         //Not the correct way to logout (back button still works)
                         //  and it does not quit the session with the server
+
                         intent = new Intent(getActivity(), MainPage.class);
+
                         break;
                     default:
                         Log.i(TAG, "Click out of bounds");
