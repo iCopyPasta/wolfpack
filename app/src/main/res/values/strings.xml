@@ -12,7 +12,7 @@
 
     <!-- Strings for Main Page -->
     <string name="student_sign_in_button">Student</string>
-    <string name="professor_sign_in_button">Professor</string>
+    <string name="teacher_sign_in_button">Teacher</string>
     <string name="sign_in">Sign In</string>
 
     <!-- Strings related to login -->

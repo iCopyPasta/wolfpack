@@ -23,7 +23,7 @@ public class StudentPageTab1Classlist extends Fragment {
     private ListView mListViewClasses;
     private static String[] classlistTemp = {"CMPSC 460", "CMPSC 462", "CMPSC 463", "CMPSC 469","CMPSC 472", "CMPSC 488", "COMP 505", "COMP 511", "COMP 512", "COMP 519"};
     private static String[] classdesclistTemp = {"Principles of Programming Languages", "Data Structrues", "Design and Analysis of Algorithms", "Formal Languages with Applications", "Operating System Concepts", "Computer Science Project", "Theory of Computation", "Design and Anaylsis of Algorithms", "Advance Operating Systems", "Advanced Topics in Database Management Systems"};
-    private static String[] classprofessorlistTemp = {"Sukmoon Chang", "Jeremy Blum", "Jeremy Blum", "Sukmoon Chang", "Linda Null", "Hyuntae Na", "Thang Bui","Thang Bui", "Linda Null", "Linda Null"};
+    private static String[] classteacherlistTemp = {"Sukmoon Chang", "Jeremy Blum", "Jeremy Blum", "Sukmoon Chang", "Linda Null", "Hyuntae Na", "Thang Bui","Thang Bui", "Linda Null", "Linda Null"};
 
 
     @Override
@@ -90,11 +90,11 @@ public class StudentPageTab1Classlist extends Fragment {
             view = getLayoutInflater().inflate(R.layout.listview_student_page_classlist, null);
 
             TextView class_name = (TextView) view.findViewById(R.id.classNameDisplay);
-            TextView professor_name = (TextView) view.findViewById(R.id.professorNameDisplay);
+            TextView teacher_name = (TextView) view.findViewById(R.id.teacherNameDisplay);
             TextView class_description = (TextView) view.findViewById(R.id.classDescriptionDisplay);
 
             class_name.setText(classlistTemp[i]);
-            professor_name.setText(classprofessorlistTemp[i]);
+            teacher_name.setText(classteacherlistTemp[i]);
             class_description.setText(classdesclistTemp[i]);
 
             return view;

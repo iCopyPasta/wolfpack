@@ -8,13 +8,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import AuthenticationServices.LoginPage;
-import AuthenticationServices.SignUp;
+import authentication_services.LoginPage;
+import authentication_services.SignUp;
 
 
 public class MainPage extends AppCompatActivity {
 
-    public static final String USER_MODE_PROFESSOR = "PROFESSOR";
+    public static final String TAG = "MainPage";
+    public static final String USER_MODE_TEACHER = "TEACHER";
     public static final String USER_MODE_STUDENT = "STUDENT";
     public static final String BUTTON_CALLED = "BUTTON_CALLED";
 
@@ -43,9 +44,11 @@ public class MainPage extends AppCompatActivity {
         String mode = sharedPref.getString(getString(R.string.USER_MODE), "none");
         Boolean loggedIn = sharedPref.getBoolean(getString(R.string.SKIP_LOGIN), false);
 
+        Log.i(TAG, "loggedIn = " + loggedIn);
+
         if(loggedIn){
-            if(mode.equals(USER_MODE_PROFESSOR))
-                //TODO: add link to professor landing page for android
+            if(mode.equals(USER_MODE_TEACHER))
+                //TODO: add link to teacher landing page for android
                 //Intent intent = new Intent(this, SOMETHING.class);
                 //startActivity(intent);
                 ;
@@ -71,8 +74,8 @@ public class MainPage extends AppCompatActivity {
         Intent intent = new Intent(this, LoginPage.class);
 
         switch(id){
-            case R.id.professorSigninButton:
-                intent.putExtra(BUTTON_CALLED, USER_MODE_PROFESSOR);
+            case R.id.teacherSigninButton:
+                intent.putExtra(BUTTON_CALLED, USER_MODE_TEACHER);
                 break;
             case R.id.studentSigninButton:
                 intent.putExtra(BUTTON_CALLED, USER_MODE_STUDENT);
