@@ -1,9 +1,6 @@
-package AuthenticationServices;
-import android.util.Log;
+package authentication_services;
 
 import com.google.gson.annotations.SerializedName;
-
-import java.text.NumberFormat;
 
 /**
  * Created by pablo on 2/19/18.

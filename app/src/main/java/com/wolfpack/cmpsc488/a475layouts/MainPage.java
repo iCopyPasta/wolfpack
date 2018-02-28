@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import AuthenticationServices.LoginPage;
-import AuthenticationServices.SignUp;
+import authentication_services.LoginPage;
+import authentication_services.SignUp;
 
 
 public class MainPage extends AppCompatActivity {
