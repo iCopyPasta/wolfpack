@@ -14,6 +14,7 @@ import authentication_services.SignUp;
 
 public class MainPage extends AppCompatActivity {
 
+    public static final String TAG = "MainPage";
     public static final String USER_MODE_TEACHER = "TEACHER";
     public static final String USER_MODE_STUDENT = "STUDENT";
     public static final String BUTTON_CALLED = "BUTTON_CALLED";
@@ -42,6 +43,8 @@ public class MainPage extends AppCompatActivity {
 
         String mode = sharedPref.getString(getString(R.string.USER_MODE), "none");
         Boolean loggedIn = sharedPref.getBoolean(getString(R.string.SKIP_LOGIN), false);
+
+        Log.i(TAG, "loggedIn = " + loggedIn);
 
         if(loggedIn){
             if(mode.equals(USER_MODE_TEACHER))

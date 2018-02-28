@@ -1,7 +1,9 @@
 package com.wolfpack.cmpsc488.a475layouts;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,11 +50,21 @@ public class StudentPageTab3Settings extends Fragment {
                     case "About":
                         break;
                     case "Logout":
-                        //Not the correct way to logout (back button still works)
-                        //  and it does not quit the session with the server
+                        // TODO: exit session when leaving
+                        //SHARED PREFERENCES UPDATE
+                        Context context = view.getContext();
+                        SharedPreferences sharedPref = context.getSharedPreferences(
+                                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putBoolean(getString(R.string.SKIP_LOGIN), true);
+                        editor.putString(getString(R.string.USER_MODE), "none");
+
+                        editor.apply(); //dedicate to persistant storage in background thread
+                        
                         intent = new Intent(getActivity(), MainPage.class);
-
+                        Log.d(TAG, "onItemClick: transferring to MainPage.class");
+                        startActivity(intent);
                         break;
                     default:
                         Log.i(TAG, "Click out of bounds");
