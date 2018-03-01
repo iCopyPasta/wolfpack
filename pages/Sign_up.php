@@ -109,7 +109,7 @@ body {
       }
     ?>
 
-    <?php include("includes/header.php"); ?>
+    <?php include("../lib/php/header.php"); ?>
       
     <div class = "container" >
          <!-- <form class="form-signin" action="createAccount.php" method="post"> -->

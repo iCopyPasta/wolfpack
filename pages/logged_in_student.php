@@ -45,7 +45,7 @@
 
   <body>
 
-    <?php include("includes/header.php"); ?>
+    <?php include("../lib/php/header.php"); ?>
 
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-3 mx-auto text-center">
       <h1 class="display-4">Student Center</h1>

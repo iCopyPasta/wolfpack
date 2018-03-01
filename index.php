@@ -23,7 +23,7 @@
 
   <body>   
     <?php
-        include("includes/header.php");
+        include("lib/php/header_index.php");
     ?> 
 
     <main role="main">
@@ -33,7 +33,7 @@
         <div class="container">
           <h1 class="display-3">Pollato</h1>
           <h5 style="padding-left:2rem">A new way to teach.</h5>
-          <p><a class="btn btn-primary btn-lg" href="Sign_up.php" role="button">Sign up &raquo;</a></p>
+          <p><a class="btn btn-primary btn-lg" href="pages/Sign_up.php" role="button">Sign up &raquo;</a></p>
         </div>
       </div>
 
@@ -43,12 +43,12 @@
           <div class="col-md-6">
             <h2>Instructors</h2>
             <p>Explore the classroom of the future.</p>
-            <p><a class="btn btn-secondary" href="Sign_in_teacher.php" role="button">Sign in as Teacher &raquo;</a></p>
+            <p><a class="btn btn-secondary" href="pages/Sign_in_teacher.php" role="button">Sign in as Teacher &raquo;</a></p>
           </div>
           <div class="col-md-6">
             <h2>Students</h2>
             <p>Learn like never before.</p>
-            <p><a class="btn btn-secondary" href="Sign_in_student.php" role="button">Sign in as Student &raquo;</a></p>
+            <p><a class="btn btn-secondary" href="pages/Sign_in_student.php" role="button">Sign in as Student &raquo;</a></p>
           </div>
 
         </div>
@@ -62,7 +62,7 @@
     <?php
         $page_footer_text = "Credit: Twitter bootstrap 4.0 documentation. Working Demo.";
 
-        include("includes/footer.php");
+        include("lib/php/footer_index.php");
     ?>
 
     <!-- Bootstrap core JavaScript
