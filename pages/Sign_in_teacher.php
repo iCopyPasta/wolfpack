@@ -69,7 +69,7 @@ body {
 
   <body class="text-center">
   
-  <?php include("includes/header.php"); ?>
+  <?php include("../lib/php/header.php"); ?>
   
     <form class="form-signin">
       <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">

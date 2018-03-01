@@ -93,7 +93,7 @@ body {
           
           if(mysqli_num_rows($query)!=0) { //if the query has any results
                         $alertString="";
-                        header("Location: logged_in_student.html");  //if the query was successful
+                        header("Location: logged_in_student.php");  //if the query was successful
                         die();
           }
         // passwords don't match
@@ -112,7 +112,7 @@ body {
   
   <body class="text-center">
   
-<?php include("includes/header.php"); ?>
+<?php include("../lib/php/header.php"); ?>
   
     <form class="form-signin" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
       <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
