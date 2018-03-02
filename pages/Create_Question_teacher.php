@@ -60,6 +60,7 @@
         $response["message"] = "ERROR INSERTING: ".$this->description." ".$this->professor_asked." ".$this->tags." ".$e->getMessage();
         $response["success"] = 0;
         echo json_encode($response);
+        die();
       }
 
       // success JSON response

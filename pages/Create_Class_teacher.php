@@ -60,6 +60,7 @@
         $response["message"] = "ERROR INSERTING: ".$this->class_course_number." ".$this->location." ".$this->offering." ".$e->getMessage();
         $response["success"] = 0;
         echo json_encode($response);
+        die();
       }
 
       // success JSON response
