@@ -65,6 +65,7 @@
     <string name="last_name">Last Name</string>
     <string name="error_missing_permissions">Cannot start without required permissions</string>
     <string name="preference_file_key">com.wolfpack.cmpsc488.a475layouts</string>
+    <string name="title_activity_professor_class_page">Class Name</string>
 
 
 
