@@ -3,9 +3,15 @@
   This class is used by the teacher to insert a new class into table Class_Course.
 
   Example Usage:
-  include('Create_Class_teacher.php');
-  $insertClass = new ClassCourse(460, 'Olmstead', 'what is offering?');
-  $insertClass->insert();
+
+  <?php
+      if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        include('Create_Class_teacher.php');
+        $insertClass = new ClassCourse('aaa', 'bbbb', 'cccc');
+        $insertClass->insert();
+      }
+  ?>
+  
   */
 
   class ClassCourse{
