@@ -9,7 +9,7 @@
 
     <title>Signin Template for Bootstrap</title>
 
-    <!-- Bootstrap core CSS 
+    <!-- Bootstrap core CSS
     <link href="../../../../dist/css/bootstrap.min.css" rel="stylesheet">-->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
@@ -73,47 +73,33 @@ body {
         if not valid, alert the user that their attempt was invalid
    -->
   <?php
-
       $alertString="";
       if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // validate password match
-        $host='localhost';
-          $user='root';
-          $pass='';
-          $db='iClicker';
-          $con=mysqli_connect($host, $user, $pass, $db);
-          if($con) echo 'connected successfully to testdb database<br>';
-          $insertEmail=$_POST["inputEmail"];
-          $insertPass=$_POST["inputPassword"];
-          $sql="SELECT email, salted_password FROM student_account WHERE email =
-               '$insertEmail' AND salted_password = 
-               SHA('$insertPass')";
-          echo $sql;
-          $query=mysqli_query($con,$sql);
-          
-          if(mysqli_num_rows($query)!=0) { //if the query has any results
-                        $alertString="";
-                        header("Location: logged_in_student.php");  //if the query was successful
-                        die();
-          }
-        // passwords don't match
+
+        $insertEmail=$_POST["inputEmail"];
+        $insertPass=$_POST["inputPassword"];
+
+        include('C_Sign_In_Class_Student.php');
+        $studentSignIn = new StudentSignIn($insertEmail, $insertPass);
+
+        // true if email+pw found; false if no record found
+        if(json_decode($studentSignIn->select())->success){
+          $alertString="";
+          header("Location: logged_in_student.php");  //if the query was successful
+          die();
+        }
         else{
           $alertString='<div class="alert alert-danger">
                 <strong>Error.</strong> Username or password does not exist.
                 </div>';
         }
       }
-    ?>  
-    
-    
-    
+    ?>
 
- 
-  
   <body class="text-center">
-  
+
 <?php include("../lib/php/header.php"); ?>
-  
+
     <form class="form-signin" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
       <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
@@ -133,7 +119,7 @@ body {
       <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       <p class="mt-5 mb-3 text-muted">Credit: Twitter bootstrap 4.0 documentation. Working demo for 2-13-18.</p>
     </form>
-    
-    
+
+
   </body>
 </html>
