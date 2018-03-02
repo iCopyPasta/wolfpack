@@ -11,7 +11,7 @@
         $insertClass->insert();
       }
   ?>
-  
+
   */
 
   class ClassCourse{
@@ -57,14 +57,14 @@
       }catch (Exception $e){
         // fail JSON response
         $response = array();
-        $response["message"] = "ERROR on INSERT: " . $e->getMessage();
+        $response["message"] = "ERROR INSERTING: ".$this->class_course_number." ".$this->location." ".$this->offering." ".$e->getMessage();
         $response["success"] = 0;
         echo json_encode($response);
       }
 
       // success JSON response
       $response = array();
-      $response["message"] = "Inserted: ";
+      $response["message"] = "Inserted: ".$this->class_course_number." ".$this->location." ".$this->offering;
       $response["success"] = 1;
       echo json_encode($response);
 
