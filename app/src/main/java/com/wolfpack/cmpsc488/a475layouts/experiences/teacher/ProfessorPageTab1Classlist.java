@@ -1,4 +1,4 @@
-package com.wolfpack.cmpsc488.a475layouts;
+package com.wolfpack.cmpsc488.a475layouts.experiences.teacher;
 
 
 import android.content.Intent;
@@ -12,6 +12,9 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.wolfpack.cmpsc488.a475layouts.experiences.student.ClassPage;
+import com.wolfpack.cmpsc488.a475layouts.R;
 
 public class ProfessorPageTab1Classlist extends Fragment {
 

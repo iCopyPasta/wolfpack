@@ -1,4 +1,4 @@
-package com.wolfpack.cmpsc488.a475layouts;
+package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.app.DialogFragment;
 import android.content.Intent;
@@ -7,16 +7,19 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.TextView;
 
 import android.support.design.widget.TabLayout;
+
+import com.wolfpack.cmpsc488.a475layouts.QuestionPage;
+import com.wolfpack.cmpsc488.a475layouts.R;
+import com.wolfpack.cmpsc488.a475layouts.TabAdapter;
 //import android.widget.Toolbar;
 
 
 // TODO: pass class name and change toolbar name
 
 
-public class professorClassPage extends AppCompatActivity implements ActiveSessionDialog.ActiveSessionDialogListener {
+public class ClassPage extends AppCompatActivity implements ActiveSessionDialog.ActiveSessionDialogListener {
 
     public static final String TAG = "ClassPage";
 
@@ -46,7 +49,7 @@ public class professorClassPage extends AppCompatActivity implements ActiveSessi
             Log.i(TAG, "in try before classNameDisplay assignment");
 
             //displays class name (eg CMPSC 121) in the toolbar
-            classNameDisplay = (Toolbar) findViewById(R.id.toolbarprofessorClassPage);
+            classNameDisplay = (Toolbar) findViewById(R.id.toolbarClassPage);
             setSupportActionBar(classNameDisplay);
             classNameDisplay.setTitle(className);
 
@@ -63,7 +66,7 @@ public class professorClassPage extends AppCompatActivity implements ActiveSessi
             Log.i(TAG, "end of onCreate");
         }
         catch (NullPointerException e){
-            Log.i(TAG,"professorClassPage got NullPointerException");
+            Log.i(TAG,"ClassPage got NullPointerException");
             Log.i(TAG, e.getMessage());
         }
 

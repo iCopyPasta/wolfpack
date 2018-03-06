@@ -1,11 +1,15 @@
-package authentication_services;
+package com.wolfpack.cmpsc488.a475layouts.services.authentication;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.AsyncTask;
@@ -24,23 +28,29 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.wolfpack.cmpsc488.a475layouts.CameraExample;
-import com.wolfpack.cmpsc488.a475layouts.MainPage;
 import com.wolfpack.cmpsc488.a475layouts.R;
-import com.wolfpack.cmpsc488.a475layouts.StudentPage;
+import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentPage;
 
 import retrofit2.Call;
 import retrofit2.Response;
 
 /**
- * A login screen that offers login via email/password.
+ * A login screen that offers sign-up via email/password.
  */
-public class LoginPage extends AppCompatActivity {
+public class SignUp extends AppCompatActivity {
 
-    public static final String TAG = "LoginPage";
+    private static final int REQUEST_CODE_REQUIRED_PERMISSIONS = 1;
 
+    private static final String[] REQUIRED_PERMISSIONS =
+            new String[]{
+                    Manifest.permission.INTERNET
+            };
+    private static final String TAG = "SignUpActivity";
+
+    /**
+     * Keep track of the login task to ensure we can cancel it if requested.
+     */
     private UserLoginTask mAuthTask = null;
-    private String mode = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -48,11 +58,10 @@ public class LoginPage extends AppCompatActivity {
     private View mProgressView;
     private View mLoginFormView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_page);
+        setContentView(R.layout.activity_sign_up);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
@@ -62,15 +71,11 @@ public class LoginPage extends AppCompatActivity {
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                     attemptLogin();
-                    Log.i(TAG, "finished with attemptLogin");
                     return true;
                 }
                 return false;
             }
         });
-
-        Intent intent = getIntent();
-        mode = intent.getStringExtra(MainPage.BUTTON_CALLED);
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -82,7 +87,6 @@ public class LoginPage extends AppCompatActivity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
     }
 
     /**
@@ -131,9 +135,34 @@ public class LoginPage extends AppCompatActivity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask();
-            mAuthTask.execute(email, password);
+
+            //get values to execute on
+            String first_name = ((AutoCompleteTextView) findViewById(R.id.firstName)).
+                    getText().toString();
+
+            String last_name = ((AutoCompleteTextView) findViewById(R.id.lastName)).
+                    getText().toString();
+
+            String the_email = ((AutoCompleteTextView) findViewById(R.id.email)).
+                    getText().toString();
+
+            String the_password = ((EditText) findViewById(R.id.password)).
+                    getText().toString();
+
+            //Request Permission for Internet
+            Log.i("SignUp", "about to send data over");
+
+            if (!hasPermissions(this, REQUIRED_PERMISSIONS)) {
+                Log.i("SignUp", "We dont have permissions!!");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_REQUIRED_PERMISSIONS);
+                }
+            }else{
+                Log.i("SignUp", "We have permissions!!");
+                showProgress(true);
+                mAuthTask = new UserLoginTask();
+                mAuthTask.execute(first_name, last_name, the_email, the_password);
+            }
         }
     }
 
@@ -144,7 +173,7 @@ public class LoginPage extends AppCompatActivity {
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 10;
     }
 
     /**
@@ -183,24 +212,17 @@ public class LoginPage extends AppCompatActivity {
         }
     }
 
-    public void onNADemo(View view){
-        Log.i(TAG, "onNADemo is called");
-        Intent intent = new Intent(this, CameraExample.class);
-        startActivity(intent);
-    }
-
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
     public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
-
         LoginDetails loginDetails;
         Response<LoginDetails> response;
 
+
         @Override
         protected Boolean doInBackground(String... params) {
-            // TODO: attempt authentication against a network service.
 
             try {
                 Log.i(TAG, "About to try network request out");
@@ -212,16 +234,17 @@ public class LoginPage extends AppCompatActivity {
 
                 Log.i(TAG, "setting call with parameters");
                 Call<LoginDetails> call =
-                        webService.attemptLogin(params[0], params[1]);
+                        webService.attemptLogin(params[0], params[1], params[2], params[3]);
 
 
                 Log.i(TAG, "waiting on potential values");
+
 
                 //TODO: ADD SECURE TRY-CATCH BLOCKS FOR VARIOUS POSSIBILITIES!
                 response = call.execute();
                 Log.i(TAG, response.body().toString());
                 loginDetails = response.body();
-                Log.i("Sign_in", "Finished");
+                Log.i("SignUp", "Finished");
 
                 return loginDetails != null;
             } catch (Exception e){
@@ -233,56 +256,26 @@ public class LoginPage extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final Boolean success) {
-
-            String buttonName;
-
-            Intent caller = getIntent();
-            Intent intent = null;
-            if(caller != null){
-
-
-                buttonName = caller.getStringExtra(MainPage.BUTTON_CALLED);
-                Log.i(TAG, "button name is: "  + buttonName);
-
-                if(buttonName.equals(MainPage.USER_MODE_STUDENT)){
-                    intent = new Intent(getApplicationContext(), StudentPage.class);
-                }
-
-                if(buttonName.equals(MainPage.USER_MODE_TEACHER)){
-                    //intent = new Intent(getApplicationContext(), SOMETHING.class)
-
-                }
-            }
-
             mAuthTask = null;
             showProgress(false);
 
-
             if (success) {
-                Log.i(TAG, "successful login");
+                //TODO: Logic to jump into login b/c we are assuming an email is returned
 
-                //SHARED PREFERENCES UPDATE
-                Context context = getApplicationContext();
-                SharedPreferences sharedPref = context.getSharedPreferences(
-                        getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putBoolean(getString(R.string.SKIP_LOGIN), true);
-                editor.putString(getString(R.string.USER_MODE), mode);
-
-                editor.apply(); //dedicate to persistant storage in background thread
-
-                //FEEDBACK FROM SERVER
                 String message = loginDetails.getMessage();
 
-                Toast.makeText(LoginPage.this, message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show();
 
-                if(intent != null)
-                    startActivity(intent);
-
-
+                Intent intent = new Intent(getApplicationContext(), StudentPage.class);
+                startActivity(intent);
 
             } else {
+                if(loginDetails == null)
+                    Toast.makeText(SignUp.this, "Null", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(SignUp.this, loginDetails.toString(), Toast.LENGTH_SHORT).show();
+
+                //String message = loginDetails[0].getMessage();
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
@@ -293,6 +286,38 @@ public class LoginPage extends AppCompatActivity {
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    /** Returns true if the app was granted all the permissions. Otherwise, returns false. */
+    private static boolean hasPermissions(Context context, String... permissions) {
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(context, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Handles user acceptance (or denial) of our permission request. */
+    @CallSuper
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode != REQUEST_CODE_REQUIRED_PERMISSIONS) {
+            return;
+        }
+
+        for (int grantResult : grantResults) {
+            if (grantResult == PackageManager.PERMISSION_DENIED) {
+                Toast.makeText(this, R.string.error_missing_permissions, Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }
+        }
+        recreate();
     }
 }
 

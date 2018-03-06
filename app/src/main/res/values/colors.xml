@@ -3,6 +3,6 @@
     <color name="colorPrimary">#3f51b5</color>
     <color name="colorPrimaryDark">#ea282828</color>
     <color name="colorAccent">#ff538d</color>
-    <color name="colorTeacherPrimary">#39935c</color>
+    <color name="colorProfessorPrimary">#39935c</color>
     <color name="colorStudentPrimary">#1783ff</color>
 </resources>

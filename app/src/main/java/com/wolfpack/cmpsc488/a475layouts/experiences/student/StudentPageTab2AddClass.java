@@ -1,10 +1,12 @@
-package com.wolfpack.cmpsc488.a475layouts;
+package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.wolfpack.cmpsc488.a475layouts.R;
 
 public class StudentPageTab2AddClass extends Fragment {
 

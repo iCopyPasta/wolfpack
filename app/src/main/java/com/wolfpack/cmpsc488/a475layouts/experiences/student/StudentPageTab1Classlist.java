@@ -1,4 +1,4 @@
-package com.wolfpack.cmpsc488.a475layouts;
+package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -8,10 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.wolfpack.cmpsc488.a475layouts.R;
 
 //import org.w3c.dom.Text;
 

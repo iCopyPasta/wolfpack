@@ -1,4 +1,4 @@
-package com.wolfpack.cmpsc488.a475layouts;
+package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.app.Activity;
 import android.app.AlertDialog;
