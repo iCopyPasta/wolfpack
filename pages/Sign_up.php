@@ -86,19 +86,35 @@ body {
           $matchPWString="";
           // TODO: ensure email does not already exist
           // create account
-          $host='localhost';
-          $user='root';
-          $pass='';
-          $db='iClicker';
-          $con=mysqli_connect($host, $user, $pass, $db);
-          if($con) echo 'connected successfully to testdb database<br>';
+          include('Connection.php');
+          include('registerConfirmation.php');
+            
+         $connection = new Connection;
+         $pdo = $connection->getConnection();
+            
+         
           $insertEmail=$_POST["inputEmail"];
           $insertPass=$_POST["inputPassword"];
           $sql="insert into student_account (email, salted_password) values ("
                . "'" . $insertEmail . "',"
                . "SHA('" . $insertPass . "'))";
-          $query=mysqli_query($con,$sql);
-          if($query) echo 'data inserted successfully<br>';
+          $stmt = $pdo->prepare($sql);
+          try{
+            $stmt->execute();
+          }
+         catch (Exception $e){
+             // fail JSON response
+            $response = array();
+            $response["message"] = $e->getMessage();
+            $response["success"] = 0;
+            echo json_encode($response);
+            die();
+          }
+        
+        $pdo = null;  
+        
+        addUniqueHash($connection,$insertEmail);
+        
         }
         // passwords don't match
         else{
