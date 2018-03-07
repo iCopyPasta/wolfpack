@@ -74,16 +74,14 @@
                 AND tags LIKE :tags";
 
       $stmt = $pdo->prepare($sql);
-      // $stmt->bindValue(':question_id', $this->question_id);
-      // $stmt->bindValue(':description', $this->description);
-      // $stmt->bindValue(':professor_asked', $this->professor_asked);
-      // $stmt->bindValue(':tags', $this->tags);
+       $stmt->bindValue(':question_id', $this->question_id);
+       $stmt->bindValue(':description', $this->description);
+       $stmt->bindValue(':professor_asked', $this->professor_asked);
+       $stmt->bindValue(':tags', $this->tags);
 
       try{
         // $stmt->execute(['email' => $this->email, 'password' => $this->password]);
         $stmt->execute();
-        // echo json_encode($stmt->fetchAll());
-        // $stmt->query();
       }catch (Exception $e){
         // fail JSON response
         $response = array();
@@ -95,24 +93,6 @@
       }
       $pdo = null;
       return json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-      // if($stmt){  // a value was returned, may be a row or empty
-        // email and pw match
-        // if(!empty($stmt->fetch())){  //if its not empty then email and pw match
-        //   $response = array();
-        //   $response["message"] = "Match";
-        //   $response["success"] = 1;
-        //   return json_encode($response);
-        // }
-        // // email and pw do NOT match
-        // else{
-        //   $response = array();
-        //   $response["message"] = "No Match";
-        //   $response["success"] = 0;
-        //   return json_encode($response);
-        // }
-      // }
-
-
     }
   }
 ?>
