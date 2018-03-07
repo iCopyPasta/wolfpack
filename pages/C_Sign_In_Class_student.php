@@ -73,7 +73,6 @@
       try{
         // $stmt->execute(['email' => $this->email, 'password' => $this->password]);
         $stmt->execute();
-        // $stmt->query();
       }catch (Exception $e){
         // fail JSON response
         $response = array();
