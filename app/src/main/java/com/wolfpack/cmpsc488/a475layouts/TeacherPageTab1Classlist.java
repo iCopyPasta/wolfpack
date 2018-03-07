@@ -13,14 +13,14 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class ProfessorPageTab1Classlist extends Fragment {
+public class TeacherPageTab1Classlist extends Fragment {
 
     private static final String TAG = "PPTab1Classlist";
 
     private ListView mListViewClasses;
     private static String[] classlistTemp = {"CMPSC 441", "CMPSC 457", "CMPSC 460", "CMPSC 469"};
     private static String[] classdesclistTemp = {"Artificial Intelligence", "Computer Graphics Algorithms", "Principles of Programming Languages", "Formal Languages with Applications"};
-    //private static String[] classprofessorlistTemp = {"Sukmoon Chang", "Sukmoon Chang", "Sukmoon Chang", "Sukmoon Chang"};
+    //private static String[] classteacherlistTemp = {"Sukmoon Chang", "Sukmoon Chang", "Sukmoon Chang", "Sukmoon Chang"};
 
 
     @Override
@@ -85,13 +85,13 @@ public class ProfessorPageTab1Classlist extends Fragment {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            view = getLayoutInflater().inflate(R.layout.listview_professor_page_classlist, null);
+            view = getLayoutInflater().inflate(R.layout.fragment_professor_page_tab3_settings, null);
 
-            //TextView professor_name = (TextView) view.findViewById(R.id.professorNameDisplay);
+            //TextView teacher_name = (TextView) view.findViewById(R.id.teacherNameDisplay);
             TextView class_name = (TextView) view.findViewById(R.id.profClassNameDisplay);
             TextView class_description = (TextView) view.findViewById(R.id.profClassDescriptionDisplay);
 
-            //professor_name.setText(classprofessorlistTemp[i]);
+            //teacher_name.setText(classteacherlistTemp[i]);
             class_description.setText(classdesclistTemp[i]);
             class_name.setText(classlistTemp[i]);
 

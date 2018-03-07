@@ -16,7 +16,7 @@ import android.support.design.widget.TabLayout;
 // TODO: pass class name and change toolbar name
 
 
-public class professorClassPage extends AppCompatActivity implements ActiveSessionDialog.ActiveSessionDialogListener {
+public class teacherClassPage extends AppCompatActivity implements ActiveSessionDialog.ActiveSessionDialogListener {
 
     public static final String TAG = "ClassPage";
 
@@ -46,7 +46,7 @@ public class professorClassPage extends AppCompatActivity implements ActiveSessi
             Log.i(TAG, "in try before classNameDisplay assignment");
 
             //displays class name (eg CMPSC 121) in the toolbar
-            classNameDisplay = (Toolbar) findViewById(R.id.toolbarprofessorClassPage);
+            classNameDisplay = (Toolbar) findViewById(R.id.toolbarteacherClassPage);
             setSupportActionBar(classNameDisplay);
             classNameDisplay.setTitle(className);
 
@@ -63,7 +63,7 @@ public class professorClassPage extends AppCompatActivity implements ActiveSessi
             Log.i(TAG, "end of onCreate");
         }
         catch (NullPointerException e){
-            Log.i(TAG,"professorClassPage got NullPointerException");
+            Log.i(TAG,"teacherClassPage got NullPointerException");
             Log.i(TAG, e.getMessage());
         }
 

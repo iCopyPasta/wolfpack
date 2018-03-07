@@ -5,9 +5,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class professorPage extends AppCompatActivity {
+public class teacherPage extends AppCompatActivity {
 
-    private static final String TAG = "ProfessorPage";
+    private static final String TAG = "TeacherPage";
 
     private TabAdapter mTabAdapter;
     private ViewPager mViewPager;
@@ -19,7 +19,7 @@ public class professorPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_professor_page);
+        setContentView(R.layout.activity_teacher_page);
 
         //set up the viewpager with the sections adapter
         mViewPager = (ViewPager) findViewById(R.id.studentPageViewPager);

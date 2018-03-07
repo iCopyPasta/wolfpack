@@ -13,13 +13,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class ProfessorPageTab3Settings extends Fragment {
+public class TeacherPageTab3Settings extends Fragment {
 
     private static final String TAG = "PPTab3Settings";
 
     private ListView mListViewSettings;
     //TODO: we could move settingsListTemp array into the strings.xml file as it is a static list pertaining to the particular page
-    private static String[] settingsListTemp = {"User Information", "Help", "About", "Logout", "We are on the Professor Side"};
+    private static String[] settingsListTemp = {"User Information", "Help", "About", "Logout", "We are on the Teacher Side"};
 
 
     @Override

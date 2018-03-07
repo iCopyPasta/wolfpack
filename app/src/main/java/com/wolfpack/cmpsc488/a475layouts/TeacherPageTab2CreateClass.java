@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ProfessorPageTab2CreateClass extends Fragment {
+public class TeacherPageTab2CreateClass extends Fragment {
 
     private static final String TAG = "PPTab2CreateClass";
 
