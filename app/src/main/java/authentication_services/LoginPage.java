@@ -29,8 +29,10 @@ import com.wolfpack.cmpsc488.a475layouts.MainPage;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.StudentPage;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * A login screen that offers login via email/password.
@@ -196,6 +198,7 @@ public class LoginPage extends AppCompatActivity {
     public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
 
         LoginDetails loginDetails;
+
         Response<LoginDetails> response;
 
         @Override
@@ -212,8 +215,7 @@ public class LoginPage extends AppCompatActivity {
 
                 Log.i(TAG, "setting call with parameters");
                 Call<LoginDetails> call =
-                        webService.attemptLogin(params[0], params[1]);
-
+                        webService.attemptLogin(true,"attemptLogin", params[0], params[1]);
 
                 Log.i(TAG, "waiting on potential values");
 
@@ -223,7 +225,7 @@ public class LoginPage extends AppCompatActivity {
                 loginDetails = response.body();
                 Log.i("Sign_in", "Finished");
 
-                return loginDetails != null;
+                return loginDetails != null && loginDetails.getStatus() > 0;
             } catch (Exception e){
                 Log.e(TAG, e.getMessage());
                 return false;

@@ -234,7 +234,7 @@ public class SignUp extends AppCompatActivity {
 
                 Log.i(TAG, "setting call with parameters");
                 Call<LoginDetails> call =
-                        webService.attemptLogin(params[0], params[1], params[2], params[3]);
+                        webService.attemptSignUp(params[0], params[1], params[2], params[3]);
 
 
                 Log.i(TAG, "waiting on potential values");

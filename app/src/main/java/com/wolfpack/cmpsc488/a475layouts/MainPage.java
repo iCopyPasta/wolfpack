@@ -96,11 +96,6 @@ public class MainPage extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-
-
-
-
     /* MUST REMOVE LATER */
     public void onToStudent(View view){
         Log.i("Main Page", "onToStudent is called");
@@ -108,9 +103,9 @@ public class MainPage extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void onToProfessor(View view){
-        Log.i("Main Page", "onToProfessor is called");
-        Intent intent = new Intent(this, ProfessorPage.class);
+    public void onToTeacher(View view){
+        Log.i("Main Page", "onToTeacher is called");
+        Intent intent = new Intent(this, TeacherPage.class);
         startActivity(intent);
     }
 }
