@@ -64,12 +64,10 @@
 
       $sql = "SELECT email, salted_password
               FROM student_account
-              WHERE email = :email
-                AND salted_password = SHA(:password)";
+              WHERE email = :email";
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':email', $this->email);
-      $stmt->bindValue(':password', $this->password);
-
+      
       try{
         // $stmt->execute(['email' => $this->email, 'password' => $this->password]);
         $stmt->execute();

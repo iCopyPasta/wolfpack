@@ -1,3 +1,37 @@
+<?php
+  $alertString = "";
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $insertEmail = isset($_POST["inputEmail"]) ? $_POST["inputEmail"] : null;
+    $insertPass = isset($_POST["inputPassword"]) ? $_POST["inputPassword"] : null;
+    // boolean $android -> indicates android(true) or web(false); HTML can ignore this, will result in "false"
+    $android = isset($_POST["android"]) ? $_POST["android"] : false;
+
+    include('C_Sign_In_Class_student.php');
+    $studentSignIn = new StudentSignIn($insertEmail, $insertPass);
+
+    // statement is true if email+pw found; false if no record found
+    // TODO: distinguish Android from Web
+    if (json_decode($studentSignIn->select())->success) {
+      if(boolval($android)){
+        $response = array();
+        $response["message"] = "Success(android): email + password found";
+        $response["success"] = 1;
+        echo json_encode($response);
+        exit(0);
+      }
+      
+    } else {
+      if(boolval($android)){
+        $response = array();
+        $response["message"] = "ERROR(android): no email + password found";
+        $response["success"] = 0;
+        echo json_encode($response);
+        exit(0);
+      }
+    }
+  }
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -72,59 +106,7 @@
     }
   </style>
 </head>
-<!--
-this php code will do the following:
-1. Validate if the user account/password is valid
-2. if valid, redirect page to student landing page
-  if not valid, alert the user that their attempt was invalid
- -->
-<?php
-  $alertString = "";
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $insertEmail = isset($_POST["inputEmail"]) ? $_POST["inputEmail"] : null;
-    $insertPass = isset($_POST["inputPassword"]) ? $_POST["inputPassword"] : null;
-    // boolean $android -> indicates android(true) or web(false); HTML can ignore this, will result in "false"
-    $android = isset($_POST["android"]) ? $_POST["android"] : false;
 
-    include('C_Sign_In_Class_Student.php');
-    $studentSignIn = new StudentSignIn($insertEmail, $insertPass);
-
-    // statement is true if email+pw found; false if no record found
-    // TODO: distinguish Android from Web
-    if (json_decode($studentSignIn->select())->success) {
-      if(boolval($android)){
-        $response = array();
-        $response["message"] = "Success(android): email + password found";
-        $response["success"] = 1;
-        echo json_encode($response);
-      }
-      else{
-        $response = array();
-        $response["message"] = "Success(web): email + password found";
-        $response["success"] = 1;
-        echo json_encode($response);
-        $alertString = "";
-        header("Location: logged_in_student.php");
-      }
-    } else {
-      if(boolval($android)){
-        $response = array();
-        $response["message"] = "ERROR(android): no email + password found";
-        $response["success"] = 0;
-        echo json_encode($response);
-      }
-      else{
-        $response = array();
-        $response["message"] = "ERROR(web): no email + password found";
-        $response["success"] = 0;
-        echo json_encode($response);
-        $alertString = '<div class="alert alert-danger">
-              <strong>Error.</strong> Username or password does not exist.
-              </div>';
-      }
-    }
-  }
-?>
 
 <body class="text-center">
 

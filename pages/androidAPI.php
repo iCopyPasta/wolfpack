@@ -7,15 +7,18 @@
         $strings_for_post = (array) $args[0];
 
         //construct an array with a mapping from POST string key field to actual value we've obtained   
-        
         return array_combine($strings_for_post, array_slice(func_get_args(), 2));
     
     }
 
     function build_curlreq($fields, $postvars, $url){
-            // set the url, number of POST vars, POST data
+            
+            
             $ch = curl_init();
+            // to force output of url file back to our android client
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            // set the url, number of POST vars, POST data
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postvars);
@@ -49,16 +52,15 @@
     $fields = array();
     $postvars;
     
-    // to force output of url file back to our android client
-    //curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
-
+    
     switch($methodName){
             
         //add as many necessary method invocations
         case "attemptLogin":
            
             //$url = "http://192.168.1.57/pages/test.php";
-            $url = "http://192.168.1.57/Sign_in_student.php";
+            //$url = "http://wolfpack.cs.hbg.psu.edu/pages/test.php"
+            $url = "http://192.168.1.57/pages/Sign_in_student.php";
             
             $fields = build_fields($fields, 
                          array("inputEmail", "inputPassword", "android"),
@@ -73,7 +75,7 @@
             break;
 
         default:
-            //echo '{"message": "default", "success": "0"}';
+            
             break;
             
     }
