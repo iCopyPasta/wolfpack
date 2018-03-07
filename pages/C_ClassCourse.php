@@ -6,7 +6,7 @@
 
   <?php
       if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        include('C_Create_Class_teacher.php');
+        include('C_InsertClassCourse.php');
         $insertClass = new ClassCourse('aaa', 'bbbb', 'cccc');
         $insertClass->insert();
       }
@@ -14,7 +14,7 @@
 
   */
 
-  class ClassCourse{
+  class InsertClassCourse{
     private $class_course_number;
     private $location;
     private $offering;
