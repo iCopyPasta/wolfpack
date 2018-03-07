@@ -8,12 +8,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.support.v7.widget.Toolbar;
 
+import authentication_services.WolfpackClient;
+
 public class StudentPage extends AppCompatActivity {
 
     private static final String TAG = "StudentPage";
-
+    private static WolfpackClient wolfpackClient;
     private TabAdapter mTabAdapter;
     private ViewPager mViewPager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,15 @@ public class StudentPage extends AppCompatActivity {
         adapter.addFragment(new StudentPageTab2AddClass(), getResources().getString(R.string.student_page_tab2_addclass));
         adapter.addFragment(new StudentPageTab3Settings(), getResources().getString(R.string.student_page_tab3_settings));
         viewPager.setAdapter(adapter);
+    }
+
+    public static synchronized WolfpackClient getInstance(){
+        if(wolfpackClient == null){
+            return WolfpackClient.retrofit.create(WolfpackClient.class);
+        } else{
+            return wolfpackClient;
+        }
+
     }
 
 
