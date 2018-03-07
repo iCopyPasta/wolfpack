@@ -66,13 +66,12 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      // $sql = "SELECT question_id, description, professor_asked, tags
-      //         FROM question
-      //         WHERE question_id LIKE :question_id
-      //           AND description LIKE :description
-      //           AND professor_asked LIKE :professor_asked
-      //           AND tags LIKE :tags";
-      $sql = "SELECT * FROM question";
+      $sql = "SELECT question_id, description, professor_asked, tags
+              FROM question
+              WHERE question_id LIKE :question_id
+                AND description LIKE :description
+                AND professor_asked LIKE :professor_asked
+                AND tags LIKE :tags";
 
       $stmt = $pdo->prepare($sql);
       // $stmt->bindValue(':question_id', $this->question_id);
@@ -95,7 +94,7 @@
         return json_encode($response);
       }
       $pdo = null;
-      return json_encode($stmt->fetchAll());
+      return json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
       // if($stmt){  // a value was returned, may be a row or empty
         // email and pw match
         // if(!empty($stmt->fetch())){  //if its not empty then email and pw match
