@@ -14,16 +14,18 @@
 
   */
 
-  class InsertClassCourse{
+  class ClassCourse{
+    private $class_id;
     private $class_course_number;
     private $location;
     private $offering;
 
-    function __construct($c,$l,$o) {
-          $this->__set('class_course_number', $c);
-          $this->__set('location',$l);
-          $this->__set('offering',$o);
-        }
+    function __construct($id, $c,$l,$o) {
+      $this->__set('class_id',$id);
+      $this->__set('class_course_number', $c);
+      $this->__set('location',$l);
+      $this->__set('offering',$o);
+    }
 
     // magical get
     // reference: http://php.net/manual/en/language.oop5.magic.php
@@ -43,7 +45,7 @@
     }
 
     public function insert(){
-      include('Connection.php');
+//      include('Connection.php');
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
@@ -70,6 +72,41 @@
       echo json_encode($response);
 
       $pdo = null;
+    }
+
+    public function select(){
+      // may be better to make connection in calling page
+//      include('Connection.php');
+      $connection = new Connection;
+      $pdo = $connection->getConnection();
+
+      $sql = "SELECT class_id, class_course_number, location, offering
+              FROM class_course
+              WHERE class_id LIKE :class_id
+                AND class_course_number LIKE :class_course_number
+                AND location LIKE :location
+                AND offering LIKE :offering";
+
+      $stmt = $pdo->prepare($sql);
+      $stmt->bindValue(':class_id', $this->class_id);
+      $stmt->bindValue(':class_course_number', $this->class_course_number);
+      $stmt->bindValue(':location', $this->location);
+      $stmt->bindValue(':offering', $this->offering);
+
+      try{
+        // $stmt->execute(['email' => $this->email, 'password' => $this->password]);
+        $stmt->execute();
+      }catch (Exception $e){
+        // fail JSON response
+        $response = array();
+        $response["message"] = "ERROR SELECTING: ".$e->getMessage();
+        $response["success"] = 0;
+        // echo json_encode($response);
+        // die();
+        return json_encode($response);
+      }
+      $pdo = null;
+      return json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
   }

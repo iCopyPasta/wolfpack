@@ -45,7 +45,7 @@
     }
 
     public function insert(){
-      include('Connection.php');
+//      include('Connection.php');
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
@@ -76,7 +76,7 @@
 
     public function select(){
       // may be better to make connection in calling page
-      include('Connection.php');
+//      include('Connection.php');
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
