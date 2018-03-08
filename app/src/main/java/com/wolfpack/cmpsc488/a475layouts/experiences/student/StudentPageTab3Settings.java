@@ -1,4 +1,4 @@
-package com.wolfpack.cmpsc488.a475layouts;
+package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 
 import android.content.Context;
@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.wolfpack.cmpsc488.a475layouts.MainPage;
+import com.wolfpack.cmpsc488.a475layouts.R;
 
 public class StudentPageTab3Settings extends Fragment {
 

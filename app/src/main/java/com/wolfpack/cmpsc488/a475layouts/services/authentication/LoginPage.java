@@ -1,4 +1,4 @@
-package authentication_services;
+package com.wolfpack.cmpsc488.a475layouts.services.authentication;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -27,7 +27,7 @@ import android.widget.Toast;
 import com.wolfpack.cmpsc488.a475layouts.CameraExample;
 import com.wolfpack.cmpsc488.a475layouts.MainPage;
 import com.wolfpack.cmpsc488.a475layouts.R;
-import com.wolfpack.cmpsc488.a475layouts.StudentPage;
+import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentPage;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

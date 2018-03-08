@@ -1,25 +1,28 @@
-package com.wolfpack.cmpsc488.a475layouts;
+package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+
+import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 
-public class teacherPage extends AppCompatActivity {
+import com.wolfpack.cmpsc488.a475layouts.R;
+import com.wolfpack.cmpsc488.a475layouts.TabAdapter;
 
-    private static final String TAG = "TeacherPage";
+import authentication_services.WolfpackClient;
 
+public class StudentPage extends AppCompatActivity {
+
+    private static final String TAG = "StudentPage";
+    private static WolfpackClient wolfpackClient;
     private TabAdapter mTabAdapter;
     private ViewPager mViewPager;
-
-
-    //private ListView listView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_teacher_page);
+        setContentView(R.layout.activity_student_page);
 
         //set up the viewpager with the sections adapter
         mViewPager = (ViewPager) findViewById(R.id.studentPageViewPager);
@@ -38,4 +41,29 @@ public class teacherPage extends AppCompatActivity {
         adapter.addFragment(new StudentPageTab3Settings(), getResources().getString(R.string.student_page_tab3_settings));
         viewPager.setAdapter(adapter);
     }
+
+    public static synchronized WolfpackClient getWolfpackClientInstance(){
+        if(wolfpackClient == null){
+            return WolfpackClient.retrofit.create(WolfpackClient.class);
+        } else{
+            return wolfpackClient;
+        }
+
+    }
+
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+

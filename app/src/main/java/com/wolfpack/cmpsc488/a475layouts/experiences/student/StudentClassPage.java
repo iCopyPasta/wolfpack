@@ -1,4 +1,4 @@
-package com.wolfpack.cmpsc488.a475layouts;
+package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.app.DialogFragment;
 import android.content.Intent;
@@ -7,18 +7,21 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.TextView;
 
 import android.support.design.widget.TabLayout;
+
+import com.wolfpack.cmpsc488.a475layouts.QuestionPage;
+import com.wolfpack.cmpsc488.a475layouts.R;
+import com.wolfpack.cmpsc488.a475layouts.TabAdapter;
 //import android.widget.Toolbar;
 
 
 // TODO: pass class name and change toolbar name
 
 
-public class ClassPage extends AppCompatActivity implements ActiveSessionDialog.ActiveSessionDialogListener {
+public class StudentClassPage extends AppCompatActivity implements ActiveSessionDialog.ActiveSessionDialogListener {
 
-    public static final String TAG = "ClassPage";
+    public static final String TAG = "StudentClassPage";
 
     private String className;
     private Toolbar classNameDisplay;
@@ -63,7 +66,7 @@ public class ClassPage extends AppCompatActivity implements ActiveSessionDialog.
             Log.i(TAG, "end of onCreate");
         }
         catch (NullPointerException e){
-            Log.i(TAG,"ClassPage got NullPointerException");
+            Log.i(TAG,"StudentClassPage got NullPointerException");
             Log.i(TAG, e.getMessage());
         }
 
@@ -87,8 +90,8 @@ public class ClassPage extends AppCompatActivity implements ActiveSessionDialog.
 
     private void setupViewPager(ViewPager viewPager){
         TabAdapter adapter = new TabAdapter(getSupportFragmentManager());
-        adapter.addFragment(new ClassPageTab1Sessionlist(), getResources().getString(R.string.class_page_tab1_session));
-        adapter.addFragment(new ClassPageTab2Classinfo(), getResources().getString(R.string.class_page_tab2_classinfo));
+        adapter.addFragment(new StudentClassPageTab1Sessionlist(), getResources().getString(R.string.class_page_tab1_session));
+        adapter.addFragment(new StudentClassPageTab2Classinfo(), getResources().getString(R.string.class_page_tab2_classinfo));
         viewPager.setAdapter(adapter);
     }
 

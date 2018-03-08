@@ -1,4 +1,4 @@
-package com.wolfpack.cmpsc488.a475layouts;
+package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
@@ -23,6 +23,8 @@ import pagination.models.SearchClassResult;
 import pagination.models.SearchResultSection;
 import retrofit2.Call;
 import retrofit2.Response;
+
+import com.wolfpack.cmpsc488.a475layouts.R;
 
 public class StudentPageTab2AddClass extends Fragment {
 

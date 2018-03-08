@@ -1,4 +1,4 @@
-package authentication_services;
+package com.wolfpack.cmpsc488.a475layouts.services.authentication;
 
 
 import com.google.gson.Gson;

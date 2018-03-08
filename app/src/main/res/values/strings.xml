@@ -7,7 +7,6 @@
     <string name="title_activity_login_page">Sign in</string>
     <string name="title_activity_student_page">Home</string>
     <string name="title_activity_teacher_page">Home</string>
-    <string name="title_activity_teacher_class_page">Teacher Class Page</string>
     <string name="title_activity_question_page">Question</string>
     <string name="title_activity_main_page">iClicker++</string>
     <string name="title_activity_class_page">Class Name</string>
