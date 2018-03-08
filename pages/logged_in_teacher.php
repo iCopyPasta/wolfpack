@@ -41,6 +41,7 @@
 
             -webkit-flex-flow: row wrap;
             justify-content: space-around;
+            align-items: center;
         }
 
         .flex-item
@@ -49,13 +50,14 @@
             padding: 5px;
             width: 200px;
             height: 150px;
-            margin-top: 10px;
+            margin-top: 100px;
 
             line-height: 150px;
             color: white;
             font-weight: bold;
             font-size: 3em;
             text-align: center;
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
         }
 
     </style>
@@ -65,18 +67,13 @@
         <?php include("../lib/php/header.php"); ?>
         
         <ul class="flex-container">
-            <li class="flex-item">1</li>
-            <li class="flex-item">2</li>
-            <li class="flex-item">3</li>
-            <li class="flex-item">4</li>
-            <li class="flex-item">5</li>
-            <li class="flex-item">6</li>
+            <button type="button" class="btn flex-item">1</button>
+            <button type="button" class="btn flex-item">2</button>
+            <button type="button" class="btn flex-item">3</button>
+            <button type="button" class="btn flex-item">4</button>
+            <button type="button" class="btn flex-item">5</button>
+            <button type="button" class="btn flex-item">6</button>
         </ul>
-
-    
-        <footer class="container">
-            <p> Credit: Twitter bootstrap 4.0 documentation. Working demo for 2-13-18.</p>
-        </footer>
 
 
 
