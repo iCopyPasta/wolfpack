@@ -81,49 +81,100 @@ this php code will do the following:
 <?php
   $alertString = "";
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // get input email and password
     $insertEmail = isset($_POST["inputEmail"]) ? $_POST["inputEmail"] : null;
     $insertPass = isset($_POST["inputPassword"]) ? $_POST["inputPassword"] : null;
     // boolean $android -> indicates android(true) or web(false); HTML can ignore this, will result in "false"
     $android = isset($_POST["android"]) ? $_POST["android"] : false;
 
-    include('C_Sign_In_Class_Student.php');
-    $studentSignIn = new StudentSignIn($insertEmail, $insertPass);
+    // search for email in db
+    include('C_StudentAccount.php');
+    $selectStudentAccount = new StudentAccount('%','%','%','%', '%', $insertEmail);
+    $qJSON = json_decode($selectStudentAccount->select(), true);
 
-    // statement is true if email+pw found; false if no record found
-    // TODO: distinguish Android from Web
-    if (json_decode($studentSignIn->select())->success) {
-      if(boolval($android)){
-        $response = array();
-        $response["message"] = "Success(android): email + password found";
-        $response["success"] = 1;
-        echo json_encode($response);
+    // email found
+    if($qJSON[0]['success'] == 1){
+      echo "successful query<br>";
+
+      // get hashed password from search results
+      // hashed password if email found
+      // null if no email found
+      $hashPW = isset($qJSON[1]['salted_password']) ? $qJSON[1]['salted_password'] : null;
+
+      // compare user entered password with hashed pw from db
+      // correct password and email found
+      if(password_verify($insertPass, $hashPW) && !is_null($hashPW)) {
+        echo "password verified<br>";
+        //android login success
+        if(boolval($android)){
+          $response = array();
+          $response["message"] = "Success(android): email + password found";
+          $response["success"] = 1;
+          echo json_encode($response);
+        }
+        //web login success
+        else{
+          $response = array();
+          $response["message"] = "Success(web): email + password found";
+          $response["success"] = 1;
+          echo json_encode($response);
+          $alertString = "";
+          header("Location: logged_in_student.php");
+        }
       }
+      // email not found
+      elseif(is_null($hashPW)){
+        echo "email not found<br>";
+      }
+      // incorrect password
       else{
-        $response = array();
-        $response["message"] = "Success(web): email + password found";
-        $response["success"] = 1;
-        echo json_encode($response);
-        $alertString = "";
-        header("Location: logged_in_student.php");
+        echo "password mismatch<br>";
+        //android incorrect password
+        if(boolval($android)){
+          $response = array();
+          $response["message"] = "ERROR(android): incorrect password";
+          $response["success"] = 0;
+          echo json_encode($response);
+        }
+        //web incorrect password
+        else{
+          $response = array();
+          $response["message"] = "ERROR(web): incorrect password";
+          $response["success"] = 0;
+          echo json_encode($response);
+          $alertString = '<div class="alert alert-danger">
+          <strong>Error: </strong> Incorrect Password
+          </div>';
+        }
       }
-    } else {
+    }
+    // email not found
+    else{
+      echo "unsuccessful query<br>";
+      //login failure
+      //android login failure
       if(boolval($android)){
         $response = array();
         $response["message"] = "ERROR(android): no email + password found";
         $response["success"] = 0;
         echo json_encode($response);
       }
+      //web login failure
       else{
         $response = array();
         $response["message"] = "ERROR(web): no email + password found";
         $response["success"] = 0;
         echo json_encode($response);
         $alertString = '<div class="alert alert-danger">
-              <strong>Error.</strong> Username or password does not exist.
-              </div>';
-      }
+          <strong>Error: </strong> Username does not exist
+          </div>';
+       }
     }
   }
+
+
+
 ?>
 
 <body class="text-center">
