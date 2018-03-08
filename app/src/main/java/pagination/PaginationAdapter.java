@@ -48,8 +48,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 Log.i(TAG, "onScrolled called");
                 super.onScrolled(recyclerView, dx, dy);
-                totalItemCount = linearLayoutManager.getItemCount();
+                /*totalItemCount = linearLayoutManager.getItemCount();
+                Log.i(TAG, "onScrolled: totalItemCount = " + totalItemCount);
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                Log.i(TAG, "onScrolled: lastVisibleItem = " + lastVisibleItem);
 
                 if(!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)){
                     if(loadmore != null){
@@ -57,7 +59,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         loadmore.onLoadMore();
                         isLoading = true;
                     }
-                }
+                }*/
 
 
             }
@@ -72,6 +74,18 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if (!recyclerView.canScrollVertically(1)) {
                     Toast.makeText(recyclerView.getContext(),"Last",Toast.LENGTH_SHORT).show();
+                    totalItemCount = linearLayoutManager.getItemCount();
+                    Log.i(TAG, "onScrollState: totalItemCount = " + totalItemCount);
+                    lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                    Log.i(TAG, "onScrolledState: lastVisibleItem = " + lastVisibleItem);
+
+                    if(!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)){
+                        if(loadmore != null){
+                            Log.i(TAG, "calling onLoadMore");
+                            loadmore.onLoadMore();
+                            isLoading = true;
+                        }
+                    }
 
                 }
             }
@@ -136,11 +150,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public int getLastPageNumber(){
-        int retVal = (int) getItemCount() / visibleThreshold;
-        if(retVal <= 0)
+        int retValint = items.size() / visibleThreshold;
+        Log.i(TAG, "retValint = "  + retValint);
+        if(retValint <= 1)
             return 1;
         else
-            return retVal;
+            return retValint;
     }
 
     //View Holders

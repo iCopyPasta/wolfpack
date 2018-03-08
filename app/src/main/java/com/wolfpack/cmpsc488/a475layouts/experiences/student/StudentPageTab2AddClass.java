@@ -31,6 +31,7 @@ public class StudentPageTab2AddClass extends Fragment {
     ArrayList<SearchResultSection> items = new ArrayList<>();
     PaginationAdapter adapter;
     EditText classIdSearchEditText;
+    boolean isBackgroundTaskRunning;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,10 +53,7 @@ public class StudentPageTab2AddClass extends Fragment {
         adapter = new PaginationAdapter(recyclerView, getActivity(), items);
         recyclerView.setAdapter(adapter);
         recyclerView.setNestedScrollingEnabled(true);
-
-        final ResultBackgroundTask backgroundTask =
-                new ResultBackgroundTask();
-
+        isBackgroundTaskRunning = false;
 
 
         adapter.setLoadmore(
@@ -63,12 +61,15 @@ public class StudentPageTab2AddClass extends Fragment {
                     @Override
                     public void onLoadMore() {
 
-                        if(backgroundTask.getStatus() == AsyncTask.Status.RUNNING ||
-                        backgroundTask.getStatus() == AsyncTask.Status.PENDING){
+                        if(isBackgroundTaskRunning){
                             Log.i("adapter:onLoadMore", "we avoided multiple requests!");
-                            backgroundTask.execute(
+                        } else{
+                            isBackgroundTaskRunning = true;
+                            new ResultBackgroundTask().execute(
                                     classIdSearchEditText.getText().toString());
                         }
+
+
 
                     }
                 }
@@ -97,9 +98,11 @@ public class StudentPageTab2AddClass extends Fragment {
                                         Log.i("onKey", "adapter has no items");
                                     }
 
-                                    if(backgroundTask.getStatus() != AsyncTask.Status.RUNNING){
+                                    if(isBackgroundTaskRunning){
                                         Log.i("adapter:onLoadMore", "we avoided multiple requests!");
-                                        backgroundTask.execute(
+                                    } else{
+                                        isBackgroundTaskRunning = true;
+                                        new ResultBackgroundTask().execute(
                                                 classIdSearchEditText.getText().toString());
                                     }
 
@@ -177,6 +180,7 @@ public class StudentPageTab2AddClass extends Fragment {
                 Log.i(TAG, "detailedObjects: " + (result.getDetailedObjects() == null));
 
                 classIdSearchEditText.setEnabled(true);
+                isBackgroundTaskRunning = false;
                 adapter.setLoaded();
                 Log.i(TAG, "we made it all the way to onPostExecute");
             }
