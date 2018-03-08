@@ -73,7 +73,8 @@ public interface WolfpackClient{
     @POST(FEED)
     Call<SearchClassResult<SearchResultSection>> findClasses(
             @Field("inputCurrentPageNumber") int currentPage,
-            @Field("inputClassTitle") String classTitle
+            @Field("inputClassTitle") String classTitle,
+            @Field("inputMethodName") String methodName
     );
 
 }

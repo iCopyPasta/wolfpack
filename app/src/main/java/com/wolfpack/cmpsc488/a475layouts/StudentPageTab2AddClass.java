@@ -29,7 +29,6 @@ public class StudentPageTab2AddClass extends Fragment {
     ArrayList<SearchResultSection> items = new ArrayList<>();
     PaginationAdapter adapter;
     EditText classIdSearchEditText;
-    WolfpackClient apiCaller;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,16 +37,32 @@ public class StudentPageTab2AddClass extends Fragment {
         return rootView;
     }
 
+
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         classIdSearchEditText = getActivity().findViewById(R.id.classIdSearchEditText);
 
         // Grab our recycler view and set its adapter;
-        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.sectionResults);
+        final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.sectionResults);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new PaginationAdapter(recyclerView, getActivity(), items);
         recyclerView.setAdapter(adapter);
+        recyclerView.setNestedScrollingEnabled(true);
+
+        final ResultBackgroundTask backgroundTask =
+                new ResultBackgroundTask();
+
+        adapter.setLoadmore(
+                new ILoadmore() {
+                    @Override
+                    public void onLoadMore() {
+                        backgroundTask.execute(
+                                classIdSearchEditText.getText().toString());
+                    }
+                }
+        );
 
         // Set our listener to search based on the correct specification
         classIdSearchEditText.setOnKeyListener(
@@ -66,13 +81,13 @@ public class StudentPageTab2AddClass extends Fragment {
                                     .findViewById(R.id.classRadioGroup)).getCheckedRadioButtonId()
                                     ){
                                 case R.id.addClassRadioButton:
-                                    classIdSearchEditText.setEnabled(false);
+                                    //classIdSearchEditText.setEnabled(false);
 
-                                    ResultBackgroundTask backgroundTask =
-                                            new ResultBackgroundTask();
+                                    if(adapter.getItemCount() == 0){
+                                        Log.i("onKey", "adapter has no items");
+                                        recyclerView.startNestedScroll(2);
 
-                                    backgroundTask.execute(
-                                            classIdSearchEditText.getText().toString());
+                                    }
 
                                     break;
 
@@ -108,10 +123,12 @@ public class StudentPageTab2AddClass extends Fragment {
 
                 Call<SearchClassResult<SearchResultSection>> call = client.findClasses(
                         adapter.getLastPageNumber(),
-                        params[0]);
+                        params[0],
+                        "findClasses");
 
                 Log.i(TAG, "waiting on potential values");
                 response = call.execute();
+                Log.i(TAG, "execution finished, returning body");
 
                 return response.body();
 
@@ -135,20 +152,18 @@ public class StudentPageTab2AddClass extends Fragment {
 
             //we successfully retrieved a valid value back from server
             if(result != null){
+                Log.i(TAG, "result was not null");
 
-                adapter.setLoadmore(
-                        new ILoadmore() {
-                            @Override
-                            public void onLoadMore() {
-                                items.addAll(result.getDetailedObjects());
-                                adapter.notifyItemInserted(items.size() - 1);
-                                adapter.notifyDataSetChanged();
-                            }
-                        }
-                );
+                items.addAll(result.getDetailedObjects());
+                adapter.notifyItemInserted(items.size() - 1);
+                adapter.notifyDataSetChanged();
+
+                Log.i(TAG, "result: " + result.toString());
+                Log.i(TAG, "detailedObjects: " + (result.getDetailedObjects() == null));
 
                 classIdSearchEditText.setEnabled(true);
                 adapter.setLoaded();
+                Log.i(TAG, "we made it all the way to onPostExecute");
             }
             else{
                 classIdSearchEditText.setEnabled(true);

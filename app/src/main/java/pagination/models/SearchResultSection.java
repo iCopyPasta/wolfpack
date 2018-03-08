@@ -2,38 +2,30 @@ package pagination.models;
 
 import java.math.BigInteger;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by peo5032 on 3/7/18.
  */
 
 public class SearchResultSection {
 
-    private BigInteger section_id;
-
-    private String class_title;
-
-    private int class_section_number;
+    @SerializedName("location")
+    @Expose
     private String location;
+    @SerializedName("section_id")
+    @Expose
+    private Integer sectionId;
+    @SerializedName("offering")
+    @Expose
     private String offering;
-    public BigInteger getSection_id() {
-        return section_id;
-    }
-
-    public String getClass_title() { return class_title; }
-
-    public void setClass_title(String class_title) { this.class_title = class_title; }
-
-    public void setSection_id(BigInteger section_id) {
-        this.section_id = section_id;
-    }
-
-    public int getClass_section_number() {
-        return class_section_number;
-    }
-
-    public void setClass_section_number(int class_section_number) {
-        this.class_section_number = class_section_number;
-    }
+    @SerializedName("class_title")
+    @Expose
+    private String classTitle;
+    @SerializedName("class_section_number")
+    @Expose
+    private Integer classSectionNumber;
 
     public String getLocation() {
         return location;
@@ -43,11 +35,44 @@ public class SearchResultSection {
         this.location = location;
     }
 
+    public Integer getSectionId() {
+        return sectionId;
+    }
+
+    public void setSectionId(Integer sectionId) {
+        this.sectionId = sectionId;
+    }
+
     public String getOffering() {
         return offering;
     }
 
     public void setOffering(String offering) {
         this.offering = offering;
+    }
+
+    public String getClassTitle() {
+        return classTitle;
+    }
+
+    public void setClassTitle(String classTitle) {
+        this.classTitle = classTitle;
+    }
+
+    public Integer getClassSectionNumber() {
+        return classSectionNumber;
+    }
+
+    public void setClassSectionNumber(Integer classSectionNumber) {
+        this.classSectionNumber = classSectionNumber;
+    }
+
+    @Override
+    public String toString(){
+        return "title: " + getClassTitle() +
+                " class section number: " + getClassTitle()+
+                " location: " + getLocation()+
+                " offering: " + getOffering()+
+                " section id: " + getSectionId();
     }
 }

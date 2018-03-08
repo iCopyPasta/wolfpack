@@ -1,6 +1,9 @@
 package pagination.models;
 
 import java.util.ArrayList;
+import java.util.List;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by peo5032 on 3/7/18.
@@ -8,44 +11,65 @@ import java.util.ArrayList;
 
 public class SearchClassResult<T> {
 
-    private int currentPage;
-    private int totalResults;
-    private int totalPages;
-    private ArrayList<T> detailedObjects;
 
-    public int getCurrentPage() {
-        return currentPage;
-    }
 
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
-    }
+        @SerializedName("currentPage")
+        @Expose
+        private Integer currentPage;
+        @SerializedName("totalResults")
+        @Expose
+        private Integer totalResults;
+        @SerializedName("totalPages")
+        @Expose
+        private Integer totalPages;
+        @SerializedName("results")
+        @Expose
+        private List<T> results = null;
 
-    public int getTotalResults() {
-        return totalResults;
-    }
+        public Integer getCurrentPage() {
+            return currentPage;
+        }
 
-    public void setTotalResults(int totalResults) {
-        this.totalResults = totalResults;
-    }
+        public void setCurrentPage(Integer currentPage) {
+            this.currentPage = currentPage;
+        }
 
-    public int getTotalPages() {
-        return totalPages;
-    }
+        public Integer getTotalResults() {
+            return totalResults;
+        }
 
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
-    }
+        public void setTotalResults(Integer totalResults) {
+            this.totalResults = totalResults;
+        }
 
-    public ArrayList<T> getDetailedObjects() {
-        return detailedObjects;
-    }
+        public Integer getTotalPages() {
+            return totalPages;
+        }
 
-    public void setDetailedObjects(ArrayList<T> detailedObjects) {
-        this.detailedObjects = detailedObjects;
-    }
+        public void setTotalPages(Integer totalPages) {
+            this.totalPages = totalPages;
+        }
 
-    public void addAllToDetailsItems(ArrayList<T> newResults){
-        this.detailedObjects.addAll(newResults);
+        public List<T> getDetailedObjects() {
+            return results;
+        }
+
+        public void setResults(List<T> results) {
+            this.results = results;
+        }
+    @Override
+    public String toString(){
+        String retVal =  "currentPage: " + getCurrentPage() +
+                " totalResults: " + getTotalResults() +
+                " totalPages: " + getTotalPages();
+
+        StringBuilder stringBuilder = new StringBuilder(retVal);
+        if(results != null){
+            for(T el: results){
+                stringBuilder.append(el);
+            }
+        }
+        return stringBuilder.toString();
+
     }
 }

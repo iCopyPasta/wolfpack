@@ -3,6 +3,7 @@ package pagination;
 import android.app.Activity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import pagination.models.SearchResultSection;
 public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int VIEW_TYPE_ITEM = 0, VIEW_TYPE_LOADING = 1;
+    private static final String TAG = "PaginationAdapter";
     private ILoadmore loadmore;
     private boolean isLoading;
     private Activity activity;
@@ -41,12 +43,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                Log.i(TAG, "onScrolled called");
                 super.onScrolled(recyclerView, dx, dy);
                 totalItemCount = linearLayoutManager.getItemCount();
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
 
                 if(!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)){
                     if(loadmore != null){
+                        Log.i(TAG, "calling onLoadMore");
                         loadmore.onLoadMore();
                         isLoading = true;
                     }
@@ -82,10 +86,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if(holder instanceof ItemViewHolder){
             SearchResultSection item = items.get(position);
             ItemViewHolder viewHolder = (ItemViewHolder) holder;
-            viewHolder.className.setText(item.getClass_title());
+            viewHolder.className.setText(item.getClassTitle());
             viewHolder.offering.setText(item.getOffering());
             viewHolder.location.setText(item.getLocation());
-            viewHolder.section.setText(item.getClass_section_number());
+            viewHolder.section.setText(item.getClassSectionNumber());
 
         } else if(holder instanceof LoadingViewHolder){
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
