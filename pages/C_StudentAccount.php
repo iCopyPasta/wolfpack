@@ -1,16 +1,25 @@
 <?php
   /*
-  This class is used by the teacher to insert a new question into table "question".
+  This class is used by the user to:
+    insert a new student account into table "student_account"
+    select from "student_account"
 
-  Example Usage:
+  Example usage (see Sign_up.php for more):
 
-  <?php
-      if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        include('C_Question.php');
-        $insertQuestion = new Question('Is this a question?', 'professor asked field', 'TrueOrFalseTag');
-        $insertQuestion->insert();
-      }
-  ?>
+    include_once('C_StudentAccount.php');
+
+    $selectStudentAccount = new StudentAccount('thisValueIsIgnored', 'Scott', 'Wilson', $hashPassword, 'studentSchoolID', $insertEmail);
+    $qJSON = json_decode($selectStudentAccount->insert(), true);
+    $success = isset($qJSON[0]['success']) ? $qJSON[0]['success'] : null;
+    $message = isset($qJSON[0]['message']) ? $qJSON[0]['message'] : null;
+
+
+    $selectStudentAccount = new StudentAccount('%','%','%','%', '%', $insertEmail);
+    $qJSON = json_decode($selectStudentAccount->select(), true);
+    $success = isset($qJSON[0]['success']) ? $qJSON[0]['success'] : null;
+    $message = isset($qJSON[0]['message']) ? $qJSON[0]['message'] : null;
+    $email = isset($qJSON[1]['email']) ? $qJSON[1]['email'] : null;
+    $firstName = isset($qJSON[1]['first_name']) ? $qJSON[1]['first_name'] : null;
 
   */
 
