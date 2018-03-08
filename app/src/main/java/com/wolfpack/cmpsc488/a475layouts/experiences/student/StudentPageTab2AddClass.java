@@ -56,12 +56,20 @@ public class StudentPageTab2AddClass extends Fragment {
         final ResultBackgroundTask backgroundTask =
                 new ResultBackgroundTask();
 
+
+
         adapter.setLoadmore(
                 new ILoadmore() {
                     @Override
                     public void onLoadMore() {
-                        backgroundTask.execute(
-                                classIdSearchEditText.getText().toString());
+
+                        if(backgroundTask.getStatus() == AsyncTask.Status.RUNNING ||
+                        backgroundTask.getStatus() == AsyncTask.Status.PENDING){
+                            Log.i("adapter:onLoadMore", "we avoided multiple requests!");
+                            backgroundTask.execute(
+                                    classIdSearchEditText.getText().toString());
+                        }
+
                     }
                 }
         );
@@ -83,14 +91,18 @@ public class StudentPageTab2AddClass extends Fragment {
                                     .findViewById(R.id.classRadioGroup)).getCheckedRadioButtonId()
                                     ){
                                 case R.id.addClassRadioButton:
-                                    //classIdSearchEditText.setEnabled(false);
+                                    classIdSearchEditText.setEnabled(false);
 
                                     if(adapter.getItemCount() == 0){
                                         Log.i("onKey", "adapter has no items");
-                                        recyclerView.startNestedScroll(2);
                                     }
-                                    backgroundTask.execute(
-                                            classIdSearchEditText.getText().toString());
+
+                                    if(backgroundTask.getStatus() != AsyncTask.Status.RUNNING){
+                                        Log.i("adapter:onLoadMore", "we avoided multiple requests!");
+                                        backgroundTask.execute(
+                                                classIdSearchEditText.getText().toString());
+                                    }
+
 
                                     break;
 

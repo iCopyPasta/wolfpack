@@ -61,7 +61,7 @@ public class SearchClassResult<T> {
     public String toString(){
         String retVal =  "currentPage: " + getCurrentPage() +
                 " totalResults: " + getTotalResults() +
-                " totalPages: " + getTotalPages();
+                " totalPages: " + getTotalPages() + "\n";
 
         StringBuilder stringBuilder = new StringBuilder(retVal);
         if(results != null){

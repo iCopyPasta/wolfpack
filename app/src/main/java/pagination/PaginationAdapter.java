@@ -59,6 +59,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
 
+
             }
 
             // THE LIFESAVER
@@ -106,7 +107,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             viewHolder.className.setText(item.getClassTitle());
             viewHolder.offering.setText(item.getOffering());
             viewHolder.location.setText(item.getLocation());
-            viewHolder.section.setText(item.getClassSectionNumber());
+            viewHolder.sectionNo.setText(String.valueOf(item.getClassSectionNumber()));
 
         } else if(holder instanceof LoadingViewHolder){
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
@@ -146,22 +147,24 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     class LoadingViewHolder extends RecyclerView.ViewHolder{
 
-        public ProgressBar progressBar;
+        ProgressBar progressBar;
 
-        public LoadingViewHolder(View itemView){
+        LoadingViewHolder(View itemView){
             super(itemView);
             progressBar = (ProgressBar) itemView.findViewById(R.id.paginationProgressBar);
-
         }
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder{
-        public TextView className, section, location, offering;
+        TextView className;
+        TextView sectionNo;
+        TextView location;
+        TextView offering;
 
-        public ItemViewHolder(View itemView){
+        ItemViewHolder(View itemView){
             super(itemView);
             className = (TextView) itemView.findViewById(R.id.txtClassName);
-            section = (TextView) itemView.findViewById(R.id.txtSectionNumber);
+            sectionNo = (TextView) itemView.findViewById(R.id.txtSectionNo);
             location = (TextView) itemView.findViewById(R.id.txtLocation);
             offering = (TextView) itemView.findViewById(R.id.txtOffering);
 

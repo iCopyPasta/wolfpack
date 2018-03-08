@@ -70,9 +70,9 @@ public class SearchResultSection {
     @Override
     public String toString(){
         return "title: " + getClassTitle() +
-                " class section number: " + getClassTitle()+
+                " class section number: " + getClassSectionNumber()+
                 " location: " + getLocation()+
                 " offering: " + getOffering()+
-                " section id: " + getSectionId();
+                " section id: " + getSectionId() + "\n";
     }
 }
