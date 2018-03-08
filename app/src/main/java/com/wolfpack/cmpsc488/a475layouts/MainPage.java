@@ -99,11 +99,6 @@ public class MainPage extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-
-
-
-
     /* MUST REMOVE LATER */
     public void onToStudent(View view){
         Log.i("Main Page", "onToStudent is called");
