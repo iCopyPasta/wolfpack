@@ -106,7 +106,7 @@ public class StudentPageTab2AddClass extends Fragment {
 
                 Log.i(TAG, "setting call with parameters");
 
-                Call<SearchClassResult<SearchResultSection>> call = client.findClasses(true,
+                Call<SearchClassResult<SearchResultSection>> call = client.findClasses(
                         adapter.getLastPageNumber(),
                         params[0]);
 

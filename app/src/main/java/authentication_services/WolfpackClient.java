@@ -72,7 +72,6 @@ public interface WolfpackClient{
     @FormUrlEncoded
     @POST(FEED)
     Call<SearchClassResult<SearchResultSection>> findClasses(
-            @Field("android") Boolean isAndroid,
             @Field("inputCurrentPageNumber") int currentPage,
             @Field("inputClassTitle") String classTitle
     );
