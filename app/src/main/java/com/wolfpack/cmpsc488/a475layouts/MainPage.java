@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import authentication_services.LoginPage;
-import authentication_services.SignUp;
+import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentPage;
+import com.wolfpack.cmpsc488.a475layouts.experiences.teacher.TeacherPage;
+
+import com.wolfpack.cmpsc488.a475layouts.services.authentication.LoginPage;
+import com.wolfpack.cmpsc488.a475layouts.services.authentication.SignUp;
 
 
 public class MainPage extends AppCompatActivity {
@@ -108,9 +111,9 @@ public class MainPage extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void onToProfessor(View view){
-        Log.i("Main Page", "onToProfessor is called");
-        Intent intent = new Intent(this, ProfessorPage.class);
+    public void onToTeacher(View view){
+        Log.i("Main Page", "onToTeacher is called");
+        Intent intent = new Intent(this, TeacherPage.class);
         startActivity(intent);
     }
 }

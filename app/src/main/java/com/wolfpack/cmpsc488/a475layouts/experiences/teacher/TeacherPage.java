@@ -1,4 +1,4 @@
-package com.wolfpack.cmpsc488.a475layouts;
+package com.wolfpack.cmpsc488.a475layouts.experiences.teacher;
 
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -6,12 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
-import android.support.v7.widget.Toolbar;
 
-public class ProfessorPage extends AppCompatActivity {
+import com.wolfpack.cmpsc488.a475layouts.R;
+import com.wolfpack.cmpsc488.a475layouts.TabAdapter;
+
+public class TeacherPage extends AppCompatActivity {
 
 
-    private static final String TAG = "ProfessorPage";
+    private static final String TAG = "TeacherPage";
 
     private TabAdapter mTabAdapter;
     private ViewPager mViewPager;
@@ -19,18 +21,18 @@ public class ProfessorPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_professor_page);
+        setContentView(R.layout.activity_teacher_page);
 
         Log.i(TAG, "onCreate Start");
 
         //set up the viewpager with the sections adapter
-        mViewPager = (ViewPager) findViewById(R.id.professorPageViewPager);
+        mViewPager = (ViewPager) findViewById(R.id.teacherPageViewPager);
         try {
             setupViewPager(mViewPager);
 
             Log.i(TAG, "onCreate after setupViewPager");
 
-            TabLayout tabLayout = (TabLayout) findViewById(R.id.professorPageTabs);
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.teacherPageTabs);
             tabLayout.setupWithViewPager(mViewPager);
 
             Log.i(TAG, "onCreate after tabLayout setup");
@@ -43,9 +45,9 @@ public class ProfessorPage extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager){
         TabAdapter adapter = new TabAdapter(getSupportFragmentManager());
-        adapter.addFragment(new ProfessorPageTab1Classlist(), getResources().getString(R.string.professor_page_tab1_classlist));
-        adapter.addFragment(new ProfessorPageTab2CreateClass(), getResources().getString(R.string.professor_page_tab2_createclass));
-        adapter.addFragment(new ProfessorPageTab3Settings(), getResources().getString(R.string.professor_page_tab3_settings));
+        adapter.addFragment(new TeacherPageTab1Classlist(), getResources().getString(R.string.teacher_page_tab1_classlist));
+        adapter.addFragment(new TeacherPageTab2CreateClass(), getResources().getString(R.string.teacher_page_tab2_createclass));
+        adapter.addFragment(new TeacherPageTab3Settings(), getResources().getString(R.string.teacher_page_tab3_settings));
         viewPager.setAdapter(adapter);
     }
 

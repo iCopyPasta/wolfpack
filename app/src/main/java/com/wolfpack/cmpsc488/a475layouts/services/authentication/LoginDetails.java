@@ -1,9 +1,10 @@
-package authentication_services;
+package com.wolfpack.cmpsc488.a475layouts.services.authentication;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by pablo on 2/19/18.
+ *
  */
 
 public class LoginDetails {
