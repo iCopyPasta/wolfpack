@@ -47,7 +47,10 @@
     $password = isset($_POST['inputPassword']) ? $_POST['inputPassword'] : null;
     $firstName = (isset($_POST['inputFirstName']) ? $_POST['inputFirstName'] : null);
     $lastName = (isset($_POST['inputLastName']) ? $_POST['inputLastName'] : null);
-    
+
+    $classTitle = isset($_POST['inputClassTitle']) ? $_POST['inputClassTitle'] : null;
+    $currentPage = isset($_POST['inputCurrentPageNumber']) ? $_POST['inputCurrentPageNumber'] : null;
+    $resultsPerPage = isset($_POST['inputResultsPerPage']) ? $_POST['inputResultsPerPage'] : null;
 
     $fields = array();
     $postvars;
@@ -73,6 +76,20 @@
             build_curlreq($fields, $postvars, $url);
 
             break;
+            
+        case "findClasses":
+            //$url = "http://wolfpack.cs.hbg.psu.edu/pages/Class_Search.php"
+            $url = "http://192.168.1.57/pages/Class_Search_Stub.php";
+            
+            $fields = build_fields($fields,
+                                   array('inputClassTitle', 'inputCurrentPageNumber','android'),
+                                   $classTitle,
+                                   $currentPage,
+                                   $android);
+            
+            $postvars = http_build_query($fields);
+
+            build_curlreq($fields, $postvars, $url);
 
         default:
             
