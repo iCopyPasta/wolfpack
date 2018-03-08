@@ -111,14 +111,21 @@
       }catch (Exception $e){
         // fail JSON response
         $response = array();
-        $response["message"] = "ERROR SELECTING: ".$e->getMessage();
+        $response["message"] = "ERROR SELECTING from Student Account: ".$e->getMessage();
         $response["success"] = 0;
         // echo json_encode($response);
         // die();
         return json_encode($response);
       }
       $pdo = null;
-      return json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+      $response = array();
+      $response["message"] = "Success SELECTING from Student Account";
+      $response["success"] = 1;
+//      $response["what"] = empty($stmt->fetchAll(PDO::FETCH_ASSOC));
+      $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      array_unshift($retVal, $response);
+
+      return json_encode($retVal);
     }
 
   }
