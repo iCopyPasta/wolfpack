@@ -82,23 +82,30 @@ body {
       $matchPWString="";
       if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // validate password match
-        if(passwordMatch($_POST["inputPassword"], $_POST["inputConfirmPassword"])){
-          $matchPWString="";
+        if(passwordMatch($_POST["inputPassword"], $_POST["inputConfirmPassword"])) {
+          $matchPWString = "";
           // TODO: ensure email does not already exist
+          // TODO: use Connection.php
           // create account
-          $host='localhost';
-          $user='root';
-          $pass='';
-          $db='iClicker';
-          $con=mysqli_connect($host, $user, $pass, $db);
-          if($con) echo 'connected successfully to testdb database<br>';
-          $insertEmail=$_POST["inputEmail"];
-          $insertPass=$_POST["inputPassword"];
-          $sql="insert into student_account (email, salted_password) values ("
-               . "'" . $insertEmail . "',"
-               . "SHA('" . $insertPass . "'))";
-          $query=mysqli_query($con,$sql);
-          if($query) echo 'data inserted successfully<br>';
+          $host = 'localhost';
+          $user = 'root';
+          $pass = '';
+          $db = 'iClicker';
+          $con = mysqli_connect($host, $user, $pass, $db);
+          if ($con) echo 'connected successfully to testdb database<br>';
+
+//          $insertEmail=$_POST["inputEmail"];
+//          $insertPass=$_POST["inputPassword"];
+          $insertEmail = (isset($_POST['inputEmail']) ? $_POST['inputEmail'] : null);
+          $insertPass = (isset($_POST['inputPassword']) ? $_POST['inputPassword'] : null);
+          if ($insertEmail !== null && $insertPass !== null) {
+            $options = ['cost' => 11];
+            $hashPassword = password_hash($insertPass, PASSWORD_BCRYPT, $options);
+            $sql = "insert into student_account (email, salted_password) values ("
+                    . "'" . $insertEmail . "', '" . $hashPassword . "')";
+            $query = mysqli_query($con, $sql);
+            if ($query) echo 'data inserted successfully<br>';
+          }
         }
         // passwords don't match
         else{
@@ -106,6 +113,7 @@ body {
                 <strong>Error.</strong> Passwords don\'t match.
                 </div>';
         }
+        echo $hashPassword;
       }
     ?>
 
