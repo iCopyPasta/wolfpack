@@ -66,9 +66,6 @@ public class StudentPageTab2AddClass extends Fragment {
                                     .findViewById(R.id.classRadioGroup)).getCheckedRadioButtonId()
                                     ){
                                 case R.id.addClassRadioButton:
-                                    //TODO: run background task
-                                    Toast.makeText(getActivity(), "implement, yet",
-                                            Toast.LENGTH_SHORT).show();
                                     classIdSearchEditText.setEnabled(false);
 
                                     ResultBackgroundTask backgroundTask =
@@ -119,12 +116,16 @@ public class StudentPageTab2AddClass extends Fragment {
                 return response.body();
 
                 //TODO: ADD SECURE TRY-CATCH BLOCKS FOR VARIOUS POSSIBILITIES!
-            } catch (IllegalStateException e){
+            } catch(java.net.ConnectException e){
+                Log.e(TAG, e.getMessage());
+                return null;
+            }
+            catch (IllegalStateException e){
                 Log.e(TAG, e.getMessage());
                 return null;
 
             } catch (Exception e){
-                Log.e(TAG, e.getMessage());
+                Log.e(TAG, e.getClass().toString() + e.getMessage());
                 return null;
             }
         }
@@ -150,6 +151,7 @@ public class StudentPageTab2AddClass extends Fragment {
                 adapter.setLoaded();
             }
             else{
+                classIdSearchEditText.setEnabled(true);
                 Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_SHORT).show();
             }
 
