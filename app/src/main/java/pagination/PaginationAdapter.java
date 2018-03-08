@@ -114,7 +114,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public int getLastPageNumber(){
-        return (int) getItemCount() / visibleThreshold;
+        int retVal = (int) getItemCount() / visibleThreshold;
+        if(retVal <= 0)
+            return 1;
+        else
+            return retVal;
     }
 
     //View Holders

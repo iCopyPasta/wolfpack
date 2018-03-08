@@ -1,8 +1,5 @@
 package com.wolfpack.cmpsc488.a475layouts;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -18,12 +15,11 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.SimpleTimeZone;
 
-import authentication_services.LoginDetails;
-import authentication_services.LoginPage;
 import authentication_services.WolfpackClient;
+import pagination.ILoadmore;
 import pagination.PaginationAdapter;
+import pagination.models.SearchClassResult;
 import pagination.models.SearchResultSection;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -53,7 +49,6 @@ public class StudentPageTab2AddClass extends Fragment {
         adapter = new PaginationAdapter(recyclerView, getActivity(), items);
         recyclerView.setAdapter(adapter);
 
-
         // Set our listener to search based on the correct specification
         classIdSearchEditText.setOnKeyListener(
                 new View.OnKeyListener() {
@@ -72,8 +67,15 @@ public class StudentPageTab2AddClass extends Fragment {
                                     ){
                                 case R.id.addClassRadioButton:
                                     //TODO: run background task
-                                    Toast.makeText(getActivity(), "implement, yet", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "implement, yet",
+                                            Toast.LENGTH_SHORT).show();
                                     classIdSearchEditText.setEnabled(false);
+
+                                    ResultBackgroundTask backgroundTask =
+                                            new ResultBackgroundTask();
+
+                                    backgroundTask.execute(
+                                            classIdSearchEditText.getText().toString());
 
                                     break;
 
@@ -90,47 +92,73 @@ public class StudentPageTab2AddClass extends Fragment {
 
     }
 
-    class ResultBackgroundTask extends AsyncTask<String, Void, Boolean> {
+    class ResultBackgroundTask extends AsyncTask<String, Void, SearchClassResult<SearchResultSection>> {
 
         private static final String TAG = "ResultBackgroundTask";
 
-        LoginDetails loginDetails;
-
-        Response<SearchResultSection> response;
+        Response<SearchClassResult<SearchResultSection>> response;
+        WolfpackClient client;
 
         @Override
-        protected Boolean doInBackground(String... params) {
-            // TODO: attempt authentication against a network service.
+        protected SearchClassResult<SearchResultSection> doInBackground(String... params) {
 
             try {
                 Log.i(TAG, "About to try network request out");
-                // TODO: attempt authentication against a network service.
 
+                client = StudentPage.getWolfpackClientInstance();
 
                 Log.i(TAG, "setting call with parameters");
 
+                Call<SearchClassResult<SearchResultSection>> call = client.findClasses(true,
+                        adapter.getLastPageNumber(),
+                        params[0]);
+
                 Log.i(TAG, "waiting on potential values");
+                response = call.execute();
+
+                return response.body();
 
                 //TODO: ADD SECURE TRY-CATCH BLOCKS FOR VARIOUS POSSIBILITIES!
+            } catch (IllegalStateException e){
+                Log.e(TAG, e.getMessage());
+                return null;
 
-                //TODO: return an appropriate boolean value
-                return false;
             } catch (Exception e){
                 Log.e(TAG, e.getMessage());
-                return false;
+                return null;
             }
-
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
-            //TODO: get results and update the values in our adapter
+        protected void onPostExecute(final SearchClassResult<SearchResultSection> result) {
+
+            //we successfully retrieved a valid value back from server
+            if(result != null){
+
+                adapter.setLoadmore(
+                        new ILoadmore() {
+                            @Override
+                            public void onLoadMore() {
+                                items.addAll(result.getDetailedObjects());
+                                adapter.notifyItemInserted(items.size() - 1);
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                );
+
+                classIdSearchEditText.setEnabled(true);
+                adapter.setLoaded();
+            }
+            else{
+                Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_SHORT).show();
+            }
 
         }
 
         @Override
         protected void onCancelled() {
             //TODO: show some error in the screen
+            Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
         }
     }
 

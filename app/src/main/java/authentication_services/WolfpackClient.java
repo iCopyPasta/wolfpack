@@ -7,6 +7,8 @@ import com.google.gson.GsonBuilder;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
+import pagination.models.SearchClassResult;
+import pagination.models.SearchResultSection;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -67,6 +69,12 @@ public interface WolfpackClient{
             @Field("inputPassword") String password
     );
 
-    //TODO: DEFINE CALL HERE BASED FOR LOGIN
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<SearchClassResult<SearchResultSection>> findClasses(
+            @Field("android") Boolean isAndroid,
+            @Field("inputCurrentPageNumber") int currentPage,
+            @Field("inputClassTitle") String classTitle
+    );
 
 }

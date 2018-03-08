@@ -41,7 +41,7 @@ public class StudentPage extends AppCompatActivity {
         viewPager.setAdapter(adapter);
     }
 
-    public static synchronized WolfpackClient getInstance(){
+    public static synchronized WolfpackClient getWolfpackClientInstance(){
         if(wolfpackClient == null){
             return WolfpackClient.retrofit.create(WolfpackClient.class);
         } else{
