@@ -35,30 +35,40 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+
         <activity
             android:name=".QuestionPage"
             android:label="@string/title_activity_question_page" />
+
         <activity
-            android:name="authentication_services.LoginPage"
+            android:name=".services.authentication.LoginPage"
             android:label="@string/title_activity_login_page" />
+
         <activity
-            android:name=".ClassPage"
+            android:name=".experiences.student.StudentClassPage"
             android:label="@string/title_activity_class_page"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
-            android:name=".StudentPage"
+            android:name=".experiences.student.StudentPage"
             android:label="@string/title_activity_student_page"
             android:theme="@style/AppTheme.NoActionBar" />
 
+
+<!--        <activity
+            android:name=".experiences.teacher.teacherClassPage"
+            android:label="@string/title_activity_class_page"
+            android:theme="@style/AppTheme.NoActionBar" />-->
+
         <activity
-            android:name=".TeacherPage"
-            android:label="@string/title_activity_teacher_page"
+            android:name=".experiences.teacher.TeacherPage"
+            android:label="@string/title_activity_class_page"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-
         <activity
-            android:name="authentication_services.SignUp"
+            android:name=".services.authentication.SignUp"
             android:label="@string/title_activity_sign_up" />
+
     </application>
 
 </manifest>

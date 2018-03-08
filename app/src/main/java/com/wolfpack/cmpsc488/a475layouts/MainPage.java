@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import authentication_services.LoginPage;
-import authentication_services.SignUp;
+import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentPage;
+import com.wolfpack.cmpsc488.a475layouts.experiences.teacher.TeacherPage;
+
+import com.wolfpack.cmpsc488.a475layouts.services.authentication.LoginPage;
+import com.wolfpack.cmpsc488.a475layouts.services.authentication.SignUp;
 
 
 public class MainPage extends AppCompatActivity {

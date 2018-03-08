@@ -1,4 +1,5 @@
-package com.wolfpack.cmpsc488.a475layouts;
+package com.wolfpack.cmpsc488.a475layouts.experiences.teacher;
+
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -8,34 +9,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-//import org.w3c.dom.Text;
+import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentClassPage;
+import com.wolfpack.cmpsc488.a475layouts.R;
 
-public class StudentPageTab1Classlist extends Fragment {
+public class TeacherPageTab1Classlist extends Fragment {
 
-
-    private static final String TAG = "SPTab1Classlist";
+    private static final String TAG = "PPTab1Classlist";
 
     private ListView mListViewClasses;
-    private static String[] classlistTemp = {"CMPSC 460", "CMPSC 462", "CMPSC 463", "CMPSC 469","CMPSC 472", "CMPSC 488", "COMP 505", "COMP 511", "COMP 512", "COMP 519"};
-    private static String[] classdesclistTemp = {"Principles of Programming Languages", "Data Structrues", "Design and Analysis of Algorithms", "Formal Languages with Applications", "Operating System Concepts", "Computer Science Project", "Theory of Computation", "Design and Anaylsis of Algorithms", "Advance Operating Systems", "Advanced Topics in Database Management Systems"};
-    private static String[] classteacherlistTemp = {"Sukmoon Chang", "Jeremy Blum", "Jeremy Blum", "Sukmoon Chang", "Linda Null", "Hyuntae Na", "Thang Bui","Thang Bui", "Linda Null", "Linda Null"};
+    private static String[] classlistTemp = {"CMPSC 441", "CMPSC 457", "CMPSC 460", "CMPSC 469"};
+    private static String[] classdesclistTemp = {"Artificial Intelligence", "Computer Graphics Algorithms", "Principles of Programming Languages", "Formal Languages with Applications"};
+    //private static String[] classteacherlistTemp = {"Sukmoon Chang", "Sukmoon Chang", "Sukmoon Chang", "Sukmoon Chang"};
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_student_page_tab1_classlist, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_teacher_page_tab1_classlist, container, false);
 
+        Log.i(TAG, "onCreateView");
 
         //populate list view
         // TODO: Use database to find classes that the student is enrolled
         //       Currently it is displaying a hard coded list for demonstrating purposes
 
-        mListViewClasses = (ListView) rootView.findViewById(R.id.classListView);
+        mListViewClasses = (ListView) rootView.findViewById(R.id.profClassListView);
 
 
         CustomAdapter mCustomAdapter = new CustomAdapter();
@@ -54,7 +55,7 @@ public class StudentPageTab1Classlist extends Fragment {
         mListViewClasses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
-                Intent intent = new Intent(getActivity(), ClassPage.class);
+                Intent intent = new Intent(getActivity(), StudentClassPage.class);
                 intent.putExtra("ClassName", classlistTemp[i]);
                 Log.i(TAG, "hello from onItemClick");
 
@@ -87,18 +88,19 @@ public class StudentPageTab1Classlist extends Fragment {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            view = getLayoutInflater().inflate(R.layout.listview_student_page_classlist, null);
+            view = getLayoutInflater().inflate(R.layout.listview_teacher_page_classlist, null);
 
-            TextView class_name = (TextView) view.findViewById(R.id.classNameDisplay);
-            TextView teacher_name = (TextView) view.findViewById(R.id.teacherNameDisplay);
-            TextView class_description = (TextView) view.findViewById(R.id.classDescriptionDisplay);
+            //TextView teacher_name = (TextView) view.findViewById(R.id.teacherNameDisplay);
+            TextView class_name = (TextView) view.findViewById(R.id.profClassNameDisplay);
+            TextView class_description = (TextView) view.findViewById(R.id.profClassDescriptionDisplay);
 
-            class_name.setText(classlistTemp[i]);
-            teacher_name.setText(classteacherlistTemp[i]);
+            //teacher_name.setText(classteacherlistTemp[i]);
             class_description.setText(classdesclistTemp[i]);
+            class_name.setText(classlistTemp[i]);
 
             return view;
         }
     }
+
 
 }

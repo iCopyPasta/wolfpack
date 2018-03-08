@@ -1,4 +1,4 @@
-package com.wolfpack.cmpsc488.a475layouts;
+package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class ClassPageTab2Classinfo extends Fragment {
+import com.wolfpack.cmpsc488.a475layouts.R;
+
+public class StudentClassPageTab2Classinfo extends Fragment {
 
     private static final String TAG = "CPTab1Classinfo";
 

@@ -1,4 +1,4 @@
-package com.wolfpack.cmpsc488.a475layouts;
+package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -11,7 +11,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class ClassPageTab1Sessionlist extends Fragment {
+import com.wolfpack.cmpsc488.a475layouts.QuestionPage;
+import com.wolfpack.cmpsc488.a475layouts.R;
+
+public class StudentClassPageTab1Sessionlist extends Fragment {
 
     private static final String TAG = "CPTab1Sessionlist";
 

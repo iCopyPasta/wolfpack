@@ -1,4 +1,4 @@
-package authentication_services;
+package com.wolfpack.cmpsc488.a475layouts.services.authentication;
 
 import android.Manifest;
 import android.animation.Animator;
@@ -29,7 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
-import com.wolfpack.cmpsc488.a475layouts.StudentPage;
+import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentPage;
 
 import retrofit2.Call;
 import retrofit2.Response;
