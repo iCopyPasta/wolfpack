@@ -9,8 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
+import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentPage;
+
 import java.util.ArrayList;
 import pagination.models.SearchResultSection;
 
@@ -56,6 +59,20 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
 
+            }
+
+            // THE LIFESAVER
+            //https://stackoverflow.com/questions/36127734/detect-when-recyclerview-reaches-the-bottom-most-position-while-scrolling
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                Log.i(TAG, "onScrollStateChanged");
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (!recyclerView.canScrollVertically(1)) {
+                    Toast.makeText(recyclerView.getContext(),"Last",Toast.LENGTH_SHORT).show();
+
+                }
             }
         });
     }

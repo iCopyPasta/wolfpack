@@ -88,8 +88,9 @@ public class StudentPageTab2AddClass extends Fragment {
                                     if(adapter.getItemCount() == 0){
                                         Log.i("onKey", "adapter has no items");
                                         recyclerView.startNestedScroll(2);
-
                                     }
+                                    backgroundTask.execute(
+                                            classIdSearchEditText.getText().toString());
 
                                     break;
 
