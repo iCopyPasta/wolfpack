@@ -1,55 +1,62 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.wolfpack.cmpsc488.a475layouts.QuestionPage;
 import com.wolfpack.cmpsc488.a475layouts.R;
 
-public class ClassPageTab2Classinfo extends Fragment {
+public class StudentClassPageTab1Sessionlist extends Fragment {
 
-    private static final String TAG = "CPTab1Classinfo";
+    private static final String TAG = "CPTab1Sessionlist";
 
-    private ListView mListViewClassinfo;
-    private static String[] classinfoTemp = {"Class ID", "Teacher"};
+    private ListView mListViewSessions;
+    private static String[] sessionlistTemp = {"Session 01", "Session 02"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_class_page_tab2_classinfo, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_class_page_tab1_sessionlist, container, false);
 
 
         //populate list view
         // TODO: Use database to find classes that the student is enrolled
         //       Currently it is displaying a hard coded list for demonstrating purposes
 
-        mListViewClassinfo = (ListView) rootView.findViewById(R.id.classinfoListView);
+        mListViewSessions = (ListView) rootView.findViewById(R.id.sessionListView);
 
         ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
                 getActivity(),
                 android.R.layout.simple_list_item_1,
-                classinfoTemp);
+                sessionlistTemp);
 
-        mListViewClassinfo.setAdapter(mAdapter);
+        mListViewSessions.setAdapter(mAdapter);
 
-        /*
-        mListViewClassinfo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListViewSessions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id){
-                Intent intent = new Intent(getActivity(), ClassPage.class);
-                //intent.putExtra("ClassName", mListViewClassinfo.getItemAtPosition(position).toString());
+                Intent intent = new Intent(getActivity(), QuestionPage.class);
+                //intent.putExtra("ClassName", mListViewSessions.getItemAtPosition(position).toString());
                 Log.i(TAG, "hello from onItemClick");
 
                 startActivity(intent);
             }
         });
-        */
+
 
         return rootView;
     }
+
+
+
+
 
 
 }

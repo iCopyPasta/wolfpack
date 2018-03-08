@@ -45,7 +45,7 @@
             android:label="@string/title_activity_login_page" />
 
         <activity
-            android:name=".experiences.student.ClassPage"
+            android:name=".experiences.student.StudentClassPage"
             android:label="@string/title_activity_class_page"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -56,12 +56,12 @@
 
 
 <!--        <activity
-            android:name=".experiences.teacher.professorClassPage"
+            android:name=".experiences.teacher.teacherClassPage"
             android:label="@string/title_activity_class_page"
             android:theme="@style/AppTheme.NoActionBar" />-->
 
         <activity
-            android:name=".experiences.teacher.ProfessorPage"
+            android:name=".experiences.teacher.TeacherPage"
             android:label="@string/title_activity_class_page"
             android:theme="@style/AppTheme.NoActionBar"/>
 

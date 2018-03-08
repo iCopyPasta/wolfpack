@@ -13,22 +13,22 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.wolfpack.cmpsc488.a475layouts.experiences.student.ClassPage;
+import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentClassPage;
 import com.wolfpack.cmpsc488.a475layouts.R;
 
-public class ProfessorPageTab1Classlist extends Fragment {
+public class TeacherPageTab1Classlist extends Fragment {
 
     private static final String TAG = "PPTab1Classlist";
 
     private ListView mListViewClasses;
     private static String[] classlistTemp = {"CMPSC 441", "CMPSC 457", "CMPSC 460", "CMPSC 469"};
     private static String[] classdesclistTemp = {"Artificial Intelligence", "Computer Graphics Algorithms", "Principles of Programming Languages", "Formal Languages with Applications"};
-    //private static String[] classprofessorlistTemp = {"Sukmoon Chang", "Sukmoon Chang", "Sukmoon Chang", "Sukmoon Chang"};
+    //private static String[] classteacherlistTemp = {"Sukmoon Chang", "Sukmoon Chang", "Sukmoon Chang", "Sukmoon Chang"};
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_professor_page_tab1_classlist, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_teacher_page_tab1_classlist, container, false);
 
         Log.i(TAG, "onCreateView");
 
@@ -55,7 +55,7 @@ public class ProfessorPageTab1Classlist extends Fragment {
         mListViewClasses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
-                Intent intent = new Intent(getActivity(), ClassPage.class);
+                Intent intent = new Intent(getActivity(), StudentClassPage.class);
                 intent.putExtra("ClassName", classlistTemp[i]);
                 Log.i(TAG, "hello from onItemClick");
 
@@ -88,13 +88,13 @@ public class ProfessorPageTab1Classlist extends Fragment {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            view = getLayoutInflater().inflate(R.layout.listview_professor_page_classlist, null);
+            view = getLayoutInflater().inflate(R.layout.listview_teacher_page_classlist, null);
 
-            //TextView professor_name = (TextView) view.findViewById(R.id.professorNameDisplay);
+            //TextView teacher_name = (TextView) view.findViewById(R.id.teacherNameDisplay);
             TextView class_name = (TextView) view.findViewById(R.id.profClassNameDisplay);
             TextView class_description = (TextView) view.findViewById(R.id.profClassDescriptionDisplay);
 
-            //professor_name.setText(classprofessorlistTemp[i]);
+            //teacher_name.setText(classteacherlistTemp[i]);
             class_description.setText(classdesclistTemp[i]);
             class_name.setText(classlistTemp[i]);
 

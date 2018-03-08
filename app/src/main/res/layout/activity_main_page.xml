@@ -15,7 +15,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@color/colorProfessorPrimary"
+        android:backgroundTint="@color/colorTeacherPrimary"
         android:elevation="0dp"
         android:onClick="onSignUp"
         android:text="@string/signup"
@@ -68,7 +68,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
-        android:backgroundTint="@color/colorProfessorPrimary"
+        android:backgroundTint="@color/colorTeacherPrimary"
         android:elevation="0dp"
         android:onClick="onLogin"
         android:text="@string/teacher_sign_in_button"
@@ -112,8 +112,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:onClick="onToProfessor"
-        android:text="to professor"
+        android:onClick="onToTeacher"
+        android:text="to teacher"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

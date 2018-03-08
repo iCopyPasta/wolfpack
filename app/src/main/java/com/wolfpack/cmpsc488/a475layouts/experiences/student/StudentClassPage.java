@@ -19,9 +19,9 @@ import com.wolfpack.cmpsc488.a475layouts.TabAdapter;
 // TODO: pass class name and change toolbar name
 
 
-public class ClassPage extends AppCompatActivity implements ActiveSessionDialog.ActiveSessionDialogListener {
+public class StudentClassPage extends AppCompatActivity implements ActiveSessionDialog.ActiveSessionDialogListener {
 
-    public static final String TAG = "ClassPage";
+    public static final String TAG = "StudentClassPage";
 
     private String className;
     private Toolbar classNameDisplay;
@@ -66,7 +66,7 @@ public class ClassPage extends AppCompatActivity implements ActiveSessionDialog.
             Log.i(TAG, "end of onCreate");
         }
         catch (NullPointerException e){
-            Log.i(TAG,"ClassPage got NullPointerException");
+            Log.i(TAG,"StudentClassPage got NullPointerException");
             Log.i(TAG, e.getMessage());
         }
 
@@ -90,8 +90,8 @@ public class ClassPage extends AppCompatActivity implements ActiveSessionDialog.
 
     private void setupViewPager(ViewPager viewPager){
         TabAdapter adapter = new TabAdapter(getSupportFragmentManager());
-        adapter.addFragment(new ClassPageTab1Sessionlist(), getResources().getString(R.string.class_page_tab1_session));
-        adapter.addFragment(new ClassPageTab2Classinfo(), getResources().getString(R.string.class_page_tab2_classinfo));
+        adapter.addFragment(new StudentClassPageTab1Sessionlist(), getResources().getString(R.string.class_page_tab1_session));
+        adapter.addFragment(new StudentClassPageTab2Classinfo(), getResources().getString(R.string.class_page_tab2_classinfo));
         viewPager.setAdapter(adapter);
     }
 

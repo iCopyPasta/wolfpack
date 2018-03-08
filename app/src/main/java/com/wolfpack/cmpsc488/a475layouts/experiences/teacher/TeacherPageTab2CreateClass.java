@@ -9,14 +9,14 @@ import android.view.ViewGroup;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
 
-public class ProfessorPageTab2CreateClass extends Fragment {
+public class TeacherPageTab2CreateClass extends Fragment {
 
     private static final String TAG = "PPTab2CreateClass";
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_professor_page_tab2_createclass, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_teacher_page_tab2_createclass, container, false);
 
         Log.i(TAG, "onCreateView");
 
