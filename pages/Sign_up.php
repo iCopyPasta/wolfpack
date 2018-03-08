@@ -80,7 +80,6 @@ body {
         return ($pw1 == $pw2);
       }
       include_once('C_StudentAccount.php');
-      $matchPWString = "";
       // TODO: ensure email does not already exist
       $insertEmail = (isset($_POST['inputEmail']) ? $_POST['inputEmail'] : null);
       $insertPass = (isset($_POST['inputPassword']) ? $_POST['inputPassword'] : null);
@@ -99,7 +98,7 @@ body {
               //good things happen here!
               $options = ['cost' => 11];
               $hashPassword = password_hash($insertPass, PASSWORD_BCRYPT, $options);
-              $selectStudentAccount = new StudentAccount('thisValueIsIgnored', 'aValueThatIsntNull', 'aValueThatIsntNull', $hashPassword, 'aValueThatIsntNull', $insertEmail);
+              $selectStudentAccount = new StudentAccount('thisValueIsIgnored', 'firstname', 'lastname', $hashPassword, 'aValue', $insertEmail);
               $qJSON = json_decode($selectStudentAccount->insert(), true);
               echo "account creation successful";
             } //pw1 != pw2
@@ -117,9 +116,6 @@ body {
                 $response["message"] = "ERROR(web): password doesn't match confirmPassword";
                 $response["success"] = 0;
                 echo json_encode($response);
-//                $matchPWString = '<div class="alert alert-danger">
-//                                <strong>Error: </strong> Passwords don't match
-//                                </div>';
               }
             }
           }
@@ -138,9 +134,6 @@ body {
               $response["message"] = "ERROR(web): email already exists";
               $response["success"] = 0;
               echo json_encode($response);
-//                $matchPWString = '<div class="alert alert-danger">
-//                                <strong>Error: </strong> Email already exists.  Please choose another.
-//                                </div>';
             }
           }
         } // email,pw1,pw2 null
