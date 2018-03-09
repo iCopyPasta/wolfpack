@@ -49,13 +49,13 @@
             background: tomato;
             padding: 5px;
             width: 200px;
-            height: 150px;
+            height: 100px;
             margin-top: 100px;
 
-            line-height: 150px;
+            line-height: 50px;
             color: white;
             font-weight: bold;
-            font-size: 3em;
+            font-size: 1.7em;
             text-align: center;
             box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
         }
@@ -67,12 +67,12 @@
         <?php include("../lib/php/header.php"); ?>
         
         <ul class="flex-container">
-            <button type="button" class="btn flex-item">1</button>
-            <button type="button" class="btn flex-item">2</button>
-            <button type="button" class="btn flex-item">3</button>
-            <button type="button" class="btn flex-item">4</button>
-            <button type="button" class="btn flex-item">5</button>
-            <button type="button" class="btn flex-item">6</button>
+            <button type="button" class="btn flex-item">View Section 1</button>
+            <button type="button" class="btn flex-item">View Section 2</button>
+            <button type="button" class="btn flex-item">View Section 3</button>
+            <button type="button" class="btn flex-item">View Section 4</button>
+            <button type="button" class="btn flex-item">View Section 5</button>
+            <button type="button" class="btn flex-item">View Section 6</button>
         </ul>
 
 
