@@ -75,6 +75,7 @@ body {
   <?php
       $alertString="";
       if ($_SERVER["REQUEST_METHOD"] == "POST") {
+<<<<<<< HEAD:pages/Sign_in_student.php
 
         $insertEmail=$_POST["inputEmail"];
         $insertPass=$_POST["inputPassword"];
@@ -88,6 +89,27 @@ body {
           header("Location: logged_in_student.php");  //if the query was successful
           die();
         }
+        // validate password match
+        $host='localhost';
+          $user='root';
+          $pass='';
+          $db='iClicker';
+          $con=mysqli_connect($host, $user, $pass, $db);
+          if($con) echo 'connected successfully to testdb database<br>';
+          $insertEmail=$_POST["inputEmail"];
+          $insertPass=$_POST["inputPassword"];
+          $sql="SELECT email, salted_password FROM student_account WHERE email =
+               '$insertEmail' AND salted_password = 
+               SHA('$insertPass')";
+          echo $sql;
+          $query=mysqli_query($con,$sql);
+          
+          if(mysqli_num_rows($query)!=0) { //if the query has any results
+                        $alertString="";
+                        header("Location: logged_in_student.php");  //if the query was successful
+                        die();
+          }
+        // passwords don't match
         else{
           $alertString='<div class="alert alert-danger">
                 <strong>Error.</strong> Username or password does not exist.
@@ -100,6 +122,9 @@ body {
 
 <?php include("../lib/php/header.php"); ?>
 
+  
+<?php include("../lib/php/header.php"); ?>
+  
     <form class="form-signin" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
       <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
