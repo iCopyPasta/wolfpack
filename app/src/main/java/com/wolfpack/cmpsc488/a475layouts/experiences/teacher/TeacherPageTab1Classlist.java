@@ -55,7 +55,7 @@ public class TeacherPageTab1Classlist extends Fragment {
         mListViewClasses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
-                Intent intent = new Intent(getActivity(), StudentClassPage.class);
+                Intent intent = new Intent(getActivity(), TeacherClassPage.class);
                 intent.putExtra("ClassName", classlistTemp[i]);
                 Log.i(TAG, "hello from onItemClick");
 

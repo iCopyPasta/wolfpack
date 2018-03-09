@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
@@ -16,35 +17,35 @@
 
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbarClassPage"
+            android:id="@+id/studentToolbarClassPage"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_weight="1"
             android:background="@color/colorStudentPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/title_activity_class_page">
+            app:title="@string/title_activity_student_class_page">
 
         </android.support.v7.widget.Toolbar>
 
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/sessionPageTabs"
+            android:id="@+id/studentClassPageTabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorStudentPrimary">
 
             <android.support.design.widget.TabItem
-                android:id="@+id/tabSessionList"
+                android:id="@+id/studentTabSessionList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/class_page_tab1_session" />
+                android:text="@string/student_class_page_tab1_session" />
 
             <android.support.design.widget.TabItem
-                android:id="@+id/tabClassInfo"
+                android:id="@+id/studentTabClassInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/class_page_tab2_classinfo" />
+                android:text="@string/student_class_page_tab2_classinfo" />
 
 
         </android.support.design.widget.TabLayout>
@@ -52,7 +53,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/sessionPageViewPager"
+        android:id="@+id/studentClassPageViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
