@@ -75,8 +75,6 @@ body {
   <?php
       $alertString="";
       if ($_SERVER["REQUEST_METHOD"] == "POST") {
-<<<<<<< HEAD:pages/Sign_in_student.php
-
         $insertEmail=$_POST["inputEmail"];
         $insertPass=$_POST["inputPassword"];
 
