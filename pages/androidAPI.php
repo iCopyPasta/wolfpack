@@ -52,6 +52,22 @@
     $currentPage = isset($_POST['inputCurrentPageNumber']) ? $_POST['inputCurrentPageNumber'] : null;
     $resultsPerPage = isset($_POST['inputResultsPerPage']) ? $_POST['inputResultsPerPage'] : null;
     $pictureContent = isset($_FILES['inputUserPicture']) ? $_FILES['inputUserPicture'] : null;
+    $debugResponse = array();
+    
+    //camera debugging
+    /*if($pictureContent !== null){
+        $debugResponse["message"] = "pictureContent is NOT null : ";
+        
+    }*/
+
+    /*if($methodName !== null){
+        $debugResponse["message"] = $debugResponse["message"] . "inputMethodName is NOT null";
+        $debugResponse["success"] = 1;
+        echo json_encode($debugResponse);
+        exit(1);
+    }*/
+
+    
     
 
     $fields = array();
@@ -93,19 +109,44 @@
 
             build_curlreq($fields, $postvars, $url);
 
+            break;
+
         case "uploadSinglePic":
             //$url = "http://wolfpack.cs.hbg.psu.edu/pages/Class_Search.php"
             $url = "http://192.168.1.57/pages/upload.php";
+            $response = array();
+            //$path="opt/lampp/htdocs/images/"
+            //require "$path";
             
             $fields = build_fields($fields,
-                                   array('inputUserPictureName', 'inputUserPictureContent','android'),
+                                   array('inputUserPictureContent' ,'android'),
                                    $pictureContent["name"],
-                                   $pictureContent["image"],
                                    $android);
             
-            $postvars = http_build_query($fields);
+            //$postvars = http_build_query($fields);
 
-            build_curlreq($fields, $postvars, $url);
+            //build_curlreq($fields, $postvars, $url);
+
+            //CHECKS TO PREVENT WARNINGS AND/OR FAILURES!
+
+            if (move_uploaded_file($_FILES["inputUserPicture"]["tmp_name"], 
+        "/opt/lampp/htdocs/images/". $_FILES["inputUserPicture"]["name"])) {
+                $response["message"] ="The file has been uploaded";
+                $response["success"] = 1;
+                echo json_encode($response);
+                exit(1);
+            }            
+            else{
+                $response["message"] ="The file has not been uploaded";
+                $response["success"] = 0;
+                echo json_encode($response);
+                exit(1);
+            }
+            exit(1);
+
+            break;
+
+            
 
         default:
             $response = array();

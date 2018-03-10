@@ -2,10 +2,23 @@
 
     //ANDROID-SPECIFIC LOGIC AND USAGE
     $android_file_check = require_once "androidAPI.php";
-    $pictureContent = isset($_POSTS['inputUserPictureContent']) ? $_POST['inputUserPictureContent'] : null;
-    $pictureName = isset($_POST['inputUserPictureName']) ? $_POST['inputUserPictureName'] : null;
-    $android = isset($_POST['android']) ? $_POST['android'] : false;
+
+    if(!$android_file_check){
+        $response["message"] = "Sorry, critical error occured on server";
+        $response["success"] = 0;
+        echo json_encode($response);
+        exit(1);
+    }
+
     $response = array();
+    $response["message"] = "In upload.php after first check";
+    $response["success"] = 1;
+    echo json_encode($response);
+    exit(1);
+
+    $pictureContent = isset($_POSTS['inputUserPictureContent']) ? $_POST['inputUserPictureContent'] : null;
+    $android = isset($_POST['android']) ? $_POST['android'] : false;
+    
 
     #CHANGE BASED ON SERVER USED
     #$target_dir = "/var/www/html/images/";
