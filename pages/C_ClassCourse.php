@@ -1,18 +1,18 @@
 <?php
   /*
-  This class is used by the teacher to insert a new class into table "class_course".
+  This class is used by the teacher to insert or select table "class_course".
 
   Example Usage:
 
-  <?php
-      if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        include('C_InsertClassCourse.php');
-        $insertClass = new ClassCourse('aaa', 'bbbb', 'cccc');
-        $insertClass->insert();
-      }
-  ?>
+  // insert a new course
+  $aCourse = new ClassCourse('thisWontMatterSinceItsThePK', '460', 'Olmstead 218', 'whatIsOffering?');
+  $aCourse->insert();
 
-  */
+  // selecting a course; 0th element is success message; 1th to end are rows from table
+  $aCourse = new ClassCourse('1', '460', '%', '%');
+  $myRows = $aCourse->select();
+
+*/
 
   class ClassCourse{
     private $class_id;
