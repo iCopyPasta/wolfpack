@@ -16,21 +16,21 @@ import com.wolfpack.cmpsc488.a475layouts.R;
 
 public class StudentClassPageTab1Sessionlist extends Fragment {
 
-    private static final String TAG = "CPTab1Sessionlist";
+    private static final String TAG = "TCPTab1Sessionlist";
 
     private ListView mListViewSessions;
     private static String[] sessionlistTemp = {"Session 01", "Session 02"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_class_page_tab1_sessionlist, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_student_class_page_tab1_sessionlist, container, false);
 
 
         //populate list view
         // TODO: Use database to find classes that the student is enrolled
         //       Currently it is displaying a hard coded list for demonstrating purposes
 
-        mListViewSessions = (ListView) rootView.findViewById(R.id.sessionListView);
+        mListViewSessions = (ListView) rootView.findViewById(R.id.studentSessionListView);
 
         ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
                 getActivity(),
