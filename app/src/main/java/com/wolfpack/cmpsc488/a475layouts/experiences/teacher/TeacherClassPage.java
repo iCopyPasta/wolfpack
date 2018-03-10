@@ -1,7 +1,5 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.teacher;
 
-import android.app.DialogFragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +8,6 @@ import android.util.Log;
 
 import android.support.design.widget.TabLayout;
 
-import com.wolfpack.cmpsc488.a475layouts.QuestionPage;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.TabAdapter;
 //import android.widget.Toolbar;
@@ -88,8 +85,9 @@ public class TeacherClassPage extends AppCompatActivity {//implements ActiveSess
 
     private void setupViewPager(ViewPager viewPager){
         TabAdapter adapter = new TabAdapter(getSupportFragmentManager());
-        adapter.addFragment(new TeacherClassPageTab1Sessionlist(), getResources().getString(R.string.teacher_class_page_tab1_session));
-        adapter.addFragment(new TeacherClassPageTab2Classinfo(), getResources().getString(R.string.teacher_class_page_tab2_classinfo));
+        adapter.addFragment(new TeacherClassPageTabSessionlist(), getResources().getString(R.string.teacher_class_page_tab_session));
+        adapter.addFragment(new TeacherClassPageTabManage(), getResources().getString(R.string.teacher_class_page_tab_manage));
+        adapter.addFragment(new TeacherClassPageTabClassinfo(), getResources().getString(R.string.teacher_class_page_tab_classinfo));
         viewPager.setAdapter(adapter);
     }
 

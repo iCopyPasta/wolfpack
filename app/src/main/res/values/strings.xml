@@ -57,8 +57,11 @@
 
 
     <!-- Strings for Teacher Class Page -->
-    <string name="teacher_class_page_tab1_session">Sessions</string>
-    <string name="teacher_class_page_tab2_classinfo">Information</string>
+    <string name="teacher_class_page_tab_session">Sessions</string>
+    <string name="teacher_class_page_tab_manage">Manage</string>
+    <string name="teacher_class_page_tab_classinfo">Settings</string>
+    <string name="manage_sessions">Manage Sessions</string>
+    <string name="manage_questions">Manage Questions</string>
 
 
 
