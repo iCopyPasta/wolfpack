@@ -353,6 +353,11 @@ public class CameraExample extends AppCompatActivity {
                 Log.i(TAG, result.getMessage());
                 Log.i(TAG, String.valueOf(result.getStatus()));
                 isUploading = false;
+
+                if(result.getStatus() == 1){
+                    Toast.makeText(CameraExample.this, "Upload done", Toast.LENGTH_SHORT).show();
+
+                }
             }
             else{
 
