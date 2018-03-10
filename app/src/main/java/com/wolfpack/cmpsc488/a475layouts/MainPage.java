@@ -111,4 +111,10 @@ public class MainPage extends AppCompatActivity {
         Intent intent = new Intent(this, TeacherPage.class);
         startActivity(intent);
     }
+
+    public void onCameraExample(View view){
+        Log.i("Main Page", "onCameraExample is called");
+        Intent intent = new Intent(this, CameraExample.class);
+        startActivity(intent);
+    }
 }

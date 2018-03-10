@@ -3,8 +3,13 @@ package com.wolfpack.cmpsc488.a475layouts.services.authentication;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.wolfpack.cmpsc488.a475layouts.services.authentication.data_retrieval.BasicWolfpackResponse;
 
+import java.io.File;
+
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import pagination.models.SearchClassResult;
@@ -12,9 +17,13 @@ import pagination.models.SearchResultSection;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 
 public interface WolfpackClient{
 
@@ -75,6 +84,14 @@ public interface WolfpackClient{
             @Field("inputCurrentPageNumber") int currentPage,
             @Field("inputClassTitle") String classTitle,
             @Field("inputMethodName") String methodName
+    );
+
+    @POST(FEED)
+    Call<BasicWolfpackResponse> uploadSinglePic(
+            @Header("Content-Type") String contentType,
+            @Header("Authorization") String auth,
+            @Body MultipartBody body
+
     );
 
 }

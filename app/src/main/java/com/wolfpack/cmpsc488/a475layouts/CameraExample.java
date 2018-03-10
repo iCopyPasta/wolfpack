@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -16,24 +18,37 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentPage;
+import com.wolfpack.cmpsc488.a475layouts.services.authentication.WolfpackClient;
+import com.wolfpack.cmpsc488.a475layouts.services.authentication.data_retrieval.BasicWolfpackResponse;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import pagination.models.SearchClassResult;
+import pagination.models.SearchResultSection;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.http.Multipart;
+
 import static android.os.Environment.DIRECTORY_PICTURES;
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
 
 /**
- * Created by pablo on 2/11/18.
- * This is a mostly complete, but unfinished example of using the camera application.
- * We can use this to get results back from the camera, and avoid implementation ourselves
- * I suspect this process will be similar for external library calls such as GPS
- * Worth reading up on permissions, intents, and callbacks for different applications
- * has NO code to save instances!!!!!
+ * Updated by peo5032 on 3/11/18.
+ * This java object will now incorporate Retrofit to upload an image to a server
  */
 
-//TODO: Figure out how to implement usage with PUBLIC DIRECTORY
     //the problem is that the call to INSERT CALL requires that the URI have content!
     //most tutorials have file:// as the tag, which will cause newer versions of Android to crash,
     //starting with Android 6 I believe
@@ -45,6 +60,7 @@ public class CameraExample extends AppCompatActivity {
     Uri photoURI = null;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_PUBLIC_DIRECTORY = 2;
+    boolean isUploading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,6 +273,98 @@ public class CameraExample extends AppCompatActivity {
 
             // other 'case' lines to check for other
             // permissions this app might request.
+        }
+    }
+
+    public void onCameraUpload(View view){
+        //Toast.makeText(this, "to implement, yet", Toast.LENGTH_SHORT).show();
+
+
+        if(!isUploading){
+            isUploading = true;
+
+            (new ResultBackgroundTask()).execute();
+        }
+
+    }
+
+    class ResultBackgroundTask extends AsyncTask<String, Void, BasicWolfpackResponse> {
+
+        private static final String TAG = "ResultBackgroundTask";
+
+        Response<BasicWolfpackResponse> response;
+        WolfpackClient client;
+
+        @Override
+        protected BasicWolfpackResponse doInBackground(String... params) {
+            Log.i(TAG, "running new doInBackground task");
+
+            try {
+                Log.i(TAG, "About to try network request out");
+
+                client = StudentPage.getWolfpackClientInstance();
+
+                Log.i(TAG, "setting call with parameters");
+
+                RequestBody fileBody = RequestBody.create(MediaType.parse(
+                        getContentResolver().getType(photoURI)), photoFile);
+
+                //https://stackoverflow.com/questions/36491096/retrofit-multipart-request-required-multipartfile-parameter-file-is-not-pre/36514662
+                MultipartBody body = new MultipartBody.Builder()
+                        .addFormDataPart("file-type", "profile")
+                        .addFormDataPart("inputUserPicture", photoFile.getName(), fileBody)
+                        .addFormDataPart("inputMethodName", "uploadSinglePic" )
+                        .build();
+                Call<BasicWolfpackResponse> call =
+                        client.uploadSinglePic(("multipart/form-data; boundary=" + body.boundary()) ,
+                        "wolfpack.cs.hbg.psu.edu", body);
+                Log.i(TAG, "waiting on potential values");
+                response = call.execute();
+                Log.i(TAG, "execution finished, returning body");
+
+                return response.body();
+
+                //TODO: ADD SECURE TRY-CATCH BLOCKS FOR VARIOUS POSSIBILITIES!
+            } catch(java.net.ConnectException e){
+                Log.e(TAG, e.getMessage());
+                return null;
+            }
+            catch (IllegalStateException e){
+                Log.e(TAG, e.getMessage());
+                return null;
+
+            } catch(NullPointerException e){
+                Log.e(TAG, e.getMessage());
+                return null;
+            }
+            catch (Exception e){
+                Log.e(TAG, e.getClass().toString() + " "+  e.getMessage());
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(final BasicWolfpackResponse result) {
+
+            //we successfully retrieved a valid value back from server
+            if(result != null){
+                Log.i(TAG, "result was not null");
+                Log.i(TAG, "we made it all the way to onPostExecute");
+                Log.i(TAG, result.getMessage());
+                Log.i(TAG, String.valueOf(result.getStatus()));
+                isUploading = false;
+            }
+            else{
+
+                Toast.makeText(CameraExample.this, "An error occurred", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        @Override
+        protected void onCancelled() {
+            //TODO: show some error in the screen
+            Toast.makeText(CameraExample.this, "Cancelled", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -68,6 +68,9 @@
         <activity
             android:name=".services.authentication.SignUp"
             android:label="@string/title_activity_sign_up" />
+        <activity android:name=".CameraExample"
+            android:label="@string/CameraUpload"
+            />
 
     </application>
 

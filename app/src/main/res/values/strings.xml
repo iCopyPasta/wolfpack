@@ -75,6 +75,7 @@
     <string name="teacher_page_tab1_classlist">Class List</string>
     <string name="teacher_page_tab2_createclass">Create Class</string>
     <string name="teacher_page_tab3_settings">Settings</string>
+    <string name="CameraUpload">Upload</string>
 
 
 </resources>
