@@ -4,13 +4,11 @@
 
   Example Usage:
 
-  <?php
-      if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        include('C_Question.php');
-        $insertQuestion = new Question('Is this a question?', 'professor asked field', 'TrueOrFalseTag');
-        $insertQuestion->insert();
-      }
-  ?>
+  $insertQuestion = new Question('Is this a question?', 'professor asked field', 'TrueOrFalseTag');
+  $insertQuestion->insert();
+
+  $selectQuestion = new Question('1', '%', '%', '%');
+  $result = json_decode($selectQuestion->select(), true);
 
   */
 
@@ -105,8 +103,14 @@
         // die();
         return json_encode($response);
       }
+
       $pdo = null;
-      return json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+      $response = array();
+      $response["message"] = "Success SELECTING from Question";
+      $response["success"] = 1;
+      $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      array_unshift($retVal, $response);
+      return json_encode($retVal);
     }
 
   }
