@@ -4,7 +4,31 @@
 
   Example Usage:
 
-  //TODO: example usage
+  //include the script
+  include('/pages/C_Poll.php');
+
+  // create a poll
+  $poll = new Poll('','','',
+          '2018', '03', '09', '15:40:00',
+          '2018', '04', '10', '10:00:00');
+
+  // is the poll active? in other words, is the current time within the poll window?
+  $retVal = $poll->isActive();
+  if($retVal == true){
+    echo 'true<br>';
+  }
+  else{
+    echo 'false<br>';
+  }
+
+  // add a question to the poll
+  $selectQuestion = new Question('3', '%', '%', '%');
+  $result = json_decode($selectQuestion->select(), true);
+  $result = json_encode($result, true);
+  $poll->addQuestion($result);
+
+  // get an array containing a list of all the questions in the poll
+  $poll->__get('listOfQuestions')
 
   */
 
@@ -22,10 +46,14 @@
     private $endDay;
     private $endYear;
     private $endTime;
-    //private $results;  //TODO: needs more planning
+    //private $results;  //TODO: $results needs more planning
 
-    function __construct($loq, $cc,$cs, $sy, $sm, $sd, $st,$ey, $em, $ed, $et) {
-      $this->__set('listOfQuestions',$loq);
+    // Month: 2 digit String of format: xx
+    // Day  : 2 digit String of format: xx
+    // Year : 4 digit String of format: xxxx
+    // Time : 6 digit String of format: xx:xx:xx
+    function __construct($cc,$cs, $sy, $sm, $sd, $st,$ey, $em, $ed, $et) {
+      $this->listOfQuestions = array();
       $this->__set('classCourse', $cc);
       $this->__set('classSection',$cs);
 
@@ -57,13 +85,34 @@
       return $this;
     }
 
+    // $question : a JSON encoded Question object
+    // return: JSON encoded object with message(string) and success(boolean) values
     public function addQuestion($question){
+      $response = array();
 
+      try {
+        $questionJSON = json_decode($question);
+      }catch(Exception $e){
+        $response["message"] = "Error: addQuestion to poll object. ".$e;
+        $response["success"] = 0;
+        return $response;
+      }
+
+      try{
+        array_push($this->listOfQuestions, $questionJSON);
+      }catch(Exception $e){
+        $response["message"] = "Error: addQuestion to poll object. ".$e;
+        $response["success"] = 0;
+        return $response;
+      }
+
+      $response["message"] = "Success: addQuestion to poll object";
+      $response["success"] = 1;
+      return json_encode($response);
     }
 
     //note that day and month must be two digits (leading zero) or logic will fail
     public function isActive(){
-
       //get start date and time
       $start = $this->__get('startYear').'-'.
               $this->__get('startMonth').'-'.
@@ -80,7 +129,6 @@
       date_default_timezone_set('America/New_York'); // CDT
       $currDate = date("Y-m-d H:i:s");
 
-      //TODO: is current date/time after start date/time and before end date/time?
       //poll has started: current time is after start time
       if($currDate > $start){
         //poll hasn't ended yet: current time is before end time
