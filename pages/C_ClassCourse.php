@@ -105,8 +105,16 @@
         // die();
         return json_encode($response);
       }
+
       $pdo = null;
-      return json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+      $response = array();
+      $response["message"] = "Success SELECTING from ClassCourse";
+      $response["success"] = 1;
+      $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      array_unshift($retVal, $response);
+      return json_encode($retVal);
+
+
     }
 
   }
