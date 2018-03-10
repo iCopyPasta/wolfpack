@@ -51,6 +51,8 @@
     $classTitle = isset($_POST['inputClassTitle']) ? $_POST['inputClassTitle'] : null;
     $currentPage = isset($_POST['inputCurrentPageNumber']) ? $_POST['inputCurrentPageNumber'] : null;
     $resultsPerPage = isset($_POST['inputResultsPerPage']) ? $_POST['inputResultsPerPage'] : null;
+    $pictureContent = isset($_FILES['inputUserPicture']) ? $_FILES['inputUserPicture'] : null;
+    
 
     $fields = array();
     $postvars;
@@ -91,7 +93,26 @@
 
             build_curlreq($fields, $postvars, $url);
 
+        case "uploadSinglePic":
+            //$url = "http://wolfpack.cs.hbg.psu.edu/pages/Class_Search.php"
+            $url = "http://192.168.1.57/pages/upload.php";
+            
+            $fields = build_fields($fields,
+                                   array('inputUserPictureName', 'inputUserPictureContent','android'),
+                                   $pictureContent["name"],
+                                   $pictureContent["image"],
+                                   $android);
+            
+            $postvars = http_build_query($fields);
+
+            build_curlreq($fields, $postvars, $url);
+
         default:
+            $response = array();
+            $response["message"] = "No valid use found";
+            $response["success"] = 0;
+            echo json_encode($response);
+            exit(1);
             
             break;
             
