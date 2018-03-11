@@ -5,15 +5,10 @@
 class Connection{
 
     function getConnection(){
-
-	    // $host = 'localhost';
-	    // $username = 'wolfpack_tester';
-	    // $password = 'cashRule$Everything101';
-	    // $dbname = 'wolfpack_tester';
       $host = 'localhost';
-	    $username = 'root';
-	    $password = '';
-	    $dbname = 'iClicker';
+      $username = 'root';
+      $password = '';
+      $dbname = 'wolfpack_tester';
 
 	    try{
           $conn    = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);

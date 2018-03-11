@@ -192,7 +192,6 @@ this php code will do the following:
   if not valid, alert the user that their attempt was invalid
  -->
 
-
 <body class="text-center">
 
 <?php include("../lib/php/header.php"); ?>
