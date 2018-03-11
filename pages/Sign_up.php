@@ -80,6 +80,9 @@ body {
         return ($pw1 == $pw2);
       }
       include_once('C_StudentAccount.php');
+      include_once('Connection.php');
+      $connection = new Connection;
+      
       // TODO: ensure email does not already exist
       $insertEmail = (isset($_POST['inputEmail']) ? $_POST['inputEmail'] : null);
       $insertPass = (isset($_POST['inputPassword']) ? $_POST['inputPassword'] : null);
@@ -95,6 +98,8 @@ body {
           if(is_null($emailExist)) {
             //pw1 == pw2
             if(passwordMatch($insertPass, $insertPass2)) {
+              include('registerConfirmation.php');
+              addUniqueHash($connection,$insertEmail);
               //good things happen here!
               $options = ['cost' => 11];
               $hashPassword = password_hash($insertPass, PASSWORD_BCRYPT, $options);
