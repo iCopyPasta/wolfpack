@@ -9,12 +9,15 @@ import android.os.Bundle;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.TabAdapter;
 
+import com.wolfpack.cmpsc488.a475layouts.services.authentication.WolfpackClient;
+
 public class StudentPage extends AppCompatActivity {
 
     private static final String TAG = "StudentPage";
-
+    private static WolfpackClient wolfpackClient;
     private TabAdapter mTabAdapter;
     private ViewPager mViewPager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,15 @@ public class StudentPage extends AppCompatActivity {
         adapter.addFragment(new StudentPageTab2AddClass(), getResources().getString(R.string.student_page_tab2_addclass));
         adapter.addFragment(new StudentPageTab3Settings(), getResources().getString(R.string.student_page_tab3_settings));
         viewPager.setAdapter(adapter);
+    }
+
+    public static synchronized WolfpackClient getWolfpackClientInstance(){
+        if(wolfpackClient == null){
+            return WolfpackClient.retrofit.create(WolfpackClient.class);
+        } else{
+            return wolfpackClient;
+        }
+
     }
 
 

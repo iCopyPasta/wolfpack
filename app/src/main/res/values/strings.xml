@@ -11,7 +11,10 @@
     <string name="title_activity_teacher_class_page">Class Name</string>
 
     <string name="title_activity_question_page">Question</string>
-    <string name="title_activity_main_page">iClicker++</string>
+
+    <string name="title_activity_main_page">Pollato</string>
+    <string name="title_activity_class_page">Class Name</string>
+
 
 
     <!-- Strings for Main Page -->
