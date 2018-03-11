@@ -24,6 +24,9 @@
           $hashPassword = password_hash($insertPass, PASSWORD_BCRYPT, $options);
           $selectStudentAccount = new StudentAccount('thisValueIsIgnored', 'firstname', 'lastname', $hashPassword, 'aValue', $insertEmail);
           echo $selectStudentAccount->insert(); // insert method returns a json_encoded response
+          if(boolval($android)){
+            exit(0);
+          }
         } //pw1 != pw2
         else {
           //TODO: differentiation between android and web here may be unnecessary but it doesn't seem to be a problem for now
@@ -33,6 +36,7 @@
             $response["message"] = "ERROR: password doesn't match confirmPassword";
             $response["success"] = 0;
             echo json_encode($response);
+            exit(0);
           }
           //web pw1 != pw2
           else{
@@ -52,6 +56,7 @@
           $response["message"] = "ERROR: email already exists";
           $response["success"] = 0;
           echo json_encode($response);
+          exit(0);
         }
         //web email already exists
         else{
@@ -69,6 +74,7 @@
         $response["message"] = "ERROR: email and pw cannot be null";
         $response["success"] = 0;
         echo json_encode($response);
+        exit(0);
       }
       //web email,pw1,pw2 null
       else{
