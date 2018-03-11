@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">iClicker++</string>
+    <string name="app_name">Pollato</string>
     <string name="textview">TextView</string>
 
 
@@ -86,7 +86,10 @@
     <string name="USER_MODE">USER_MODE</string>
 
 
+
+    <string name="CameraUpload">Upload</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
 
 
 </resources>
