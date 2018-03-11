@@ -46,7 +46,7 @@
 
         <activity
             android:name=".experiences.student.StudentClassPage"
-            android:label="@string/title_activity_class_page"
+            android:label="@string/title_activity_student_class_page"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
@@ -55,15 +55,16 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
 
-<!--        <activity
-            android:name=".experiences.teacher.teacherClassPage"
-            android:label="@string/title_activity_class_page"
-            android:theme="@style/AppTheme.NoActionBar" />-->
+        <activity
+            android:name=".experiences.teacher.TeacherClassPage"
+            android:label="@string/title_activity_teacher_class_page"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".experiences.teacher.TeacherPage"
-            android:label="@string/title_activity_class_page"
+            android:label="@string/title_activity_teacher_class_page"
             android:theme="@style/AppTheme.NoActionBar"/>
+
 
         <activity
             android:name=".services.authentication.SignUp"
