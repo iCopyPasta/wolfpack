@@ -5,30 +5,43 @@
   Example Usage:
 
   //include the script
-  include('/pages/C_Poll.php');
+    include('/pages/C_Poll.php');
 
   // create a poll
-  $poll = new Poll('','','',
-          '2018', '03', '09', '15:40:00',
-          '2018', '04', '10', '10:00:00');
+    // Month: 2 digit String of format: xx
+    // Day  : 2 digit String of format: xx
+    // Year : 4 digit String of format: xxxx
+    // Time : 6 digit String of format: xx:xx:xx
+    $poll = new Poll('','','',
+            '2018', '03', '09', '15:40:00',
+            '2018', '04', '10', '10:00:00');
 
   // is the poll active? in other words, is the current time within the poll window?
-  $retVal = $poll->isActive();
-  if($retVal == true){
-    echo 'true<br>';
-  }
-  else{
-    echo 'false<br>';
-  }
+    $retVal = $poll->isActive();
+    if($retVal == true){
+      echo 'true<br>';
+    }
+    else{
+      echo 'false<br>';
+    }
 
-  // add a question to the poll
-  $selectQuestion = new Question('3', '%', '%', '%');
-  $result = json_decode($selectQuestion->select(), true);
-  $result = json_encode($result, true);
-  $poll->addQuestion($result);
+  // add a single question to the poll
+    $selectQuestion = new Question('3', '%', '%', '%');
+    $result = json_decode($selectQuestion->select(), true);
+    $result = json_encode($result, true);
+    $poll->addQuestion($result);
 
   // get an array containing a list of all the questions in the poll
-  $poll->__get('listOfQuestions')
+    $poll->__get('listOfQuestions')
+
+  // set the poll's class course
+    $aCourse = new ClassCourse('%', '460', 'Olmstead 218', 'offering?');
+    $poll->__set('classCourse', $aCourse->select());
+
+  // get the poll's class course
+    $theCourse = $poll->__get('classCourse');
+
+
 
   */
 
@@ -47,6 +60,14 @@
     private $endYear;
     private $endTime;
     //private $results;  //TODO: $results needs more planning
+
+    //TODO: ensure that end is not before start
+
+    //TODO: use "instance"/factory method approach, take multiple arguements... , default 5min duration if no end time given
+    //    public function __construct() {
+    //      $parameters = func_get_args();
+    //      ...
+    //    }
 
     // Month: 2 digit String of format: xx
     // Day  : 2 digit String of format: xx
@@ -149,7 +170,7 @@
       return null;
     }
 
-
+    //TODO:
 
   }
 ?>
