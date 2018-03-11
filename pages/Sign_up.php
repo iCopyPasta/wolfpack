@@ -1,3 +1,89 @@
+<?php
+  function passwordMatch($pw1, $pw2){
+    return ($pw1 == $pw2);
+  }
+  include_once('C_StudentAccount.php');
+  $insertEmail = (isset($_POST['inputEmail']) ? $_POST['inputEmail'] : null);
+  $insertPass = (isset($_POST['inputPassword']) ? $_POST['inputPassword'] : null);
+  $insertPass2 = (isset($_POST['inputConfirmPassword']) ? $_POST['inputConfirmPassword'] : null);
+  $android = isset($_POST["android"]) ? $_POST["android"] : false;
+  $matchPWString = '';
+
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // email,pw1,pw2 are all not null
+    if(!(is_null($insertEmail) && is_null($insertPass) && is_null($insertPass2))) {
+      //email does not already exist
+      $selectStudentAccount = new StudentAccount('%','%','%','%', '%', $insertEmail);
+      $qJSON = json_decode($selectStudentAccount->select(), true);
+      $emailExist = isset($qJSON[1]['email']) ? $qJSON[1]['email'] : null;
+      if(is_null($emailExist)) {
+        //pw1 == pw2
+        if(passwordMatch($insertPass, $insertPass2)) {
+          //good things happen here!
+          $options = ['cost' => 11];
+          $hashPassword = password_hash($insertPass, PASSWORD_BCRYPT, $options);
+          $selectStudentAccount = new StudentAccount('thisValueIsIgnored', 'firstname', 'lastname', $hashPassword, 'aValue', $insertEmail);
+          echo $selectStudentAccount->insert(); // insert method returns a json_encoded response
+        } //pw1 != pw2
+        else {
+          //TODO: differentiation between android and web here may be unnecessary but it doesn't seem to be a problem for now
+          //android pw1 != pw2
+          if(boolval($android)){
+            $response = array();
+            $response["message"] = "ERROR: password doesn't match confirmPassword";
+            $response["success"] = 0;
+            echo json_encode($response);
+          }
+          //web pw1 != pw2
+          else{
+            $response = array();
+            $response["message"] = "ERROR: password doesn't match confirmPassword";
+            $response["success"] = 0;
+            echo json_encode($response);
+          }
+        }
+      }
+      //email already exists
+      else {
+        //TODO: differentiation between android and web here may be unnecessary but it doesn't seem to be a problem for now
+        //android email already exists
+        if(boolval($android)){
+          $response = array();
+          $response["message"] = "ERROR: email already exists";
+          $response["success"] = 0;
+          echo json_encode($response);
+        }
+        //web email already exists
+        else{
+          $response = array();
+          $response["message"] = "ERROR: email already exists";
+          $response["success"] = 0;
+          echo json_encode($response);
+        }
+      }
+    } // email,pw1,pw2 null
+    else {
+      //android email,pw1,pw2 null
+      if(boolval($android)){
+        $response = array();
+        $response["message"] = "ERROR: email and pw cannot be null";
+        $response["success"] = 0;
+        echo json_encode($response);
+      }
+      //web email,pw1,pw2 null
+      else{
+        $response = array();
+        $response["message"] = "ERROR: email and pw cannot be null";
+        $response["success"] = 0;
+        echo json_encode($response);
+        $matchPWString = '<div class="alert alert-danger">
+                        <strong>Error: </strong> Email and pw cannot be null
+                        </div>';
+      }
+    }
+  }
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -75,89 +161,7 @@ body {
       - if it already exists then do not change the DB
     3. create the account in the DB
    -->
-    <?php
-      function passwordMatch($pw1, $pw2){
-        return ($pw1 == $pw2);
-      }
-      include_once('C_StudentAccount.php');
-      // TODO: ensure email does not already exist
-      $insertEmail = (isset($_POST['inputEmail']) ? $_POST['inputEmail'] : null);
-      $insertPass = (isset($_POST['inputPassword']) ? $_POST['inputPassword'] : null);
-      $insertPass2 = (isset($_POST['inputConfirmPassword']) ? $_POST['inputConfirmPassword'] : null);
-      $android = isset($_POST["android"]) ? $_POST["android"] : false;
-      if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // email,pw1,pw2 are all not null
-        if(!(is_null($insertEmail) && is_null($insertPass) && is_null($insertPass2))) {
-          //email does not already exist
-          $selectStudentAccount = new StudentAccount('%','%','%','%', '%', $insertEmail);
-          $qJSON = json_decode($selectStudentAccount->select(), true);
-          $emailExist = isset($qJSON[1]['email']) ? $qJSON[1]['email'] : null;
-          if(is_null($emailExist)) {
-            //pw1 == pw2
-            if(passwordMatch($insertPass, $insertPass2)) {
-              //good things happen here!
-              $options = ['cost' => 11];
-              $hashPassword = password_hash($insertPass, PASSWORD_BCRYPT, $options);
-              $selectStudentAccount = new StudentAccount('thisValueIsIgnored', 'firstname', 'lastname', $hashPassword, 'aValue', $insertEmail);
-              $qJSON = json_decode($selectStudentAccount->insert(), true);
-              echo "account creation successful";
-            } //pw1 != pw2
-            else {
-              //android pw1 != pw2
-              if(boolval($android)){
-                $response = array();
-                $response["message"] = "ERROR(android): password doesn't match confirmPassword";
-                $response["success"] = 0;
-                echo json_encode($response);
-              }
-              //web pw1 != pw2
-              else{
-                $response = array();
-                $response["message"] = "ERROR(web): password doesn't match confirmPassword";
-                $response["success"] = 0;
-                echo json_encode($response);
-              }
-            }
-          }
-          //email already exists
-          else {
-            //android email already exists
-            if(boolval($android)){
-              $response = array();
-              $response["message"] = "ERROR(android): email already exists";
-              $response["success"] = 0;
-              echo json_encode($response);
-            }
-            //web email already exists
-            else{
-              $response = array();
-              $response["message"] = "ERROR(web): email already exists";
-              $response["success"] = 0;
-              echo json_encode($response);
-            }
-          }
-        } // email,pw1,pw2 null
-        else {
-          //android email,pw1,pw2 null
-          if(boolval($android)){
-            $response = array();
-            $response["message"] = "ERROR(android): email and pw cannot be null";
-            $response["success"] = 0;
-            echo json_encode($response);
-          }
-          //web email,pw1,pw2 null
-          else{
-            $response = array();
-            $response["message"] = "ERROR(web): email and pw cannot be null";
-            $response["success"] = 0;
-            echo json_encode($response);
-//                $matchPWString = '<div class="alert alert-danger">
-//                                <strong>Error: </strong> Email and pw cannot be null
-//                                </div>';
-          }
-        }
-      }
-    ?>
+
 
     <?php include("../lib/php/header.php"); ?>
       
