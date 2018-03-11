@@ -1,3 +1,114 @@
+<?php
+  $alertString = "";
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // get input email and password
+    $insertEmail = isset($_POST["inputEmail"]) ? $_POST["inputEmail"] : null;
+    $insertPass = isset($_POST["inputPassword"]) ? $_POST["inputPassword"] : null;
+    // boolean $android -> indicates android(true) or web(false); HTML can ignore this, will result in "false"
+    $android = isset($_POST["android"]) ? $_POST["android"] : false;
+
+    // search for email in db
+    include('C_StudentAccount.php');
+    $selectStudentAccount = new StudentAccount('%','%','%','%', '%', $insertEmail);
+    $qJSON = json_decode($selectStudentAccount->select(), true);
+
+    // email found
+    if($qJSON[0]['success'] == 1){
+      // get hashed password from search results
+      // hashed password if email found
+      // null if no email found
+      $hashPW = isset($qJSON[1]['salted_password']) ? $qJSON[1]['salted_password'] : null;
+
+      // compare user entered password with hashed pw from db
+      // correct password and email found
+      if(password_verify($insertPass, $hashPW) && !is_null($hashPW)) {
+        //android login success
+        if(boolval($android)){
+          $response = array();
+          $response["message"] = "Success(android): email + password found";
+          $response["success"] = 1;
+          echo json_encode($response);
+          exit(0);
+        }
+        //web login success
+        else{
+          $response = array();
+          $response["message"] = "Success(web): email + password found";
+          $response["success"] = 1;
+          echo json_encode($response);
+          $alertString = "";
+          header("Location: logged_in_student.php");
+        }
+      }
+      // email not found
+      elseif(is_null($hashPW)){
+        if(boolval($android)){
+          $response = array();
+          $response["message"] = "ERROR(android): incorrect email";
+          $response["success"] = 0;
+          echo json_encode($response);
+          exit(0);
+        }
+        else{
+          $response = array();
+          $response["message"] = "ERROR(web): incorrect email";
+          $response["success"] = 0;
+          echo json_encode($response);
+          $alertString = '<div class="alert alert-danger">
+          <strong>Error: </strong> Incorrect Email
+          </div>';
+        }
+      }
+      // incorrect password
+      else{
+        //android incorrect password
+        if(boolval($android)){
+          $response = array();
+          $response["message"] = "ERROR(android): incorrect password";
+          $response["success"] = 0;
+          echo json_encode($response);
+          exit(0);
+        }
+        //web incorrect password
+        else{
+          $response = array();
+          $response["message"] = "ERROR(web): incorrect password";
+          $response["success"] = 0;
+          echo json_encode($response);
+          $alertString = '<div class="alert alert-danger">
+          <strong>Error: </strong> Incorrect Password
+          </div>';
+        }
+      }
+    }
+    // email not found
+    else{
+      //login failure
+      //android login failure
+      if(boolval($android)){
+        $response = array();
+        $response["message"] = "ERROR(android): no email + password found";
+        $response["success"] = 0;
+        echo json_encode($response);
+      }
+      //web login failure
+      else{
+        $response = array();
+        $response["message"] = "ERROR(web): no email + password found";
+        $response["success"] = 0;
+        echo json_encode($response);
+        $alertString = '<div class="alert alert-danger">
+          <strong>Error: </strong> Username does not exist
+          </div>';
+      }
+    }
+  }
+
+
+
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -80,104 +191,7 @@ this php code will do the following:
 2. if valid, redirect page to student landing page
   if not valid, alert the user that their attempt was invalid
  -->
-<?php
-  $alertString = "";
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // get input email and password
-    $insertEmail = isset($_POST["inputEmail"]) ? $_POST["inputEmail"] : null;
-    $insertPass = isset($_POST["inputPassword"]) ? $_POST["inputPassword"] : null;
-    // boolean $android -> indicates android(true) or web(false); HTML can ignore this, will result in "false"
-    $android = isset($_POST["android"]) ? $_POST["android"] : false;
-
-    // search for email in db
-    include('C_StudentAccount.php');
-    $selectStudentAccount = new StudentAccount('%','%','%','%', '%', $insertEmail);
-    $qJSON = json_decode($selectStudentAccount->select(), true);
-
-    // email found
-    if($qJSON[0]['success'] == 1){
-      echo "successful query<br>";
-
-      // get hashed password from search results
-      // hashed password if email found
-      // null if no email found
-      $hashPW = isset($qJSON[1]['salted_password']) ? $qJSON[1]['salted_password'] : null;
-
-      // compare user entered password with hashed pw from db
-      // correct password and email found
-      if(password_verify($insertPass, $hashPW) && !is_null($hashPW)) {
-        echo "password verified<br>";
-        //android login success
-        if(boolval($android)){
-          $response = array();
-          $response["message"] = "Success(android): email + password found";
-          $response["success"] = 1;
-          echo json_encode($response);
-        }
-        //web login success
-        else{
-          $response = array();
-          $response["message"] = "Success(web): email + password found";
-          $response["success"] = 1;
-          echo json_encode($response);
-          $alertString = "";
-          header("Location: logged_in_student.php");
-        }
-      }
-      // email not found
-      elseif(is_null($hashPW)){
-        echo "email not found<br>";
-      }
-      // incorrect password
-      else{
-        echo "password mismatch<br>";
-        //android incorrect password
-        if(boolval($android)){
-          $response = array();
-          $response["message"] = "ERROR(android): incorrect password";
-          $response["success"] = 0;
-          echo json_encode($response);
-        }
-        //web incorrect password
-        else{
-          $response = array();
-          $response["message"] = "ERROR(web): incorrect password";
-          $response["success"] = 0;
-          echo json_encode($response);
-          $alertString = '<div class="alert alert-danger">
-          <strong>Error: </strong> Incorrect Password
-          </div>';
-        }
-      }
-    }
-    // email not found
-    else{
-      echo "unsuccessful query<br>";
-      //login failure
-      //android login failure
-      if(boolval($android)){
-        $response = array();
-        $response["message"] = "ERROR(android): no email + password found";
-        $response["success"] = 0;
-        echo json_encode($response);
-      }
-      //web login failure
-      else{
-        $response = array();
-        $response["message"] = "ERROR(web): no email + password found";
-        $response["success"] = 0;
-        echo json_encode($response);
-        $alertString = '<div class="alert alert-danger">
-          <strong>Error: </strong> Username does not exist
-          </div>';
-       }
-    }
-  }
-
-
-
-?>
 
 <body class="text-center">
 
