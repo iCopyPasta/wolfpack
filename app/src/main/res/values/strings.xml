@@ -7,9 +7,14 @@
     <string name="title_activity_login_page">Sign in</string>
     <string name="title_activity_student_page">Home</string>
     <string name="title_activity_teacher_page">Home</string>
+    <string name="title_activity_student_class_page">Class Name</string>
+    <string name="title_activity_teacher_class_page">Class Name</string>
+
     <string name="title_activity_question_page">Question</string>
+
     <string name="title_activity_main_page">Pollato</string>
     <string name="title_activity_class_page">Class Name</string>
+
 
 
     <!-- Strings for Main Page -->
@@ -35,20 +40,32 @@
     <string name="class_id">Class ID</string>
 
     <!-- Strings for Student Page -->
-    <string name="tab_classes">Classes</string>
+    <string name="student_page_tab_classes">Classes</string>
     <string name="student_page_tab1_classlist">Class List</string>
     <string name="student_page_tab2_addclass">Add Class</string>
     <string name="student_page_tab3_settings">Settings</string>
 
 
-    <!-- Strings for Class Session Page -->
-    <!--<string name="session_history">Session History</string>-->
-    <!--<string name="action_settings">Settings</string>-->
-    <string name="class_page_tab1_session">Sessions</string>
-    <string name="class_page_tab2_classinfo">Information</string>
+    <!-- Strings for Student Class Page -->
+    <string name="student_class_page_tab1_session">Sessions</string>
+    <string name="student_class_page_tab2_classinfo">Information</string>
 
 
-    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- Strings for Teacher Page -->
+    <string name="teacher_page_tab_classes">Classes</string>
+    <string name="teacher_page_tab1_classlist">Class List</string>
+    <string name="teacher_page_tab2_createclass">Create Class</string>
+    <string name="teacher_page_tab3_settings">Settings</string>
+
+
+    <!-- Strings for Teacher Class Page -->
+    <string name="teacher_class_page_tab_session">Sessions</string>
+    <string name="teacher_class_page_tab_manage">Manage</string>
+    <string name="teacher_class_page_tab_classinfo">Settings</string>
+    <string name="manage_sessions">Manage Sessions</string>
+    <string name="manage_questions">Manage Questions</string>
+
 
 
     <!-- Strings for Question Page -->
@@ -70,12 +87,9 @@
 
 
 
-
-    <!-- Strings for Teacher Page -->
-    <string name="teacher_page_tab1_classlist">Class List</string>
-    <string name="teacher_page_tab2_createclass">Create Class</string>
-    <string name="teacher_page_tab3_settings">Settings</string>
     <string name="CameraUpload">Upload</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
 
 
 </resources>
