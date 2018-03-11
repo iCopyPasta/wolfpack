@@ -34,7 +34,7 @@
         //web login success
         else{
           $response = array();
-          $response["message"] = "Success(web): email + password found";
+          $response["message"] = "Success: email + password found";
           $response["success"] = 1;
           echo json_encode($response);
           $alertString = "";
@@ -45,14 +45,14 @@
       elseif(is_null($hashPW)){
         if(boolval($android)){
           $response = array();
-          $response["message"] = "ERROR(android): incorrect email";
+          $response["message"] = "ERROR: incorrect email";
           $response["success"] = 0;
           echo json_encode($response);
           exit(0);
         }
         else{
           $response = array();
-          $response["message"] = "ERROR(web): incorrect email";
+          $response["message"] = "ERROR: incorrect email";
           $response["success"] = 0;
           echo json_encode($response);
           $alertString = '<div class="alert alert-danger">
@@ -65,7 +65,7 @@
         //android incorrect password
         if(boolval($android)){
           $response = array();
-          $response["message"] = "ERROR(android): incorrect password";
+          $response["message"] = "ERROR: incorrect password";
           $response["success"] = 0;
           echo json_encode($response);
           exit(0);
@@ -73,7 +73,7 @@
         //web incorrect password
         else{
           $response = array();
-          $response["message"] = "ERROR(web): incorrect password";
+          $response["message"] = "ERROR: incorrect password";
           $response["success"] = 0;
           echo json_encode($response);
           $alertString = '<div class="alert alert-danger">
@@ -88,14 +88,15 @@
       //android login failure
       if(boolval($android)){
         $response = array();
-        $response["message"] = "ERROR(android): no email + password found";
+        $response["message"] = "ERROR: no email + password found";
         $response["success"] = 0;
         echo json_encode($response);
+        exit(0);
       }
       //web login failure
       else{
         $response = array();
-        $response["message"] = "ERROR(web): no email + password found";
+        $response["message"] = "ERROR: no email + password found";
         $response["success"] = 0;
         echo json_encode($response);
         $alertString = '<div class="alert alert-danger">
