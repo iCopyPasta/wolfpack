@@ -98,14 +98,16 @@ body {
           if(is_null($emailExist)) {
             //pw1 == pw2
             if(passwordMatch($insertPass, $insertPass2)) {
-              include('registerConfirmation.php');
-              addUniqueHash($connection,$insertEmail);
+             
               //good things happen here!
               $options = ['cost' => 11];
               $hashPassword = password_hash($insertPass, PASSWORD_BCRYPT, $options);
               $selectStudentAccount = new StudentAccount('thisValueIsIgnored', 'firstname', 'lastname', $hashPassword, 'aValue', $insertEmail);
               $qJSON = json_decode($selectStudentAccount->insert(), true);
               echo "account creation successful";
+                
+              include('registerConfirmation.php');
+              addUniqueHash($connection,$insertEmail); //sets UniqueID and confirmed vars in db
             } //pw1 != pw2
             else {
               //android pw1 != pw2
