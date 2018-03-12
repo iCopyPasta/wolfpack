@@ -1,28 +1,30 @@
 <?php
   /*
-  This class is used by the teacher to insert a new question into table "question".
+  This class is used by the teacher to insert or select table "class_section".
 
   Example Usage:
 
-  $insertQuestion = new Question('Is this a question?', 'professor asked field', 'TrueOrFalseTag');
-  $insertQuestion->insert();
+  // insert a new section
+  $aSection = new ClassSection('aaa', 'bbbb', 'cccc');
+  $aSection->insert();
 
-  $selectQuestion = new Question('1', '%', '%', '%');
-  $result = json_decode($selectQuestion->select(), true);
+  // selecting a section; 0th element is success message; 1th to end are rows from table
+  $aSection = new ClassSection('$', 'aaa', 'bbbb', 'cccc');
+  $myRows = $aSection->select();
 
   */
 
-  class Question{
-    private $question_id;
-    private $description;
-    private $professor_asked;
-    private $tags;
+  class ClassSection{
+    private $section_id;
+    private $class_section_number;
+    private $location;
+    private $offering;
 
-    function __construct($q,$d,$p,$t) {
-      $this->__set('question_id', $q);
-      $this->__set('description',$d);
-      $this->__set('professor_asked', $p);
-      $this->__set('tags',$t);
+    function __construct($id, $c,$l,$o) {
+      $this->__set('section_id',$id);
+      $this->__set('class_section_number', $c);
+      $this->__set('location',$l);
+      $this->__set('offering',$o);
     }
 
     // magical get
@@ -47,17 +49,17 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "INSERT INTO question
-                              (description, professor_asked, tags)
-                              VALUES (:description, :professor_asked, :tags)";
+      $sql = "INSERT INTO class_section
+                              (class_section_number, location, offering)
+                              VALUES (:class_section_number, :location, :offering)";
       $stmt = $pdo->prepare($sql);
 
       try{
-        $stmt->execute(['description' => $this->description, 'professor_asked' => $this->professor_asked, 'tags' => $this->tags]);
+        $stmt->execute(['class_section_number' => $this->class_section_number, 'location' => $this->location, 'offering' => $this->offering]);
       }catch (Exception $e){
         // fail JSON response
         $response = array();
-        $response["message"] = "ERROR INSERTING: ".$this->description." ".$this->professor_asked." ".$this->tags." ".$e->getMessage();
+        $response["message"] = "ERROR INSERTING: ".$this->class_section_number." ".$this->location." ".$this->offering." ".$e->getMessage();
         $response["success"] = 0;
         echo json_encode($response);
         die();
@@ -65,7 +67,7 @@
 
       // success JSON response
       $response = array();
-      $response["message"] = "Inserted: ".$this->description." ".$this->professor_asked." ".$this->tags;
+      $response["message"] = "Inserted: ".$this->class_section_number." ".$this->location." ".$this->offering;
       $response["success"] = 1;
       echo json_encode($response);
 
@@ -78,18 +80,18 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "SELECT question_id, description, professor_asked, tags
-              FROM question
-              WHERE question_id LIKE :question_id
-                AND description LIKE :description
-                AND professor_asked LIKE :professor_asked
-                AND tags LIKE :tags";
+      $sql = "SELECT section_id, class_section_number, location, offering
+              FROM class_section
+              WHERE section_id LIKE :section_id
+                AND class_section_number LIKE :class_section_number
+                AND location LIKE :location
+                AND offering LIKE :offering";
 
       $stmt = $pdo->prepare($sql);
-      $stmt->bindValue(':question_id', $this->question_id);
-      $stmt->bindValue(':description', $this->description);
-      $stmt->bindValue(':professor_asked', $this->professor_asked);
-      $stmt->bindValue(':tags', $this->tags);
+      $stmt->bindValue(':section_id', $this->section_id);
+      $stmt->bindValue(':class_section_number', $this->class_section_number);
+      $stmt->bindValue(':location', $this->location);
+      $stmt->bindValue(':offering', $this->offering);
 
       try{
         // $stmt->execute(['email' => $this->email, 'password' => $this->password]);
@@ -106,11 +108,13 @@
 
       $pdo = null;
       $response = array();
-      $response["message"] = "Success SELECTING from Question";
+      $response["message"] = "Success SELECTING from ClassSection";
       $response["success"] = 1;
       $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
       array_unshift($retVal, $response);
       return json_encode($retVal);
+
+
     }
 
   }
