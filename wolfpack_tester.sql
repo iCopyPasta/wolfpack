@@ -20,6 +20,22 @@ SET time_zone = "+00:00";
 -- Database: `wolfpack_tester`
 --
 
+-- Drop tables
+DROP TABLE IF EXISTS teaches;
+DROP TABLE IF EXISTS grouped_by;
+DROP TABLE IF EXISTS answers;
+DROP TABLE IF EXISTS owns;
+DROP TABLE IF EXISTS has;
+DROP TABLE IF EXISTS uses;
+DROP TABLE IF EXISTS is_in;
+
+DROP TABLE IF EXISTS professor_account;
+DROP TABLE IF EXISTS student_account;
+DROP TABLE IF EXISTS class_course;
+DROP TABLE IF EXISTS class_section;
+DROP TABLE IF EXISTS question;
+DROP TABLE IF EXISTS question_session;
+
 -- --------------------------------------------------------
 
 --
