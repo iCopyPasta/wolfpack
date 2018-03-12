@@ -105,9 +105,6 @@
       }
     }
   }
-
-
-
 ?>
 
 <!doctype html>
@@ -192,7 +189,6 @@ this php code will do the following:
 2. if valid, redirect page to student landing page
   if not valid, alert the user that their attempt was invalid
  -->
-
 
 <body class="text-center">
 
