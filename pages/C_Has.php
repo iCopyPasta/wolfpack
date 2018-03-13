@@ -74,7 +74,7 @@
       //TODO: maybe "isClassIdExist" and "isSectionExist" should be functions. Also, this code will be used a lot
       // ensure that the 'class_id' exists in the class_course table before trying to insert
       include_once('/pages/C_ClassCourse.php');
-      $course = new ClassCourse($this->__get('class_id'), '%', '%', '%');
+      $course = new ClassCourse($this->__get('class_id'), '%', '%', '%', '%');
       $qJSON = json_decode($course->select(), true);
       // if a row was returned then the class_id exists
       $isClassIdExist = array_key_exists(1, $qJSON);

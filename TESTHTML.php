@@ -46,16 +46,118 @@
   <?php
       $alertString="";
       if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        include('/pages/C_View_Question.php');
-        $viewQuestion = new ViewQuestion('%','%','%','%');
-        $qJSON = json_decode($viewQuestion->select());
-        // var_dump($qJSON, true);
-        // foreach($qJSON as $key => $value){
-        //   echo "$key => $value"."<br>";
-        // }
-        echo json_encode($qJSON);
+        include('/pages/Connection.php');
+        include('/pages/C_ClassCourse.php');
+        include('/pages/C_ClassSection.php');
+        include('/pages/C_Has.php');
+        include('/pages/C_IsIn.php');
+        include('/pages/C_ProfessorAccount.php');
+        include('/pages/C_Teaches.php');
+        include('/pages/searchClassTitleSectionByTeacher.php');
+        include('/pages/searchClassesByStudent.php');
 
+        // select a course
+        $newCourse = new ClassCourse('%', '122', 'Olmstead 100', 'whatIsOffering?', 'Object Oriented Programming');
+        echo indent($newCourse->select());
+
+
+//
+//        // select a section
+//        $newSection = new ClassSection('thisWontMatterSinceItsThePK', '2', 'Olmstead 100', 'offering?');
+//        $newSection->select();
+//
+//        // select a "has"
+//        $aHas = new Has(1, 1);
+//        $response = $aHas->select();
+//
+//        // select a professor
+//        $newProfessor = new ProfessorAccount('%', 'Sukmoon', 'Chang', 'pw', 'schoolId', 'Chang1@psu.edu');
+//        $newProfessor->select();
+//        $newProfessor = new ProfessorAccount('%', 'Hyuntae', 'Na', 'pw', 'schoolId', 'Na1@psu.edu');
+//        $newProfessor->select();
+//        $newProfessor = new ProfessorAccount('%', 'Jeremy', 'Blum', 'pw', 'schoolId', 'Blum1@psu.edu');
+//        $newProfessor->select();
+//        $newProfessor = new ProfessorAccount('%', 'Linda', 'Kunkle', 'pw', 'schoolId', 'Kunkle1@psu.edu');
+//        $newProfessor->select();
+//
+//        // select a teaches
+//        $newTeaches = new Teaches(1, 1);
+//        $newTeaches->select();
+//
+//        // select a is_in
+//        $newIsIn = new IsIn(11, 1, 1);
+//        $response = $newIsIn->select();
+//
+//        // search for all the classes a student is in
+//        $search = searchClassesByStudent(1, 10, 11);
+//
+////        $search = searchClassesByStudent(1, 10, 11);
+//        $qJSON = json_decode($search);
+//        // var_dump($qJSON, true);
+//        // foreach($qJSON as $key => $value){
+//        //   echo "$key => $value"."<br>";
+//        // }
+//        echo json_encode($qJSON);
       }
+
+    /**
+     * Indents a flat JSON string to make it more human-readable.
+     *
+     * @param string $json The original JSON string to process.
+     *
+     * @return string Indented version of the original JSON string.
+     */
+    function indent($json) {
+
+      $result      = '';
+      $pos         = 0;
+      $strLen      = strlen($json);
+      $indentStr   = '  ';
+      $newLine     = "\n";
+      $prevChar    = '';
+      $outOfQuotes = true;
+
+      for ($i=0; $i<=$strLen; $i++) {
+
+        // Grab the next character in the string.
+        $char = substr($json, $i, 1);
+
+        // Are we inside a quoted string?
+        if ($char == '"' && $prevChar != '\\') {
+          $outOfQuotes = !$outOfQuotes;
+
+          // If this character is the end of an element,
+          // output a new line and indent the next line.
+        } else if(($char == '}' || $char == ']') && $outOfQuotes) {
+          $result .= $newLine;
+          $pos --;
+          for ($j=0; $j<$pos; $j++) {
+            $result .= $indentStr;
+          }
+        }
+
+        // Add the character to the result string.
+        $result .= $char;
+
+        // If the last character was the beginning of an element,
+        // output a new line and indent the next line.
+        if (($char == ',' || $char == '{' || $char == '[') && $outOfQuotes) {
+          $result .= $newLine;
+          if ($char == '{' || $char == '[') {
+            $pos ++;
+          }
+
+          for ($j = 0; $j < $pos; $j++) {
+            $result .= $indentStr;
+          }
+        }
+
+        $prevChar = $char;
+      }
+
+      return $result;
+    }
+
   ?>
 
   <body>

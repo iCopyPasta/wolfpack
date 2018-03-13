@@ -23,28 +23,21 @@
 
   */
 
-  class StudentAccount{
-    private $student_id;
+  class ProfessorAccount{
+    private $professor_id;
     private $first_name;
     private $last_name;
     private $salted_password;
-    private $student_school_id;
+    private $professor_school_id;
     private $email;
-    private $title;
-    private $uniqueID;
-    private $isConfirmed;
 
-
-    function __construct($id, $fname, $lname, $spassword, $studschoolid, $email, $title, $uniqueID, $isConfirmed) {
-      $this->__set('student_id', $id);
-      $this->__set('first_name',$fname);
-      $this->__set('last_name', $lname);
-      $this->__set('salted_password',$spassword);
-      $this->__set('student_school_id',$studschoolid);
-      $this->__set('email',$email);
-      $this->__set('title',$title);
-      $this->__set('uniqueID',$uniqueID);
-      $this->__set('isConfirmed',$isConfirmed);
+    function __construct($id, $fn, $ln, $sp, $ssid, $em) {
+      $this->__set('professor_id', $id);
+      $this->__set('first_name',$fn);
+      $this->__set('last_name', $ln);
+      $this->__set('salted_password',$sp);
+      $this->__set('professor_school_id',$ssid);
+      $this->__set('email',$em);
     }
 
     // magical get
@@ -69,27 +62,22 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "INSERT INTO student_account
-                              (first_name, last_name, salted_password, student_school_id, email, title, uniqueID, isConfirmed)
-                              VALUES (:first_name, :last_name, :salted_password, :student_school_id, :email, :title, :uniqueID, :isConfirmed)";
+      $sql = "INSERT INTO professor_account
+                              (first_name, last_name, salted_password, professor_school_id, email)
+                              VALUES (:first_name, :last_name, :salted_password, :professor_school_id, :email)";
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':first_name', $this->first_name);
       $stmt->bindValue(':last_name', $this->last_name);
       $stmt->bindValue(':salted_password', $this->salted_password);
-      $stmt->bindValue(':student_school_id', $this->student_school_id);
+      $stmt->bindValue(':professor_school_id', $this->professor_school_id);
       $stmt->bindValue(':email', $this->email);
-      $stmt->bindValue(':title', $this->title);
-      $stmt->bindValue(':uniqueID', $this->uniqueID);
-      $stmt->bindValue(':isConfirmed', $this->isConfirmed);
 
       try{
         $stmt->execute();
       }catch (Exception $e){
         // fail JSON response
         $response = array();
-        $response["message"] = "ERROR INSERTING: ".$this->first_name." ".$this->last_name." ".$this->salted_password." ".
-                                $this->student_school_id." ".$this->email." ".$this->title." ".$this->uniqueID." ".
-                                $this->isConfirmed." ".$e->getMessage();
+        $response["message"] = "ERROR INSERTING: ".$this->first_name." ".$this->last_name." ".$this->salted_password." ".$this->professor_school_id." ".$this->email.$e->getMessage();
         $response["success"] = 0;
         echo json_encode($response);
         die();
@@ -97,9 +85,7 @@
 
       // success JSON response
       $response = array();
-      $response["message"] = "Inserted: ".$this->first_name." ".$this->last_name." ".$this->salted_password." ".
-                              $this->student_school_id." ".$this->email." ".$this->title." ".$this->uniqueID." ".
-                              $this->isConfirmed;
+      $response["message"] = "Inserted: ".$this->first_name." ".$this->last_name." ".$this->salted_password." ".$this->professor_school_id." ".$this->email;
       $response["success"] = 1;
       echo json_encode($response);
 
@@ -111,36 +97,30 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "SELECT student_id, first_name, last_name, salted_password, student_school_id, email, title, uniqueID, isConfirmed
-              FROM student_account
-              WHERE student_id LIKE :student_id
+      $sql = "SELECT professor_id, first_name, last_name, salted_password, professor_school_id, email
+              FROM professor_account
+              WHERE professor_id LIKE :professor_id
                 AND first_name LIKE :first_name
                 AND last_name LIKE :last_name
                 AND salted_password LIKE :salted_password
-                AND student_school_id LIKE :student_school_id
+                AND professor_school_id LIKE :professor_school_id
                 AND email LIKE :email
-                AND title LIKE :title
-                AND uniqueID LIKE :uniqueID
-                AND isConfirmed LIKE :isConfirmed
                 ";
 
       $stmt = $pdo->prepare($sql);
-      $stmt->bindValue(':student_id', $this->student_id);
+      $stmt->bindValue(':professor_id', $this->professor_id);
       $stmt->bindValue(':first_name', $this->first_name);
       $stmt->bindValue(':last_name', $this->last_name);
       $stmt->bindValue(':salted_password', $this->salted_password);
-      $stmt->bindValue(':student_school_id', $this->student_school_id);
+      $stmt->bindValue(':professor_school_id', $this->professor_school_id);
       $stmt->bindValue(':email', $this->email);
-      $stmt->bindValue(':title', $this->title);
-      $stmt->bindValue(':uniqueID', $this->uniqueID);
-      $stmt->bindValue(':isConfirmed', $this->isConfirmed);
 
       try{
         $stmt->execute();
       }catch (Exception $e){
         // fail JSON response
         $response = array();
-        $response["message"] = "ERROR SELECTING from Student Account: ".$e->getMessage();
+        $response["message"] = "ERROR SELECTING from Professor Account: ".$e->getMessage();
         $response["success"] = 0;
         // echo json_encode($response);
         // die();
@@ -148,7 +128,7 @@
       }
       $pdo = null;
       $response = array();
-      $response["message"] = "Success SELECTING from Student Account";
+      $response["message"] = "Success SELECTING from Professor Account";
       $response["success"] = 1;
 //      $response["what"] = empty($stmt->fetchAll(PDO::FETCH_ASSOC));
       $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
