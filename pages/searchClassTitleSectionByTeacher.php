@@ -1,6 +1,6 @@
 <?php
 
-  function searchClassTitleSectionByTeacher($title, $teacherFName, $teacherLName){
+  function searchClassTitleSectionByTeacher($page, $title, $teacherFName, $teacherLName){
     include_once('Connection.php');
     $connection = new Connection;
     $pdo = $connection->getConnection();
