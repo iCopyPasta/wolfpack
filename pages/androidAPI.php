@@ -146,7 +146,7 @@
 
             break;
 
-	case "updateClassList":
+	case "findEnrolledClasses":
 	     $url = "http://wolfpack.cs.hbg.psu.edu/pages/hughes.php";
 	
             $fields = build_fields($fields,
