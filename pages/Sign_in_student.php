@@ -1,3 +1,5 @@
+<?php include("../lib/php/header.php"); ?>
+
 <?php
   $alertString = "";
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -38,6 +40,7 @@
           $response["success"] = 1;
           echo json_encode($response);
           $alertString = "";
+          $_SESSION['user'] = $insertEmail; //saves a session variable, unaccessable to the client, identifying them
           header("Location: logged_in_student.php");
         }
       }
@@ -192,7 +195,7 @@ this php code will do the following:
 
 <body class="text-center">
 
-<?php include("../lib/php/header.php"); ?>
+<?php /*include("../lib/php/header.php"); */ ?>
 
 <form class="form-signin" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
   <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">

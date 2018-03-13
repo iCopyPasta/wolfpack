@@ -29,7 +29,7 @@
           $selectStudentAccount = new StudentAccount('thisValueIsIgnored', 'firstname', 'lastname', $hashPassword, 'aValue', $insertEmail, '%', '%', 0);
           echo $selectStudentAccount->insert(); // insert method returns a json_encoded response
           include('registerConfirmation.php');
-          addUniqueHash($connection,$insertEmail); //sets UniqueID and confirmed vars in db
+          addUniqueHash($connection,$insertEmail); //sets UniqueID and confirmed vars in db, custom function -TR
           if(boolval($android)){
             exit(0);
           }

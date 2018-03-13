@@ -80,8 +80,8 @@
         case "attemptLogin":
            
             //$url = "http://192.168.1.57/pages/test.php";
-            //$url = "http://wolfpack.cs.hbg.psu.edu/pages/test.php"
-            $url = "http://192.168.1.57/pages/Sign_in_student.php";
+            $url = "http://wolfpack.cs.hbg.psu.edu/pages/test.php";
+            //$url = "http://192.168.1.57/pages/Sign_in_student.php";
             
             $fields = build_fields($fields, 
                          array("inputEmail", "inputPassword", "android"),
@@ -96,8 +96,8 @@
             break;
             
         case "findClasses":
-            //$url = "http://wolfpack.cs.hbg.psu.edu/pages/Class_Search.php"
-            $url = "http://192.168.1.57/pages/Class_Search_Stub.php";
+            $url = "http://wolfpack.cs.hbg.psu.edu/pages/Class_Search_Stub.php";
+            //$url = "http://192.168.1.57/pages/Class_Search_Stub.php";
             
             $fields = build_fields($fields,
                                    array('inputClassTitle', 'inputCurrentPageNumber','android'),
@@ -112,8 +112,8 @@
             break;
 
         case "uploadSinglePic":
-            //$url = "http://wolfpack.cs.hbg.psu.edu/pages/Class_Search.php"
-            $url = "http://192.168.1.57/pages/upload.php";
+            $url = "http://wolfpack.cs.hbg.psu.edu/pages/Class_Search_Stub.php";
+            //$url = "http://192.168.1.57/pages/upload.php";
             $response = array();
             //$path="opt/lampp/htdocs/images/"
             //require "$path";
@@ -130,7 +130,7 @@
             //CHECKS TO PREVENT WARNINGS AND/OR FAILURES!
 
             if (move_uploaded_file($_FILES["inputUserPicture"]["tmp_name"], 
-        "/opt/lampp/htdocs/images/". $_FILES["inputUserPicture"]["name"])) {
+        "/var/www/html/images/". $_FILES["inputUserPicture"]["name"])) {
                 $response["message"] ="The file has been uploaded";
                 $response["success"] = 1;
                 echo json_encode($response);
@@ -146,8 +146,20 @@
 
             break;
 
-            
+	case "updateClassList":
+	     $url = "http://wolfpack.cs.hbg.psu.edu/pages/hughes.php";
+	
+            $fields = build_fields($fields,
+	                           array("inputCurrentPageNumber", "inputEmail","android"),
+                                   $currentPage,
+	                           $email,
+				   $android);
 
+            $postvars = http_build_query($fields);
+
+            build_curlreq($fields, $postvars, $url);
+            break;
+	    
         default:
             $response = array();
             $response["message"] = "No valid use found";
