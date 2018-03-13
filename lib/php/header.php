@@ -1,3 +1,6 @@
+ <?php //include this code at the top of all pages with special functionality for a logged in user, or put it in header
+ session_start(); ?>
+
 <!-- Toolbar currently does nothing, just a default placeholder -->
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
   <a class="navbar-brand" href="../index.php">Pollato</a>
@@ -25,7 +28,17 @@
           <a class="dropdown-item" href="#">Something else here</a>
         </div>
       </li>
+        
     </ul>
-
+      <p style="color:white">
+    <?php if (isset($_SESSION['user'])) { //usage: $_SESSION['user'] will contain the email of the logged in user
+        // logged in
+        echo "Hello ".$_SESSION['user']; 
+        } else {
+        // not logged in
+        echo "Not logged in.";
+        }
+      ?>
+      </p>
   </div>
 </nav>
