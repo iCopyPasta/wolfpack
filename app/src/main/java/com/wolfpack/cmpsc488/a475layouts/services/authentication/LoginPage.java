@@ -28,11 +28,10 @@ import com.wolfpack.cmpsc488.a475layouts.CameraExample;
 import com.wolfpack.cmpsc488.a475layouts.MainPage;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentPage;
+import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * A login screen that offers login via email/password.

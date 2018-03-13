@@ -9,7 +9,7 @@ import android.os.Bundle;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.TabAdapter;
 
-import com.wolfpack.cmpsc488.a475layouts.services.authentication.WolfpackClient;
+import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
 
 public class StudentPage extends AppCompatActivity {
 

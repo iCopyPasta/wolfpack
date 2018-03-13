@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import com.wolfpack.cmpsc488.a475layouts.services.authentication.WolfpackClient;
+import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
 import pagination.ILoadmore;
 import pagination.PaginationAdapter;
 import pagination.models.SearchClassResult;

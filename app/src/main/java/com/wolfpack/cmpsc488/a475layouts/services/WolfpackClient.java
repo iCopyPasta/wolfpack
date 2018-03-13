@@ -1,16 +1,13 @@
-package com.wolfpack.cmpsc488.a475layouts.services.authentication;
+package com.wolfpack.cmpsc488.a475layouts.services;
 
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.wolfpack.cmpsc488.a475layouts.services.authentication.data_retrieval.BasicWolfpackResponse;
-
-import java.io.File;
+import com.wolfpack.cmpsc488.a475layouts.services.authentication.LoginDetails;
+import com.wolfpack.cmpsc488.a475layouts.services.data_retrieval.BasicWolfpackResponse;
 
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import pagination.models.SearchClassResult;
 import pagination.models.SearchResultSection;
@@ -21,23 +18,20 @@ import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
-import retrofit2.http.Multipart;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
 
 public interface WolfpackClient{
 
     //local testing for pabz
-    String BASE_URL = "http://192.168.1.57";
+    //String BASE_URL = "http://192.168.1.57";
+
+    //Reference for converting JSON to POJO
+    //http://www.jsonschema2pojo.org/
+
+    String BASE_URL = "http://wolfpack.cs.hbg.psu.edu";
 
     String FEED = "/pages/androidAPI.php";
-    //String FEED = "/pages/test.php";
-    //String FEED = "pages/Sign_in_student.php";
 
-    //wolfpack VM location
-    //String FEED = "pablo_test_android/Sign_up.php";
-    //String BASE_URL = "http://wolfpack.cs.hbg.psu.edu/";
-    String LOGIN = "pablo_test_android/Sign_in_student.php";
 
     Gson gson = new GsonBuilder()
             .setLenient()
@@ -92,6 +86,15 @@ public interface WolfpackClient{
             @Header("Authorization") String auth,
             @Body MultipartBody body
 
+    );
+
+    //Change to your JSON response
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<Object> findEnrolledClasses(
+            @Field("inputCurrentPageNumber") int currentPage,
+            @Field("inputUserEmail") String email,
+            @Field("inputMethodName") String methodName
     );
 
 }

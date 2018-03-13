@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentPage;
+import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
 
 import retrofit2.Call;
 import retrofit2.Response;

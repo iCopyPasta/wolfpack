@@ -1,4 +1,4 @@
-package com.wolfpack.cmpsc488.a475layouts.services.authentication.data_retrieval;
+package com.wolfpack.cmpsc488.a475layouts.services.data_retrieval;
 
 import com.google.gson.annotations.SerializedName;
 
