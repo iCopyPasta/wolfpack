@@ -38,6 +38,7 @@
           $response["success"] = 1;
           echo json_encode($response);
           $alertString = "";
+          $_SESSION['user'] = $insertEmail; //saves a session variable, unaccessable to the client, identifying them
           header("Location: logged_in_student.php");
         }
       }
