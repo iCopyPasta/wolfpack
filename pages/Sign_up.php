@@ -16,7 +16,7 @@
     // email,pw1,pw2 are all not null
     if(!(is_null($insertEmail) && is_null($insertPass) && is_null($insertPass2))) {
       //email does not already exist
-      $selectStudentAccount = new StudentAccount('%','%','%','%', '%', $insertEmail);
+      $selectStudentAccount = new StudentAccount('%','%','%','%', '%', $insertEmail, '%', '%', '%');
       $qJSON = json_decode($selectStudentAccount->select(), true);
       $emailExist = isset($qJSON[1]['email']) ? $qJSON[1]['email'] : null;
       if(is_null($emailExist)) {
@@ -26,10 +26,10 @@
           //good things happen here!
           $options = ['cost' => 11];
           $hashPassword = password_hash($insertPass, PASSWORD_BCRYPT, $options);
-          $selectStudentAccount = new StudentAccount('thisValueIsIgnored', 'firstname', 'lastname', $hashPassword, 'aValue', $insertEmail);
+          $selectStudentAccount = new StudentAccount('thisValueIsIgnored', 'firstname', 'lastname', $hashPassword, 'aValue', $insertEmail, '%', '%', 0);
           echo $selectStudentAccount->insert(); // insert method returns a json_encoded response
           include('registerConfirmation.php');
-          Hash($connection,$insertEmail); //sets UniqueID and confirmed vars in db
+          addUniqueHash($connection,$insertEmail); //sets UniqueID and confirmed vars in db
           if(boolval($android)){
             exit(0);
           }
