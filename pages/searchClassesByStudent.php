@@ -8,7 +8,6 @@
                 student_id - students id number
     return: JSON obj containing a list of classes the student belongs to
 
-    //TODO: Example usage and return val
     Example Usage:
     $search = searchClassesByStudent(1, 10, 1);
 
