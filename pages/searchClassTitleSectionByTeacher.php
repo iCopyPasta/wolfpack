@@ -1,6 +1,21 @@
 <?php
+  /*
+    //TODO: documentation and usage
+    function searchClassTitleSectionByTeacher
+    arguments:  page - the current page
+                rowsPerPage - rows per page
+                teacherFName - teacher first name
+                teacherLName - teacher last name
+    return: JSON obj containing course title and course section number
 
-  function searchClassTitleSectionByTeacher($page, $title, $teacherFName, $teacherLName){
+    Example Usage:
+    $search = searchClassTitleSectionByTeacher(1, 'Principles', 'Sukmoon', 'Chang');
+
+    Example Return Value:
+    [{"message":"Success SELECTING from professor_account, teaches, class_section, has, class_course","success":1},{"title":"Principles of Programming","class_section_number":"1"}]
+
+  */
+  function searchClassByStudent($page, $rowsPerPage, $title, $teacherFName, $teacherLName){
     include_once('Connection.php');
     $connection = new Connection;
     $pdo = $connection->getConnection();
@@ -36,7 +51,7 @@
 
     $pdo = null;
     $response = array();
-    $response["message"] = "Success SELECTING from Question";
+    $response["message"] = "Success SELECTING from professor_account, teaches, class_section, has, class_course";
     $response["success"] = 1;
     $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
     array_unshift($retVal, $response);
