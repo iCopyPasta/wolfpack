@@ -1,3 +1,4 @@
+ALTER TABLE class_course AUTO_INCREMENT = 1;
 INSERT INTO `class_course` (`class_id`, `title`, `description`) VALUES
 (205, 'BIO 105', 'Biology - Parasitology'),
 (206, 'CIE 377', 'Civil Engineering - Surveying'),
@@ -29,4 +30,3 @@ INSERT INTO `class_course` (`class_id`, `title`, `description`) VALUES
 (232, 'STAT 384', 'Statistics - Computational Statistics'),
 (233, 'SCI 188', 'Systems Science - Control Theory : Control Engineering'),
 (234, 'SCI 226', 'Systems Science - Cybernetics');
-COMMIT;
