@@ -18,6 +18,7 @@
         html
         {
             font-size: 14px;
+            padding-top: 56px;
         }
         
         @media (min-width: 768px)
@@ -27,38 +28,6 @@
                 font-size: 16px;
             }
         }
-        .flex-container
-        {
-            padding: 0;
-            margin: 0;
-            list-style: none;
-
-            display: -webkit-box;
-            display: -moz-box;
-            display: -ms-flexbox;
-            display: -webkit-flex;
-            display: flex;
-
-            -webkit-flex-flow: row wrap;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        .flex-item
-        { 
-            background: tomato;
-            padding: 5px;
-            width: 250px;
-            height: 100px;
-            margin-top: 100px;
-
-            line-height: 50px;
-            color: white;
-            font-weight: bold;
-            font-size: 1.5em;
-            text-align: center;
-            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-        }
 
     </style>
   </head>
@@ -66,20 +35,58 @@
     <body>
         <?php include("../lib/php/header.php"); ?>
         
-        <ul class="flex-container">
-            <!-- Dropdown box -->
-            <button type="button" class="btn flex-item">Question Type</button>
-            <!-- Text box -->
-            <button type="button" class="btn flex-item">Question Body</button>
-            <!-- Creating answers will involve entering answer into a text box and pressing enter or clicking on next text box to move on.
-                 When starting another answer, a new, blank, text box will appear beneath the selected textbox.-->
-            <button type="button" class="btn flex-item">Possible Answers</button>
-            <!-- Click a button next to the corresponding text box to flag the answer as the correct answer. Can be applied to multiple answers. -->
-            <button type="button" class="btn flex-item">Flag Correct Answer</button>
-            <button type="button" class="btn flex-item">Extra</button>
-            <button type="button" class="btn flex-item">Extra</button>
-        </ul>
-
+        <form>
+            <div class="form-group">
+            <label for="questionType">Type of Question</label>
+            <select class="form-control" id="questionType">
+              <option>Multiple Choice</option>
+              <option>True/False</option>
+              <option>Short Answer</option>
+            </select>
+          </div>
+            <div class="form-group">
+                <label for="questionBody">Question Body</label>
+                <textarea class="form-control" id="qustionBody" rows="3" placeholder="Enter Question Body"></textarea>
+            </div>
+            
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="checkbox" aria-label="Checkbox for following text input">
+                    </div>
+                </div>
+                <textarea class="form-control" id="qustionAnswer1" rows="2" placeholder="Enter Answer"></textarea>
+            </div>
+            
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="checkbox" aria-label="Checkbox for following text input">
+                    </div>
+                </div>
+                <textarea class="form-control" id="qustionAnswer2" rows="2" placeholder="Enter Answer"></textarea>
+            </div>
+            
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="checkbox" aria-label="Checkbox for following text input">
+                    </div>
+                </div>
+                <textarea class="form-control" id="qustionAnswer3" rows="2" placeholder="Enter Answer"></textarea>
+            </div>
+            
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="checkbox" aria-label="Checkbox for following text input">
+                    </div>
+                </div>
+                <textarea class="form-control" id="qustionAnswer4" rows="2" placeholder="Enter Answer"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
 
 
         <!-- Bootstrap core JavaScript
