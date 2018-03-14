@@ -31,6 +31,7 @@ public class StudentPageTab2AddClass extends Fragment {
     ArrayList<SearchResultSection> items = new ArrayList<>();
     PaginationAdapter adapter;
     EditText classIdSearchEditText;
+    EditText teacherNameSearchEditText;
     boolean isBackgroundTaskRunning;
 
     @Override
@@ -40,12 +41,12 @@ public class StudentPageTab2AddClass extends Fragment {
         return rootView;
     }
 
-
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         classIdSearchEditText = getActivity().findViewById(R.id.classIdSearchEditText);
+        teacherNameSearchEditText = getActivity().findViewById(R.id.classTeacherSearchEditText);
+
 
         // Grab our recycler view and set its adapter;
         final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.sectionResults);
@@ -60,7 +61,6 @@ public class StudentPageTab2AddClass extends Fragment {
                 new ILoadmore() {
                     @Override
                     public void onLoadMore() {
-
                         if(isBackgroundTaskRunning){
                             Log.i("adapter:onLoadMore", "we avoided multiple requests!");
                         } else{
@@ -68,15 +68,12 @@ public class StudentPageTab2AddClass extends Fragment {
                             new ResultBackgroundTask().execute(
                                     classIdSearchEditText.getText().toString());
                         }
-
-
-
                     }
                 }
         );
 
         // Set our listener to search based on the correct specification
-        classIdSearchEditText.setOnKeyListener(
+        teacherNameSearchEditText.setOnKeyListener(
                 new View.OnKeyListener() {
                     @Override
                     public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
@@ -85,35 +82,17 @@ public class StudentPageTab2AddClass extends Fragment {
                         if(keyCode == KeyEvent.KEYCODE_ENTER &&
                                 keyEvent.getAction() == KeyEvent.ACTION_UP){
 
-                            // check which radio group button is used for our execution to
-                            // our background task
+                                if(adapter.getItemCount() == 0){
+                                    Log.i("onKey", "adapter has no items");
+                                }
 
-                            switch (((RadioGroup) getActivity()
-                                    .findViewById(R.id.classRadioGroup)).getCheckedRadioButtonId()
-                                    ){
-                                case R.id.addClassRadioButton:
-                                    classIdSearchEditText.setEnabled(false);
-
-                                    if(adapter.getItemCount() == 0){
-                                        Log.i("onKey", "adapter has no items");
-                                    }
-
-                                    if(isBackgroundTaskRunning){
-                                        Log.i("adapter:onLoadMore", "we avoided multiple requests!");
-                                    } else{
-                                        isBackgroundTaskRunning = true;
-                                        new ResultBackgroundTask().execute(
-                                                classIdSearchEditText.getText().toString());
-                                    }
-
-
-                                    break;
-
-                                case R.id.pendingInvitesRadioButton:
-                                    //TODO: disable input and run background task
-                                    break;
-
-                            }
+                                if(isBackgroundTaskRunning){
+                                    Log.i("adapter:onLoadMore", "we avoided multiple requests!");
+                                } else{
+                                    isBackgroundTaskRunning = true;
+                                    new ResultBackgroundTask().execute(
+                                            classIdSearchEditText.getText().toString());
+                                }
                         }
                         return false;
                     }
@@ -197,7 +176,4 @@ public class StudentPageTab2AddClass extends Fragment {
             Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
 }
