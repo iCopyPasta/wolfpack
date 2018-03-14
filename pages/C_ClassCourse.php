@@ -21,12 +21,12 @@
     private $offering;
     private $title;
 
-    function __construct($id, $c,$l,$o, $t) {
+    function __construct($id, $courseNumber, $location, $offering, $title) {
       $this->__set('class_id',$id);
-      $this->__set('class_course_number', $c);
-      $this->__set('location',$l);
-      $this->__set('offering',$o);
-      $this->__set('title',$t);
+      $this->__set('class_course_number', $courseNumber);
+      $this->__set('location',$location);
+      $this->__set('offering',$offering);
+      $this->__set('title',$title);
     }
 
     // magical get
