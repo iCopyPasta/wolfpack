@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `is_in` (
   `student_id` bigint(20) UNSIGNED NOT NULL,
   `class_id` bigint(20) UNSIGNED NOT NULL,
   `section_id` bigint(20) UNSIGNED NOT NULL,
-  PRIMARY KEY (`class_id`,`student_id`),
+  PRIMARY KEY (`student_id`,`class_id`,`section_id`),
   KEY `student_id` (`student_id`),
   KEY `section_id` (`section_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
