@@ -20,11 +20,11 @@
     private $location;
     private $offering;
 
-    function __construct($id, $c,$l,$o) {
+    function __construct($id, $classSectionNumber, $location, $offering) {
       $this->__set('section_id',$id);
-      $this->__set('class_section_number', $c);
-      $this->__set('location',$l);
-      $this->__set('offering',$o);
+      $this->__set('class_section_number', $classSectionNumber);
+      $this->__set('location', $location);
+      $this->__set('offering', $offering);
     }
 
     // magical get
