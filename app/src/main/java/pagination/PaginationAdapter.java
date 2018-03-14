@@ -48,10 +48,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 Log.i(TAG, "onScrolled called");
                 super.onScrolled(recyclerView, dx, dy);
-                /*totalItemCount = linearLayoutManager.getItemCount();
-                Log.i(TAG, "onScrolled: totalItemCount = " + totalItemCount);
+
+                totalItemCount = linearLayoutManager.getItemCount();
+                Log.i(TAG, "onScrollState: totalItemCount = " + totalItemCount);
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                Log.i(TAG, "onScrolled: lastVisibleItem = " + lastVisibleItem);
+                Log.i(TAG, "onScrolledState: lastVisibleItem = " + lastVisibleItem);
 
                 if(!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)){
                     if(loadmore != null){
@@ -59,8 +60,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         loadmore.onLoadMore();
                         isLoading = true;
                     }
-                }*/
-
+                }
 
             }
 
@@ -74,7 +74,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if (!recyclerView.canScrollVertically(1)) {
                     Toast.makeText(recyclerView.getContext(),"Last",Toast.LENGTH_SHORT).show();
-                    totalItemCount = linearLayoutManager.getItemCount();
+                    /*totalItemCount = linearLayoutManager.getItemCount();
                     Log.i(TAG, "onScrollState: totalItemCount = " + totalItemCount);
                     lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
                     Log.i(TAG, "onScrolledState: lastVisibleItem = " + lastVisibleItem);
@@ -85,7 +85,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             loadmore.onLoadMore();
                             isLoading = true;
                         }
-                    }
+                    }*/
 
                 }
             }
@@ -113,7 +113,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        //TODO: implement
 
         if(holder instanceof ItemViewHolder){
             SearchResultSection item = items.get(position);
@@ -166,7 +165,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         LoadingViewHolder(View itemView){
             super(itemView);
-            progressBar = (ProgressBar) itemView.findViewById(R.id.paginationProgressBar);
+            progressBar = itemView.findViewById(R.id.paginationProgressBar);
         }
     }
 

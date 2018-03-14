@@ -57,7 +57,6 @@ public interface WolfpackClient{
     @FormUrlEncoded
     @POST(FEED)
     Call<LoginDetails> attemptLogin(
-            @Field("android") Boolean isAndroid,
             @Field("inputMethodName") String methodName,
             @Field("inputEmail") String email,
             @Field("inputPassword") String password
