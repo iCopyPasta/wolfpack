@@ -18,6 +18,16 @@ DROP TABLE IF EXISTS class_section;
 DROP TABLE IF EXISTS question;
 DROP TABLE IF EXISTS question_session;
 
+CREATE TABLE IF NOT EXISTS `question_session` (
+  `session_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `time_created` datetime DEFAULT NULL,
+  `tags` varchar(3000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `isActive` tinyint(1) NOT NULL DEFAULT '0',
+  `active_question_id` int(11) NOT NULL,
+  PRIMARY KEY (`session_id`),
+  UNIQUE KEY `session_id` (`session_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS `answers` (
   `question_id` bigint(20) UNSIGNED NOT NULL,
   `student_id` bigint(20) UNSIGNED NOT NULL,
