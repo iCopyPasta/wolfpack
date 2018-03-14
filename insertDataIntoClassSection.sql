@@ -1,3 +1,4 @@
+DELETE FROM class_section;
 ALTER TABLE class_section AUTO_INCREMENT = 1;
 INSERT INTO `class_section` (`section_id`, `class_section_number`, `location`, `offering`) VALUES
 (1, 1, 'Olmstead 100', '10'),

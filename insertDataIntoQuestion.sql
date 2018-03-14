@@ -1,3 +1,4 @@
+DELETE FROM question;
 ALTER TABLE question AUTO_INCREMENT = 1;
 INSERT INTO `question` (`question_id`, `asked`, `description`, `tags`, `potential_answers`, `correct_answers`) VALUES
 (1, 0, '1 Whats your full name?', 'someTag', '[\"Yes\", \"No\", \"Maybe\", \"42\"]', '[0, 3]'),

@@ -1,3 +1,4 @@
+DELETE FROM class_course;
 ALTER TABLE class_course AUTO_INCREMENT = 1;
 INSERT INTO `class_course` (`class_id`, `title`, `description`) VALUES
 (1, 'BIO 105', 'Biology - Parasitology'),
