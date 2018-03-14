@@ -79,8 +79,8 @@
         //add as many necessary method invocations
         case "attemptLogin":
            
-            //$url = "http://192.168.1.57/pages/test.php";
-            $url = "http://wolfpack.cs.hbg.psu.edu/pages/test.php";
+            
+            $url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_in_student.php";
             //$url = "http://192.168.1.57/pages/Sign_in_student.php";
             
             $fields = build_fields($fields, 
