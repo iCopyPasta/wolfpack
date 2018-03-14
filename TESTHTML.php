@@ -1288,18 +1288,24 @@
 //          $newHas->insert();
 //        }
 
-        // generate <x> is_in
-        // 50 students
-        // 90 sections
+//        // generate 250 is_in
+//        // 50 students
+//        // 30 courses
+//        // 90 sections
+//        include_once('pages/C_IsIn.php');
+//        for($x = 0; $x < 250; $x++) {
+//          $newIsIn = new IsIn((($x%50)+1), (($x%30)+1), (($x%90)+1));
+//          $newIsIn->insert();
+//        }
 
 
       }
 
 
-
-
-
   ?>
+
+
+
 
   <body>
     <?php include("/pages/PaginationForWeb.php"); ?>

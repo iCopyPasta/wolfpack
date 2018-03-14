@@ -78,14 +78,14 @@
       //TODO: maybe "isStudentIdExist" and "isCourseExist" should be functions. Also, this code will be used a lot
       // ensure that the 'student_id' exists in the student_account table before trying to insert
       include_once('/pages/C_StudentAccount.php');
-      $student = new StudentAccount($this->__get('student_id'), '%', '%', '%', '%', '%');
+      $student = new StudentAccount($this->__get('student_id'), '%', '%', '%', '%', '%', '%', '%', '%');
       $qJSON = json_decode($student->select(), true);
       // if a row was returned then the student_id exists
       $isStudentIdExist = array_key_exists(1, $qJSON);
 
       // ensure that the 'class_id' exists in the class_course table before trying to insert
       include_once('/pages/C_ClassCourse.php');
-      $course = new ClassCourse($this->__get('class_id'), '%', '%', '%', '%');
+      $course = new ClassCourse($this->__get('class_id'), '%', '%');
       $qJSON = json_decode($course->select(), true);
       // if a row was returned then the class_id exists
       $isClassIdExist = array_key_exists(1, $qJSON);
