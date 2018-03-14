@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS `grouped_by` (
 CREATE TABLE IF NOT EXISTS `has` (
   `section_id` bigint(20) UNSIGNED NOT NULL,
   `class_id` bigint(20) UNSIGNED NOT NULL,
+  PRIMARY KEY (`section_id`,`class_id`),
   KEY `section_id` (`section_id`),
   KEY `class_id` (`class_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
