@@ -1197,7 +1197,107 @@
 //                                                        $randomIsConfirmed[$x]);
 //          $newStudentAccount->insert();
 //        }
+
+//        // generate 30 random class_courses
+//        // 30 random descriptions
+//        $randomCourseDescription = array( "Biology - Parasitology",
+//                                          "Civil Engineering - Surveying",
+//                                          "Computer Sciences - Theory Of Computation : Concurrency Theory",
+//                                          "Economics - Macroeconomics",
+//                                          "Economics - Participatory Economics",
+//                                          "Electrical Engineering - Control Systems Engineering : Control Theory",
+//                                          "Electrical Engineering - Power Engineering",
+//                                          "Human Physical Performance And Recreation - Game Design",
+//                                          "Journalism, Media Studies And Communication - Journalism : New Media Journalism",
+//                                          "Linguistics - Computational Linguistics / Natural Language Processing",
+//                                          "Linguistics - Sociolinguistics",
+//                                          "Literature - Creative Writing : Creative Nonfiction",
+//                                          "Literature - Creative Writing : Playwrighting",
+//                                          "Logic - Philosophical Logic",
+//                                          "Mathematics - Algebra : Category Theory -- Topos Theory",
+//                                          "Medicine - Internal Medicine : Ophthalmology",
+//                                          "Medicine - Orthoptics",
+//                                          "Medicine - Radiology",
+//                                          "Performing Arts - Music : Recording",
+//                                          "Philosophy - Applied Philosophy : Philosophy Of Science -- Philosophy Of Biology",
+//                                          "Philosophy - Metaphysics : Ontology",
+//                                          "Public Administration - Police Science",
+//                                          "Religion - Abrahamic Religions : Christianity -- Christian Theology",
+//                                          "Religion - Indian Religions",
+//                                          "Sociology - Collective Behavior",
+//                                          "Sociology - Social Change",
+//                                          "Sociology - Sociology Of Culture",
+//                                          "Statistics - Computational Statistics",
+//                                          "Systems Science - Control Theory : Control Engineering",
+//                                          "Systems Science - Cybernetics");
+//        // 30 random course titles
+//        $randomCourseTitle = array( "BIO 105",
+//                                    "CIE 377",
+//                                    "CMPSC 130",
+//                                    "ECO 223",
+//                                    "ECO 339",
+//                                    "EE 192",
+//                                    "EE 142",
+//                                    "KINES 384",
+//                                    "JOUR 188",
+//                                    "LIN 226",
+//                                    "LIN 105",
+//                                    "LIT 377",
+//                                    "LIT 130",
+//                                    "PHIL 223",
+//                                    "MTH 339",
+//                                    "MED 192",
+//                                    "MED 142",
+//                                    "MED 384",
+//                                    "MUS 188",
+//                                    "PHIL 226",
+//                                    "PHIL 105",
+//                                    "POL 377",
+//                                    "REL 130",
+//                                    "REL 223",
+//                                    "SOC 339",
+//                                    "SOC 192",
+//                                    "SOC 142",
+//                                    "STAT 384",
+//                                    "SCI 188",
+//                                    "SCI 226");
+//        include_once('/pages/C_ClassCourse.php');
+//        for($x = 0; $x < 30; $x++) {
+//          $newClassCourse = new ClassCourse('ignored', $randomCourseTitle[$x], $randomCourseDescription[$x]);
+//          $newClassCourse->insert();
+//        }
+
+//        // generate 90 random class_sections
+//        // 3 section numbers
+//        $randomSectionNumbers = array(1, 2, 3);
+//        // 5 offerings
+//        $randomOfferings = array(10, 20, 30, 40, 50);
+//        // 4 locations
+//        $randomLocations = array("Olmstead 100", "Olmstead 218", "TL 112", "Library 110");
+//
+//        include_once('/pages/C_ClassSection.php');
+//        for($x = 0; $x < 90; $x++) {
+//          $newClassSection = new ClassSection('ignored', $randomSectionNumbers[$x%3], $randomLocations[$x%4], $randomOfferings[$x%5]);
+//          $newClassSection->insert();
+//        }
+
+//        // generate 90 random "has"
+//        include_once('/pages/C_Has.php');
+//        for($x = 0; $x < 90; $x++) {
+//          $newHas = new Has(($x%30)+1, $x+1);
+//          $newHas->insert();
+//        }
+
+        // generate <x> is_in
+        // 50 students
+        // 90 sections
+
+
       }
+
+
+
+
 
   ?>
 
