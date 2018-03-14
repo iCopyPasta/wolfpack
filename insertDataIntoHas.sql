@@ -1,3 +1,4 @@
+ALTER TABLE has AUTO_INCREMENT = 1;
 INSERT INTO `has` (`section_id`, `class_id`) VALUES
 (1, 1),
 (2, 2),
