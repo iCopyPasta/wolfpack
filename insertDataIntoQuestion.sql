@@ -1,49 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 4.7.4
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1:3306
--- Generation Time: Mar 14, 2018 at 04:16 AM
--- Server version: 5.7.19
--- PHP Version: 5.6.31
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `wolfpack_tester`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `question`
---
-
-DROP TABLE IF EXISTS `question`;
-CREATE TABLE IF NOT EXISTS `question` (
-  `question_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `asked` tinyint(1) DEFAULT '0',
-  `description` varchar(1500) COLLATE utf8_unicode_ci DEFAULT 'None',
-  `tags` varchar(3000) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `potential_answers` json NOT NULL,
-  `correct_answers` json NOT NULL,
-  PRIMARY KEY (`question_id`),
-  UNIQUE KEY `question_id` (`question_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=802 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `question`
---
-
 INSERT INTO `question` (`question_id`, `asked`, `description`, `tags`, `potential_answers`, `correct_answers`) VALUES
 (1, 0, '1 Whats your full name?', 'someTag', '[\"Yes\", \"No\", \"Maybe\", \"42\"]', '[0, 3]'),
 (2, 0, '2 How old are you?', 'someTag', '[\"Yes\", \"No\", \"Maybe\", \"42\"]', '[0, 3]'),
@@ -848,7 +802,3 @@ INSERT INTO `question` (`question_id`, `asked`, `description`, `tags`, `potentia
 (800, 0, '799 Would you ever let your parents pick out a partner for you?', 'someTag', '[\"Yes\", \"No\", \"Maybe\", \"42\"]', '[0, 3]'),
 (801, 0, '800 Have you ever tried spam? the meat product', 'someTag', '[\"Yes\", \"No\", \"Maybe\", \"42\"]', '[0, 3]');
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
