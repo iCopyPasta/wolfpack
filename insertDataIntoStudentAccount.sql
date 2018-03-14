@@ -50,7 +50,3 @@ INSERT INTO `student_account` (`student_id`, `first_name`, `last_name`, `student
 (49, 'Elane', 'Mcconnell', '2320', 'kostas@verizon.net', 'qkSuP5PBtFw5WMDFJGkYkZrX', '4245', 0, 'Miss'),
 (50, 'Tawanna', 'Avila', '4728', 'ewaters@optonline.net', 'aGKQKjnSHjAHm2vbqpnCCzM3', '1781', 0, 'Mr.');
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
