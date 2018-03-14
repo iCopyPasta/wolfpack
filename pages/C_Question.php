@@ -15,14 +15,19 @@
   class Question{
     private $question_id;
     private $description;
-    private $professor_asked;
+    private $asked;
     private $tags;
+    private $potential_answers;
+    private $correct_answers;
 
-    function __construct($q,$d,$p,$t) {
-      $this->__set('question_id', $q);
-      $this->__set('description',$d);
-      $this->__set('professor_asked', $p);
-      $this->__set('tags',$t);
+    function __construct($questionId, $description, $tags, $asked, $potentialAnswers, $correctAnswers) {
+      $this->__set('question_id', $questionId);
+      $this->__set('description',$description);
+      $this->__set('tags',$tags);
+      $this->__set('asked', $asked);
+      $this->__set('potential_answers', $potentialAnswers);
+      $this->__set('correct_answers', $correctAnswers);
+
     }
 
     // magical get
@@ -48,16 +53,18 @@
       $pdo = $connection->getConnection();
 
       $sql = "INSERT INTO question
-                              (description, professor_asked, tags)
-                              VALUES (:description, :professor_asked, :tags)";
+                              (description, tags, asked, potential_answers, correct_answers)
+                              VALUES (:description, :tags, :asked, :potential_answers, :correct_answers)";
       $stmt = $pdo->prepare($sql);
 
       try{
-        $stmt->execute(['description' => $this->description, 'professor_asked' => $this->professor_asked, 'tags' => $this->tags]);
+        $stmt->execute(['description' => $this->description, 'tags' => $this->tags,
+                        'asked' => $this->asked, 'potential_answers' => $this->potential_answers, 'correct_answers' => $this->correct_answers]);
       }catch (Exception $e){
         // fail JSON response
         $response = array();
-        $response["message"] = "ERROR INSERTING: ".$this->description." ".$this->professor_asked." ".$this->tags." ".$e->getMessage();
+        $response["message"] = "ERROR INSERTING: ".$this->description." ".$this->tags.
+                                " ".$this->asked." ".$this->potential_answers." ".$this->correct_answers." ".$e->getMessage();
         $response["success"] = 0;
         echo json_encode($response);
         die();
@@ -65,7 +72,8 @@
 
       // success JSON response
       $response = array();
-      $response["message"] = "Inserted: ".$this->description." ".$this->professor_asked." ".$this->tags;
+      $response["message"] =  "Inserted: ".$this->description." ".$this->tags.
+                              " ".$this->asked." ".$this->potential_answers." ".$this->correct_answers;
       $response["success"] = 1;
       echo json_encode($response);
 
@@ -78,18 +86,22 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "SELECT question_id, description, professor_asked, tags
+      $sql = "SELECT question_id, description, tags, asked, potential_answers, correct_answers
               FROM question
               WHERE question_id LIKE :question_id
                 AND description LIKE :description
-                AND professor_asked LIKE :professor_asked
-                AND tags LIKE :tags";
+                AND asked LIKE :asked
+                AND tags LIKE :tags
+                AND potential_answers LIKE :potential_answers
+                AND correct_answers LIKE :correct_answers";
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':question_id', $this->question_id);
       $stmt->bindValue(':description', $this->description);
-      $stmt->bindValue(':professor_asked', $this->professor_asked);
+      $stmt->bindValue(':asked', $this->asked);
       $stmt->bindValue(':tags', $this->tags);
+      $stmt->bindValue(':potential_answers', $this->potential_answers);
+      $stmt->bindValue(':correct_answers', $this->correct_answers);
 
       try{
         // $stmt->execute(['email' => $this->email, 'password' => $this->password]);
