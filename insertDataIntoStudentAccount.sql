@@ -1,3 +1,4 @@
+ALTER TABLE student_account AUTO_INCREMENT = 1;
 INSERT INTO `student_account` (`student_id`, `first_name`, `last_name`, `student_school_id`, `email`, `salted_password`, `uniqueID`, `isConfirmed`, `title`) VALUES
 (1, 'Lynetta', 'Baker', '1406', 'crypt@msn.com', 'a7UtvZDaP95ZXRXz3gWz5eDh', '4467', 0, 'Mr.'),
 (2, 'Victorina', 'Heath', '1407', 'hllam@aol.com', '9PTCg7jK2REynm2xX3wzD7nx', '3562', 0, 'Mrs.'),
