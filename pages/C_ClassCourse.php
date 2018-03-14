@@ -16,17 +16,13 @@
 
   class ClassCourse{
     private $class_id;
-    private $class_course_number;
-    private $location;
-    private $offering;
     private $title;
+    private $description;
 
-    function __construct($id, $courseNumber, $location, $offering, $title) {
+    function __construct($id, $title, $description) {
       $this->__set('class_id',$id);
-      $this->__set('class_course_number', $courseNumber);
-      $this->__set('location',$location);
-      $this->__set('offering',$offering);
       $this->__set('title',$title);
+      $this->__set('description',$description);
     }
 
     // magical get
@@ -52,19 +48,17 @@
       $pdo = $connection->getConnection();
 
       $sql = "INSERT INTO class_course
-                              (class_course_number, location, offering, title)
-                              VALUES (:class_course_number, :location, :offering, :title)";
+                              (title, description)
+                              VALUES (:title, :description)";
       $stmt = $pdo->prepare($sql);
 
       try{
-        $stmt->execute(['class_course_number' => $this->class_course_number,
-                        'location' => $this->location,
-                        'offering' => $this->offering,
-                        'title' => $this->title]);
+        $stmt->execute(['title' => $this->title,
+                        'description' => $this->description]);
       }catch (Exception $e){
         // fail JSON response
         $response = array();
-        $response["message"] = "ERROR INSERTING: ".$this->class_course_number." ".$this->location." ".$this->offering." ".$this->title." ".$e->getMessage();
+        $response["message"] = "ERROR INSERTING: ".$this->title." ".$this->description." ".$e->getMessage();
         $response["success"] = 0;
         echo json_encode($response);
         die();
@@ -72,7 +66,7 @@
 
       // success JSON response
       $response = array();
-      $response["message"] = "Inserted: ".$this->class_course_number." ".$this->location." ".$this->offering." ".$this->title;
+      $response["message"] = "Inserted: ".$this->title." ".$this->description;
       $response["success"] = 1;
       echo json_encode($response);
 
@@ -85,23 +79,18 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "SELECT class_id, class_course_number, location, offering
+      $sql = "SELECT class_id, title, description
               FROM class_course
               WHERE class_id LIKE :class_id
-                AND class_course_number LIKE :class_course_number
-                AND location LIKE :location
-                AND offering LIKE :offering
-                AND title LIKE :title";
+                AND title LIKE :title
+                AND description LIKE :description";
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':class_id', $this->class_id);
-      $stmt->bindValue(':class_course_number', $this->class_course_number);
-      $stmt->bindValue(':location', $this->location);
-      $stmt->bindValue(':offering', $this->offering);
       $stmt->bindValue(':title', $this->title);
+      $stmt->bindValue(':description', $this->description);
 
       try{
-        // $stmt->execute(['email' => $this->email, 'password' => $this->password]);
         $stmt->execute();
       }catch (Exception $e){
         // fail JSON response
