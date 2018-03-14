@@ -1,5 +1,5 @@
-DELETE FROM student_account;
-ALTER TABLE student_account AUTO_INCREMENT = 1;
+DELETE FROM professor_account;
+ALTER TABLE professor_account AUTO_INCREMENT = 1;
 CREATE TABLE IF NOT EXISTS `professor_account` (
   `professor_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `first_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
