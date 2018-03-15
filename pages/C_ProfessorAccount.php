@@ -1,12 +1,12 @@
 <?php
 /*
 This class is used by the user to:
-  insert a new student account into table "student_account"
-  select from "student_account"
+  insert a new professor account into table "professor_account"
+  select from "professor_account"
 
 Example usage (see Sign_up.php for more):
 
-  include_once('C_StudentAccount.php');
+  include_once('C_ProfessorAccount.php');
 
   $selectStudentAccount = new StudentAccount('thisValueIsIgnored', 'Scott', 'Wilson', $hashPassword, 'studentSchoolID', $insertEmail);
   $qJSON = json_decode($selectStudentAccount->insert(), true);
@@ -28,19 +28,19 @@ class ProfessorAccount{
     private $first_name;
     private $last_name;
     private $salted_password;
-    private $student_school_id;
+    private $professor_school_id;
     private $email;
     private $title;
     private $uniqueID;
     private $isConfirmed;
 
 
-    function __construct($id, $fname, $lname, $spassword, $studschoolid, $email, $title, $uniqueID, $isConfirmed) {
+    function __construct($id, $fname, $lname, $spassword, $profSchoolid, $email, $title, $uniqueID, $isConfirmed) {
         $this->__set('professor_id', $id);
         $this->__set('first_name',$fname);
         $this->__set('last_name', $lname);
         $this->__set('salted_password',$spassword);
-        $this->__set('student_school_id',$studschoolid);
+        $this->__set('professor_school_id',$profSchoolid);
         $this->__set('email',$email);
         $this->__set('title',$title);
         $this->__set('uniqueID',$uniqueID);
@@ -70,13 +70,13 @@ class ProfessorAccount{
         $pdo = $connection->getConnection();
 
         $sql = "INSERT INTO professor_account
-                              (first_name, last_name, salted_password, student_school_id, email, title, uniqueID, isConfirmed)
-                              VALUES (:first_name, :last_name, :salted_password, :student_school_id, :email, :title, :uniqueID, :isConfirmed)";
+                              (first_name, last_name, salted_password, professor_school_id, email, title, uniqueID, isConfirmed)
+                              VALUES (:first_name, :last_name, :salted_password, :professor_school_id, :email, :title, :uniqueID, :isConfirmed)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':first_name', $this->first_name);
         $stmt->bindValue(':last_name', $this->last_name);
         $stmt->bindValue(':salted_password', $this->salted_password);
-        $stmt->bindValue(':student_school_id', $this->student_school_id);
+        $stmt->bindValue(':professor_school_id', $this->professor_school_id);
         $stmt->bindValue(':email', $this->email);
         $stmt->bindValue(':title', $this->title);
         $stmt->bindValue(':uniqueID', $this->uniqueID);
@@ -88,7 +88,7 @@ class ProfessorAccount{
             // fail JSON response
             $response = array();
             $response["message"] = "ERROR INSERTING: ".$this->first_name." ".$this->last_name." ".$this->salted_password." ".
-                $this->student_school_id." ".$this->email." ".$this->title." ".$this->uniqueID." ".
+                $this->professor_school_id." ".$this->email." ".$this->title." ".$this->uniqueID." ".
                 $this->isConfirmed." ".$e->getMessage();
             $response["success"] = 0;
             echo json_encode($response);
@@ -98,7 +98,7 @@ class ProfessorAccount{
         // success JSON response
         $response = array();
         $response["message"] = "Inserted: ".$this->first_name." ".$this->last_name." ".$this->salted_password." ".
-            $this->student_school_id." ".$this->email." ".$this->title." ".$this->uniqueID." ".
+            $this->professor_school_id." ".$this->email." ".$this->title." ".$this->uniqueID." ".
             $this->isConfirmed;
         $response["success"] = 1;
         echo json_encode($response);
@@ -111,13 +111,13 @@ class ProfessorAccount{
         $connection = new Connection;
         $pdo = $connection->getConnection();
 
-        $sql = "SELECT professor_id, first_name, last_name, salted_password, student_school_id, email, title, uniqueID, isConfirmed
+        $sql = "SELECT professor_id, first_name, last_name, salted_password, professor_school_id, email, title, uniqueID, isConfirmed
               FROM professor_account
               WHERE professor_id LIKE :professor_id
                 AND first_name LIKE :first_name
                 AND last_name LIKE :last_name
                 AND salted_password LIKE :salted_password
-                AND student_school_id LIKE :student_school_id
+                AND professor_school_id LIKE :professor_school_id
                 AND email LIKE :email
                 AND title LIKE :title
                 AND uniqueID LIKE :uniqueID
@@ -129,7 +129,7 @@ class ProfessorAccount{
         $stmt->bindValue(':first_name', $this->first_name);
         $stmt->bindValue(':last_name', $this->last_name);
         $stmt->bindValue(':salted_password', $this->salted_password);
-        $stmt->bindValue(':student_school_id', $this->student_school_id);
+        $stmt->bindValue(':professor_school_id', $this->professor_school_id);
         $stmt->bindValue(':email', $this->email);
         $stmt->bindValue(':title', $this->title);
         $stmt->bindValue(':uniqueID', $this->uniqueID);
@@ -140,7 +140,7 @@ class ProfessorAccount{
         }catch (Exception $e){
             // fail JSON response
             $response = array();
-            $response["message"] = "ERROR SELECTING from Student Account: ".$e->getMessage();
+            $response["message"] = "ERROR SELECTING from professor Account: ".$e->getMessage();
             $response["success"] = 0;
             // echo json_encode($response);
             // die();
