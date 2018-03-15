@@ -92,7 +92,7 @@
 
       // ensure that the 'section_id' exists in the class_section table before trying to insert
       include_once('/pages/C_ClassSection.php');
-      $section = new ClassSection($this->__get('class_id'), '%', '%', '%');
+      $section = new ClassSection($this->__get('section_id'), '%', '%', '%');
       $qJSON = json_decode($section->select(), true);
       // if a row was returned then the section_id exists
       $isSectionIdExist = array_key_exists(1, $qJSON);
