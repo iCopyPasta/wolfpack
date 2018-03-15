@@ -125,7 +125,6 @@
             <button type="button" class="btn btn-lg btn-block btn-success">Join Class</button>
           </div>
         </div>
-        
       </div>
 
       <footer class="container">
