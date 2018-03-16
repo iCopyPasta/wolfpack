@@ -60,6 +60,24 @@
       return $this;
     }
 
+    public function isClassIdExist($aClassId){
+      // ensure that the 'class_id' exists in the class_course table before trying to insert
+      include_once('/pages/C_ClassCourse.php');
+      $course = new ClassCourse($aClassId, '%', '%', '%', '%');
+      $qJSON = json_decode($course->select(), true);
+      // if a row was returned then the class_id exists
+      return array_key_exists(1, $qJSON);
+    }
+
+    public function isSectionIdExist($aSectionId){
+      // ensure that the 'section_id' exists in the class_section table before trying to insert
+      include_once('/pages/C_ClassSection.php');
+      $section = new ClassSection($aSectionId, '%', '%', '%');
+      $qJSON = json_decode($section->select(), true);
+      // if a row was returned then the class_id exists
+      return array_key_exists(1, $qJSON);
+    }
+
     public function insert(){
 
       $connection = new Connection;
