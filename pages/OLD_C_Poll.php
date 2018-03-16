@@ -5,7 +5,7 @@
   Example Usage:
 
   //include the script
-    include('/pages/C_Poll.php');
+    include('/pages/OLD_C_Poll.php');
 
   // create a poll
     // Month: 2 digit String of format: xx

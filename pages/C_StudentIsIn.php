@@ -34,7 +34,7 @@
 
 */
 
-  class IsIn{
+  class StudentIsIn{
     private $student_id;
     private $class_id;
 
@@ -61,17 +61,13 @@
     }
 
     public function insert(){
-
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "INSERT INTO is_in
+      $sql = "INSERT INTO student_is_in
                               (student_id, class_id)
                               VALUES (:student_id, :class_id)";
       $stmt = $pdo->prepare($sql);
-
-
-
       $isStudentIdExist = $this->isStudentIdExist($this->__get('student_id'));
       $isClassIdExist = $this->isClassIdExist($this->__get('class_id'));
 
@@ -123,9 +119,9 @@
       $pdo = $connection->getConnection();
 
       $sql = "SELECT student_id, class_id
-              FROM is_in
-              WHERE student_id LIKE :student_id
-                AND class_id LIKE :class_id";
+              FROM student_is_in
+              WHERE student_id = :student_id
+                AND class_id = :class_id";
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':student_id', $this->student_id);
@@ -143,13 +139,11 @@
 
       $pdo = null;
       $response = array();
-      $response["message"] = "Success SELECTING from is_in";
+      $response["message"] = "Success SELECTING from student_is_in";
       $response["success"] = 1;
       $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
       array_unshift($retVal, $response);
       return json_encode($retVal);
-
-
     }
 
     public function isStudentIdExist($aStudentId){
@@ -162,7 +156,7 @@
 
     public function isClassIdExist($aClassId){
       include_once('/pages/C_ClassCourseSection.php');
-      $class = new ClassCourseSection($aClassId, '%', '%', '%', '%', '%');
+      $class = new ClassCourseSection($aClassId, '%', '%', '%', '%');
       $qJSON = json_decode($class->select(), true);
       // if a row was returned then the class_id exists
       return array_key_exists(1, $qJSON);
