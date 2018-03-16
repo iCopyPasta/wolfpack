@@ -14,17 +14,21 @@
 
   */
 
-  class ClassSection{
-    private $section_id;
-    private $class_section_number;
-    private $location;
+  class ClassCourseSection{
+    private $class_id;
+    private $title;
+    private $description;
+    private $section_number;
     private $offering;
+    private $location;
 
-    function __construct($id, $c,$l,$o) {
-      $this->__set('section_id',$id);
-      $this->__set('class_section_number', $c);
-      $this->__set('location',$l);
-      $this->__set('offering',$o);
+    function __construct($classId, $title, $desc, $section_number, $offering, $location){
+      $this->__set('class_id', $classId);
+      $this->__set('title', $title);
+      $this->__set('description', $desc);
+      $this->__set('section_number', $section_number);
+      $this->__set('offering', $offering);
+      $this->__set('location', $location);
     }
 
     // magical get
@@ -49,17 +53,17 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "INSERT INTO class_section
-                              (class_section_number, location, offering)
-                              VALUES (:class_section_number, :location, :offering)";
+      $sql = "INSERT INTO class_course_section
+                              (title, description, section_number, offering, location)
+                              VALUES (:title, :description, :section_number, :offering, :location)";
       $stmt = $pdo->prepare($sql);
 
       try{
-        $stmt->execute(['class_section_number' => $this->class_section_number, 'location' => $this->location, 'offering' => $this->offering]);
+        $stmt->execute(['title'=>$this->title,'description'=>$this->description, 'section_number' => $this->section_number, 'offering' => $this->offering, 'location' => $this->location]);
       }catch (Exception $e){
         // fail JSON response
         $response = array();
-        $response["message"] = "ERROR INSERTING: ".$this->class_section_number." ".$this->location." ".$this->offering." ".$e->getMessage();
+        $response["message"] = "ERROR INSERTING: ".$this->title." ".$this->description." ".$this->section_number." ".$this->offering." ".$this->location." ".$e->getMessage();
         $response["success"] = 0;
         echo json_encode($response);
         die();
@@ -67,7 +71,7 @@
 
       // success JSON response
       $response = array();
-      $response["message"] = "Inserted: ".$this->class_section_number." ".$this->location." ".$this->offering;
+      $response["message"] = "Inserted: ".$this->title." ".$this->description." ".$this->section_number." ".$this->offering." ".$this->location;
       $response["success"] = 1;
       echo json_encode($response);
 
@@ -80,21 +84,24 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "SELECT section_id, class_section_number, location, offering
-              FROM class_section
-              WHERE section_id LIKE :section_id
-                AND class_section_number LIKE :class_section_number
+      $sql = "SELECT class_id, title, description, section_number, offering, location
+              FROM class_course_section
+              WHERE class_id LIKE :class_id
+                AND title LIKE :title
+                AND description LIKE :description
+                AND section_number LIKE :section_number
                 AND location LIKE :location
                 AND offering LIKE :offering";
 
       $stmt = $pdo->prepare($sql);
-      $stmt->bindValue(':section_id', $this->section_id);
-      $stmt->bindValue(':class_section_number', $this->class_section_number);
-      $stmt->bindValue(':location', $this->location);
+      $stmt->bindValue(':class_id', $this->class_id);
+      $stmt->bindValue(':title', $this->title);
+      $stmt->bindValue(':description', $this->description);
+      $stmt->bindValue(':section_number', $this->section_number);
       $stmt->bindValue(':offering', $this->offering);
+      $stmt->bindValue(':location', $this->location);
 
       try{
-        // $stmt->execute(['email' => $this->email, 'password' => $this->password]);
         $stmt->execute();
       }catch (Exception $e){
         // fail JSON response
@@ -108,7 +115,7 @@
 
       $pdo = null;
       $response = array();
-      $response["message"] = "Success SELECTING from ClassSection";
+      $response["message"] = "Success SELECTING from Class";
       $response["success"] = 1;
       $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
       array_unshift($retVal, $response);

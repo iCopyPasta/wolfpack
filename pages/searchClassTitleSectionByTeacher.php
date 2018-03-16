@@ -15,21 +15,18 @@
     [{"message":"Success SELECTING from professor_account, teaches, class_section, has, class_course","success":1},{"title":"Principles of Programming","class_section_number":"1"}]
 
   */
-  function searchClassByStudent($page, $rowsPerPage, $title, $teacherFName, $teacherLName){
+  function searchClassTitleSectionByTeacher($page, $rowsPerPage, $title, $teacherFName, $teacherLName){
     include_once('Connection.php');
     $connection = new Connection;
     $pdo = $connection->getConnection();
 
-    $sql = "SELECT class_course.title, class_section.class_section_number
-                FROM professor_account, teaches, class_section, has, class_course
-                WHERE professor_account.professor_id = professor_account.professor_id
-                  AND teaches.section_id = class_section.section_id
-                  AND class_section.section_id = has.section_id
-                  AND has.class_id = class_course.class_id
-                  AND class_course.title LIKE :title
+    $sql = "SELECT class_course_section.title, class_course_section.section_number
+                FROM professor_account, teaches, class_course_section
+                WHERE professor_account.professor_id = teaches.professor_id
+                  AND teaches.class_id = class_course_section.class_id
+                  AND class_course_section.title LIKE :title
                   AND professor_account.first_name LIKE :teacherFName
                   AND professor_account.last_name LIKE :teacherLName";
-
 
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':title', '%'.$title.'%');
@@ -51,7 +48,7 @@
 
     $pdo = null;
     $response = array();
-    $response["message"] = "Success SELECTING from professor_account, teaches, class_section, has, class_course";
+    $response["message"] = "Success SELECTING from professor_account, teaches, class_course_section";
     $response["success"] = 1;
     $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
     array_unshift($retVal, $response);
