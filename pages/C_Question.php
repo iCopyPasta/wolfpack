@@ -15,12 +15,12 @@
   class Question{
     private $question_id;
     private $description;
-    private $type;
+    private $question_type;
     private $potential_answers;
     private $correct_answers;
 
     function __construct($q,$d,$t,$p,$a) {
-      $this->__set('type', $t);
+      $this->__set('question_type', $t);
       $this->__set('question_id', $q);
       $this->__set('description',$d);
       $this->__set('potential_answers', $p);
@@ -50,16 +50,16 @@
       $pdo = $connection->getConnection();
 
       $sql = "INSERT INTO question
-                              (type, description, potential_answers, correct_answers)
+                              (question_type, description, potential_answers, correct_answers)
                               VALUES (:question_type, :description, :potential_answers, :correct_answers)";
       $stmt = $pdo->prepare($sql);
 
       try{
-        $stmt->execute(['description' => $this->description, 'teacher_asked' => $this->teacher_asked, 'tags' => $this->tags]);
+        $stmt->execute(['description' => $this->description, 'question_type' => $this->question_type]);
       }catch (Exception $e){
         // fail JSON response
         $response = array();
-        $response["message"] = "ERROR INSERTING: ".$this->description." ".$this->teacher_asked." ".$this->tags." ".$e->getMessage();
+        $response["message"] = "ERROR INSERTING: ".$this->description." ".$this->question_type." ".$e->getMessage();
         $response["success"] = 0;
         echo json_encode($response);
         die();
@@ -67,7 +67,7 @@
 
       // success JSON response
       $response = array();
-      $response["message"] = "Inserted: ".$this->description." ".$this->teacher_asked." ".$this->tags;
+      $response["message"] = "Inserted: ".$this->description." ".$this->question_type;
       $response["success"] = 1;
       echo json_encode($response);
 
@@ -80,16 +80,16 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "SELECT type, question_id, description, potential_answers, correct_answers
+      $sql = "SELECT question_type, question_id, description, potential_answers, correct_answers
               FROM question
-              WHERE type LIKE :question_type 
+              WHERE question_type LIKE :question_type 
                 AND question_id LIKE :question_id
                 AND description LIKE :description
                 AND potential_answers LIKE :potential_answers
                 AND correct_answers LIKE :correct_answers";
 
       $stmt = $pdo->prepare($sql);
-      $stmt->bindValue(':question_type', $this->type);
+      $stmt->bindValue(':question_type', $this->question_type);
       $stmt->bindValue(':question_id', $this->question_id);
       $stmt->bindValue(':description', $this->description);
       $stmt->bindValue(':potential_answers', $this->potential_answers);

@@ -28,7 +28,6 @@
     private $first_name;
     private $last_name;
     private $salted_password;
-    private $student_school_id;
     private $email;
     private $title;
     private $uniqueID;
@@ -86,7 +85,7 @@
         // fail JSON response
         $response = array();
         $response["message"] = "ERROR INSERTING: ".$this->first_name." ".$this->last_name." ".$this->salted_password." ".
-                                $this->student_school_id." ".$this->email." ".$this->title." ".$this->uniqueID." ".
+                                $this->email." ".$this->title." ".$this->uniqueID." ".
                                 $this->isConfirmed." ".$e->getMessage();
         $response["success"] = 0;
         echo json_encode($response);
@@ -96,7 +95,7 @@
       // success JSON response
       $response = array();
       $response["message"] = "Inserted: ".$this->first_name." ".$this->last_name." ".$this->salted_password." ".
-                              $this->student_school_id." ".$this->email." ".$this->title." ".$this->uniqueID." ".
+                              $this->email." ".$this->title." ".$this->uniqueID." ".
                               $this->isConfirmed;
       $response["success"] = 1;
       echo json_encode($response);
