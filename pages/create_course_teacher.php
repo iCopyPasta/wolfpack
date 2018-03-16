@@ -24,6 +24,7 @@
         // good things happen here!
         include_once('C_ClassCourse.php');
         $class = new ClassCourse('%', $title, $description);
+        $retVal = $class->insert();
       }
       else{
         // $description is empty
