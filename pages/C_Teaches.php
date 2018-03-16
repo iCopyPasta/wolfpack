@@ -14,11 +14,11 @@
 
   class Teaches{
     private $professor_id;
-    private $section_id;
+    private $class_id;
 
-    function __construct($pid,$sid) {
-      $this->__set('professor_id', $pid);
-      $this->__set('section_id',$sid);
+    function __construct($professorId,$classId) {
+      $this->__set('professor_id', $professorId);
+      $this->__set('class_id',$classId);
     }
 
     // magical get
@@ -44,16 +44,16 @@
       $pdo = $connection->getConnection();
 
       $sql = "INSERT INTO teaches
-                              (professor_id, section_id)
-                              VALUES (:professor_id, :section_id)";
+                              (professor_id, class_id)
+                              VALUES (:professor_id, :class_id)";
       $stmt = $pdo->prepare($sql);
 
       try{
-        $stmt->execute(['professor_id' => $this->professor_id, 'section_id' => $this->section_id]);
+        $stmt->execute(['professor_id' => $this->professor_id, 'class_id' => $this->class_id]);
       }catch (Exception $e){
         // fail JSON response
         $response = array();
-        $response["message"] = "ERROR INSERTING: ".$this->professor_id." ".$this->section_id." ".$e->getMessage();
+        $response["message"] = "ERROR INSERTING: ".$this->professor_id." ".$this->class_id." ".$e->getMessage();
         $response["success"] = 0;
         echo json_encode($response);
         die();
@@ -61,7 +61,7 @@
 
       // success JSON response
       $response = array();
-      $response["message"] = "Inserted: ".$this->professor_id." ".$this->section_id;
+      $response["message"] = "Inserted: ".$this->professor_id." ".$this->class_id;
       $response["success"] = 1;
       echo json_encode($response);
 
@@ -74,17 +74,16 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "SELECT professor_id, section_id
+      $sql = "SELECT professor_id, class_id
               FROM teaches
               WHERE professor_id LIKE :professor_id
-                AND section_id LIKE :section_id";
+                AND class_id LIKE :class_id";
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':professor_id', $this->professor_id);
-      $stmt->bindValue(':section_id', $this->section_id);
+      $stmt->bindValue(':class_id', $this->class_id);
 
       try{
-        // $stmt->execute(['email' => $this->email, 'password' => $this->password]);
         $stmt->execute();
       }catch (Exception $e){
         // fail JSON response
