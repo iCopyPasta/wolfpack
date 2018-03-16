@@ -55,7 +55,7 @@
   //  ?>
 
 <body>
-<?php include("/pages/PaginationForWeb.php"); ?>
+<?php include("/PaginationForWeb.php"); ?>
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="get">
   <div class="form-group">
     <label for="student_id">Student Id Number:</label>
