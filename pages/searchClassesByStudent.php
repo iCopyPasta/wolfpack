@@ -21,22 +21,17 @@
     $connection = new Connection;
     $pdo = $connection->getConnection();
 
-    $sql = "SELECT  class_course.class_id, class_course.class_course_number, class_course.location,
-                    class_course.offering, class_course.title,
-                    class_section.section_id, class_section.class_section_number, class_section.offering,
-                    class_section.location
-            FROM class_course, has, class_section, is_in, student_account
+    $sql = "SELECT  class_course_section.class_id, class_course_section.title, class_course_section.description, class_course_section.section_number,
+                    class_course_section.offering, class_course_section.location
+            FROM class_course_section, is_in, student_account
             WHERE student_account.student_id = is_in.student_id
-              AND is_in.class_id = class_course.class_id
-              AND class_course.class_id = has.class_id
-              AND has.section_id = class_section.section_id
+              AND is_in.class_id = class_course_section.class_id
               AND student_account.student_id = :student_id";
 
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':student_id', $student_id);
 
     try{
-      // $stmt->execute(['email' => $this->email, 'password' => $this->password]);
       $stmt->execute();
     }catch (Exception $e){
       // fail JSON response
@@ -50,7 +45,7 @@
 
     $pdo = null;
     $response = array();
-    $response["message"] = "Success SELECTING from class_course, has, class_section, is_in, student_account";
+    $response["message"] = "Success SELECTING from class_course_section, is_in, student_account";
     $response["success"] = 1;
     $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
     array_unshift($retVal, $response);
