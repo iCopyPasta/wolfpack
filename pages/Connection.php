@@ -38,7 +38,7 @@
       }
 
       if($passwordArg !== null){
-        $password = $passwordArg;
+        $password = passwordArg;
       }
 
       if($dbnameArg !== null){
