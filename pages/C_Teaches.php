@@ -4,7 +4,7 @@
 
   Example Usage:
 
-  $insertQuestion = new Question('Is this a question?', 'professor asked field', 'TrueOrFalseTag');
+  $insertQuestion = new Question('Is this a question?', 'teacher asked field', 'TrueOrFalseTag');
   $insertQuestion->insert();
 
   $selectQuestion = new Question('1', '%', '%', '%');
@@ -13,11 +13,11 @@
   */
 
   class Teaches{
-    private $professor_id;
+    private $teacher_id;
     private $class_id;
 
-    function __construct($professorId,$classId) {
-      $this->__set('professor_id', $professorId);
+    function __construct($teacherId,$classId) {
+      $this->__set('teacher_id', $teacherId);
       $this->__set('class_id',$classId);
     }
 
@@ -39,21 +39,21 @@
     }
 
     public function insert(){
-//      include('Connection.php');
+
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
       $sql = "INSERT INTO teaches
-                              (professor_id, class_id)
-                              VALUES (:professor_id, :class_id)";
+                              (teacher_id, class_id)
+                              VALUES (:teacher_id, :class_id)";
       $stmt = $pdo->prepare($sql);
 
       try{
-        $stmt->execute(['professor_id' => $this->professor_id, 'class_id' => $this->class_id]);
+        $stmt->execute(['teacher_id' => $this->teacher_id, 'class_id' => $this->class_id]);
       }catch (Exception $e){
         // fail JSON response
         $response = array();
-        $response["message"] = "ERROR INSERTING: ".$this->professor_id." ".$this->class_id." ".$e->getMessage();
+        $response["message"] = "ERROR INSERTING: ".$this->teacher_id." ".$this->class_id." ".$e->getMessage();
         $response["success"] = 0;
         echo json_encode($response);
         die();
@@ -61,26 +61,26 @@
 
       // success JSON response
       $response = array();
-      $response["message"] = "Inserted: ".$this->professor_id." ".$this->class_id;
+      $response["message"] = "Inserted: ".$this->teacher_id." ".$this->class_id;
       $response["success"] = 1;
       echo json_encode($response);
 
       $pdo = null;
     }
 
+    //JSON
     public function select(){
-      // may be better to make connection in calling page
-//      include('Connection.php');
+      
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "SELECT professor_id, class_id
+      $sql = "SELECT teacher_id, class_id
               FROM teaches
-              WHERE professor_id LIKE :professor_id
-                AND class_id LIKE :class_id";
+              WHERE teacher_id = :teacher_id
+                AND class_id = :class_id";
 
       $stmt = $pdo->prepare($sql);
-      $stmt->bindValue(':professor_id', $this->professor_id);
+      $stmt->bindValue(':teacher_id', $this->teacher_id);
       $stmt->bindValue(':class_id', $this->class_id);
 
       try{
@@ -90,8 +90,7 @@
         $response = array();
         $response["message"] = "ERROR SELECTING: ".$e->getMessage();
         $response["success"] = 0;
-        // echo json_encode($response);
-        // die();
+
         return json_encode($response);
       }
 
