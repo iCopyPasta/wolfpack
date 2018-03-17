@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <title>Teacher Center</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+    <!-- Custom styles for this template -->
+    <style>
+      html {
+        font-size: 14px;
+      }
+      @media (min-width: 768px) {
+      html {
+        font-size: 16px;
+      }
+      }
+
+      .container {
+        max-width: 960px;
+      }
+
+      .pricing-header {
+        max-width: 700px;
+      }
+
+      .card-deck .card {
+        min-width: 220px;
+      }
+
+      .border-top { border-top: 1px solid #e5e5e5; }
+      .border-bottom { border-bottom: 1px solid #e5e5e5; }
+
+      .box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+    </style>
+  </head>
+
+  
+  <body>
+
+    <form action="" method="post">
+      <div class="form-group">
+        <label for="Question Description">
+          Question Description</label>
+        <input type="text" class="form-control" id="Question Description" name="Question Description">
+      </div>
+    <div id="question_radio_group" class = "form-group">
+        <div class="radio">
+          <label><input id="radio_trueFalse" type="radio" name="radioOpt">True/False</label>
+        </div>
+        <div class="radio">
+          <label><input id="radio_choice" type="radio" name="radioOpt">Multiple Choice</label>
+        </div>
+        
+        <div class="radio">
+          <label><input id="radio_select" type="radio" name="radioOpt">Selection</label>
+        </div>
+        
+        <div class="radio disabled">
+          <label><input id="radio_image" type="radio" name="radioOpt" disabled>Image Upload</label>
+        </div>  
+    </div>    
+        
+        <label for="">Potential Answers</label>
+        <input type="text" id="member" name="member" value= "Enter Number" onfocus="this.value=''" hint= "enter number of possible answers" ><br/>
+        <a href="#" id="filldetails" onclick="addFields()">Create Potential Answers</a>
+        <div id="potential_answers_container"></div>
+        
+        
+      <button type="submit" class="btn btn-default">Create</button>
+    </form>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../../../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../../../dist/js/bootstrap.min.js"></script>
+    <script src="../../../../assets/js/vendor/holder.min.js"></script>
+    <!--<script>
+        Holder.addTheme('thumb', {
+        bg: '#55595c',
+        fg: '#eceeef',
+        text: 'Thumbnail'
+      });
+    </script>-->
+  </body>
+</html>
+
+<script type='text/javascript'>
+        function addFields(){
+            
+            if(document.getElementById("radio_select").checked == true){
+                
+                // Number of inputs to create
+                var number = document.getElementById("member").value;
+                // Container <div> where dynamic content will be placed
+                var container = document.getElementById("potential_answers_container");
+                // Clear previous contents of the container
+                while (container.hasChildNodes()) {
+                    container.removeChild(container.lastChild);
+                }
+                for (i=0;i<number;i++){
+                    // Append a node with a random text
+                    container.appendChild(document.createTextNode("Answer " + (i+1)));
+                    // Create an <input> element, set its type and name attributes
+                    var input = document.createElement("input");
+                    input.type = "text";
+                    input.name = "question" + i;
+
+                    var checkbox = document.createElement("input");
+                    checkbox.type="checkbox";
+                    checkbox.id = "checkbox" + i;
+                    checkbox.name = "checkbox" + i;
+
+                    container.appendChild(input);
+                    container.appendChild(checkbox);
+                    // Append a line break 
+                    container.appendChild(document.createElement("br"));
+                }   
+            }
+            else if(document.getElementById("radio_choice").checked == true){
+                // Number of inputs to create
+                var number = document.getElementById("member").value;
+                // Container <div> where dynamic content will be placed
+                var container = document.getElementById("potential_answers_container");
+                // Clear previous contents of the container
+                while (container.hasChildNodes()) {
+                    container.removeChild(container.lastChild);
+                }
+                for (i=0;i<number;i++){
+                    // Append a node with a random text
+                    container.appendChild(document.createTextNode("answerChoice " + (i+1)));
+                    // Create an <input> element, set its type and name attributes
+                    var input = document.createElement("input");
+                    input.type = "text";
+                    input.name = "question" + i;
+
+                    var checkbox = document.createElement("input");
+                    checkbox.type="radio";
+                    checkbox.id = "radioChoice" + i;
+                    checkbox.name = "correctChoiceAnswer";
+
+                    container.appendChild(input);
+                    container.appendChild(checkbox);
+                    // Append a line break 
+                    container.appendChild(document.createElement("br"));
+                }
+            }
+            else if(document.getElementById("radio_trueFalse").checked == true){
+                // Number of inputs to create
+                var number = document.getElementById("member").value;
+                // Container <div> where dynamic content will be placed
+                var container = document.getElementById("potential_answers_container");
+                // Clear previous contents of the container
+                while (container.hasChildNodes()) {
+                    container.removeChild(container.lastChild);
+                }
+                for (i=0;i<2;i++){
+                    // Append a node with a random text
+                    container.appendChild(document.createTextNode("answerChoice " + (i+1)));
+                    // Create an <input> element, set its type and name attributes
+                    var input = document.createElement("input");
+                    input.type = "text";
+                    input.name = "question" + i;
+
+                    var checkbox = document.createElement("input");
+                    checkbox.type="radio";
+                    checkbox.id = "radioTF" + i;
+                    checkbox.name = "correctTrueFalseAnswer";
+
+                    container.appendChild(input);
+                    container.appendChild(checkbox);
+                    // Append a line break 
+                    container.appendChild(document.createElement("br"));
+                }
+                    
+            }else if(document.getElementById("radio_image").checked == true){
+                alert("not implemented, yet");
+                
+            }else{
+                alert("No selected question type!");
+            }
+            
+        }
+</script>
