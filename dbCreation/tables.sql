@@ -145,9 +145,9 @@ CREATE TABLE `question_session` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `class_id` bigint(20) NOT NULL,
   `question_set_id` bigint(20) NOT NULL,
-  `start` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `end` timestamp NULL DEFAULT NULL,
-  `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `start_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `end_time` timestamp NULL DEFAULT NULL,
+  `start_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `FK_question_session_class_id` (`class_id`),
   KEY `FK_question_session_question_set_id` (`question_set_id`)
