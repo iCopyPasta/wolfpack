@@ -110,14 +110,14 @@
 
       $sql = "SELECT student_id, first_name, last_name, salted_password, email, title, uniqueID, is_confirmed
               FROM student_account
-              WHERE student_id = :student_id
-                AND first_name = :first_name
-                AND last_name = :last_name
-                AND salted_password = :salted_password
-                AND email = :email
-                AND title = :title
-                AND uniqueID = :uniqueID
-                AND is_confirmed = :is_confirmed
+              WHERE student_id LIKE :student_id
+                AND first_name LIKE :first_name
+                AND last_name LIKE :last_name
+                AND salted_password LIKE :salted_password
+                AND email LIKE :email
+                AND title LIKE :title
+                AND uniqueID LIKE :uniqueID
+                AND is_confirmed LIKE :is_confirmed
                 ";
 
       $stmt = $pdo->prepare($sql);
