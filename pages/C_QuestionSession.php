@@ -34,13 +34,21 @@
 
 */
 
-  class StudentIsIn{
-    private $student_id;
+  class QuestionSession{
+    private $id;
     private $class_id;
+    private $question_set_id;
+    private $start_time;
+    private $end_time;
+    private $start_date;
 
-    function __construct($stud_id, $classid) {
-      $this->__set('student_id',$stud_id);
-      $this->__set('class_id',$classid);
+    function __construct($id, $class_id, $question_set_id, $start_time, $end_time, $start_date){
+      $this->__set('id', $id);
+      $this->__set('class_id', $class_id);
+      $this->__set('question_set_id', $question_set_id);
+      $this->__set('start_time', $start_time);
+      $this->__set('end_time', $end_time);
+      $this->__set('start_date', $start_date);
     }
 
     // magical get
@@ -64,23 +72,30 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "INSERT INTO student_is_in
-                              (student_id, class_id)
-                              VALUES (:student_id, :class_id)";
+      $sql = "INSERT INTO question_session
+                              (class_id, question_set_id, start_time, end_time, start_date)
+                              VALUES (:class_id, :question_set_id, :start_time, :end_time, :start_date)";
       $stmt = $pdo->prepare($sql);
       include_once('isIdExistFunctions.php');
-      $isStudentIdExist = isStudentIdExist($this->__get('student_id'));
       $isClassIdExist = isClassIdExist($this->__get('class_id'));
+      $isQuestionSetIdExist = isQuestionSetIdExist($this->__get('question_set_id'));
 
-      if($isStudentIdExist){
+      if($isQuestionSetIdExist){
         if($isClassIdExist){
           // classId and sectionId exist; attempt to insert
           try{
-            $stmt->execute(['student_id' => $this->student_id, 'class_id' => $this->class_id]);
+            $stmt->execute(['class_id' => $this->class_id, 'question_set_id' => $this->question_set_id,
+                            'start_time' => $this->start_time, 'end_time' => $this->end_time,
+                            'start_date' => $this->start_date]);
           }catch (Exception $e){
             // fail JSON response
             $response = array();
-            $response["message"] = "ERROR INSERTING: ".$this->student_id." ".$this->class_id." ".$e->getMessage();
+            $response["message"] = "ERROR INSERTING: ".$this->class_id." ".
+                                                      $this->question_set_id." ".
+                                                      $this->start_time." ".
+                                                      $this->end_time. " ".
+                                                      $this->start_date." ".
+                                                      $e->getMessage();
             $response["success"] = 0;
             echo json_encode($response);
             die();
@@ -88,29 +103,29 @@
 
           // success JSON response
           $response = array();
-          $response["message"] = "Inserted: ".$this->student_id." ".$this->class_id;
+          $response["message"] = "Inserted: ".$this->class_id." ".
+                                              $this->question_set_id." ".
+                                              $this->start_time." ".
+                                              $this->end_time. " ".
+                                              $this->start_date;
           $response["success"] = 1;
           echo json_encode($response);
 
           $pdo = null;
-        }
-        else{
+        }else{
           // build response for no class id
           $response = array();
-          $response["message"] = "ERROR INSERTING into is_in table: class_id ".$this->class_id." does not exist in class_course table";
+          $response["message"] = "ERROR INSERTING into question_session table: class_id ".$this->class_id." does not exist in class_course_section table";
           $response["success"] = 0;
           echo json_encode($response);
         }
-      }
-      else{
-        // build response for no student id
+      }else{
+        // build response for no question set id
         $response = array();
-        $response["message"] = "ERROR INSERTING into is_in table: student_id ".$this->student_id." does not exist in student_account table";
+        $response["message"] = "ERROR INSERTING into question_session table: question_set_id ".$this->question_set_id." does not exist in question_set table";
         $response["success"] = 0;
         echo json_encode($response);
       }
-
-
     }
 
     public function select(){
@@ -119,14 +134,22 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "SELECT student_id, class_id
-              FROM student_is_in
-              WHERE student_id = :student_id
-                AND class_id = :class_id";
+      $sql = "SELECT id, class_id, question_set_id, start_time, end_time, start_date
+              FROM question_session
+              WHERE id = :id
+                AND class_id = :class_id
+                AND question_set_id = :question_set_id
+                AND start_time = :start_time
+                AND end_time = :end_time
+                AND start_date = :start_date";
 
       $stmt = $pdo->prepare($sql);
-      $stmt->bindValue(':student_id', $this->student_id);
+      $stmt->bindValue(':id', $this->id);
       $stmt->bindValue(':class_id', $this->class_id);
+      $stmt->bindValue(':question_set_id', $this->question_set_id);
+      $stmt->bindValue(':start_time', $this->start_time);
+      $stmt->bindValue(':end_time', $this->end_time);
+      $stmt->bindValue(':start_date', $this->start_date);
 
       try{
         $stmt->execute();
@@ -140,27 +163,11 @@
 
       $pdo = null;
       $response = array();
-      $response["message"] = "Success SELECTING from student_is_in";
+      $response["message"] = "Success SELECTING from question_session";
       $response["success"] = 1;
       $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
       array_unshift($retVal, $response);
       return json_encode($retVal);
-    }
-
-    public function isStudentIdExist($aStudentId){
-      include_once('/pages/C_StudentAccount.php');
-      $student = new StudentAccount($aStudentId, '%', '%', '%', '%', '%', '%', '%', '%');
-      $qJSON = json_decode($student->select(), true);
-      // if a row was returned then the class_id exists
-      return array_key_exists(1, $qJSON);
-    }
-
-    public function isClassIdExist($aClassId){
-      include_once('/pages/C_ClassCourseSection.php');
-      $class = new ClassCourseSection($aClassId, '%', '%', '%', '%');
-      $qJSON = json_decode($class->select(), true);
-      // if a row was returned then the class_id exists
-      return array_key_exists(1, $qJSON);
     }
 
   }

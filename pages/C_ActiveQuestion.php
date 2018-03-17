@@ -34,13 +34,13 @@
 
 */
 
-  class StudentIsIn{
-    private $student_id;
-    private $class_id;
+  class ActiveQuestion{
+    private $question_set_id;
+    private $question_id;
 
-    function __construct($stud_id, $classid) {
-      $this->__set('student_id',$stud_id);
-      $this->__set('class_id',$classid);
+    function __construct($question_set_id, $question_id) {
+      $this->__set('question_set_id',$question_set_id);
+      $this->__set('question_id',$question_id);
     }
 
     // magical get
@@ -64,23 +64,23 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "INSERT INTO student_is_in
-                              (student_id, class_id)
-                              VALUES (:student_id, :class_id)";
+      $sql = "INSERT INTO active_question
+                              (question_set_id, question_id)
+                              VALUES (:question_set_id, :question_id)";
       $stmt = $pdo->prepare($sql);
       include_once('isIdExistFunctions.php');
-      $isStudentIdExist = isStudentIdExist($this->__get('student_id'));
-      $isClassIdExist = isClassIdExist($this->__get('class_id'));
+      $isQuestionSetIdExist = isQuestionSetIdExist($this->__get('question_set_id'));
+      $isQuestionIdExist = isQuestionIdExist($this->__get('question_id'));
 
-      if($isStudentIdExist){
-        if($isClassIdExist){
+      if($isQuestionSetIdExist){
+        if($isQuestionIdExist){
           // classId and sectionId exist; attempt to insert
           try{
-            $stmt->execute(['student_id' => $this->student_id, 'class_id' => $this->class_id]);
+            $stmt->execute(['question_set_id' => $this->question_set_id, 'question_id' => $this->question_id]);
           }catch (Exception $e){
             // fail JSON response
             $response = array();
-            $response["message"] = "ERROR INSERTING: ".$this->student_id." ".$this->class_id." ".$e->getMessage();
+            $response["message"] = "ERROR INSERTING: ".$this->question_set_id." ".$this->question_id." ".$e->getMessage();
             $response["success"] = 0;
             echo json_encode($response);
             die();
@@ -88,24 +88,24 @@
 
           // success JSON response
           $response = array();
-          $response["message"] = "Inserted: ".$this->student_id." ".$this->class_id;
+          $response["message"] = "Inserted: ".$this->question_set_id." ".$this->question_id;
           $response["success"] = 1;
           echo json_encode($response);
 
           $pdo = null;
         }
         else{
-          // build response for no class id
+          // build response for no question id
           $response = array();
-          $response["message"] = "ERROR INSERTING into is_in table: class_id ".$this->class_id." does not exist in class_course table";
+          $response["message"] = "ERROR INSERTING into active_question table: question_id ".$this->question_id." does not exist";
           $response["success"] = 0;
           echo json_encode($response);
         }
       }
       else{
-        // build response for no student id
+        // build response for no question set id
         $response = array();
-        $response["message"] = "ERROR INSERTING into is_in table: student_id ".$this->student_id." does not exist in student_account table";
+        $response["message"] = "ERROR INSERTING into active_question table: question_set_id ".$this->question_set_id." does not exist";
         $response["success"] = 0;
         echo json_encode($response);
       }
@@ -120,13 +120,13 @@
       $pdo = $connection->getConnection();
 
       $sql = "SELECT student_id, class_id
-              FROM student_is_in
-              WHERE student_id = :student_id
-                AND class_id = :class_id";
+              FROM active_question
+              WHERE question_set_id = :question_set_id
+                AND question_id = :question_id";
 
       $stmt = $pdo->prepare($sql);
-      $stmt->bindValue(':student_id', $this->student_id);
-      $stmt->bindValue(':class_id', $this->class_id);
+      $stmt->bindValue(':question_set_id', $this->question_set_id);
+      $stmt->bindValue(':question_id', $this->question_id);
 
       try{
         $stmt->execute();
@@ -140,27 +140,11 @@
 
       $pdo = null;
       $response = array();
-      $response["message"] = "Success SELECTING from student_is_in";
+      $response["message"] = "Success SELECTING from active_question";
       $response["success"] = 1;
       $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
       array_unshift($retVal, $response);
       return json_encode($retVal);
-    }
-
-    public function isStudentIdExist($aStudentId){
-      include_once('/pages/C_StudentAccount.php');
-      $student = new StudentAccount($aStudentId, '%', '%', '%', '%', '%', '%', '%', '%');
-      $qJSON = json_decode($student->select(), true);
-      // if a row was returned then the class_id exists
-      return array_key_exists(1, $qJSON);
-    }
-
-    public function isClassIdExist($aClassId){
-      include_once('/pages/C_ClassCourseSection.php');
-      $class = new ClassCourseSection($aClassId, '%', '%', '%', '%');
-      $qJSON = json_decode($class->select(), true);
-      // if a row was returned then the class_id exists
-      return array_key_exists(1, $qJSON);
     }
 
   }
