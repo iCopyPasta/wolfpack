@@ -31,10 +31,10 @@
     private $email;
     private $title;
     private $uniqueID;
-    private $is_confirmed;
+    private $isConfirmed;
 
 
-    function __construct($id, $fname, $lname, $spassword, $email, $title, $uniqueID, $is_confirmed) {
+    function __construct($id, $fname, $lname, $spassword, $email, $title, $uniqueID, $isConfirmed) {
       $this->__set('student_id', $id);
       $this->__set('first_name',$fname);
       $this->__set('last_name', $lname);
@@ -42,7 +42,7 @@
       $this->__set('email',$email);
       $this->__set('title',$title);
       $this->__set('uniqueID',$uniqueID);
-      $this->__set('is_confirmed',$is_confirmed);
+      $this->__set('isConfirmed',$isConfirmed);
     }
 
     // magical get
@@ -68,8 +68,8 @@
       $pdo = $connection->getConnection();
 
       $sql = "INSERT INTO student_account
-                              (first_name, last_name, salted_password, email, title, uniqueID, is_confirmed)
-                              VALUES (:first_name, :last_name, :salted_password, :email, :title, :uniqueID, :is_confirmed)";
+                              (first_name, last_name, salted_password, email, title, uniqueID, isConfirmed)
+                              VALUES (:first_name, :last_name, :salted_password, :email, :title, :uniqueID, :isConfirmed)";
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':first_name', $this->first_name);
       $stmt->bindValue(':last_name', $this->last_name);
@@ -77,7 +77,7 @@
       $stmt->bindValue(':email', $this->email);
       $stmt->bindValue(':title', $this->title);
       $stmt->bindValue(':uniqueID', $this->uniqueID);
-      $stmt->bindValue(':is_confirmed', $this->is_confirmed);
+      $stmt->bindValue(':isConfirmed', $this->isConfirmed);
 
       try{
         $stmt->execute();
@@ -86,7 +86,7 @@
         $response = array();
         $response["message"] = "ERROR INSERTING: ".$this->first_name." ".$this->last_name." ".$this->salted_password." ".
                                 $this->email." ".$this->title." ".$this->uniqueID." ".
-                                $this->is_confirmed." ".$e->getMessage();
+                                $this->isConfirmed." ".$e->getMessage();
         $response["success"] = 0;
         echo json_encode($response);
         die();
@@ -96,7 +96,7 @@
       $response = array();
       $response["message"] = "Inserted: ".$this->first_name." ".$this->last_name." ".$this->salted_password." ".
                               $this->email." ".$this->title." ".$this->uniqueID." ".
-                              $this->is_confirmed;
+                              $this->isConfirmed;
       $response["success"] = 1;
       echo json_encode($response);
 
@@ -108,7 +108,7 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "SELECT student_id, first_name, last_name, salted_password, email, title, uniqueID, is_confirmed
+      $sql = "SELECT student_id, first_name, last_name, salted_password, email, title, uniqueID, isConfirmed
               FROM student_account
               WHERE student_id = :student_id
                 AND first_name = :first_name
@@ -117,7 +117,7 @@
                 AND email = :email
                 AND title = :title
                 AND uniqueID = :uniqueID
-                AND is_confirmed = :is_confirmed
+                AND isConfirmed = :isConfirmed
                 ";
 
       $stmt = $pdo->prepare($sql);
@@ -128,7 +128,7 @@
       $stmt->bindValue(':email', $this->email);
       $stmt->bindValue(':title', $this->title);
       $stmt->bindValue(':uniqueID', $this->uniqueID);
-      $stmt->bindValue(':is_confirmed', $this->is_confirmed);
+      $stmt->bindValue(':isConfirmed', $this->isConfirmed);
 
       try{
         $stmt->execute();
