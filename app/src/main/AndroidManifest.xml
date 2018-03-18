@@ -68,7 +68,11 @@
             android:name=".services.pollingsession.MyJobService"
             android:enabled="true"
             android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".services.pollingsession.MyStartedService"
+            android:enabled="true"
+            android:exported="false"></service>
     </application>
 
 </manifest>
