@@ -56,6 +56,15 @@
                               VALUES (:teacher_id, :question_type, :description, :potential_answers, :correct_answers)";
       $stmt = $pdo->prepare($sql);
 
+      // does the teacher_id exist?
+      if(!isTeacherIdExist($this->teacher_id)){
+        // fail JSON response
+        $response = array();
+        $response["message"] = "ERROR INSERTING: teacher_id ".$this->teacher_id." does not exist: ";
+        $response["success"] = 0;
+        return json_encode($response);
+      }
+
       try{
         $stmt->execute(['teacher_id' => $this->teacher_id,
                         'description' => $this->description,
