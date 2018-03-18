@@ -73,6 +73,6 @@ public class MyIntentService extends IntentService {
     //TODO: incorporate retrofit call to particular file with values passed via intent
     //TODO: incoporate broadcast manager to send message of existing poll
     //TODO: incoporate broadcast listener + intent filter in main fragment
-    
+
 
 }
