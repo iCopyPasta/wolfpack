@@ -1,36 +1,40 @@
 <?php
   /*
-  This class is used to insert and select from table "is_in".
-  _______________
-  |is_in         |
-  |______________|
-  |student_id    |
-  |class_id      |
-  |--------------|
-  |______________|
+  This class is used to insert and select from table "question_session".
+  ___________________
+  |question_session |
+  |_________________|
+  |id               |
+  |-----------------|
+  |class_id         |
+  |question_set_id  |
+  |start_time       |
+  |end_time         |
+  |start_date       |
+  |_________________|
 
-  This table has a composite primary key built from the student_account and class_course table.
+  This table has references the class_id and question_set_id from the class_course_section and question_set tables.
   For this reason, checks are made against those tables to ensure the student_id and class_id given exist in their respective tables.
 
   Example Usage:
 
-  // insert a new "is_in"
-    $aIsIn = new IsIn(1, 15);
-    $response = $aIsIn->insert();
+  // insert a new question_session
+  $newObject = new QuestionSession('1', '1', '1', '2018-03-22 09:31:29', '2018-03-22 09:31:29', '2018-03-22 09:31:29');
+  $newObject->insert();
 
-  // selecting a "is_in"; 0th element is success message; 1th to end are rows from table
-    $aIsIn = new IsIn(1, 15);
-    $response = $aIsIn->select();
+  // select a question_session
+  $newObject = new QuestionSession('1', '1', '1', '2018-03-22 09:31:29', '2018-03-22 09:31:29', '2018-03-22 09:31:29');
+  $retVal = json_decode($newObject->select());
 
   // to test for no rows existing
-    $aIsIn = new IsIn(1, 15);
-    $qJSON = json_decode($aIsIn->select(), true);
-    if(array_key_exists(1, $qJSON)){
-      echo 'exists<br>';
-    }
-    else{
-      echo 'no exists<br>';
-    }
+  $newObject = new QuestionSession('1', '1', '1', '2018-03-22 09:31:29', '2018-03-22 09:31:29', '2018-03-22 09:31:29');
+  $retVal = json_decode($newObject->select());
+  if(array_key_exists(1, $retVal)){
+    echo 'exists<br>';
+  }
+  else{
+    echo 'no exists<br>';
+  }
 
 */
 
@@ -136,12 +140,12 @@
 
       $sql = "SELECT id, class_id, question_set_id, start_time, end_time, start_date
               FROM question_session
-              WHERE id = :id
-                AND class_id = :class_id
-                AND question_set_id = :question_set_id
-                AND start_time = :start_time
-                AND end_time = :end_time
-                AND start_date = :start_date";
+              WHERE id LIKE :id
+                AND class_id LIKE :class_id
+                AND question_set_id LIKE :question_set_id
+                AND start_time LIKE :start_time
+                AND end_time LIKE :end_time
+                AND start_date LIKE :start_date";
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':id', $this->id);
