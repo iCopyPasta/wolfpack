@@ -1,8 +1,18 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
+import android.os.PersistableBundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +20,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.QuestionPage;
 import com.wolfpack.cmpsc488.a475layouts.R;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyJobService;
 
 public class StudentClassPageTab1Sessionlist extends Fragment {
 
@@ -20,6 +32,17 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
     private ListView mListViewSessions;
     private static String[] sessionlistTemp = {"Session 01", "Session 02"};
+
+    private JobScheduler jobScheduler;
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(context, "message!", Toast.LENGTH_SHORT).show();
+
+            Log.i(TAG, "onReceive: " + "service message received");
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,6 +76,62 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
         return rootView;
     }
+
+    //-----experimentation with background work
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+
+
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        LocalBroadcastManager.getInstance(
+                getActivity().getApplicationContext())
+                .registerReceiver(mReceiver, new IntentFilter("ServiceMessage"));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            jobScheduler = (JobScheduler) getActivity().getSystemService(
+                    Context.JOB_SCHEDULER_SERVICE);
+
+            PersistableBundle persistableBundle = new PersistableBundle(3);
+            persistableBundle.putString("class", "Tab1SessionList");
+
+            JobInfo jobInfo = new JobInfo.Builder(4242,
+                    new ComponentName(getActivity(), MyJobService.class))
+                    .setOverrideDeadline(10000)
+                    .setExtras(persistableBundle)
+                    .build();
+
+            jobScheduler.schedule(jobInfo);
+
+
+        }
+
+
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+
+        jobScheduler = null;
+
+        LocalBroadcastManager.getInstance(
+                getActivity().getApplicationContext())
+                .unregisterReceiver(mReceiver);
+    }
+
+
 
 
 

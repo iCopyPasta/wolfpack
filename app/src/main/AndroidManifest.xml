@@ -65,8 +65,10 @@
             android:label="@string/CameraUpload" />
 
         <service
-            android:name=".services.pollingsession.MyIntentService"
-            android:exported="false"></service>
+            android:name=".services.pollingsession.MyJobService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
     </application>
 
 </manifest>
