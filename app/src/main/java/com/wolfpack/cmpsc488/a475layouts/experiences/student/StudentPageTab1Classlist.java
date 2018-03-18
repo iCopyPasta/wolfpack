@@ -43,8 +43,8 @@ public class StudentPageTab1Classlist extends Fragment {
 
         mListViewClasses.setAdapter(mCustomAdapter);
 
-        /*
-        ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
+
+        /*ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
                 getActivity(),
                 android.R.layout.simple_list_item_1,
                 classlistTemp);
@@ -56,7 +56,7 @@ public class StudentPageTab1Classlist extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
                 Intent intent = new Intent(getActivity(), StudentClassPage.class);
-                intent.putExtra("ClassName", classlistTemp[i]);
+                intent.putExtra("className", classlistTemp[i]);
                 Log.i(TAG, "hello from onItemClick");
 
                 startActivity(intent);

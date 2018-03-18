@@ -4,16 +4,14 @@
 
 
     <!-- Titles of pages -->
+    <string name="title_activity_main_page">Pollato</string>
     <string name="title_activity_login_page">Sign in</string>
-    <string name="title_activity_student_page">Home</string>
+
     <string name="title_activity_teacher_page">Home</string>
-    <string name="title_activity_student_class_page">Class Name</string>
     <string name="title_activity_teacher_class_page">Class Name</string>
 
-    <string name="title_activity_question_page">Question</string>
-
-    <string name="title_activity_main_page">Pollato</string>
     <string name="title_activity_class_page">Class Name</string>
+
 
 
 
@@ -39,7 +37,11 @@
     <string name="pending_invites">Pending Invites</string>
     <string name="class_id">Class ID</string>
 
+
+    <!--STUDENT-->
+
     <!-- Strings for Student Page -->
+    <string name="title_activity_student_page">Home</string>
     <string name="student_page_tab_classes">Classes</string>
     <string name="student_page_tab1_classlist">Class List</string>
     <string name="student_page_tab2_addclass">Add Class</string>
@@ -47,10 +49,22 @@
 
 
     <!-- Strings for Student Class Page -->
+    <string name="title_activity_student_class_page">Class Name</string>
     <string name="student_class_page_tab1_session">Sessions</string>
     <string name="student_class_page_tab2_classinfo">Information</string>
 
+    <!-- Strings for Session Page -->
+    <string name="title_activity_student_session_page">Questions</string>
+    <string name="session_name">default</string>
+    <string name="active_session_notice">Waiting for new question</string>
 
+
+    <!-- Strings for Question Page -->
+    <string name="title_activity_student_question_page">Question</string>
+    <string name="default_question_text">default</string>
+
+
+    <!--TEACHER-->
 
     <!-- Strings for Teacher Page -->
     <string name="teacher_page_tab_classes">Classes</string>
@@ -64,15 +78,11 @@
     <string name="teacher_class_page_tab_manage">Manage</string>
     <string name="teacher_class_page_tab_classinfo">Settings</string>
     <string name="manage_sessions">Manage Sessions</string>
+
     <string name="manage_questions">Manage Questions</string>
 
 
 
-    <!-- Strings for Question Page -->
-    <string name="default_question_text">question</string>
-    <string name="time_remaining">Time Remaining:</string>
-    <string name="view_statistics">View Statistics</string>
-    <string name="countdown">00:00</string>
 
     <string name="action_settings">what?</string>
     <string name="signup">Sign Up</string>
