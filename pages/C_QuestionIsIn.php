@@ -82,30 +82,27 @@
             $response = array();
             $response["message"] = "ERROR INSERTING: ".$this->question_set_id." ".$this->question_id." ".$e->getMessage();
             $response["success"] = 0;
-            echo json_encode($response);
-            die();
+            return json_encode($response);
           }
 
           // success JSON response
           $response = array();
           $response["message"] = "Inserted: ".$this->question_set_id." ".$this->question_id;
           $response["success"] = 1;
-          echo json_encode($response);
-
-          $pdo = null;
+          return json_encode($response);
         }else{
           // build response for no question id
           $response = array();
           $response["message"] = "ERROR INSERTING into question_is_in table: question_id ".$this->question_id." does not exist in question table";
           $response["success"] = 0;
-          echo json_encode($response);
+          return json_encode($response);
         }
       }else{
         // build response for no question set id
         $response = array();
         $response["message"] = "ERROR INSERTING into question_is_in table: question_set_id ".$this->question_set_id." does not exist in question_set table";
         $response["success"] = 0;
-        echo json_encode($response);
+        return json_encode($response);
       }
     }
 

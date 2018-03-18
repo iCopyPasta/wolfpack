@@ -62,17 +62,14 @@
         $response = array();
         $response["message"] = "ERROR INSERTING: ".$this->question_type." ".$this->description." ".$e->getMessage();
         $response["success"] = 0;
-        echo json_encode($response);
-        die();
+        return json_encode($response);
       }
 
       // success JSON response
       $response = array();
       $response["message"] = "Inserted: ".$this->question_type." ".$this->description;
       $response["success"] = 1;
-      echo json_encode($response);
-
-      $pdo = null;
+      return json_encode($response);
     }
 
     public function select(){

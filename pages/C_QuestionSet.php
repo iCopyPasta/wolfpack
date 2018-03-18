@@ -68,17 +68,14 @@
         $response = array();
         $response["message"] = "ERROR INSERTING: ".$this->question_set_name." ".$e->getMessage();
         $response["success"] = 0;
-        echo json_encode($response);
-        die();
+        return json_encode($response);
       }
 
       // success JSON response
       $response = array();
       $response["message"] = "Inserted: ".$this->question_set_name;
       $response["success"] = 1;
-      echo json_encode($response);
-
-      $pdo = null;
+      return json_encode($response);
     }
 
     public function select(){

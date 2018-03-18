@@ -81,8 +81,7 @@
                 $this->email." ".$this->title." ".$this->uniqueID." ".
                 $this->is_confirmed." ".$e->getMessage();
         $response["success"] = 0;
-        echo json_encode($response);
-        die();
+        return json_encode($response);
       }
       // success JSON response
       $response = array();
@@ -90,8 +89,7 @@
               $this->email." ".$this->title." ".$this->uniqueID." ".
               $this->is_confirmed;
       $response["success"] = 1;
-      echo json_encode($response);
-      $pdo = null;
+      return json_encode($response);
     }
 
     public function select(){

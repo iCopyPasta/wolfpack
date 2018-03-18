@@ -98,37 +98,34 @@
               $response = array();
               $response["message"] = "ERROR INSERTING: " . $this->student_id . " " . $this->session_id . " " . $this->question_history_id . " " . $e->getMessage();
               $response["success"] = 0;
-              echo json_encode($response);
-              die();
+              return json_encode($response);
             }
 
             // success JSON response
             $response = array();
             $response["message"] = "Inserted: " . $this->student_id . " " . $this->session_id . " " . $this->question_history_id ;
             $response["success"] = 1;
-            echo json_encode($response);
-
-            $pdo = null;
+            return json_encode($response);
           }else {
             // question history id does not exist
             $response = array();
             $response["message"] = "ERROR INSERTING into answers table: question_history_id " . $this->question_history_id . " does not exist in class_course table";
             $response["success"] = 0;
-            echo json_encode($response);
+            return json_encode($response);
           }
         }else{
           // session id does not exist
           $response = array();
           $response["message"] = "ERROR INSERTING into answers table: session_id " . $this->session_id . " does not exist in class_course table";
           $response["success"] = 0;
-          echo json_encode($response);
+          return json_encode($response);
         }
       }else{
         // student id does not exist
         $response = array();
         $response["message"] = "ERROR INSERTING into answers table: student_id ".$this->student_id." does not exist in student_account table";
         $response["success"] = 0;
-        echo json_encode($response);
+        return json_encode($response);
       }
     }
 
