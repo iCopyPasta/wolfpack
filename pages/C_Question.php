@@ -19,12 +19,12 @@
     private $potential_answers;
     private $correct_answers;
 
-    function __construct($q,$d,$t,$p,$a) {
-      $this->__set('question_type', $t);
-      $this->__set('question_id', $q);
-      $this->__set('description',$d);
-      $this->__set('potential_answers', $p);
-      $this->__set('correct_answers', $a);
+    function __construct($qId,$description,$question_type,$potential_answers,$correct_answers) {
+      $this->__set('question_type', $question_type);
+      $this->__set('question_id', $qId);
+      $this->__set('description',$description);
+      $this->__set('potential_answers', $potential_answers);
+      $this->__set('correct_answers', $correct_answers);
     }
 
     // magical get
@@ -55,11 +55,12 @@
       $stmt = $pdo->prepare($sql);
 
       try{
-        $stmt->execute(['description' => $this->description, 'question_type' => $this->question_type]);
+        $stmt->execute(['description' => $this->description, 'question_type' => $this->question_type,
+                        'potential_answers' => $this->potential_answers, 'correct_answers' => $this->correct_answers]);
       }catch (Exception $e){
         // fail JSON response
         $response = array();
-        $response["message"] = "ERROR INSERTING: ".$this->description." ".$this->question_type." ".$e->getMessage();
+        $response["message"] = "ERROR INSERTING: ".$this->question_type." ".$this->description." ".$e->getMessage();
         $response["success"] = 0;
         echo json_encode($response);
         die();
@@ -67,7 +68,7 @@
 
       // success JSON response
       $response = array();
-      $response["message"] = "Inserted: ".$this->description." ".$this->question_type;
+      $response["message"] = "Inserted: ".$this->question_type." ".$this->description;
       $response["success"] = 1;
       echo json_encode($response);
 
