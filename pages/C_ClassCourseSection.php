@@ -85,7 +85,7 @@
 
       $sql = "SELECT class_id, title, description, offering, location
               FROM class_course_section
-              WHERE class_id = :class_id
+              WHERE class_id LIKE :class_id
                 AND title LIKE :title
                 AND description LIKE :description
                 AND location LIKE :location

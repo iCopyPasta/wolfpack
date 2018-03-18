@@ -117,8 +117,8 @@
 
       $sql = "SELECT question_set_id, question_id
               FROM question_is_in
-              WHERE question_set_id = :question_set_id
-                AND question_id = :question_id";
+              WHERE question_set_id LIKE :question_set_id
+                AND question_id LIKE :question_id";
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':question_set_id', $this->question_set_id);

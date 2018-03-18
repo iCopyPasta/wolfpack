@@ -98,7 +98,7 @@
         }else{
           // build response for no session id
           $response = array();
-          $response["message"] = "ERROR INSERTING into question_history table: class_id ".$this->session_id." does not exist in question_sesion table";
+          $response["message"] = "ERROR INSERTING into question_history table: session_id ".$this->session_id." does not exist in question_session table";
           $response["success"] = 0;
           echo json_encode($response);
         }
@@ -106,7 +106,7 @@
       else{
         // build response for no question id
         $response = array();
-        $response["message"] = "ERROR INSERTING into question_history table: student_id ".$this->question_id." does not exist in question table";
+        $response["message"] = "ERROR INSERTING into question_history table: question_id ".$this->question_id." does not exist in question table";
         $response["success"] = 0;
         echo json_encode($response);
       }
@@ -118,11 +118,11 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "SELECT id, student_id, class_id
+      $sql = "SELECT id, question_id, session_id
               FROM question_history
-              WHERE id = :id
-                AND question_id = :question_id
-                AND session_id = :session_id";
+              WHERE id LIKE :id
+                AND question_id LIKE :question_id
+                AND session_id LIKE :session_id";
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':id', $this->id);

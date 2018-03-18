@@ -121,8 +121,8 @@
 
       $sql = "SELECT student_id, class_id
               FROM student_is_in
-              WHERE student_id = :student_id
-                AND class_id = :class_id";
+              WHERE student_id LIKE :student_id
+                AND class_id LIKE :class_id";
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':student_id', $this->student_id);

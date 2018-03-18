@@ -87,7 +87,12 @@
           if ($isQuestionHistoryIdExist) {
             // classId sectionId, and question history id exist; attempt to insert
             try {
-              $stmt->execute(['student_id' => $this->student_id, 'session_id' => $this->session_id, 'question_history_id' => $this->question_history_id]);
+              $stmt->execute(['student_id' => $this->student_id,
+                              'session_id' => $this->session_id,
+                              'question_history_id' => $this->question_history_id,
+                              'answer_type' => $this->answer_type,
+                              'answer' => $this->answer,
+                              'submit_time' => $this->submit_time]);
             } catch (Exception $e) {
               // fail JSON response
               $response = array();
@@ -104,22 +109,21 @@
             echo json_encode($response);
 
             $pdo = null;
-          } else {
+          }else {
             // question history id does not exist
             $response = array();
             $response["message"] = "ERROR INSERTING into answers table: question_history_id " . $this->question_history_id . " does not exist in class_course table";
             $response["success"] = 0;
             echo json_encode($response);
           }
-        } else{
+        }else{
           // session id does not exist
           $response = array();
           $response["message"] = "ERROR INSERTING into answers table: session_id " . $this->session_id . " does not exist in class_course table";
           $response["success"] = 0;
           echo json_encode($response);
         }
-      }
-      else{
+      }else{
         // student id does not exist
         $response = array();
         $response["message"] = "ERROR INSERTING into answers table: student_id ".$this->student_id." does not exist in student_account table";
@@ -136,9 +140,9 @@
 
       $sql = "SELECT student_id, session_id, question_history_id, answer_type, answer, submit_time
               FROM answers
-              WHERE student_id = :student_id
-                AND session_id = :session_id
-                AND question_history_id = :question_history_id
+              WHERE student_id LIKE :student_id
+                AND session_id LIKE :session_id
+                AND question_history_id LIKE :question_history_id
                 AND answer_type LIKE :answer_type
                 AND answer LIKE :answer
                 AND submit_time LIKE :submit_time";
