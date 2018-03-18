@@ -89,6 +89,7 @@
               $this->email." ".$this->title." ".$this->uniqueID." ".
               $this->is_confirmed;
       $response["success"] = 1;
+      $response["idInserted"] = $pdo->lastInsertId();
       return json_encode($response);
     }
 

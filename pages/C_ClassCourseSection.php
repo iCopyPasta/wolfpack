@@ -71,6 +71,7 @@
       $response = array();
       $response["message"] = "Inserted: ".$this->title." ".$this->description." ".$this->offering." ".$this->location;
       $response["success"] = 1;
+      $response["idInserted"] = $pdo->lastInsertId();
       return json_encode($response);
     }
 

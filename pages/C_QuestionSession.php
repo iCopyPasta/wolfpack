@@ -112,6 +112,7 @@
                                               $this->end_time. " ".
                                               $this->start_date;
           $response["success"] = 1;
+          $response["idInserted"] = $pdo->lastInsertId();
           return json_encode($response);
         }else{
           // build response for no class id

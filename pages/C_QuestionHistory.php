@@ -140,6 +140,7 @@
       $response = array();
       $response["message"] = "Success SELECTING from question_history";
       $response["success"] = 1;
+      $response["idInserted"] = $pdo->lastInsertId();
       $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
       array_unshift($retVal, $response);
       return json_encode($retVal);
