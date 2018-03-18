@@ -117,8 +117,8 @@
 
       $sql = "SELECT question_set_id, teacher_id
               FROM owns_question_set
-              WHERE question_set_id = :question_set_id
-                AND teacher_id = :teacher_id";
+              WHERE question_set_id LIKE :question_set_id
+                AND teacher_id LIKE :teacher_id";
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':question_set_id', $this->question_set_id);
