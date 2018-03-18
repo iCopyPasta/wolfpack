@@ -25,10 +25,12 @@
 
   class QuestionSet{
     private $question_set_id;
+    private $teacher_id;
     private $question_set_name;
 
-    function __construct($question_set_id, $question_set_name) {
+    function __construct($question_set_id, $teacher_id,  $question_set_name) {
       $this->__set('question_set_id', $question_set_id);
+      $this->__set('teacher_id', $teacher_id);
       $this->__set('question_set_name',$question_set_name);
     }
 
@@ -55,25 +57,34 @@
       $pdo = $connection->getConnection();
 
       $sql = "INSERT INTO question_set
-                              (question_set_name)
-                              VALUES (:question_set_name)";
+                              (teacher_id, question_set_name)
+                              VALUES (:teacher_id, :question_set_name)";
       $stmt = $pdo->prepare($sql);
-//      $stmt->bindValue(':question_set_id', $this->question_set_id);
+      $stmt->bindValue(':teacher_id', $this->teacher_id);
       $stmt->bindValue(':question_set_name', $this->question_set_name);
+
+      // does the teacher_id exist?
+      if(!isTeacherIdExist($this->teacher_id)){
+        // fail JSON response
+        $response = array();
+        $response["message"] = "ERROR INSERTING: teacher_id ".$this->teacher_id." does not exist: ";
+        $response["success"] = 0;
+        return json_encode($response);
+      }
 
       try{
         $stmt->execute();
       }catch (Exception $e){
         // fail JSON response
         $response = array();
-        $response["message"] = "ERROR INSERTING: ".$this->question_set_name." ".$e->getMessage();
+        $response["message"] = "ERROR INSERTING: ".$this->teacher_id." ".$this->question_set_name." ".$e->getMessage();
         $response["success"] = 0;
         return json_encode($response);
       }
 
       // success JSON response
       $response = array();
-      $response["message"] = "Inserted: ".$this->question_set_name;
+      $response["message"] = "Inserted: ".$this->teacher_id." ".$this->question_set_name;
       $response["success"] = 1;
       $response["idInserted"] = $pdo->lastInsertId();
       return json_encode($response);
@@ -84,13 +95,15 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "SELECT question_set_id, question_set_name
+      $sql = "SELECT question_set_id, teacher_id, question_set_name
               FROM question_set
               WHERE question_set_id LIKE :question_set_id
+                AND teacher_id LIKE :teacher_id
                 AND question_set_name LIKE :question_set_name";
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':question_set_id', $this->question_set_id);
+      $stmt->bindValue(':teacher_id', $this->teacher_id);
       $stmt->bindValue(':question_set_name', $this->question_set_name);
 
       try{
