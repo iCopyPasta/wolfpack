@@ -36,7 +36,7 @@
   //TODO: create C_QuestionSet.php
   function isQuestionSetIdExist($aQuestionSetId){
     include_once('C_QuestionSet.php');
-    $questionSet = new QuestionHistory($aQuestionSetId, '%');
+    $questionSet = new QuestionSet($aQuestionSetId, '%');
     $qJSON = json_decode($questionSet->select(), true);
     // if a row was returned then the class_id exists
     return array_key_exists(1, $qJSON);
