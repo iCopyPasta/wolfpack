@@ -121,8 +121,8 @@
 
       $sql = "SELECT class_id, question_set_Id
               FROM active_question_set
-              WHERE class_id = :class_id
-                AND question_set_Id = :question_set_Id";
+              WHERE class_id LIKE :class_id
+                AND question_set_Id LIKE :question_set_Id";
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':class_id', $this->class_id);

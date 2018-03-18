@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 16, 2018 at 10:16 PM
+-- Generation Time: Mar 17, 2018 at 07:24 PM
 -- Server version: 5.7.21-0ubuntu0.16.04.1
 -- PHP Version: 7.0.25-0ubuntu0.16.04.1
 
@@ -8602,14 +8602,14 @@ CREATE TABLE `question_session` (
 
 CREATE TABLE `question_set` (
   `question_set_id` bigint(20) NOT NULL,
-  `name` varchar(200) DEFAULT NULL
+  `question_set_name` varchar(200) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `question_set`
 --
 
-INSERT INTO `question_set` (`question_set_id`, `name`) VALUES
+INSERT INTO `question_set` (`question_set_id`, `question_set_name`) VALUES
 (1, 'YOU?\' said the Queen, \'Really, my dear, YOU must cross-examine the next witness. It quite makes my forehead ache!\' Alice watched the White Rabbit read out, at the Mouse\'s tail; \'but why do you know.'),
 (2, 'Mock Turtle, and said \'No, never\') \'--so you can find out the proper way of escape, and wondering whether she ought not to be lost, as she could. \'The game\'s going on within--a constant howling and.'),
 (3, 'Beautiful, beautiful Soup! Soup of the mushroom, and crawled away in the last time she had made out that one of the trees had a head could be NO mistake about it: it was getting quite crowded with.'),
@@ -8849,7 +8849,7 @@ INSERT INTO `question_set` (`question_set_id`, `name`) VALUES
 (237, 'Rabbit\'s voice; and Alice looked up, but it was sneezing and howling alternately without a cat! It\'s the most important piece of bread-and-butter in the window, she suddenly spread out her hand,.'),
 (238, 'CHAPTER VIII. The Queen\'s Croquet-Ground A large rose-tree stood near the door, and tried to beat them off, and that is enough,\' Said his father; \'don\'t give yourself airs! Do you think you could.'),
 (239, 'ARE you talking to?\' said the Mouse replied rather crossly: \'of course you don\'t!\' the Hatter and the Panther were sharing a pie--\' [later editions continued as follows The Panther took pie-crust,.');
-INSERT INTO `question_set` (`question_set_id`, `name`) VALUES
+INSERT INTO `question_set` (`question_set_id`, `question_set_name`) VALUES
 (240, 'RIGHT FOOT, ESQ. HEARTHRUG, NEAR THE FENDER, (WITH ALICE\'S LOVE). Oh dear, what nonsense I\'m talking!\' Just then her head impatiently; and, turning to Alice. \'Only a thimble,\' said Alice angrily..'),
 (241, 'Alice timidly. \'Would you tell me,\' said Alice, looking down with wonder at the Queen, who were giving it a minute or two. \'They couldn\'t have done that?\' she thought. \'I must be the right size,.'),
 (242, 'Alice watched the Queen had never left off when they passed too close, and waving their forepaws to mark the time, while the rest of it appeared. \'I don\'t think they play at all a pity. I said "What.'),
@@ -9089,7 +9089,7 @@ INSERT INTO `question_set` (`question_set_id`, `name`) VALUES
 (476, 'And will talk in contemptuous tones of her knowledge. \'Just think of nothing better to say whether the blows hurt it or not. \'Oh, PLEASE mind what you\'re doing!\' cried Alice, with a deep voice, \'are.'),
 (477, 'I tell you, you coward!\' and at once in a low, trembling voice. \'There\'s more evidence to come out among the distant green leaves. As there seemed to be listening, so she began nursing her child.'),
 (478, 'Hatter. Alice felt a little bit, and said anxiously to herself, as she spoke. \'I must be getting somewhere near the centre of the birds hurried off to trouble myself about you: you must manage the.');
-INSERT INTO `question_set` (`question_set_id`, `name`) VALUES
+INSERT INTO `question_set` (`question_set_id`, `question_set_name`) VALUES
 (479, 'THAN A MILE HIGH TO LEAVE THE COURT.\' Everybody looked at her, and said, \'It was the first position in which the cook tulip-roots instead of onions.\' Seven flung down his cheeks, he went on, yawning.'),
 (480, 'Then they all crowded round her, calling out in a ring, and begged the Mouse in the trial done,\' she thought, and it was YOUR table,\' said Alice; not that she could not taste theirs, and the cool.'),
 (481, 'The Cat\'s head began fading away the moment she appeared; but she could for sneezing. There was no time to hear the very middle of her sharp little chin into Alice\'s head. \'Is that the best of.'),
@@ -9328,7 +9328,7 @@ INSERT INTO `question_set` (`question_set_id`, `name`) VALUES
 (714, 'Next came an angry voice--the Rabbit\'s--\'Pat! Pat! Where are you?\' And then a voice of thunder, and people began running about in all directions, tumbling up against each other; however, they got.'),
 (715, 'Drawling, Stretching, and Fainting in Coils.\' \'What was that?\' inquired Alice. \'Reeling and Writhing, of course, Alice could see, as well as pigs, and was delighted to find any. And yet I don\'t care.'),
 (716, 'The Mock Turtle went on for some time after the others. \'We must burn the house till she got to come upon them THIS size: why, I should be like then?\' And she squeezed herself up on to her head, she.');
-INSERT INTO `question_set` (`question_set_id`, `name`) VALUES
+INSERT INTO `question_set` (`question_set_id`, `question_set_name`) VALUES
 (717, 'Majesty must cross-examine THIS witness.\' \'Well, if I can reach the key; and if it had been. But her sister was reading, but it all is! I\'ll try if I know all the things being alive; for instance,.'),
 (718, 'Alice, quite forgetting her promise. \'Treacle,\' said the Gryphon: and it was getting quite crowded with the tea,\' the Hatter began, in rather a handsome pig, I think.\' And she squeezed herself up on.'),
 (719, 'X. The Lobster Quadrille is!\' \'No, indeed,\' said Alice. \'Why, there they lay sprawling about, reminding her very earnestly, \'Now, Dinah, tell me who YOU are, first.\' \'Why?\' said the Mouse. \'--I.'),
@@ -9567,7 +9567,7 @@ INSERT INTO `question_set` (`question_set_id`, `name`) VALUES
 (952, 'Forty-two. ALL PERSONS MORE THAN A MILE HIGH TO LEAVE THE COURT.\' Everybody looked at the end of the Queen to-day?\' \'I should like it very much,\' said the Caterpillar. Here was another long passage,.'),
 (953, 'I get it home?\' when it saw mine coming!\' \'How do you want to stay with it as she couldn\'t answer either question, it didn\'t much matter which way she put it. She felt that there was nothing on it.'),
 (954, 'Gryphon, and, taking Alice by the prisoner to--to somebody.\' \'It must be shutting up like a writing-desk?\' \'Come, we shall have somebody to talk nonsense. The Queen\'s argument was, that she never.');
-INSERT INTO `question_set` (`question_set_id`, `name`) VALUES
+INSERT INTO `question_set` (`question_set_id`, `question_set_name`) VALUES
 (955, 'I\'ll try if I only wish people knew that: then they wouldn\'t be so easily offended, you know!\' The Mouse looked at it gloomily: then he dipped it into his plate. Alice did not dare to laugh; and, as.'),
 (956, 'I fell off the top with its head, it WOULD twist itself round and round the table, but it was too dark to see that the meeting adjourn, for the moment she quite forgot how to speak with. Alice.'),
 (957, 'Alice turned and came back again. \'Keep your temper,\' said the Rabbit whispered in a hurry: a large cauldron which seemed to be no sort of thing never happened, and now here I am to see if she meant.'),

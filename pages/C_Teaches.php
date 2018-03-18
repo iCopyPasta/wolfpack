@@ -76,8 +76,8 @@
 
       $sql = "SELECT teacher_id, class_id
               FROM teaches
-              WHERE teacher_id = :teacher_id
-                AND class_id = :class_id";
+              WHERE teacher_id LIKE :teacher_id
+                AND class_id LIKE :class_id";
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':teacher_id', $this->teacher_id);

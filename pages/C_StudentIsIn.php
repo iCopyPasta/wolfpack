@@ -109,8 +109,6 @@
         $response["success"] = 0;
         echo json_encode($response);
       }
-
-
     }
 
     public function select(){
@@ -121,8 +119,8 @@
 
       $sql = "SELECT student_id, class_id
               FROM student_is_in
-              WHERE student_id = :student_id
-                AND class_id = :class_id";
+              WHERE student_id LIKE :student_id
+                AND class_id LIKE :class_id";
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':student_id', $this->student_id);
@@ -146,22 +144,5 @@
       array_unshift($retVal, $response);
       return json_encode($retVal);
     }
-
-    public function isStudentIdExist($aStudentId){
-      include_once('/pages/C_StudentAccount.php');
-      $student = new StudentAccount($aStudentId, '%', '%', '%', '%', '%', '%', '%', '%');
-      $qJSON = json_decode($student->select(), true);
-      // if a row was returned then the class_id exists
-      return array_key_exists(1, $qJSON);
-    }
-
-    public function isClassIdExist($aClassId){
-      include_once('/pages/C_ClassCourseSection.php');
-      $class = new ClassCourseSection($aClassId, '%', '%', '%', '%');
-      $qJSON = json_decode($class->select(), true);
-      // if a row was returned then the class_id exists
-      return array_key_exists(1, $qJSON);
-    }
-
   }
 ?>
