@@ -50,10 +50,11 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
             if(mService == null){
                 Log.e(TAG, "mService is null");
             } else{
-                Log.i(TAG, "onServiceConnected: myService is not null: " + mService.testValue());
+                Log.i(TAG, "onServiceConnected: myService is not null: ");
             }
 
             //we can our first initialization of this
+            mService.requestActiveSession("string 1", "string 2", "string 3");
 
         }
 
@@ -62,7 +63,6 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
             if(mService != null){
                 Log.i(TAG, "onServiceDisconnected: should make null here");
             }
-
         }
     };
 

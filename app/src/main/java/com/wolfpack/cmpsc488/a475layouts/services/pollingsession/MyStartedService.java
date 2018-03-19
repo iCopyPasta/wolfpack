@@ -13,6 +13,7 @@ import java.util.Random;
 public class MyStartedService extends Service {
 
     private final String TAG = "MyStartedService";
+    private boolean isRunning = false;
 
     private final Binder mBinder = new MyServiceBinder();
 
@@ -36,11 +37,13 @@ public class MyStartedService extends Service {
 
     @Override
     public void onCreate(){
+        isRunning = false;
         super.onCreate();
     }
 
     @Override
     public void onDestroy(){
+        isRunning = false;
         super.onDestroy();
     }
 
@@ -50,12 +53,19 @@ public class MyStartedService extends Service {
         return super.onUnbind(intent);
     }
 
-    //CALLEE METHODS
+    // methods to use in order to invoke our background task
 
     public String testValue(){
-        (new ServiceJobAsyncTask()).execute();
+        if(!isRunning)
+            (new ServiceJobAsyncTask()).execute();
 
         return "async approach started!";
+    }
+
+    //experimental test of String... passing
+    public void requestActiveSession(String... params){
+        if(!isRunning)
+            (new ServiceJobAsyncTask()).execute(params);
     }
 
 
@@ -64,9 +74,14 @@ public class MyStartedService extends Service {
         private final String TAG = "ServiceJobAT";
 
 
+
         @Override
         protected String doInBackground(String... params) {
+            isRunning = true;
 
+            for (String el:params) {
+                Log.i(TAG, "doInBackground: " + el);
+            }
 
             //TODO: perform actual network request based off of parameters
 
@@ -88,6 +103,7 @@ public class MyStartedService extends Service {
 
         @Override
         protected void onPostExecute(final String params){
+            isRunning = false;
 
             //TODO: logic based on the response we get from the server
             switch (params){
