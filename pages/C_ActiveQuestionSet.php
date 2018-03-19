@@ -82,24 +82,21 @@
             $response = array();
             $response["message"] = "ERROR INSERTING: ".$this->class_id." ".$this->question_set_Id." ".$e->getMessage();
             $response["success"] = 0;
-            echo json_encode($response);
-            die();
+            return json_encode($response);
           }
 
           // success JSON response
           $response = array();
           $response["message"] = "Inserted: ".$this->class_id." ".$this->question_set_Id;
           $response["success"] = 1;
-          echo json_encode($response);
-
-          $pdo = null;
+          return json_encode($response);
         }
         else{
           // build response for no question set id
           $response = array();
           $response["message"] = "ERROR INSERTING into active_question_set table: class_id ".$this->question_set_Id." does not exist";
           $response["success"] = 0;
-          echo json_encode($response);
+          return json_encode($response);
         }
       }
       else{
@@ -107,7 +104,7 @@
         $response = array();
         $response["message"] = "ERROR INSERTING into active_question_set table: student_id ".$this->class_id." does not exist";
         $response["success"] = 0;
-        echo json_encode($response);
+        return json_encode($response);
       }
 
 

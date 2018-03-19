@@ -84,23 +84,20 @@
             $response = array();
             $response["message"] = "ERROR INSERTING: ".$this->question_id." ".$this->session_id." ".$e->getMessage();
             $response["success"] = 0;
-            echo json_encode($response);
-            die();
+            return json_encode($response);
           }
 
           // success JSON response
           $response = array();
           $response["message"] = "Inserted: ".$this->question_id." ".$this->session_id;
           $response["success"] = 1;
-          echo json_encode($response);
-
-          $pdo = null;
+          return json_encode($response);
         }else{
           // build response for no session id
           $response = array();
           $response["message"] = "ERROR INSERTING into question_history table: session_id ".$this->session_id." does not exist in question_session table";
           $response["success"] = 0;
-          echo json_encode($response);
+          return json_encode($response);
         }
       }
       else{
@@ -108,7 +105,7 @@
         $response = array();
         $response["message"] = "ERROR INSERTING into question_history table: question_id ".$this->question_id." does not exist in question table";
         $response["success"] = 0;
-        echo json_encode($response);
+        return json_encode($response);
       }
     }
 
@@ -143,6 +140,7 @@
       $response = array();
       $response["message"] = "Success SELECTING from question_history";
       $response["success"] = 1;
+      $response["idInserted"] = $pdo->lastInsertId();
       $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
       array_unshift($retVal, $response);
       return json_encode($retVal);

@@ -82,24 +82,21 @@
             $response = array();
             $response["message"] = "ERROR INSERTING: ".$this->student_id." ".$this->class_id." ".$e->getMessage();
             $response["success"] = 0;
-            echo json_encode($response);
-            die();
+            return json_encode($response);
           }
 
           // success JSON response
           $response = array();
           $response["message"] = "Inserted: ".$this->student_id." ".$this->class_id;
           $response["success"] = 1;
-          echo json_encode($response);
-
-          $pdo = null;
+          return json_encode($response);
         }
         else{
           // build response for no class id
           $response = array();
           $response["message"] = "ERROR INSERTING into is_in table: class_id ".$this->class_id." does not exist in class_course table";
           $response["success"] = 0;
-          echo json_encode($response);
+          return json_encode($response);
         }
       }
       else{
@@ -107,7 +104,7 @@
         $response = array();
         $response["message"] = "ERROR INSERTING into is_in table: student_id ".$this->student_id." does not exist in student_account table";
         $response["success"] = 0;
-        echo json_encode($response);
+        return json_encode($response);
       }
     }
 

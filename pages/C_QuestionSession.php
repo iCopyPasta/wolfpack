@@ -101,8 +101,7 @@
                                                       $this->start_date." ".
                                                       $e->getMessage();
             $response["success"] = 0;
-            echo json_encode($response);
-            die();
+            return json_encode($response);
           }
 
           // success JSON response
@@ -113,22 +112,21 @@
                                               $this->end_time. " ".
                                               $this->start_date;
           $response["success"] = 1;
-          echo json_encode($response);
-
-          $pdo = null;
+          $response["idInserted"] = $pdo->lastInsertId();
+          return json_encode($response);
         }else{
           // build response for no class id
           $response = array();
           $response["message"] = "ERROR INSERTING into question_session table: class_id ".$this->class_id." does not exist in class_course_section table";
           $response["success"] = 0;
-          echo json_encode($response);
+          return json_encode($response);
         }
       }else{
         // build response for no question set id
         $response = array();
         $response["message"] = "ERROR INSERTING into question_session table: question_set_id ".$this->question_set_id." does not exist in question_set table";
         $response["success"] = 0;
-        echo json_encode($response);
+        return json_encode($response);
       }
     }
 

@@ -64,17 +64,15 @@
         $response = array();
         $response["message"] = "ERROR INSERTING: ".$this->title." ".$this->description." ".$this->offering." ".$this->location." ".$e->getMessage();
         $response["success"] = 0;
-        echo json_encode($response);
-        die();
+        return json_encode($response);
       }
 
       // success JSON response
       $response = array();
       $response["message"] = "Inserted: ".$this->title." ".$this->description." ".$this->offering." ".$this->location;
       $response["success"] = 1;
-      echo json_encode($response);
-
-      $pdo = null;
+      $response["idInserted"] = $pdo->lastInsertId();
+      return json_encode($response);
     }
 
     public function select(){

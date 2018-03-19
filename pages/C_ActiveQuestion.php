@@ -82,24 +82,21 @@
             $response = array();
             $response["message"] = "ERROR INSERTING: ".$this->question_set_id." ".$this->question_id." ".$e->getMessage();
             $response["success"] = 0;
-            echo json_encode($response);
-            die();
+            return json_encode($response);
           }
 
           // success JSON response
           $response = array();
           $response["message"] = "Inserted: ".$this->question_set_id." ".$this->question_id;
           $response["success"] = 1;
-          echo json_encode($response);
-
-          $pdo = null;
+          return json_encode($response);
         }
         else{
           // build response for no question id
           $response = array();
           $response["message"] = "ERROR INSERTING into active_question table: question_id ".$this->question_id." does not exist";
           $response["success"] = 0;
-          echo json_encode($response);
+          return json_encode($response);
         }
       }
       else{
@@ -107,10 +104,8 @@
         $response = array();
         $response["message"] = "ERROR INSERTING into active_question table: question_set_id ".$this->question_set_id." does not exist";
         $response["success"] = 0;
-        echo json_encode($response);
+        return json_encode($response);
       }
-
-
     }
 
     public function select(){
@@ -147,5 +142,58 @@
       return json_encode($retVal);
     }
 
+    public function delete(){
+      $connection = new Connection;
+      $pdo = $connection->getConnection();
+
+      //$question_set_id, $question_id
+      $sql = "DELETE FROM active_question
+                WHERE question_set_id LIKE :question_set_id
+                AND question_id LIKE :question_id";
+      $stmt = $pdo->prepare($sql);
+      include_once('isIdExistFunctions.php');
+
+      $stmt = $pdo->prepare($sql);
+      $stmt->bindValue(':question_set_id', $this->question_set_id);
+      $stmt->bindValue(':question_id', $this->question_id);
+
+//      $isQuestionSetIdExist = isQuestionSetIdExist($this->__get('question_set_id'));
+//      $isQuestionIdExist = isQuestionIdExist($this->__get('question_id'));
+
+//      if($isQuestionSetIdExist){
+//        if($isQuestionIdExist){
+          // classId and sectionId exist; attempt to delete
+          try{
+            $stmt->execute();
+          }catch (Exception $e){
+            // fail JSON response
+            $response = array();
+            $response["message"] = "ERROR DELETING: ".$this->question_set_id." ".$this->question_id." ".$e->getMessage();
+            $response["success"] = 0;
+            return json_encode($response);
+          }
+
+          // success JSON response
+          $response = array();
+          $response["message"] = "Deleted: ".$this->question_set_id." ".$this->question_id;
+          $response["success"] = 1;
+          return json_encode($response);
+//        }
+//        else{
+//          // build response for no question id
+//          $response = array();
+//          $response["message"] = "ERROR INSERTING into active_question table: question_id ".$this->question_id." does not exist";
+//          $response["success"] = 0;
+//          return json_encode($response);
+//        }
+//      }
+//      else{
+//        // build response for no question set id
+//        $response = array();
+//        $response["message"] = "ERROR INSERTING into active_question table: question_set_id ".$this->question_set_id." does not exist";
+//        $response["success"] = 0;
+//        return json_encode($response);
+//      }
+    }
   }
 ?>

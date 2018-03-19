@@ -14,12 +14,14 @@
 
   class Question{
     private $question_id;
+    private $teacher_id;
     private $description;
     private $question_type;
     private $potential_answers;
     private $correct_answers;
 
-    function __construct($qId,$description,$question_type,$potential_answers,$correct_answers) {
+    function __construct($qId, $teacher_id, $description,$question_type,$potential_answers,$correct_answers) {
+      $this->__set('teacher_id', $teacher_id);
       $this->__set('question_type', $question_type);
       $this->__set('question_id', $qId);
       $this->__set('description',$description);
@@ -50,29 +52,39 @@
       $pdo = $connection->getConnection();
 
       $sql = "INSERT INTO question
-                              (question_type, description, potential_answers, correct_answers)
-                              VALUES (:question_type, :description, :potential_answers, :correct_answers)";
+                              (teacher_id, question_type, description, potential_answers, correct_answers)
+                              VALUES (:teacher_id, :question_type, :description, :potential_answers, :correct_answers)";
       $stmt = $pdo->prepare($sql);
 
+      // does the teacher_id exist?
+      if(!isTeacherIdExist($this->teacher_id)){
+        // fail JSON response
+        $response = array();
+        $response["message"] = "ERROR INSERTING: teacher_id ".$this->teacher_id." does not exist: ";
+        $response["success"] = 0;
+        return json_encode($response);
+      }
+
       try{
-        $stmt->execute(['description' => $this->description, 'question_type' => $this->question_type,
-                        'potential_answers' => $this->potential_answers, 'correct_answers' => $this->correct_answers]);
+        $stmt->execute(['teacher_id' => $this->teacher_id,
+                        'description' => $this->description,
+                        'question_type' => $this->question_type,
+                        'potential_answers' => $this->potential_answers,
+                        'correct_answers' => $this->correct_answers]);
       }catch (Exception $e){
         // fail JSON response
         $response = array();
         $response["message"] = "ERROR INSERTING: ".$this->question_type." ".$this->description." ".$e->getMessage();
         $response["success"] = 0;
-        echo json_encode($response);
-        die();
+        return json_encode($response);
       }
 
       // success JSON response
       $response = array();
       $response["message"] = "Inserted: ".$this->question_type." ".$this->description;
       $response["success"] = 1;
-      echo json_encode($response);
-
-      $pdo = null;
+      $response["idInserted"] = $pdo->lastInsertId();
+      return json_encode($response);
     }
 
     public function select(){
@@ -81,15 +93,17 @@
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "SELECT question_type, question_id, description, potential_answers, correct_answers
+      $sql = "SELECT question_id, teacher_id, question_type, description, potential_answers, correct_answers
               FROM question
-              WHERE question_type LIKE :question_type 
-                AND question_id LIKE :question_id
+              WHERE question_id LIKE :question_id
+                AND teacher_id LIKE :teacher_id
+                AND question_type LIKE :question_type 
                 AND description LIKE :description
                 AND potential_answers LIKE :potential_answers
                 AND correct_answers LIKE :correct_answers";
 
       $stmt = $pdo->prepare($sql);
+      $stmt->bindValue(':teacher_id', $this->teacher_id);
       $stmt->bindValue(':question_type', $this->question_type);
       $stmt->bindValue(':question_id', $this->question_id);
       $stmt->bindValue(':description', $this->description);
