@@ -1,6 +1,16 @@
  <?php //include this code at the top of all pages with special functionality for a logged in user
  session_start(); ?>
 
+ <?php if (isset($_SESSION['user'])) { //redirects if already logged in
+        // logged in
+        header("Location: ..\index.php");
+        } else {
+        // not logged in
+        
+        }
+
+?>
+
 <?php
   $alertString = "";
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -217,7 +227,10 @@ this php code will do the following:
     echo $alertString;
   ?>
   <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-  <p class="mt-5 mb-3 text-muted">Credit: Twitter bootstrap 4.0 documentation. Working demo for 2-13-18.</p>
+  <?php
+
+        include("../lib/php/footer.php");
+    ?>
 </form>
 
 

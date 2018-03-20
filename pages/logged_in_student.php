@@ -1,11 +1,11 @@
  <?php //include this code at the top of all pages with special functionality for a logged in user
  session_start(); ?>
 
- <?php if (isset($_SESSION['user'])) { //redirects if not logged in
+ <?php if ($_SESSION['accountType'] == "student") { //redirects if not logged in as student
         // logged in
         
         } else {
-        // not logged in
+        // not logged in as student
         header("Location: ..\index.php");
         }
 
@@ -140,9 +140,10 @@
         </div>
       </div>
 
-      <footer class="container">
-      <p> Credit: Twitter bootstrap 4.0 documentation. Working demo for 2-13-18.</p>
-    </footer>
+      <?php
+
+        include("../lib/php/footer.php");
+    ?>
     </div>
 
 

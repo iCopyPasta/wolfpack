@@ -1,6 +1,16 @@
  <?php //include this code at the top of all pages with special functionality for a logged in user
  session_start(); ?>
 
+ <?php if (isset($_SESSION['user'])) { //redirects if already logged in
+        // logged in
+        header("Location: ..\index.php");
+        } else {
+        // not logged in
+        
+        }
+
+?>
+
 <?php
   function passwordMatch($pw1, $pw2){
     return ($pw1 == $pw2);

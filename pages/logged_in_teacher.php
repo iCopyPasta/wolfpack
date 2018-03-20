@@ -1,11 +1,11 @@
  <?php //include this code at the top of all pages with special functionality for a logged in user
  session_start(); ?>
 
- <?php if (isset($_SESSION['user'])) { //redirects if not logged in
+ <?php if ($_SESSION['accountType'] == "teacher") { //redirects if not logged in as student
         // logged in
         
         } else {
-        // not logged in
+        // not logged in as student
         header("Location: ..\index.php");
         }
 
@@ -20,7 +20,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
 
-    <title>Student Center</title>
+    <title>Teacher Center</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -61,13 +61,14 @@
     <?php include("../lib/php/header.php"); ?>
 
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-3 mx-auto text-center">
-      <h1 class="display-4">Student Center</h1>
+      <h1 class="display-4">Teacher Center</h1>
       <?php echo "Welcome back, ".$_SESSION['user']."!" ?>
     </div>
+     
     <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:960px">
-      <h1 class="display-5">Search for a class to add</h1>
-      <input class="form-control mr-sm-2" type="text" placeholder="Search" style="width:30%;display:inline; " aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      
+        <a style="text-decoration: none" href ="#"> <button class="btn btn-info btn-lg btn-block" type="submit">My Questions</button></a><br><br>
+        <a style="text-decoration: none" href ="#"> <button href="#" class="btn btn-info btn-lg btn-block" type="submit">My Question Sets</button></a>
     </div>
 
     <div class="container">
@@ -78,11 +79,11 @@
             <h4 class="my-0 font-weight-normal">CMPSC 488</h4>
           </div>
           <div class="card-body">
-            <h1 class="card-title pricing-card-title">35 <small class="text-muted">/ 50</small></h1>
+            <h1 class="card-title pricing-card-title">35 <small>students</small></h1>
             <ul class="list-unstyled mt-3 mb-4">
               <li>Added: 1-12-18</li>
             </ul>
-            <button type="button" class="btn btn-lg btn-block btn-primary">Enter Class</button>
+            <button type="button" class="btn btn-lg btn-block btn-primary">Poll Class</button>
           </div>
         </div>
         <div class="card mb-4 box-shadow">
@@ -90,11 +91,11 @@
             <h4 class="my-0 font-weight-normal">CMPSC 462</h4>
           </div>
           <div class="card-body">
-            <h1 class="card-title pricing-card-title">0 <small class="text-muted">/ 10</small></h1>
+            <h1 class="card-title pricing-card-title">14 <small>students</small></h1>
             <ul class="list-unstyled mt-3 mb-4">
                 <li>Added: 1-14-18</li>
             </ul>
-            <button type="button" class="btn btn-lg btn-block btn-primary">Enter Class</button>
+            <button type="button" class="btn btn-lg btn-block btn-primary">Poll Class</button>
           </div>
         </div>
         <div class="card mb-4 box-shadow">
@@ -102,47 +103,21 @@
             <h4 class="my-0 font-weight-normal">CMPSC 463</h4>
           </div>
           <div class="card-body">
-            <h1 class="card-title pricing-card-title">7 <small class="text-muted">/ 11</small></h1>
+            <h1 class="card-title pricing-card-title">37 <small>students</small></h1>
             <ul class="list-unstyled mt-3 mb-4">
               <li>Added: 1-17-18</li>
             </ul>
-            <button type="button" class="btn btn-lg btn-block btn-primary">Enter Class</button>
+            <button type="button" class="btn btn-lg btn-block btn-primary">Poll Class</button>
           </div>
         </div>
       </div>
       
-      <h1 class="display-5 text-center">Invitations</h1>
       
-      <div class="card-deck mb-3 text-center">
-        <div class="card bg-secondary mb-4 text-white">
-          <div class="card-header">
-            <h4 class="my-0 font-weight-normal">CMPSC 425</h4>
-          </div>
-          <div class="card-body">
-            <h1 class="card-title pricing-card-title"></small>Wanda Kunkel</h1>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li>Received: 1-15-18</li>
-            </ul>
-            <button type="button" class="btn btn-lg btn-block btn-success">Join Class</button>
-          </div>
-        </div>
-        <div class="card bg-secondary mb-4 text-white">
-          <div class="card-header">
-            <h4 class="my-0 font-weight-normal">CMPSC 430</h4>
-          </div>
-          <div class="card-body">
-            <h1 class="card-title pricing-card-title">Jeremy Blum</small></h1>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li>Received: 1-19-18</li>
-            </ul>
-            <button type="button" class="btn btn-lg btn-block btn-success">Join Class</button>
-          </div>
-        </div>
-      </div>
 
-      <footer class="container">
-      <p> Credit: Twitter bootstrap 4.0 documentation. Working demo for 2-13-18.</p>
-    </footer>
+      <?php
+
+        include("../lib/php/footer.php");
+    ?>
     </div>
 
 

@@ -1,3 +1,3 @@
 <footer class="container">
-      <p><?php echo $page_footer_text; ?></p>
+      <p><?php echo "Credit: Twitter bootstrap 4.0 documentation. Working Demo." ?></p>
 </footer>
