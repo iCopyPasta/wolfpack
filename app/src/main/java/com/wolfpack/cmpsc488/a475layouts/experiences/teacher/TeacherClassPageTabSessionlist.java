@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.wolfpack.cmpsc488.a475layouts.QuestionPage;
+import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentQuestionCompletePage;
 import com.wolfpack.cmpsc488.a475layouts.R;
 
 
@@ -44,7 +44,7 @@ public class TeacherClassPageTabSessionlist extends Fragment {
         mListViewSessions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id){
-                Intent intent = new Intent(getActivity(), QuestionPage.class);
+                Intent intent = new Intent(getActivity(), StudentQuestionCompletePage.class);
                 //intent.putExtra("ClassName", mListViewSessions.getItemAtPosition(position).toString());
                 Log.i(TAG, "hello from onItemClick");
 

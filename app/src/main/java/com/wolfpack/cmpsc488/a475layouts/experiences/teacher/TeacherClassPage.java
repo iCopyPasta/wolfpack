@@ -103,7 +103,7 @@ public class TeacherClassPage extends AppCompatActivity {//implements ActiveSess
     public void onPositiveClick(){
         // TODO: take user to (active) question page
         //Toast.makeText(getApplicationContext(), "Hello from onPositiveClick", Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(getApplicationContext(), QuestionPage.class);
+        Intent intent = new Intent(getApplicationContext(), StudentQuestionCompletePage.class);
         intent.putExtra("ClassName", className);
         startActivity(intent);
 

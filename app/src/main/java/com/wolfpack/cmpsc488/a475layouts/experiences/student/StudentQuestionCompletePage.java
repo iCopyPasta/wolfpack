@@ -1,5 +1,6 @@
-package com.wolfpack.cmpsc488.a475layouts;
+package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,21 +11,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wolfpack.cmpsc488.a475layouts.R;
+
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class QuestionPage extends AppCompatActivity {
-    public static final String TAG = "QuestionPage";
+public class StudentQuestionCompletePage extends AppCompatActivity implements ActiveSessionDialog.ActiveSessionDialogListener {
+    public static final String TAG = "SQuestionCompletePage";
 
-    private long defaultStartTimeMillis = 600000;
 
     private TextView mTextViewQuestion;
     private ListView mListViewAnswers;
     private TextView mTextViewCountdown;
-
-    private boolean isTimerRunning;
-
-    private long mTimeLeftMillis = defaultStartTimeMillis;
 
     private String defaultQuestion = "Rick Astley's never gonna:";
     private String[] defaultAnswers = {"Give you up", "Let you down", "Make you cry", "Hurt you"};
@@ -34,12 +32,11 @@ public class QuestionPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_page);
 
-        Log.d(TAG, "onCreate beginning");
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorStudentPrimary)));
+
 
         // TODO: get question/answers/timer from server
-        mTextViewQuestion = findViewById(R.id.textView5);
-        mListViewAnswers = findViewById(R.id.listView);
-        mTextViewCountdown = findViewById(R.id.textView12);
+        mTextViewQuestion = findViewById(R.id.questionTextView);
 
         mTextViewQuestion.setText(defaultQuestion);
 
@@ -53,51 +50,39 @@ public class QuestionPage extends AppCompatActivity {
         mListViewAnswers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Toast.makeText(
-                        getApplicationContext(),
-                        "You Choose: " + defaultAnswers[position],
+                Toast.makeText(getApplicationContext(),
+                        "You Chose: " + defaultAnswers[position],
                         Toast.LENGTH_SHORT).show();
             }
         });
 
-        //Log.d(TAG, "onCreate begin loop");
-
-
-        // TODO: fix timer
-
-        /*
-        isTimerRunning = true;
-
-        while(isTimerRunning) {
-            updateCountdownText();
-            mTimeLeftMillis -= 1000;
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            }
-            catch (Exception e){
-                Log.d(TAG, e.getMessage());
-            }
-            if (mTimeLeftMillis <= 0){
-                isTimerRunning = false;
-            }
-        }
-        */
     }
 
 
 
 
-    private void updateCountdownText(){
-        int minutes = (int) (mTimeLeftMillis / 1000) / 60;
-        int seconds = (int) (mTimeLeftMillis / 1000) % 60;
 
-        String timeLeftFormatted = String.format(Locale.getDefault(),"%02d:%02d", minutes, seconds);
 
-        mTextViewCountdown.setText(timeLeftFormatted);
 
+
+
+
+
+
+
+    /**
+     * ActiveSessionDialog.ActiveSessionDialogListener function implementation
+     */
+
+    @Override
+    public void onPositiveClick() {
 
     }
 
+    @Override
+    public void onNegativeClick() {
+
+    }
 
 
 
