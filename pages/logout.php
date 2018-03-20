@@ -1,3 +1,3 @@
-session_start();
-unset($_SESSION["nome"]); 
-header("Location: index.php");
+<?php session_start();
+unset($_SESSION["user"]); 
+header("Location: ../index.php"); ?>

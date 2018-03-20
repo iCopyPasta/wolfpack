@@ -1,3 +1,6 @@
+ <?php //include this code at the top of all pages with special functionality for a logged in user
+ session_start(); ?>
+
 <!doctype html>
 <html lang="en">
   <head>

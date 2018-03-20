@@ -1,4 +1,5 @@
-<?php include("../lib/php/header.php"); ?>
+ <?php //include this code at the top of all pages with special functionality for a logged in user
+ session_start(); ?>
 
 <?php
   $alertString = "";
@@ -12,7 +13,7 @@
 
     // search for email in db
     include('C_StudentAccount.php');
-    $selectStudentAccount = new StudentAccount('%','%','%','%', '%', $insertEmail);
+    $selectStudentAccount = new StudentAccount('%','%','%','%', $insertEmail,'%','%','%');
     $qJSON = json_decode($selectStudentAccount->select(), true);
 
     // email found
@@ -109,7 +110,7 @@
     }
   }
 ?>
-
+<?php include("../lib/php/header.php"); ?>
 <!doctype html>
 <html lang="en">
 <head>

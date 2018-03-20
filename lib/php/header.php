@@ -33,7 +33,7 @@
       <p style="color:white">
     <?php if (isset($_SESSION['user'])) { //usage: $_SESSION['user'] will contain the email of the logged in user
         // logged in
-        echo "Hello ".$_SESSION['user'].". Not you? <a href=\"Logout.php\">
+        echo "Hello ".$_SESSION['user'].". Not you? <a href=\"logout.php\">
                                             click here to log out</a>"; 
         } else {
         // not logged in
