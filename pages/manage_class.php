@@ -18,6 +18,7 @@
         html
         {
             font-size: 14px;
+            padding-top: 56px;
         }
         
         @media (min-width: 768px)
@@ -29,7 +30,7 @@
         }
         .flex-container
         {
-            padding: 0;
+            padding-right: 0;
             margin: 0;
             list-style: none;
 
@@ -40,24 +41,17 @@
             display: flex;
 
             -webkit-flex-flow: row wrap;
-            justify-content: space-around;
+            justify-content: left;
             align-items: center;
         }
-
-        .flex-item
-        { 
-            background: tomato;
-            padding: 5px;
-            width: 250px;
-            height: 100px;
-            margin-top: 100px;
-
-            line-height: 50px;
-            color: white;
-            font-weight: bold;
-            font-size: 1.5em;
-            text-align: center;
-            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        .card-button
+        {
+            max-width: 15px;
+            max-height: 15px;
+        }
+        .card
+        {
+            max-width: 18rem;   
         }
 
     </style>
@@ -66,14 +60,42 @@
     <body>
         <?php include("../lib/php/header.php"); ?>
         
-        <ul class="flex-container">
-            <button type="button" class="btn flex-item">Add Section</button>
-            <button type="button" class="btn flex-item">View Statistics</button>
-            <button type="button" class="btn flex-item">Add Administrator</button>
-            <button type="button" class="btn flex-item">Assign Curriculum</button>
-            <button type="button" class="btn flex-item">Extra</button>
-            <button type="button" class="btn flex-item">Extra</button>
-        </ul>
+        <div class="container-fluid">
+            <h1>Class 1 </h1>
+                <div class="card-deck text-center">
+                    <div class="card text-white bg-secondary mb-3 box-shadow">
+                        <div class="card-header">
+                          <h4 class="my-0 font-weight-normal">Section 1</h4>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="card-title pricing-card-title">35 <small>/ 50</small></h1>
+                            <ul class="list-unstyled mt-3 mb-4">
+                              <li>Monday Wednesday Friday</li>
+                            </ul>
+                            <a href="#" class="btn btn-lg btn-block btn-primary">Enter Section</a>
+                        </div>
+                    </div>
+                    
+                    <div class="card text-white bg-secondary mb-3 box-shadow">
+                        <div class="card-header">
+                          <h4 class="my-0 font-weight-normal">Section 2</h4>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="card-title pricing-card-title">15 <small>/ 20</small></h1>
+                            <ul class="list-unstyled mt-3 mb-4">
+                              <li>Tuesday Thursday</li>
+                            </ul>
+                            <a href="#" class="btn btn-lg btn-block btn-primary">Enter Section</a>
+                        </div>
+                    </div>
+                    
+                    <div class="card text-white text-center bg-secondary mb-3 box-shadow">
+                        <a href="#" class="btn btn-lg btn-success">Add New Section</a>
+                    </div>
+                </div>
+            
+            <a href="#" class="btn btn-lg btn-success">Add New Class</a>
+        </div>
 
 
 
