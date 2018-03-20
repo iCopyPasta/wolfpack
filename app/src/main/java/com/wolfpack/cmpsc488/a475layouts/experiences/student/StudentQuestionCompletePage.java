@@ -37,8 +37,9 @@ public class StudentQuestionCompletePage extends AppCompatActivity implements Ac
 
         // TODO: get question/answers/timer from server
         mTextViewQuestion = findViewById(R.id.questionTextView);
-
         mTextViewQuestion.setText(defaultQuestion);
+
+        mListViewAnswers = findViewById(R.id.answerListView);
 
         ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
                 getApplicationContext(),
