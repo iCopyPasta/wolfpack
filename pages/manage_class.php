@@ -60,15 +60,6 @@
     <body>
         <?php include("../lib/php/header.php"); ?>
         
-        <!--
-        <ul class="flex-container">
-            <button type="button" class="btn flex-item">Add Section</button>
-            <button type="button" class="btn flex-item">View Statistics</button>
-            <button type="button" class="btn flex-item">Add Administrator</button>
-            <button type="button" class="btn flex-item">Assign Question</button>
-        </ul>
-        -->
-        
         <div class="container-fluid">
             <h1>Class 1 </h1>
                 <div class="card-deck text-center">
@@ -79,7 +70,7 @@
                         <div class="card-body">
                             <h1 class="card-title pricing-card-title">35 <small>/ 50</small></h1>
                             <ul class="list-unstyled mt-3 mb-4">
-                              <li>Added: 1-12-18</li>
+                              <li>Monday Wednesday Friday</li>
                             </ul>
                             <a href="#" class="btn btn-lg btn-block btn-primary">Enter Section</a>
                         </div>
@@ -92,14 +83,14 @@
                         <div class="card-body">
                             <h1 class="card-title pricing-card-title">15 <small>/ 20</small></h1>
                             <ul class="list-unstyled mt-3 mb-4">
-                              <li>Added: 1-12-18</li>
+                              <li>Tuesday Thursday</li>
                             </ul>
                             <a href="#" class="btn btn-lg btn-block btn-primary">Enter Section</a>
                         </div>
                     </div>
                     
                     <div class="card text-white text-center bg-secondary mb-3 box-shadow">
-                        <a href="#" class="btn btn-lg btn-success">Add Section</a>
+                        <a href="#" class="btn btn-lg btn-success">Add New Section</a>
                     </div>
                 </div>
             
