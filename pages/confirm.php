@@ -114,7 +114,7 @@ body {
       else {
           //set container to confirmed message and change database to confirmed
           
-      $sql = "UPDATE student_account SET isConfirmed = 1 WHERE uniqueID = '$uniqueID'";
+      $sql = "UPDATE student_account SET is_confirmed = 1 WHERE uniqueID = '$uniqueID'";
       $stmt = $pdo->prepare($sql);
       try{
         $stmt->execute();
