@@ -86,7 +86,7 @@
 
     <string name="action_settings">what?</string>
     <string name="signup">Sign Up</string>
-    <string name="title_activity_sign_up">Sign in</string>
+    <string name="title_activity_sign_up">Sign up</string>
     <string name="create_account">Create Account</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
@@ -94,6 +94,7 @@
     <string name="preference_file_key">com.wolfpack.cmpsc488.a475layouts</string>
     <string name="SKIP_LOGIN">SKIP_LOGIN</string>
     <string name="USER_MODE">USER_MODE</string>
+    <string name="USER_EMAIL">USER_EMAIL</string>
 
 
 

@@ -145,7 +145,25 @@ public class LoginPage extends AppCompatActivity {
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        //return password.length() > 4;
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        return password.length() > 0;
     }
 
     /**
@@ -270,6 +288,9 @@ public class LoginPage extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putBoolean(getString(R.string.SKIP_LOGIN), true);
                 editor.putString(getString(R.string.USER_MODE), mode);
+                editor.putString(getString(R.string.USER_EMAIL), mEmailView.getText().toString());
+
+                Log.i(TAG, "email entered = "+mEmailView.getText().toString());
 
                 editor.apply(); //dedicate to persistant storage in background thread
 
