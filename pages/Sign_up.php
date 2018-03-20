@@ -1,3 +1,6 @@
+ <?php //include this code at the top of all pages with special functionality for a logged in user, or put it in header
+ session_start(); ?>
+
 <?php
   function passwordMatch($pw1, $pw2){
     return ($pw1 == $pw2);

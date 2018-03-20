@@ -7,7 +7,7 @@
     function getConnection(){
 
       $host = 'localhost';
-      $username = 'wolfpack_tester';
+      $username = 'alpha_wolfpack';
       $password = 'cashRule$Everything101';
       $dbname = 'wolfpack_tester';
 

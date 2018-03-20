@@ -1,5 +1,4 @@
-<?php //include this code at the top of all pages with special functionality for a logged in user, or put it in header
- session_start(); ?>
+
 
 <!-- Toolbar currently does nothing, just a default placeholder -->
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -33,7 +32,8 @@
       <p style="color:white">
     <?php if (isset($_SESSION['user'])) {
         // logged in
-        echo "Hello ".$_SESSION['user'];
+        echo "Hello ".$_SESSION['user'].". Not you? <a href=\"Logout.php\">
+                                            click here to log out</a>"; 
         } else {
         // not logged in
         echo "Not logged in.";
