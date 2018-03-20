@@ -42,6 +42,7 @@
           echo json_encode($response);
           $alertString = "";
           $_SESSION['user'] = $insertEmail; //saves a session variable, unaccessable to the client, identifying them
+          $_SESSION['accountType'] = "student"; //Keeps track of the type of account
           header("Location: logged_in_student.php");
         }
       }

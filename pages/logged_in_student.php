@@ -1,6 +1,16 @@
  <?php //include this code at the top of all pages with special functionality for a logged in user
  session_start(); ?>
 
+ <?php if (isset($_SESSION['user'])) { //redirects if not logged in
+        // logged in
+        
+        } else {
+        // not logged in
+        header("Location: ..\index.php");
+        }
+
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -52,7 +62,7 @@
 
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-3 mx-auto text-center">
       <h1 class="display-4">Student Center</h1>
-      <p>Welcome back, David Rowe!</p>
+      <?php echo "Welcome back, ".$_SESSION['user']."!" ?>
     </div>
     <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:960px">
       <h1 class="display-5">Search for a class to add</h1>
