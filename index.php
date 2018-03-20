@@ -1,6 +1,17 @@
  <?php //include this code at the top of all pages with special functionality for a logged in user
  session_start(); ?>
 
+ <?php if ($_SESSION['accountType'] == "student") { //logged in as student
+        header("Location: pages/logged_in_student.php");
+        
+        }
+        if  ($_SESSION['accountType'] == "teacher") { //logged in as teacher
+        header("Location: pages/logged_in_teacher.php");
+            
+        }
+
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
