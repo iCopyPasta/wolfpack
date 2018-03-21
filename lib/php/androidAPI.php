@@ -98,8 +98,8 @@
             break;
             
         case "findClassesToAdd":
-            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchClassesByTitleAndName.php";
-            $url = "http://192.168.1.57/lib/php/searchClassesByTitleAndName.php";
+            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchClassesByTitleAndName.php";
+            //$url = "http://192.168.1.57/lib/php/searchClassesByTitleAndName.php";
             
             $fields = build_fields($fields,
                                    array('title', 'firstName','lastName','currentPage','rowsPerPage'),
@@ -136,7 +136,7 @@
             break;
 
 	case "findEnrolledClasses":
-	     $url = "http://wolfpack.cs.hbg.psu.edu/pages/hughes.php";
+	     $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/hughes.php";
 	
             $fields = build_fields($fields,
 	                           array("inputCurrentPageNumber", "inputEmail","android"),
