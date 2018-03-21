@@ -7,9 +7,9 @@
     function getConnection(){
 
       $host = 'localhost';
-      $username = 'wolfpack_tester';
+      $username = 'alpha_wolfpack';
       $password = 'cashRule$Everything101';
-      $dbname = 'wolfpack_tester';
+      $dbname = 'alpha_wolfpack';
 
       try{
         $conn    = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);

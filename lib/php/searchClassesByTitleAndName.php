@@ -47,19 +47,28 @@
     $rowsPerPage = 10;
     $totalPages = 1;
     $currentPage = 1;
-
+    
 
     if($_SERVER["REQUEST_METHOD"] == "POST"){
         //in an ideal world, we'd perform sanitation!
-        
+        #echo "inside reques_method == post\n";
         
         $firstName = isset($_POST["firstName"]) ? $_POST["firstName"] : "%";
         $lastName = isset($_POST["lastName"]) ? $_POST["lastName"] : "%";
         $title = isset($_POST["title"]) ? $_POST["title"] : "%";
         
+        
         // get the current page or set a default
         $currentPage = isset($_POST["currentPage"])? (int) $_POST["currentPage"] : $currentPage;
         $rowsPerPage = isset($_POST["rowsPerPage"]) ? (int) $_POST["rowsPerPage"] : $rowsPerPage;
+        
+        //debugging statements:
+        /*echo "--------- initial data fetch ------------\n";
+        echo "first name: "; echo $firstName; echo "\n";
+        echo "last name: "; echo $lastName;echo "\n";
+        echo "title: ";echo $title; echo "\n";
+        echo "current page: ";echo $currentPage; echo "\n";
+        echo "rowsPerPage: ";echo $rowsPerPage; echo "\n";*/
         
         include_once('Connection.php');
         $connection = new Connection;
@@ -112,6 +121,15 @@
         $offset = ($currentPage - 1) * $rowsPerPage;
         
         // get the info from the db
+        
+        /*echo "--------- after first round of SQL values ------------";
+        echo "first name: "; echo $firstName; echo "\n";
+        echo "last name: "; echo $lastName;echo "\n";
+        echo "title: ";echo $title; echo "\n";
+        echo "current page: ";echo $currentPage; echo "\n";
+        echo "rowsPerPage: ";echo $rowsPerPage; echo "\n";
+        echo "total pages: ";echo $totalPages; echo "\n";
+        echo "numrows: ";echo $numrows; echo "\n";*/
 
         $sql = "SELECT class_course_section.class_id, class_course_section.title,
         class_course_section.description, class_course_section.offering, class_course_section.location
@@ -152,6 +170,8 @@
         
         echo json_encode($response);
               
+    } else{
+        echo "<br/>this didn't work";
     }
 
 ?>
