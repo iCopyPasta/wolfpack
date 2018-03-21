@@ -2,14 +2,14 @@
 
     /*
     
-    returns a paginated list of all the classes for a search based on the teacher's name and class title
+    returns a paginated list of all of the sessions for a given class
 
     expected POST variables:
         "currentPage" - the current page
         "rowsPerPage" - rows per page
-        "title" - the title of class_course_section
-        "firstName" - the first name of the teacher
-        "lastName" - the last name of the teacher
+        "student_id - students id number
+        "class_id - class id number
+        
         
     return: JSON obj containing a list of classes the student belongs to
 
@@ -17,6 +17,7 @@
     ensure you are using POST variables for the expected post variables
 
     Example Return JSON Value:
+    //TODO: add return value structure here
     
     */
 
@@ -25,6 +26,8 @@
     $rowsPerPage = 10;
     $totalPages = 1;
     $currentPage = 1;
+    $student_id = 1;
+    $class_id = 1;
 
 
     if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -96,7 +99,7 @@
                 WHERE student_account.student_id LIKE :student_id
                 AND student_account.student_id = student_is_in.student_id
                 AND student_is_in.class_id = class_course_section.class_id
-                AND class_course_section.class_id = :class_id
+                AND class_course_section.class_id LIKE :class_id
                 AND question_session.class_id = class_course_section.class_id
                 AND question_session.question_set_id = question_set.question_set_id";
         $result = $pdo->prepare($sql);
