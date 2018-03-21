@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentPage;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import pagination.models.SearchResultSection;
 
@@ -29,7 +31,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private boolean isLoading;
     private Activity activity;
     private ArrayList<SearchResultSection> items;
-    private int visibleThreshold = 5;
+    private final int visibleThreshold = 5;
+    private int serverTotal = Integer.MAX_VALUE;
     private int lastVisibleItem, totalItemCount;
 
     public PaginationAdapter(
@@ -54,7 +57,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
                 Log.i(TAG, "onScrolledState: lastVisibleItem = " + lastVisibleItem);
 
-                if(!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)){
+                if(!isLoading && totalItemCount < serverTotal){
                     if(loadmore != null){
                         Log.i(TAG, "calling onLoadMore");
                         loadmore.onLoadMore();
@@ -74,18 +77,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if (!recyclerView.canScrollVertically(1)) {
                     Toast.makeText(recyclerView.getContext(),"Last",Toast.LENGTH_SHORT).show();
-                    /*totalItemCount = linearLayoutManager.getItemCount();
-                    Log.i(TAG, "onScrollState: totalItemCount = " + totalItemCount);
-                    lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                    Log.i(TAG, "onScrolledState: lastVisibleItem = " + lastVisibleItem);
-
-                    if(!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)){
-                        if(loadmore != null){
-                            Log.i(TAG, "calling onLoadMore");
-                            loadmore.onLoadMore();
-                            isLoading = true;
-                        }
-                    }*/
 
                 }
             }
@@ -117,10 +108,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if(holder instanceof ItemViewHolder){
             SearchResultSection item = items.get(position);
             ItemViewHolder viewHolder = (ItemViewHolder) holder;
-            viewHolder.className.setText(item.getClassTitle());
             viewHolder.offering.setText(item.getOffering());
             viewHolder.location.setText(item.getLocation());
-            viewHolder.sectionNo.setText(String.valueOf(item.getClassSectionNumber()));
+            viewHolder.title.setText(item.getTitle());
+            viewHolder.description.setText(item.getDescription());
+
 
         } else if(holder instanceof LoadingViewHolder){
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
@@ -132,6 +124,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public int getRowsPerPage(){ return visibleThreshold; }
+
+    public void setServerTotal(int totalItemCount){
+        this.serverTotal = totalItemCount;
     }
 
     @Override
@@ -170,15 +168,16 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder{
-        TextView className;
-        TextView sectionNo;
+        TextView title;
+        TextView description;
         TextView location;
         TextView offering;
 
         ItemViewHolder(View itemView){
             super(itemView);
-            className = (TextView) itemView.findViewById(R.id.txtClassName);
-            sectionNo = (TextView) itemView.findViewById(R.id.txtSectionNo);
+
+            title= (TextView) itemView.findViewById(R.id.txtTitle);
+            description= (TextView) itemView.findViewById(R.id.txtDescription);
             location = (TextView) itemView.findViewById(R.id.txtLocation);
             offering = (TextView) itemView.findViewById(R.id.txtOffering);
 

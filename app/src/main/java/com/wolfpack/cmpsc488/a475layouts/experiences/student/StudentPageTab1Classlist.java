@@ -129,10 +129,10 @@ public class StudentPageTab1Classlist extends Fragment {
                         currentPage = classlist.size() / visibleThreshold;
                         currentPage = (currentPage <= 1) ? 1 : currentPage;
                         Log.i(TAG, "currentPage == "+currentPage);
-                        new ClassesResultBackgroundTask().execute(
+                        /*new ClassesResultBackgroundTask().execute(
                                 currentPage,
                                 "dev@dev.com" //email
-                        );
+                        );*/
 
                     }
 
@@ -234,8 +234,9 @@ public class StudentPageTab1Classlist extends Fragment {
         @Override
         protected ClassListResult<ClassResult> doInBackground(Object... params) {
 
-            try{
-                Log.i(TAG, "starting task");
+            return null;
+            /*try{
+                *//*Log.i(TAG, "starting task");
                 client = StudentPage.getWolfpackClientInstance();
                 Log.i(TAG, "configuring params");
 
@@ -251,7 +252,8 @@ public class StudentPageTab1Classlist extends Fragment {
                 response = call.execute();
                 Log.i(TAG, "received results");
 
-                return response.body();
+                return null;*//*
+
             }
             catch(java.net.ConnectException e){
                 Log.e(TAG, e.getMessage());
@@ -268,7 +270,7 @@ public class StudentPageTab1Classlist extends Fragment {
             catch (Exception e){
                 Log.e(TAG, e.getClass().toString() + e.getMessage());
                 return null;
-            }
+            }*/
 
         }
 
