@@ -4,60 +4,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="8dp">
+    app:cardBackgroundColor="?attr/colorBackgroundFloating"
+    app:cardCornerRadius="@dimen/fab_margin"
+    app:cardElevation="14dp"
+    app:contentPadding="@dimen/cardview_default_radius">
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/list_selector_background"
+        android:orientation="vertical"
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/txtTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/txtOffering"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/txtOffering"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtOffering"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/txtLocation"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/txtTitle"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtDescription"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/txtLocation"
-            app:layout_constraintStart_toStartOf="@+id/txtTitle"
-            app:layout_constraintTop_toBottomOf="@+id/txtOffering" />
-    </android.support.constraint.ConstraintLayout>
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 
 </android.support.v7.widget.CardView>

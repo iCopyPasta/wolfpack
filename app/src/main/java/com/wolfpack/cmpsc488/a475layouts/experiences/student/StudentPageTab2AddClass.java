@@ -89,14 +89,16 @@ public class StudentPageTab2AddClass extends Fragment {
                         if(keyCode == KeyEvent.KEYCODE_ENTER &&
                                 keyEvent.getAction() == KeyEvent.ACTION_UP){
 
-                                if(adapter.getItemCount() == 0){
-                                    Log.i("onKey", "adapter has no items");
-                                }
-
                                 if(isBackgroundTaskRunning){
                                     Log.i("adapter:onLoadMore", "we avoided multiple requests!");
                                 } else{
+
                                     isBackgroundTaskRunning = true;
+                                    if(adapter.getItemCount() > 0){
+                                        adapter.clearData();
+                                        adapter.notifyDataSetChanged();
+                                    }
+
                                     new ResultBackgroundTask().execute(
                                             classIdSearchEditText.getText().toString(),
                                             teacherFirstName.getText().toString(),
@@ -123,11 +125,37 @@ public class StudentPageTab2AddClass extends Fragment {
             try {
                 Log.i(TAG, "About to try network request out");
 
-                client = WolfpackClient.debugRetrofit.create(WolfpackClient.class);
+                //debugging client:
+                //client = WolfpackClient.debugRetrofit.create(WolfpackClient.class);
+                client = WolfpackClient.retrofit.create(WolfpackClient.class);
 
                 Log.i(TAG, "setting call with parameters");
 
-                Call<ResponseBody> call = client.testFindClassesToAdd(
+                if(params[0].equals("")){
+                    Log.i(TAG, "doInBackground: set params[0] to wildcard");
+
+                    params[0] = "%";
+                }
+                if(params[1].equals("")){
+                    params[1] = "%";
+
+                }
+                if(params[2].equals("")){
+
+                    params[2] = "%";
+                }
+
+                Call<SearchClassResult<SearchResultSection>> call = client.findClassesToAdd(
+                        params[0],
+                        params[1],
+                        params[2],
+                        adapter.getLastPageNumber(),
+                        adapter.getRowsPerPage(),
+                        "findClassesToAdd"
+                );
+
+                //HTML debugging
+                /*Call<ResponseBody> call = client.testFindClassesToAdd(
                         params[0],
                         params[1],
                         params[2],
@@ -145,6 +173,8 @@ public class StudentPageTab2AddClass extends Fragment {
                         //response = call.execute();
                 Log.i(TAG, "execution finished, returning body");
 
+                return response.body();*/
+                response = call.execute();
                 return response.body();
 
                 //TODO: ADD SECURE TRY-CATCH BLOCKS FOR VARIOUS POSSIBILITIES!

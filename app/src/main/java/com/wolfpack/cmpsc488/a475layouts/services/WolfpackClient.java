@@ -93,12 +93,12 @@ public interface WolfpackClient{
     );
 
     @FormUrlEncoded
-    @POST("/lib/php/searchClassesByTitleAndName.php")
-    Call<ResponseBody> testFindClassesToAdd(@Field("title") String title,
-                                            @Field("firstName") String firstName,
-                                            @Field("lastName") String lastName,
-                                            @Field("currentPage") int currentPage,
-                                            @Field("rowsPerPage") int rowsPerPage,
+    @POST(FEED)
+    Call<ResponseBody> testFindClassesToAdd(@Field("inputClassTitle") String title,
+                                            @Field("inputFirstName") String firstName,
+                                            @Field("inputLastName") String lastName,
+                                            @Field("inputCurrentPage") int currentPage,
+                                            @Field("inputRowsPerPage") int rowsPerPage,
                                             @Field("inputMethodName") String methodName
     );
 

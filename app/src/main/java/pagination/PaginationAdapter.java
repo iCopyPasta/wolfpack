@@ -76,7 +76,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (!recyclerView.canScrollVertically(1)) {
-                    Toast.makeText(recyclerView.getContext(),"Last",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(recyclerView.getContext(),"Last",Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -132,6 +132,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.serverTotal = totalItemCount;
     }
 
+    public void clearData(){
+        serverTotal = Integer.MAX_VALUE;
+        items.clear();
+    }
+
     @Override
     public int getItemViewType(int position){
         return items.get(position) == null ? VIEW_TYPE_LOADING: VIEW_TYPE_ITEM;
@@ -167,7 +172,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    class ItemViewHolder extends RecyclerView.ViewHolder{
+    class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView title;
         TextView description;
         TextView location;
@@ -181,6 +186,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             location = (TextView) itemView.findViewById(R.id.txtLocation);
             offering = (TextView) itemView.findViewById(R.id.txtOffering);
 
+            itemView.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View view){
+            Toast.makeText(view.getContext(), "clicked!", Toast.LENGTH_SHORT).show();
 
         }
     }
