@@ -12,7 +12,8 @@
 
   */
   
-   //include('isIdExistFunctions.php');
+  //why was this commented out?
+  include('isIdExistFunctions.php');
 
   class Question{
     private $question_id;

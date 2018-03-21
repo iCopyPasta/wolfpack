@@ -132,13 +132,18 @@
         foreach($removeZerothIndex as $value){
           $question_type = $value['question_type'];
           $description = $value['description'];
+          $answers = $value['potential_answers'];
+          $correct_answers = $value['correct_answers'];
+          
           echo "<div class=\"card mb-4\">
           <div class=\"card-header\">
-            <h4 class=\"my-0 font-weight-normal\">Question Type: $question_type</h4>
+            <h4 class=\"my-0 font-weight-normal\">$description</h4>
           </div>
           <div class=\"card-body\">
-            <h5 class=\"card-title pricing-card-title\">$description</h5>
-            
+            <h5 class=\"card-title pricing-card-title\">$answers</h5>
+          </div>
+          <div class=\"card-footer\">
+            <h6>$correct_answers</h6>
           </div>
         </div>";
         }                               

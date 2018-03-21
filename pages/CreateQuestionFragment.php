@@ -13,16 +13,9 @@
           Question Description</label>
         <input type="text" class="form-control" id="description" rows="3" name="description" required>
       </div>
-        <div id="dynamicArea">
-        
-
-        
-        </div>
-        
-        
-        
-        <button type="button" onclick="processForm()" class="btn btn-primary">Submit</button>
-        
+        <div id="dynamicArea">        
+      </div>
+      <button type="button" onclick="processForm()" class="btn btn-primary">Submit</button>    
     </form>
     </div>
 </html>
@@ -44,7 +37,11 @@
     
     function addChoice() {
         //append a new textfield to dynamicArea
-        document.getElementById("newChoice").innerHTML += "<div class=\"form-group\"><label for=\"Answer "+numberOfChoices+"\">Answer "+numberOfChoices+"</label><input type=\"text\" class=\"form-control\"rows=\"3\" required><input id=\""+numberOfChoices+"\" type=\"checkbox\">This item is a correct answer</div>"
+      
+        var parent = document.getElementById("newChoice");
+        var newChild = "<div class=\"form-group\"><label for=\"Answer "+numberOfChoices+"\">Answer "+numberOfChoices+"</label><input type=\"text\" class=\"form-control\"rows=\"3\" required><input id=\""+numberOfChoices+"\" type=\"checkbox\">This item is a correct answer</div>";
+        
+        parent.insertAdjacentHTML('beforeend', newChild);
         
         numberOfChoices++;
     }
