@@ -5,8 +5,8 @@
     <form id="question_form">
          <select name="question_type" id="type" name ="question_type" onchange="typeChanged()" required>
           <option disabled selected value> -- select an option -- </option>
-          <option value="true/false">True/False</option>
-          <option value="m/c">Multiple Choice</option>
+          <option value="True/False">True/False</option>
+          <option value="Multiple Choice">Multiple Choice</option>
         </select>
         <div class="form-group">
         <label for="Question Description">
@@ -84,8 +84,8 @@
         var send = new Object();
         send.question_type = type;
         send.description = desc;
-        send.possible_answers = possibleAnswers;
-        send.correct_answers = correctAnswers;
+        send.possible_answers = JSON.stringify(possibleAnswers);
+        send.correct_answers = JSON.stringify(correctAnswers);
         
         
         post('../lib/php/createQuestionWeb.php', send);

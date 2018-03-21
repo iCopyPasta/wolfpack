@@ -12,7 +12,7 @@
 
   */
   
-   include('isIdExistFunctions.php');
+   //include('isIdExistFunctions.php');
 
   class Question{
     private $question_id;

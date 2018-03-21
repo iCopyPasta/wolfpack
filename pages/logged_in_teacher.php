@@ -69,7 +69,7 @@
     <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:960px">
       
         <a style="text-decoration: none" href ="manage_questions.php"> <button class="btn btn-info btn-lg btn-block" >Manage My Questions</button></a><br>
-        <a style="text-decoration: none" href ="#"> <button class="btn btn-info btn-lg btn-block" >Manage My Question Sets</button></a><br>
+        <a style="text-decoration: none" href ="create_question_set.php"> <button class="btn btn-info btn-lg btn-block" >Create New Question Set</button></a><br>
         <a style="text-decoration: none"> <button id="createClassButton" class="btn btn-info btn-lg btn-block" >Create New Class</button></a>
     </div>
       
