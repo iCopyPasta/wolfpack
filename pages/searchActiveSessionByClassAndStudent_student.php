@@ -48,7 +48,6 @@
     // reference: http://php.net/manual/en/function.date.php
     date_default_timezone_set('America/New_York'); // CDT
     $currDate = date("Y-m-d H:i:s"); // "Y-m-d H:i:s" PHP format is the same as the MySQL timestamp format'YYYY-MM-DD HH:MM:SS'
-    echo '$currDate: '.$currDate;
 
 //    //poll has started: current time is after start time
 //    if($currDate > $start){
