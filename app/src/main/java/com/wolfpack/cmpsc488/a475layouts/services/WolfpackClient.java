@@ -9,6 +9,8 @@ import com.wolfpack.cmpsc488.a475layouts.services.data_retrieval.BasicWolfpackRe
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import pagination.models.ClassListResult;
+import pagination.models.ClassResult;
 import pagination.models.SearchClassResult;
 import pagination.models.SearchResultSection;
 import retrofit2.Call;
@@ -22,8 +24,12 @@ import retrofit2.http.POST;
 
 public interface WolfpackClient{
 
-    //local testing for pabz
+    //local testing for Pabz (pabz -> Pabz : you are a proper noun my friend)
     //String BASE_URL = "http://192.168.1.57";
+
+    //local testing for Tyler
+    //String BASE_URL = "192.169.1.125";
+
 
     //Reference for converting JSON to POJO
     //http://www.jsonschema2pojo.org/
@@ -91,7 +97,7 @@ public interface WolfpackClient{
     //Change to your JSON response
     @FormUrlEncoded
     @POST(FEED)
-    Call<Object> findEnrolledClasses(
+    Call<ClassListResult<ClassResult>> findEnrolledClasses(
             @Field("inputCurrentPageNumber") int currentPage,
             @Field("inputUserEmail") String email,
             @Field("inputMethodName") String methodName

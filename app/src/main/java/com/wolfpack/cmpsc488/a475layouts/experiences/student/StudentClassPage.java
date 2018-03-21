@@ -10,7 +10,6 @@ import android.util.Log;
 
 import android.support.design.widget.TabLayout;
 
-import com.wolfpack.cmpsc488.a475layouts.QuestionPage;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.TabAdapter;
 //import android.widget.Toolbar;
@@ -44,7 +43,7 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
         try {
             //get class name
             bundle = getIntent().getExtras();
-            className = (String) bundle.get("ClassName");
+            className = (String) bundle.get("className");
 
             Log.i(TAG, "in try before classNameDisplay assignment");
 
@@ -73,6 +72,8 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
     }
 
 
+
+    //TODO: move this to an async task (created in handleCompletedSession)
     @Override
     protected void onResume() {
         super.onResume();
@@ -97,6 +98,10 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
 
 
 
+    public String getClassName() {
+        return className;
+    }
+
 
 
     /**
@@ -105,17 +110,20 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
 
     @Override
     public void onPositiveClick(){
-        // TODO: take user to (active) question page
         //Toast.makeText(getApplicationContext(), "Hello from onPositiveClick", Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(getApplicationContext(), QuestionPage.class);
-        intent.putExtra("ClassName", className);
+
+        //send user to an active session's page
+        Intent intent = new Intent(getApplicationContext(), StudentSessionPage.class);
+        intent.putExtra("className", className);
+        //TODO: decide who gets the session name
+        //intent.putExtra("sessionName", "");
+        intent.putExtra("isActive", true);
         startActivity(intent);
 
     }
 
     @Override
     public void onNegativeClick(){
-        // TODO: keep user on session page
         //Toast.makeText(getApplicationContext(), "Hello from onNegativeClick", Toast.LENGTH_LONG).show();
     }
 
