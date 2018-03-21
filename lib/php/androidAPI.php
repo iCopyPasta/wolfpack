@@ -49,10 +49,12 @@
     $lastName = (isset($_POST['inputLastName']) ? $_POST['inputLastName'] : null);
 
     $classTitle = isset($_POST['inputClassTitle']) ? $_POST['inputClassTitle'] : null;
-    $currentPage = isset($_POST['inputCurrentPageNumber']) ? $_POST['inputCurrentPageNumber'] : null;
+    $currentPage = isset($_POST['inputCurrentPage']) ? $_POST['inputCurrentPage'] : null;
     $resultsPerPage = isset($_POST['inputResultsPerPage']) ? $_POST['inputResultsPerPage'] : null;
     $pictureContent = isset($_FILES['inputUserPicture']) ? $_FILES['inputUserPicture'] : null;
     $debugResponse = array();
+    $rowsPerPage = isset($_POST['inputRowsPerPage']) ? $_POST['inputRowsPerPage'] : null;
+    
     
     //camera debugging
     /*if($pictureContent !== null){
@@ -95,15 +97,18 @@
 
             break;
             
-        case "findClasses":
-            $url = "http://wolfpack.cs.hbg.psu.edu/pages/Class_Search_Stub.php";
-            //$url = "http://192.168.1.57/pages/Class_Search_Stub.php";
+        case "findClassesToAdd":
+            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchClassesByTitleAndName.php";
+            $url = "http://192.168.1.57/lib/php/searchClassesByTitleAndName.php";
             
             $fields = build_fields($fields,
-                                   array('inputClassTitle', 'inputCurrentPageNumber','android'),
+                                   array('title', 'firstName','lastName','currentPage','rowsPerPage'),
                                    $classTitle,
+                                   $firstName,
+                                   $lastName,
                                    $currentPage,
-                                   $android);
+                                   $rowsPerPage
+                                   );
             
             $postvars = http_build_query($fields);
 
@@ -112,23 +117,7 @@
             break;
 
         case "uploadSinglePic":
-            $url = "http://wolfpack.cs.hbg.psu.edu/pages/Class_Search_Stub.php";
-            //$url = "http://192.168.1.57/pages/upload.php";
-            $response = array();
-            //$path="opt/lampp/htdocs/images/"
-            //require "$path";
-            
-            $fields = build_fields($fields,
-                                   array('inputUserPictureContent' ,'android'),
-                                   $pictureContent["name"],
-                                   $android);
-            
-            //$postvars = http_build_query($fields);
-
-            //build_curlreq($fields, $postvars, $url);
-
-            //CHECKS TO PREVENT WARNINGS AND/OR FAILURES!
-
+  
             if (move_uploaded_file($_FILES["inputUserPicture"]["tmp_name"], 
         "/var/www/html/images/". $_FILES["inputUserPicture"]["name"])) {
                 $response["message"] ="The file has been uploaded";
@@ -171,3 +160,4 @@
             
     }
 ?>
+
