@@ -3,38 +3,15 @@
     function searchActiveSessionByClassAndStudent
     arguments:  page - the current page
                 rowsPerPage - rows per page
-                class_id -
-                student_id -
-    return: JSON obj containing question_set_id
+                class_id
+                student_id
+    return: JSON obj containing question_session.id
 
-    //TODO: the following documentation and usage
     Example Usage:
-    $retVal = searchQuestionsByTeacher_teacher('1', '1', '1', 'Sukmoon', 'Chang');
-    $retVal = json_decode($retVal);
-    $removeZerothIndex = $retVal;
-    unset($removeZerothIndex[0]);
-
-    foreach($removeZerothIndex as $value){
-      $question_id = $retVal[1]->question_id;
-      $question_type = $retVal[1]->question_type;
-      $description = $retVal[1]->description;
-      $potential_answers = $retVal[1]->potential_answers;
-      $correct_answers = $retVal[1]->correct_answers;
-      echo $question_id.'<br>'.$question_type.'<br>'.$description.'<br>'.$potential_answers.'<br>'.$correct_answers.'<br>';
-    }
-
-    if(array_key_exists(1, $retVal)) {
-      $question_id = $retVal[1]->question_id;
-      $question_type = $retVal[1]->question_type;
-      $description = $retVal[1]->description;
-      $potential_answers = $retVal[1]->potential_answers;
-      $correct_answers = $retVal[1]->correct_answers;
-      echo $question_id.'<br>'.$question_type.'<br>'.$description.'<br>'.$potential_answers.'<br>'.$correct_answers.'<br>';
-    }
-    var_dump($retVal);
+    $retVal = searchActiveSessionByClassAndStudent('1', '1', '13', '1');
 
     Example Return Value:
-    [{"message":"Success SELECTING from teacher_account, owns_question, question","success":1},{"question_id":"1","question_type":"desc","description":"title","potential_answers":"potentialA","correct_answers":"correctA"}]
+    [{"message":"Success SELECTING active question session","success":1},{"id":"1"}]
 
   */
 
