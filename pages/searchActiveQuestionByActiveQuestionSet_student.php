@@ -1,6 +1,6 @@
 <?php
   /*
-    function searchActiveQuestionGivenActiveQuestionSet
+    function searchActiveQuestionByActiveQuestionSet
     arguments:  page - the current page
                 rowsPerPage - rows per page
                 question_session_id
@@ -15,7 +15,7 @@
   */
 
 
-  function searchActiveQuestionGivenActiveQuestionSet($page, $rowsPerPage, $question_session_id){
+  function searchActiveQuestionByActiveQuestionSet($page, $rowsPerPage, $question_session_id){
     include_once('Connection.php');
     $connection = new Connection;
     $pdo = $connection->getConnection();
