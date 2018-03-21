@@ -22,7 +22,7 @@
     $android = isset($_POST["android"]) ? $_POST["android"] : false;
 
     // search for email in db
-    include('C_TeacherAccount.php');
+    include('../lib/php/C_TeacherAccount.php');
     $selectTeacherAccount = new TeacherAccount('%','%','%','%', $insertEmail,'%','%','%');
     $qJSON = json_decode($selectTeacherAccount->select(), true);
 

@@ -15,8 +15,8 @@
   function passwordMatch($pw1, $pw2){
     return ($pw1 == $pw2);
   }
-  include_once('C_TeacherAccount.php');
-  include_once('Connection.php');
+  include_once('../lib/php/C_TeacherAccount.php');
+  include_once('../lib/php/Connection.php');
   $connection = new Connection;
   
   $insertEmail = (isset($_POST['inputEmail']) ? $_POST['inputEmail'] : null);
@@ -41,7 +41,7 @@
           $hashPassword = password_hash($insertPass, PASSWORD_BCRYPT, $options);
           $selectTeacherAccount = new TeacherAccount('thisValueIsIgnored','firstname', 'lastname', $hashPassword,$insertEmail, 'undefined', 'undefined', '0');
           echo $selectTeacherAccount->insert(); // insert method returns a json_encoded response
-          include('registerConfirmationTeacher.php');
+          include('../lib/php/registerConfirmationTeacher.php');
           addUniqueHash($connection,$insertEmail); //sets UniqueID and confirmed vars in db, custom function -TR
           if(boolval($android)){
             exit(0);

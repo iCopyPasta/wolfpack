@@ -39,7 +39,7 @@
     
     
         
-    $txt = "Please visit the following link to confirm your account: \n \n".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/confirm.php?uniqueid=$theID";
+    $txt = "Please visit the following link to confirm your account: \n \n".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/confirmTeacher.php?uniqueid=$theID";
     $headers = "From: mailer@wolfpack.cs.hbg.psu.edu" . "\r\n";
 
     mail($to,$subject,$txt,$headers);
