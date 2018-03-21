@@ -47,7 +47,8 @@
         <div class="container">
           <h1 class="display-3">Pollato</h1>
           <h5 style="padding-left:2rem">A new way to teach.</h5>
-          <p><a class="btn btn-primary btn-lg" href="pages/Sign_up.php" role="button">Sign up &raquo;</a></p>
+          <p><a class="btn btn-primary btn-lg" href="pages/Sign_up.php" role="button">Student Sign up &raquo;</a></p>
+          <p><a class="btn btn-primary btn-lg" href="pages/Sign_up_teacher.php" role="button">Teacher Sign up &raquo;</a></p>
         </div>
       </div>
 
