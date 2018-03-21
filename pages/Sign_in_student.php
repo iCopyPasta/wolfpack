@@ -22,7 +22,7 @@
     $android = isset($_POST["android"]) ? $_POST["android"] : false;
 
     // search for email in db
-    include('C_StudentAccount.php');
+    include('../lib/php/C_StudentAccount.php');
     $selectStudentAccount = new StudentAccount('%','%','%','%', $insertEmail,'%','%','%');
     $qJSON = json_decode($selectStudentAccount->select(), true);
 
@@ -53,6 +53,7 @@
           $alertString = "";
           $_SESSION['user'] = $insertEmail; //saves a session variable, unaccessable to the client, identifying them
           $_SESSION['accountType'] = "student"; //Keeps track of the type of account
+          $_SESSION['id'] = $qJSON[1]['student_id']; //Keeps track of the id of the account
           header("Location: logged_in_student.php");
         }
       }

@@ -15,7 +15,7 @@
   function passwordMatch($pw1, $pw2){
     return ($pw1 == $pw2);
   }
-  include_once('../lib/php/C_StudentAccount.php');
+  include_once('../lib/php/C_TeacherAccount.php');
   include_once('../lib/php/Connection.php');
   $connection = new Connection;
   
@@ -29,8 +29,8 @@
     // email,pw1,pw2 are all not null
     if(!(is_null($insertEmail) && is_null($insertPass) && is_null($insertPass2))) {
       //email does not already exist
-      $selectStudentAccount = new StudentAccount('%','%','%', '%', $insertEmail, '%', '%', '%');
-      $qJSON = json_decode($selectStudentAccount->select(), true);
+      $selectTeacherAccount = new TeacherAccount('%','%','%', '%', $insertEmail, '%', '%', '%');
+      $qJSON = json_decode($selectTeacherAccount->select(), true);
       $emailExist = isset($qJSON[1]['email']) ? $qJSON[1]['email'] : null;
       if(is_null($emailExist)) {
         //pw1 == pw2
@@ -39,9 +39,9 @@
           //good things happen here!
           $options = ['cost' => 11];
           $hashPassword = password_hash($insertPass, PASSWORD_BCRYPT, $options);
-          $selectStudentAccount = new StudentAccount('thisValueIsIgnored','firstname', 'lastname', $hashPassword,$insertEmail, 'undefined', 'undefined', '0');
-          echo $selectStudentAccount->insert(); // insert method returns a json_encoded response
-          include('../lib/php/registerConfirmation.php');
+          $selectTeacherAccount = new TeacherAccount('thisValueIsIgnored','firstname', 'lastname', $hashPassword,$insertEmail, 'undefined', 'undefined', '0');
+          echo $selectTeacherAccount->insert(); // insert method returns a json_encoded response
+          include('../lib/php/registerConfirmationTeacher.php');
           addUniqueHash($connection,$insertEmail); //sets UniqueID and confirmed vars in db, custom function -TR
           if(boolval($android)){
             exit(0);
