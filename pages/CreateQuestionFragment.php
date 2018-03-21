@@ -8,14 +8,15 @@
           <option value="True/False">True/False</option>
           <option value="Multiple Choice">Multiple Choice</option>
         </select>
-        <div class="form-group">
+        <div class="form-group" id="questionForm">
         <label for="Question Description">
           Question Description</label>
         <input type="text" class="form-control" id="description" rows="3" name="description" required>
       </div>
         <div id="dynamicArea">        
       </div>
-      <button type="button" onclick="processForm()" class="btn btn-primary">Submit</button>    
+      <button type="button" onclick="processForm()" class="btn btn-primary">Submit</button>
+      <button type="button" onclick="resetForm()" class="btn btn-primary">Reset</button>
     </form>
     </div>
 </html>
@@ -46,6 +47,10 @@
         numberOfChoices++;
     }
     
+    function resetForm()  {
+        //Add functionality
+    }
+  
     function processForm() {
         var elements = document.getElementById("question_form").elements;
 
