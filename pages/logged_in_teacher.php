@@ -59,57 +59,58 @@
   <body>
 
     <?php include("../lib/php/header.php"); ?>
+    <?php include("../lib/php/selectClassesTaught.php"); ?>
 
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-3 mx-auto text-center">
       <h1 class="display-4">Teacher Center</h1>
-      <?php echo "Welcome back, ".$_SESSION['user']."!" ?>
+      <?php echo "Welcome back, ".$_SESSION['user']."!"; ?>
     </div>
      
     <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:960px">
       
-        <a style="text-decoration: none" href ="#"> <button class="btn btn-info btn-lg btn-block" type="submit">My Questions</button></a><br><br>
-        <a style="text-decoration: none" href ="#"> <button href="#" class="btn btn-info btn-lg btn-block" type="submit">My Question Sets</button></a>
+        <a style="text-decoration: none" href ="#"> <button class="btn btn-info btn-lg btn-block" type="submit">Manage My Questions</button></a><br>
+        <a style="text-decoration: none" href ="#"> <button class="btn btn-info btn-lg btn-block" type="submit">Manage My Question Sets</button></a><br>
+        <a style="text-decoration: none" href ="#"> <button href="#" class="btn btn-info btn-lg btn-block" type="submit"> Create New Class</button></a>
     </div>
 
     <div class="container">
     <h1 class="display-5 text-center">Current Classes</h1>
-      <div class="card-deck mb-3 text-center">
-        <div class="card mb-4 box-shadow">
-          <div class="card-header">
-            <h4 class="my-0 font-weight-normal">CMPSC 488</h4>
+        <div class="card-deck mb-3 text-center">
+        <?php
+        
+         $retVal = searchClassesTaught($_SESSION['id']);
+         $retVal = json_decode($retVal,true);
+         $removeZerothIndex = $retVal;
+         unset($removeZerothIndex[0]);
+        
+        
+        foreach($removeZerothIndex as $value){
+          $classId = $value['class_id'];
+          $title = $value['title'];
+          $description = $value['description'];
+          $offering = $value['offering'];
+          $location = $value['location'];
+          echo "<div class=\"card mb-4 box-shadow\">
+          <div class=\"card-header\">
+            <h4 class=\"my-0 font-weight-normal\">$title</h4>
           </div>
-          <div class="card-body">
-            <h1 class="card-title pricing-card-title">35 <small>students</small></h1>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li>Added: 1-12-18</li>
+          <div class=\"card-body\">
+            <h1 class=\"card-title pricing-card-title\"><small>$location</small></h1>
+            <ul class=\"list-unstyled mt-3 mb-4\">
+              <li>$description</li>
+              <li>$offering</li>
             </ul>
-            <button type="button" class="btn btn-lg btn-block btn-primary">Poll Class</button>
+            <button type=\"button\" class=\"btn btn-lg btn-block btn-primary\">Poll Class</button>
           </div>
-        </div>
-        <div class="card mb-4 box-shadow">
-          <div class="card-header">
-            <h4 class="my-0 font-weight-normal">CMPSC 462</h4>
-          </div>
-          <div class="card-body">
-            <h1 class="card-title pricing-card-title">14 <small>students</small></h1>
-            <ul class="list-unstyled mt-3 mb-4">
-                <li>Added: 1-14-18</li>
-            </ul>
-            <button type="button" class="btn btn-lg btn-block btn-primary">Poll Class</button>
-          </div>
-        </div>
-        <div class="card mb-4 box-shadow">
-          <div class="card-header">
-            <h4 class="my-0 font-weight-normal">CMPSC 463</h4>
-          </div>
-          <div class="card-body">
-            <h1 class="card-title pricing-card-title">37 <small>students</small></h1>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li>Added: 1-17-18</li>
-            </ul>
-            <button type="button" class="btn btn-lg btn-block btn-primary">Poll Class</button>
-          </div>
-        </div>
+        </div>";
+        }                               //TODO: link poll class to the class poll using the proper parameter send structure
+            
+        if (empty($removeZerothIndex)) {
+            echo "<br><H3 class=\"display-5 text-center\">You have no classes! Create one!</H3>";
+        }
+        
+        ?>
+
       </div>
       
       

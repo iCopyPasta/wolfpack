@@ -53,6 +53,7 @@
           $alertString = "";
           $_SESSION['user'] = $insertEmail; //saves a session variable, unaccessable to the client, identifying them
           $_SESSION['accountType'] = "teacher"; //Keeps track of the type of account
+          $_SESSION['id'] = $qJSON[1]['teacher_id']; //Keeps track of the id of the account
           header("Location: logged_in_teacher.php");
         }
       }
