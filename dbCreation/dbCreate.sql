@@ -8,6 +8,8 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
+CREATE DATABASE IF NOT EXISTS `alpha_wolfpack` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `alpha_wolfpack`;
 
 DROP TABLE IF EXISTS `active_question`;
 CREATE TABLE IF NOT EXISTS `active_question` (
