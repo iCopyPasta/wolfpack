@@ -75,22 +75,30 @@
 
       if($isStudentIdExist){
         if($isClassIdExist){
-          // classId and sectionId exist; attempt to insert
-          try{
-            $stmt->execute(['student_id' => $this->student_id, 'class_id' => $this->class_id]);
-          }catch (Exception $e){
-            // fail JSON response
+          if(!isStudentIsInExist($this->__get('student_id'), $this->__get('class_id'))) {
+            // classId and sectionId exist; attempt to insert
+            try {
+              $stmt->execute(['student_id' => $this->student_id, 'class_id' => $this->class_id]);
+            } catch (Exception $e) {
+              // fail JSON response
+              $response = array();
+              $response["message"] = "ERROR INSERTING: " . $this->student_id . " " . $this->class_id . " " . $e->getMessage();
+              $response["success"] = 0;
+              return json_encode($response);
+            }
+
+            // success JSON response
             $response = array();
-            $response["message"] = "ERROR INSERTING: ".$this->student_id." ".$this->class_id." ".$e->getMessage();
+            $response["message"] = "Inserted: " . $this->student_id . " " . $this->class_id;
+            $response["success"] = 1;
+            return json_encode($response);
+          }else{
+            // student_id and class_id already exist in studentIsIn table
+            $response = array();
+            $response["message"] = "ERROR: student:".$this->__get('student_id')." is already class:".$this->__get('class_id');
             $response["success"] = 0;
             return json_encode($response);
           }
-
-          // success JSON response
-          $response = array();
-          $response["message"] = "Inserted: ".$this->student_id." ".$this->class_id;
-          $response["success"] = 1;
-          return json_encode($response);
         }
         else{
           // build response for no class id
