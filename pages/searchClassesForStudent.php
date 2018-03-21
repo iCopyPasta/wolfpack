@@ -1,6 +1,8 @@
 <?php
 
     /*
+    
+    returns a paginated list of all the classes a student belongs to
 
     expected POST variables:
         "currentPage" - the current page
