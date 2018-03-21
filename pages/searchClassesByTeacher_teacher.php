@@ -37,7 +37,7 @@
     [{"message":"Success SELECTING from teacher_account, teaches, class_section, has, class_course","success":1},{"title":"Principles of Programming","class_section_number":"1"}]
 
   */
-  function searchClassTitleSectionByTeacher($page, $rowsPerPage, $title, $teacher_id){
+  function searchClassTitleSectionByTeacher($page, $rowsPerPage, $teacher_id){
     include_once('Connection.php');
     $connection = new Connection;
     $pdo = $connection->getConnection();
@@ -46,11 +46,9 @@
                 FROM teacher_account, teaches, class_course_section
                 WHERE teacher_account.teacher_id = teaches.teacher_id
                   AND teaches.class_id = class_course_section.class_id
-                  AND class_course_section.title LIKE :title
                   AND teacher_account.teacher_id LIKE :teacher_id";
 
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':title', '%'.$title.'%');
     $stmt->bindValue(':teacher_id', '%'.$teacher_id.'%');
 
     try{
