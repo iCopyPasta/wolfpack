@@ -90,7 +90,7 @@ body {
       $pdo = $connection->getConnection();
         
     
-      $sql = "SELECT email FROM student_account WHERE uniqueID = '$uniqueID'";
+      $sql = "SELECT email FROM teacher_account WHERE uniqueID = '$uniqueID'";
       $stmt = $pdo->prepare($sql);
       try{
         $stmt->execute();
@@ -98,7 +98,7 @@ body {
       catch (Exception $e){
         // fail JSON response
         $response = array();
-        $response["message"] = "ERROR executing query $sql in confirm.php: ".$e->getMessage();
+        $response["message"] = "ERROR executing query $sql in confirmTeacher.php: ".$e->getMessage();
         $response["success"] = 0;
         echo json_encode($response);
         die();
@@ -114,7 +114,7 @@ body {
       else {
           //set container to confirmed message and change database to confirmed
           
-      $sql = "UPDATE student_account SET is_confirmed = 1 WHERE uniqueID = '$uniqueID'";
+      $sql = "UPDATE teacher_account SET is_confirmed = 1 WHERE uniqueID = '$uniqueID'";
       $stmt = $pdo->prepare($sql);
       try{
         $stmt->execute();
