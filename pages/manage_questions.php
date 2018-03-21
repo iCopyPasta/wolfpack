@@ -59,18 +59,15 @@
   <body>
 
     <?php include("../lib/php/header.php"); ?>
-    <?php include("../lib/php/selectClassesTaught.php"); ?>
+      <?php include("../lib/php/selectQuestionsByTeacherID.php"); ?>
 
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-3 mx-auto text-center">
-      <h1 class="display-4">Teacher Center</h1>
-      <?php echo "Welcome back, ".$_SESSION['user']."!"; ?>
+      <h1 class="display-4">Question Manager</h1>
     </div>
      
     <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:960px">
-      
-        <a style="text-decoration: none" href ="manage_questions.php"> <button class="btn btn-info btn-lg btn-block" >Manage My Questions</button></a><br>
-        <a style="text-decoration: none" href ="create_question_set.php"> <button class="btn btn-info btn-lg btn-block" >Create New Question Set</button></a><br>
-        <a style="text-decoration: none"> <button id="createClassButton" class="btn btn-info btn-lg btn-block" >Create New Class</button></a>
+
+        <a style="text-decoration: none"> <button id="createQuestionButton" class="btn btn-info btn-lg btn-block">Create New Question</button></a>
     </div>
       
       <div id="myModal" class="modal">
@@ -78,12 +75,12 @@
           <!-- Modal content -->
           <div class="modal-content">
             <div class="modal-header">
-                <h2>Create a Class</h2>
+                <h2>Create a Question</h2>
               <span class="close">&times;</span>
               
             </div>
             <div class="modal-body">
-              <?php include("createClassFragment.php"); ?>
+              <?php include("CreateQuestionFragment.php"); ?>
             </div>
 
           </div>
@@ -95,7 +92,7 @@
         var modal = document.getElementById('myModal');
 
         // Get the button that opens the modal
-        var btn = document.getElementById("createClassButton");
+        var btn = document.getElementById("createQuestionButton");
 
         // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("close")[0];
@@ -122,39 +119,32 @@
       
 
     <div class="container">
-    <h1 class="display-5 text-center">Current Classes</h1>
+    <h1 class="display-5 text-center">Current Questions</h1>
         <div class="card-deck mb-3 text-center">
         <?php
         
-         $retVal = searchClassesTaught($_SESSION['id']);
+         $retVal = searchQuestionsByTeacherID($_SESSION['id']);
          $retVal = json_decode($retVal,true);
          $removeZerothIndex = $retVal;
          unset($removeZerothIndex[0]);
         
         
         foreach($removeZerothIndex as $value){
-          $classId = $value['class_id'];
-          $title = $value['title'];
+          $question_type = $value['question_type'];
           $description = $value['description'];
-          $offering = $value['offering'];
-          $location = $value['location'];
-          echo "<div class=\"card mb-4 box-shadow\">
+          echo "<div class=\"card mb-4\">
           <div class=\"card-header\">
-            <h4 class=\"my-0 font-weight-normal\">$title</h4>
+            <h4 class=\"my-0 font-weight-normal\">Question Type: $question_type</h4>
           </div>
           <div class=\"card-body\">
-            <h1 class=\"card-title pricing-card-title\"><small>$location</small></h1>
-            <ul class=\"list-unstyled mt-3 mb-4\">
-              <li>$description</li>
-              <li>$offering</li>
-            </ul>
-            <a href=\"choosePolledQuestionSet.php?class_id=$classId\"> <button type=\"button\" class=\"btn btn-lg btn-block btn-primary\">Poll Class</button></a>
+            <h5 class=\"card-title pricing-card-title\">$description</h5>
+            
           </div>
         </div>";
-        }                               //TODO: link poll class to the class poll using the proper parameter send structure
+        }                               
             
         if (empty($removeZerothIndex)) {
-            echo "<br><H3 class=\"display-5 text-center\">You have no classes! Create one!</H3>";
+            echo "<br><H3 class=\"display-5 text-center\">You have no questions! Create one!</H3>";
         }
         
         ?>

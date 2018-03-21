@@ -11,6 +11,8 @@
   $result = json_decode($selectQuestion->select(), true);
 
   */
+  
+   //include('isIdExistFunctions.php');
 
   class Question{
     private $question_id;
