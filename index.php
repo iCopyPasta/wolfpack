@@ -46,9 +46,7 @@
       <div class="jumbotron">
         <div class="container">
           <h1 class="display-3">Pollato</h1>
-          <h5 style="padding-left:2rem">A new way to teach.</h5>
-          <p><a class="btn btn-primary btn-lg" href="pages/Sign_up.php" role="button">Student Sign up &raquo;</a></p>
-          <p><a class="btn btn-primary btn-lg" href="pages/Sign_up_teacher.php" role="button">Teacher Sign up &raquo;</a></p>
+          <h5 style="padding-left:2rem">Polling made easy.</h5>
         </div>
       </div>
 
@@ -58,12 +56,14 @@
           <div class="col-md-6">
             <h2>Instructors</h2>
             <p>Explore the classroom of the future.</p>
-            <p><a class="btn btn-secondary" href="pages/Sign_in_teacher.php" role="button">Sign in as Teacher &raquo;</a></p>
+            <p><a class="btn btn-primary btn-lg" href="pages/Sign_up_teacher.php" role="button">Instructor Sign up &raquo;</a></p>
+            <p><a class="btn btn-secondary btn-lg" href="pages/Sign_in_teacher.php" role="button">Instructor Sign in &raquo;</a></p>
           </div>
           <div class="col-md-6">
             <h2>Students</h2>
             <p>Learn like never before.</p>
-            <p><a class="btn btn-secondary" href="pages/Sign_in_student.php" role="button">Sign in as Student &raquo;</a></p>
+            <p><a class="btn btn-info btn-lg" href="pages/Sign_up.php" role="button">Student Sign up &raquo;</a></p>
+            <p><a class="btn btn-secondary btn-lg" href="pages/Sign_in_student.php" role="button">Student Sign in &raquo;</a></p>
           </div>
 
         </div>
