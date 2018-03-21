@@ -1,14 +1,13 @@
 <?php
   /*
-    //TODO: documentation and usage
-    function searchQuestionsByTeacher
+    function searchActiveSessionByClassAndStudent
     arguments:  page - the current page
                 rowsPerPage - rows per page
-                teacher_id - can use '%' wildcard if unknown
-                first_name - teacher first name
-                last_name - teacher last name
-    return: JSON obj containing question_id, question_type, description, JSON potential_answers, and JSON correct_answers
+                class_id -
+                student_id -
+    return: JSON obj containing question_set_id
 
+    //TODO: the following documentation and usage
     Example Usage:
     $retVal = searchQuestionsByTeacher_teacher('1', '1', '1', 'Sukmoon', 'Chang');
     $retVal = json_decode($retVal);
@@ -38,25 +37,26 @@
     [{"message":"Success SELECTING from teacher_account, owns_question, question","success":1},{"question_id":"1","question_type":"desc","description":"title","potential_answers":"potentialA","correct_answers":"correctA"}]
 
   */
+
+
   function searchActiveSessionByClassAndStudent($page, $rowsPerPage, $class_id, $student_id){
     include_once('Connection.php');
     $connection = new Connection;
     $pdo = $connection->getConnection();
 
-    $sql = "SELECT question.question_id, question.question_type, question.description, question.potential_answers, question.correct_answers
-                FROM teacher_account, owns_question, question
-                WHERE teacher_account.teacher_id = owns_question.teacher_id
-                  AND owns_question.question_id = question.question_id
-                  AND teacher_account.teacher_id LIKE :teacher_id
-                  AND teacher_account.first_name LIKE :first_name
-                  AND teacher_account.last_name LIKE :last_name";
-
-    $sql = "SELECT "
+    $sql = "SELECT question_set.question_set_id
+            FROM student_account, class_course_section, active_question_set, question_set, student_is_in
+            WHERE student_account.student_id = student_is_in.student_id
+              AND student_is_in.class_id = class_course_section.class_id
+              AND class_course_section.class_id = active_question_set.class_id
+              AND active_question_set.question_set_id = question_set.question_set_id
+              AND student_account.student_id = :student_id
+              AND class_course_section.class_id = :class_id
+            ";
 
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':teacher_id', $teacher_id);
-    $stmt->bindValue(':first_name', $first_name);
-    $stmt->bindValue(':last_name', $last_name);
+    $stmt->bindValue(':class_id', $class_id);
+    $stmt->bindValue(':student_id', $student_id);
 
     try{
       $stmt->execute();
@@ -72,7 +72,7 @@
 
     $pdo = null;
     $response = array();
-    $response["message"] = "Success SELECTING from teacher_account, owns_question, question";
+    $response["message"] = "Success SELECTING student_account, class_course_section, active_question_set";
     $response["success"] = 1;
     $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
     array_unshift($retVal, $response);
