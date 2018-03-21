@@ -148,7 +148,7 @@
               <li>$description</li>
               <li>$offering</li>
             </ul>
-            <button type=\"button\" class=\"btn btn-lg btn-block btn-primary\">Poll Class</button>
+            <a href=\"choosePolledQuestionSet.php?class_id=$classId\"> <button type=\"button\" class=\"btn btn-lg btn-block btn-primary\">Poll Class</button></a>
           </div>
         </div>";
         }                               //TODO: link poll class to the class poll using the proper parameter send structure

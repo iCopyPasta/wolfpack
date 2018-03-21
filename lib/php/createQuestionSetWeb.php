@@ -27,7 +27,7 @@
         
     }
 
-    header("Location: ..\..\index.php");
+    header("Location: ../../pages/viewQuestionSets.php");
     echo "Question set added successfully.";
 
 ?>
