@@ -39,26 +39,21 @@
   */
 
 
-  function searchActiveQuestionGivenActiveQuestionSet($page, $rowsPerPage, $class_id, $student_id){
+  function searchActiveQuestionGivenActiveQuestionSet($page, $rowsPerPage, $question_session_id){
     include_once('Connection.php');
     $connection = new Connection;
     $pdo = $connection->getConnection();
 
-    $sql = "SELECT question.question_id
-            FROM question, active_question, question_set, active_question_set, class_course_section, student_is_in, student_account
-            WHERE active_question.question_id = question.question_id
+    $sql = "SELECT question.question_id, question.teacher_id, question.question_type, question.description, question.potential_answers, question.correct_answers
+            FROM question_session, question_set, active_question, question
+            WHERE question_session.question_set_id = question_set.question_set_id
               AND question_set.question_set_id = active_question.question_set_id
-              AND active_question_set.question_set_id = question_set.question_set_id
-              AND class_course_section.class_id = active_question_set.class_id
-              AND class_course_section.class_id = student_is_in.class_id
-              AND student_account.student_id = student_is_in.student_id
-              AND student_account.student_id = :student_id
-              AND class_course_section.class_id = :class_id
-            ";
+              AND active_question.question_id = question.question_id
+              AND question_session.id = :question_session_id
+              ";
 
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':class_id', $class_id);
-    $stmt->bindValue(':student_id', $student_id);
+    $stmt->bindValue(':question_session_id', $question_session_id);
 
     try{
       $stmt->execute();
