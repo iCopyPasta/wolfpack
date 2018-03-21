@@ -39,7 +39,7 @@
         // get the current page or set a default
         $currentPage = isset($_POST["currentPage"])? (int) $_POST["currentPage"] : $currentPage;
         
-        include_once('/Connection.php');
+        include_once('Connection.php');
         $connection = new Connection;
         $pdo = $connection->getConnection();
         
@@ -100,7 +100,7 @@
         $result->bindValue(':student_id', $student_id);
         
         try {
-            result->execute();
+            $result->execute();
         } catch (Exception $e) {
             // fail JSON response
             $response = array();
