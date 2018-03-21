@@ -100,7 +100,8 @@
 
     <string name="CameraUpload">Upload</string>
     <string name="section_format">Hello World from section: %1$d</string>
-
+    <string name="classTitle">Class Title</string>
+    <string name="Teacher_Name">Teacher Name</string>
 
 
 </resources>

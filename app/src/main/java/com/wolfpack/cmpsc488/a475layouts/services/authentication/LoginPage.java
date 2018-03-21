@@ -224,7 +224,6 @@ public class LoginPage extends AppCompatActivity {
 
             try {
                 Log.i(TAG, "About to try network request out");
-                // TODO: attempt authentication against a network service.
 
                 WolfpackClient webService =
                         WolfpackClient.retrofit.create(WolfpackClient.class);
@@ -232,7 +231,7 @@ public class LoginPage extends AppCompatActivity {
 
                 Log.i(TAG, "setting call with parameters");
                 Call<LoginDetails> call =
-                        webService.attemptLogin(true,"attemptLogin", params[0], params[1]);
+                        webService.attemptLogin("attemptLogin", params[0], params[1]);
 
                 Log.i(TAG, "waiting on potential values");
 
@@ -240,9 +239,17 @@ public class LoginPage extends AppCompatActivity {
                 response = call.execute();
                 Log.i(TAG, response.body().toString());
                 loginDetails = response.body();
-                Log.i("Sign_in", "Finished");
 
                 return loginDetails != null && loginDetails.getStatus() > 0;
+
+            } catch(java.net.ConnectException e){
+                Log.e(TAG, e.getMessage());
+                Toast.makeText(LoginPage.this, "could not find server", Toast.LENGTH_SHORT).show();
+                return null;
+            } catch (IllegalStateException e) {
+                Log.e(TAG, e.getMessage());
+                return null;
+
             } catch (Exception e){
                 Log.e(TAG, e.getMessage());
                 return false;

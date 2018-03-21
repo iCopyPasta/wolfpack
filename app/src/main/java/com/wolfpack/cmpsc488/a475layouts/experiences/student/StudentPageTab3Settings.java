@@ -61,7 +61,7 @@ public class StudentPageTab3Settings extends Fragment {
                                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
                         SharedPreferences.Editor editor = sharedPref.edit();
-                        editor.putBoolean(getString(R.string.SKIP_LOGIN), true);
+                        editor.putBoolean(getString(R.string.SKIP_LOGIN), false);
                         editor.putString(getString(R.string.USER_MODE), "none");
 
                         editor.apply(); //dedicate to persistant storage in background thread

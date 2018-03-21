@@ -79,10 +79,10 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
         super.onResume();
 
         // TODO: Check server if there is a question active
-        if (activeSession) {
-            DialogFragment dialogFragment = new ActiveSessionDialog();
-            dialogFragment.show(getFragmentManager(), "SessionActive");
-        }
+        //if (activeSession) {
+        //    DialogFragment dialogFragment = new ActiveSessionDialog();
+        //    dialogFragment.show(getFragmentManager(), "SessionActive");
+       //}
 
     }
 
