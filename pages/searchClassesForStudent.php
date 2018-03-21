@@ -15,9 +15,24 @@
     ensure you are using POST variables for the expected post variables
 
     Example Return JSON Value:
+    {"totalPages":1,
+    "totalResults":"6",
+    "success":1,
+    "results":[
+    {"class_id":"13",
+    "title":"Sed pariatur laboriosam perferendis sed sint.",
+    "description":"Rerum voluptas in quisquam nisi natus. Accusamus ut perferendis reiciendis quasi neque provident voluptatem. Quia ut repudiandae assumenda qui.",
+    "offering":"2014-09-07",
+    "location":"804 Valentin Coves Suite 389\nSouth William, GA 25690"}
+    ,
     {
-    
+    "class_id":"38",
+    "title":"Aut mollitia dolore dolore voluptatem nam culpa error.",
+    "description":"Veritatis eos eius ut ad et. Ipsam nostrum consequatur libero sit minima sunt. Illo ullam velit laudantium quia iusto. Praesentium voluptatem dolorem fugiat est omnis ullam aut nostrum.",
+    "offering":"2004-10-18",
+    "location":"9526 Harris Prairie\nMarcellusside, SD 19327-7976"
     }
+    ]}
     
 
     */
