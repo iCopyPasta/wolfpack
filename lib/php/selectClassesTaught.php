@@ -41,7 +41,7 @@
 
     $sql = "SELECT class_course_section.class_id, class_course_section.title, class_course_section.description, class_course_section.offering, class_course_section.location
                 FROM  teaches, class_course_section
-                WHERE teaches.teacher_id = :teacherID";
+                WHERE teaches.teacher_id = :teacherID AND class_course_section.class_id = teaches.class_id";
 
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':teacherID', $teacherID);

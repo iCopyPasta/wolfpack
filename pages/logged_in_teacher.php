@@ -83,8 +83,7 @@
               
             </div>
             <div class="modal-body">
-              <p>Some text in the Modal Body</p>
-              <p>Some other text...</p>
+              <?php include("createClassFragment.php"); ?>
             </div>
 
           </div>

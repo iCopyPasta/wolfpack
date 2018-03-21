@@ -28,6 +28,8 @@
   {"message":"Inserted into class_course_section and teaches: class_id->4 teacher_id->1","success":1}
 
 */
+include('isIdExistFunctions.php');
+
 function createClass($teacher_id, $first_name, $last_name, $title, $description, $offering, $location){
   include_once('Connection.php');
   include_once('C_ClassCourseSection.php');
