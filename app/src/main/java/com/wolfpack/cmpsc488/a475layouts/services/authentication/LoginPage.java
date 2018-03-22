@@ -109,7 +109,7 @@ public class LoginPage extends AppCompatActivity {
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+            mPasswordView.setError(getString(R.string.error_authentication_failure));
             focusView = mPasswordView;
             cancel = true;
         }
@@ -133,8 +133,15 @@ public class LoginPage extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
+
             mAuthTask = new UserLoginTask();
-            mAuthTask.execute(email, password);
+            if(mode.equals(MainPage.USER_MODE_STUDENT)){
+                mAuthTask.execute(MainPage.USER_MODE_STUDENT, email, password);
+            }
+            else if(mode.equals(MainPage.USER_MODE_TEACHER)){
+                mAuthTask.execute(MainPage.USER_MODE_TEACHER, email, password);
+
+            }
         }
     }
 
@@ -228,15 +235,26 @@ public class LoginPage extends AppCompatActivity {
                 WolfpackClient webService =
                         WolfpackClient.retrofit.create(WolfpackClient.class);
 
+                if (params[0].equals(MainPage.USER_MODE_STUDENT)){
+                    Log.i(TAG, "setting call with parameters for logging in as student");
+                    Call<LoginDetails> call =
+                            webService.attemptLoginStudent("attemptLoginStudent", params[1], params[2]);
 
-                Log.i(TAG, "setting call with parameters");
-                Call<LoginDetails> call =
-                        webService.attemptLogin("attemptLogin", params[0], params[1]);
+                    response = call.execute();
+
+                }
+                else if(params[0].equals(MainPage.USER_MODE_TEACHER)){
+                    Log.i(TAG, "setting call with parameters");
+                    Call<LoginDetails> call =
+                            webService.attemptLoginTeacher("attemptLoginTeacher", params[1], params[2]);
+
+                    response = call.execute();
+
+                }
 
                 Log.i(TAG, "waiting on potential values");
 
                 //TODO: ADD SECURE TRY-CATCH BLOCKS FOR VARIOUS POSSIBILITIES!
-                response = call.execute();
                 Log.i(TAG, response.body().toString());
                 loginDetails = response.body();
 
@@ -274,8 +292,9 @@ public class LoginPage extends AppCompatActivity {
                     intent = new Intent(getApplicationContext(), StudentPage.class);
                 }
 
-                if(buttonName.equals(MainPage.USER_MODE_TEACHER)){
+                else if(buttonName.equals(MainPage.USER_MODE_TEACHER)){
                     //intent = new Intent(getApplicationContext(), SOMETHING.class)
+                    Log.i(TAG, "onPostExecute: " + "send to teacher page");
 
                 }
             }
@@ -299,7 +318,7 @@ public class LoginPage extends AppCompatActivity {
 
                 Log.i(TAG, "email entered = "+mEmailView.getText().toString());
 
-                editor.apply(); //dedicate to persistant storage in background thread
+                editor.apply(); //dedicate to persistent storage in background thread
 
                 //FEEDBACK FROM SERVER
                 String message = loginDetails.getMessage();
