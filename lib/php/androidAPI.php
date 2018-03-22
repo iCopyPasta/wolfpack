@@ -45,6 +45,8 @@
     $methodName = isset($_POST['inputMethodName']) ? $_POST['inputMethodName'] : null;
     $email = isset($_POST['inputEmail']) ? $_POST['inputEmail'] : null;
     $password = isset($_POST['inputPassword']) ? $_POST['inputPassword'] : null;
+    $confirmPassword = isset($_POST['inputConfirmPassword']) ? $_POST['inputConfirmPassword'] : null;
+    $userTitle = isset($_POST["inputUserTitle"]) ? $_POST["inputUserTitle"]: null;
     $firstName = (isset($_POST['inputFirstName']) ? $_POST['inputFirstName'] : null);
     $lastName = (isset($_POST['inputLastName']) ? $_POST['inputLastName'] : null);
 
@@ -79,16 +81,38 @@
     switch($methodName){
             
         //add as many necessary method invocations
-        case "attemptLogin":
+        case "attemptLoginStudent":
            
             
-            $url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_in_student.php";
-            //$url = "http://192.168.1.57/pages/Sign_in_student.php";
+            //$url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_in_student.php";
+            $url = "http://192.168.1.57/pages/Sign_in_student.php";
             
             $fields = build_fields($fields, 
                          array("inputEmail", "inputPassword", "android"),
                         $email,
                         $password, 
+                        $android);
+            
+            $postvars = http_build_query($fields);
+
+            build_curlreq($fields, $postvars, $url);
+
+            break;
+            
+        case "attemptSignUp":
+           
+            $url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_up.php";
+            //$url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_up_student.php"; <-- anticipatory
+            //$url = "http://192.168.1.57/pages/Sign_up.php";
+            
+            $fields = build_fields($fields, 
+                         array("inputEmail", "inputPassword", "inputUserTitle","inputConfirmPassword","inputFirstName","inputLastName","android"),
+                        $email,
+                        $password, 
+                        $userTitle,
+                        $confirmPassword,
+                        $firstName,
+                        $lastName,
                         $android);
             
             $postvars = http_build_query($fields);
