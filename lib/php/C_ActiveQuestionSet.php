@@ -34,6 +34,8 @@
 
 */
 
+include_once('isIdExistFunctions.php');
+
   class ActiveQuestionSet{
     private $class_id;
     private $question_set_Id;
@@ -68,7 +70,58 @@
                               (class_id, question_set_Id)
                               VALUES (:class_id, :question_set_Id)";
       $stmt = $pdo->prepare($sql);
-      include_once('isIdExistFunctions.php');
+      //include_once('isIdExistFunctions.php');
+      $isClassIdExist = isClassIdExist($this->__get('class_id'));
+      $isQuestionSetIdExist = isQuestionSetIdExist($this->__get('question_set_Id'));
+
+      if($isClassIdExist){
+        if($isQuestionSetIdExist){
+          // classId and questionSetId exist; attempt to insert
+          try{
+            $stmt->execute(['class_id' => $this->class_id, 'question_set_Id' => $this->question_set_Id, ]);
+          }catch (Exception $e){
+            // fail JSON response
+            $response = array();
+            $response["message"] = "ERROR INSERTING: ".$this->class_id." ".$this->question_set_Id." ".$e->getMessage();
+            $response["success"] = 0;
+            return json_encode($response);
+          }
+
+          // success JSON response
+          $response = array();
+          $response["message"] = "Inserted: ".$this->class_id." ".$this->question_set_Id;
+          $response["success"] = 1;
+          return json_encode($response);
+        }
+        else{
+          // build response for no question set id
+          $response = array();
+          $response["message"] = "ERROR INSERTING into active_question_set table: class_id ".$this->question_set_Id." does not exist";
+          $response["success"] = 0;
+          return json_encode($response);
+        }
+      }
+      else{
+        // build response for no class id
+        $response = array();
+        $response["message"] = "ERROR INSERTING into active_question_set table: student_id ".$this->class_id." does not exist";
+        $response["success"] = 0;
+        return json_encode($response);
+      }
+
+
+    }
+    
+    
+    public function delete(){
+      $connection = new Connection;
+      $pdo = $connection->getConnection();
+
+      $sql = "DELETE FROM active_question_set WHERE class_id = :class_id AND question_set_id = :question_set_Id";
+      $stmt = $pdo->prepare($sql);
+      $stmt->bindValue(':class_id', $this->class_id);
+      $stmt->bindValue(':question_set_Id', $this->question_set_Id);
+
       $isClassIdExist = isClassIdExist($this->__get('class_id'));
       $isQuestionSetIdExist = isQuestionSetIdExist($this->__get('question_set_Id'));
 
