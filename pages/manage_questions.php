@@ -11,22 +11,6 @@
 
 ?>
 
-<script type='text/javascript'>
-
-  function addAnswer()
-  {
-    //append a new textfield to dynamicArea
-
-    var parent = document.getElementById("questionDeck");
-    var newChild = "<div class=\"card mb-4\"><div class=\"card-header\"><h4 class=\"my-0 font-weight-normal\">$description</h4></div><div class=\"card-body\"><h5 class=\"card-title pricing-card-title\">$answers</h5></div><div class=\"card-footer\"><h6>$correct_answers</h6></div></div>"; 
-
-    parent.insertAdjacentHTML('beforeend', newChild);
-
-    numberOfChoices++;
-  }
-
-</script>
-
 <!doctype html>
 <html lang="en">
   <head>
