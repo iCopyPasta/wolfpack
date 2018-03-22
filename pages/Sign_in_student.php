@@ -36,25 +36,50 @@
       // compare user entered password with hashed pw from db
       // correct password and email found
       if(password_verify($insertPass, $hashPW) && !is_null($hashPW)) {
-        //android login success
-        if(boolval($android)){
-          $response = array();
-          $response["message"] = "Success(android): email + password found";
-          $response["success"] = 1;
-          echo json_encode($response);
-          exit(0);
-        }
-        //web login success
-        else{
-          $response = array();
-          $response["message"] = "Success: email + password found";
-          $response["success"] = 1;
-          echo json_encode($response);
-          $alertString = "";
-          $_SESSION['user'] = $insertEmail; //saves a session variable, unaccessable to the client, identifying them
-          $_SESSION['accountType'] = "student"; //Keeps track of the type of account
-          $_SESSION['id'] = $qJSON[1]['student_id']; //Keeps track of the id of the account
-          header("Location: logged_in_student.php");
+        //check if email account is confirmed
+
+        include_once('../lib/php/isIdExistFunctions.php');
+        if(isStudentConfirmed($insertEmail)) {
+          // email is confirmed
+
+          //android login success
+          if (boolval($android)) {
+            $response = array();
+            $response["message"] = "Success(android): email + password found";
+            $response["success"] = 1;
+            echo json_encode($response);
+            exit(0);
+          } //web login success
+          else {
+            $response = array();
+            $response["message"] = "Success: email + password found";
+            $response["success"] = 1;
+            echo json_encode($response);
+            $alertString = "";
+            $_SESSION['user'] = $insertEmail; //saves a session variable, unaccessable to the client, identifying them
+            $_SESSION['accountType'] = "student"; //Keeps track of the type of account
+            $_SESSION['id'] = $qJSON[1]['student_id']; //Keeps track of the id of the account
+            header("Location: logged_in_student.php");
+          }
+        }else{
+          // email is not confirmed
+          //TODO: will need to ask user if he needs a new confirmation email; if so, send it
+          if(boolval($android)){
+            $response = array();
+            $response["message"] = "ERROR: email not confirmed";
+            $response["success"] = 0;
+            echo json_encode($response);
+            exit(0);
+          }
+          else{
+            $response = array();
+            $response["message"] = "ERROR: email not confirmed";
+            $response["success"] = 0;
+            echo json_encode($response);
+            $alertString = '<div class="alert alert-danger">
+          <strong>Error: </strong> Email not confirmed
+          </div>';
+          }
         }
       }
       // email not found
