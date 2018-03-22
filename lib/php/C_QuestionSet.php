@@ -22,7 +22,7 @@
     $firstName = isset($qJSON[1]['first_name']) ? $qJSON[1]['first_name'] : null;
 
   */
-include('isIdExistFunctions.php');
+include_once('isIdExistFunctions.php');
 
   class QuestionSet{
     private $question_set_id;

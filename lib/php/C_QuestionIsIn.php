@@ -33,7 +33,7 @@
     }
 
 */
-//include('isIdExistFunctions.php');
+include_once('isIdExistFunctions.php');
 
   class QuestionIsIn{
     private $question_set_id;
