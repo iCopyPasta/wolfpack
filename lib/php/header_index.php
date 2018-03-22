@@ -27,10 +27,9 @@
           <a class="dropdown-item" href="#">Something else here</a>
         </div>
       </li>
-        
     </ul>
-      <p style="color:white">
-    <?php if (isset($_SESSION['user'])) {
+    <span class="navbar-text">
+      <?php if (isset($_SESSION['user'])) {
         // logged in
         echo "Hello ".$_SESSION['user'].". Not you? <a href=\"pages\logout.php\">
                                             click here to log out</a>"; 
@@ -39,6 +38,6 @@
         echo "Not logged in.";
         }
       ?>
-      </p>
+    </span>
   </div>
 </nav>

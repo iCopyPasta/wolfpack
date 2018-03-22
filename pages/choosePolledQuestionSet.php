@@ -6,17 +6,17 @@
         
         } else {
         // not logged in as student
-        header("Location: ..\index.php");
+        header("Location: ../index.php");
         }
 
     if (! isset($_GET["class_id"])) {
         header("Location: ..\index.php");
     }
     $class_id = $_GET["class_id"];    
-    include("..\lib\php\confirmClassOwnership.php");
+    include("../lib/php/confirmClassOwnership.php");
         
         if (! confirmClassOwnership($class_id,$_SESSION['id'])) {
-            header("Location: ..\index.php");
+            header("Location: ../index.php");
         }
 ?>
 
@@ -61,10 +61,12 @@
 .card-hover {
  cursor: pointer; 
      color:black;
+    margin: 0 auto;
 }
         
 .card-hover:hover{
   background:teal;
+    
  
 }
 
@@ -83,14 +85,15 @@
 
 
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-3 mx-auto text-center">
-      <h1 class="display-4">My Question Sets</h1>
+      <h1 class="display-4">Select Poll Set</h1>
+        
     </div>
      
 
             
             
     <?php 
-      include_once('..\lib\php\Connection.php');
+      include_once('../lib/php/Connection.php');
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
@@ -110,10 +113,11 @@
       ?>
       
       
-      
+      <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:960px"><h5>Choose the question set to poll this class with.</h5></div>
       
 
     <div class="container">
+    
     <h1 class="display-5 text-center"><a href="..\index.php"> <button type="button" class="btn btn-primary" >Return back to Dashboard</button></a></h1>
         <div class="card-deck mb-3 text-center">
         <?php

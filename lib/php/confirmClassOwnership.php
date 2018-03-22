@@ -3,7 +3,7 @@
  * Provides the ability to check if a teacher really teaches a class, used for security checks
 */
 
-include_once('..\lib\php\Connection.php');
+include_once('../lib/php/Connection.php');
     
     function confirmClassOwnership($class_id,$teacher_id){
     

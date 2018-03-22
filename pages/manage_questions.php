@@ -80,7 +80,7 @@
               
             </div>
             <div class="modal-body">
-              <?php include("CreateQuestionFragment.php"); ?>
+              <?php include("createQuestionFragment.php"); ?>
             </div>
 
           </div>

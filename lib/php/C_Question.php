@@ -12,8 +12,9 @@
 
   */
   
-  //Only using include_once to prevent multiple include statements erroring
-  //include('isIdExistFunctions.php');
+
+ include_once('isIdExistFunctions.php');
+
 
   class Question{
     private $question_id;
@@ -60,7 +61,7 @@
       $stmt = $pdo->prepare($sql);
 
       // does the teacher_id exist?
-      include_once('isIdExistFunctions.php');
+      //include_once('isIdExistFunctions.php');
       if(!isTeacherIdExist($this->teacher_id)){
         // fail JSON response
         $response = array();

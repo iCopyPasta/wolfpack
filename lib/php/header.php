@@ -27,19 +27,18 @@
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#">Something else here</a>
         </div>
-      </li>
-        
+      </li>        
     </ul>
-      <p style="color:white">
-    <?php if (isset($_SESSION['user'])) { //usage: $_SESSION['user'] will contain the email of the logged in user
+    <span class="navbar-text">
+      <?php if (isset($_SESSION['user'])) {
         // logged in
-        echo "Hello ".$_SESSION['user'].". Not you? <a href=\"logout.php\">
+        echo "Hello ".$_SESSION['user'].". Not you? <a href=\"../../../wolfpack/pages/logout.php\">
                                             click here to log out</a>"; 
         } else {
         // not logged in
         echo "Not logged in.";
         }
       ?>
-      </p>
+    </span>
   </div>
 </header>

@@ -1,4 +1,6 @@
 <?php
+  //TODO: possibly rename this isIdExistFunctions.php script to something more general like isFunctions.php; holding back for now so as not to create confusion
+
   function isStudentIdExist($aStudentId){
     include_once('C_StudentAccount.php');
     $student = new StudentAccount($aStudentId, '%', '%', '%', '%', '%', '%', '%');
@@ -15,7 +17,6 @@
     return array_key_exists(1, $qJSON);
   }
 
-  //TODO: create C_QuestionSession.php
   function isQuestionSessionIdExist($aQSessionId){
     include_once('C_QuestionSession.php');
     $class = new QuestionSession($aQSessionId, '%', '%', '%', '%', '%');
@@ -24,7 +25,6 @@
     return array_key_exists(1, $qJSON);
   }
 
-  //TODO: create C_QuestionHistory.php
   function isQuestionHistoryIdExist($aQuestionHistoryId){
     include_once('C_QuestionHistory.php');
     $questionHist = new QuestionHistory($aQuestionHistoryId, '%', '%');
@@ -33,7 +33,6 @@
     return array_key_exists(1, $qJSON);
   }
 
-  //TODO: create C_QuestionSet.php
   function isQuestionSetIdExist($aQuestionSetId){
     include_once('C_QuestionSet.php');
     $questionSet = new QuestionSet($aQuestionSetId, '%', '%');
@@ -56,9 +55,31 @@
   $qJSON = json_decode($teacher->select(), true);
   // if a row was returned then the class_id exists
   return array_key_exists(1, $qJSON);
-}
+  }
 
+  function isStudentIsInExist($aStudentId, $aClassId){
+    include_once('C_StudentIsIn.php');
+    $teacher = new StudentIsIn($aStudentId, $aClassId);
+    $qJSON = json_decode($teacher->select(), true);
+    // if a row was returned then the class_id exists
+    return array_key_exists(1, $qJSON);
+  }
 
+  function isStudentConfirmed($email){
+    include_once('C_StudentAccount.php');
+    $student = new StudentAccount('%', '%', '%', '%', $email, '%', '%', '%');
+    $qJSON = json_decode($student->select(), true);
+    // if a row was returned then the class_id exists
+    if($qJSON[1]['is_confirmed'] == 1) return true;
+    else return false;
+  }
 
-
+  function isTeacherConfirmed($email){
+    include_once('C_TeacherAccount.php');
+    $teacher = new TeacherAccount('%', '%', '%', '%', $email, '%', '%', '%');
+    $qJSON = json_decode($teacher->select(), true);
+    // if a row was returned then the class_id exists
+    if($qJSON[1]['is_confirmed'] == 1) return true;
+    else return false;
+  }
 ?>
