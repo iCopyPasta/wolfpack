@@ -8,21 +8,15 @@
           <option value="True/False">True/False</option>
           <option value="Multiple Choice">Multiple Choice</option>
         </select>
-        <div class="form-group">
+        <div class="form-group" id="questionForm">
         <label for="Question Description">
           Question Description</label>
         <input type="text" class="form-control" id="description" rows="3" name="description" required>
       </div>
-        <div id="dynamicArea">
-        
-
-        
-        </div>
-        
-        
-        
-        <button type="button" onclick="processForm()" class="btn btn-primary">Submit</button>
-        
+        <div id="dynamicArea">        
+      </div>
+      <button type="button" onclick="processForm()" class="btn btn-primary">Submit</button>
+      <button type="button" onclick="resetForm()" class="btn btn-primary">Reset</button>
     </form>
     </div>
 </html>
@@ -44,11 +38,19 @@
     
     function addChoice() {
         //append a new textfield to dynamicArea
-        document.getElementById("newChoice").innerHTML += "<div class=\"form-group\"><label for=\"Answer "+numberOfChoices+"\">Answer "+numberOfChoices+"</label><input type=\"text\" class=\"form-control\"rows=\"3\" required><input id=\""+numberOfChoices+"\" type=\"checkbox\">This item is a correct answer</div>"
+      
+        var parent = document.getElementById("newChoice");
+        var newChild = "<div class=\"form-group\"><label for=\"Answer "+numberOfChoices+"\">Answer "+numberOfChoices+"</label><input type=\"text\" class=\"form-control\"rows=\"3\" required><input id=\""+numberOfChoices+"\" type=\"checkbox\">This item is a correct answer</div>";
+        
+        parent.insertAdjacentHTML('beforeend', newChild);
         
         numberOfChoices++;
     }
     
+    function resetForm()  {
+        //Add functionality
+    }
+  
     function processForm() {
         var elements = document.getElementById("question_form").elements;
 

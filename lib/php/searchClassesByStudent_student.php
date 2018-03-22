@@ -21,11 +21,11 @@
     $connection = new Connection;
     $pdo = $connection->getConnection();
 
-    $sql = "SELECT  class_course_section.class_id, class_course_section.title, class_course_section.description, class_course_section.section_number,
+    $sql = "SELECT  class_course_section.class_id, class_course_section.title, class_course_section.description,
                     class_course_section.offering, class_course_section.location
-            FROM class_course_section, is_in, student_account
-            WHERE student_account.student_id = is_in.student_id
-              AND is_in.class_id = class_course_section.class_id
+            FROM class_course_section, student_is_in, student_account
+            WHERE student_account.student_id = student_is_in.student_id
+              AND student_is_in.class_id = class_course_section.class_id
               AND student_account.student_id = :student_id";
 
     $stmt = $pdo->prepare($sql);
@@ -45,7 +45,7 @@
 
     $pdo = null;
     $response = array();
-    $response["message"] = "Success SELECTING from class_course_section, is_in, student_account";
+    $response["message"] = "Success SELECTING from class_course_section, student_student_is_in, student_account";
     $response["success"] = 1;
     $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
     array_unshift($retVal, $response);

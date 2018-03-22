@@ -37,7 +37,7 @@
     [{"message":"Success SELECTING from teacher_account, teaches, class_section, has, class_course","success":1},{"title":"Principles of Programming","class_section_number":"1"}]
 
   */
-  function searchClassTitleSectionByTeacher($page, $rowsPerPage, $title, $teacherFName, $teacherLName){
+  function searchClassTitleSectionByTeacher($page, $rowsPerPage, $teacher_id){
     include_once('Connection.php');
     $connection = new Connection;
     $pdo = $connection->getConnection();
@@ -46,17 +46,12 @@
                 FROM teacher_account, teaches, class_course_section
                 WHERE teacher_account.teacher_id = teaches.teacher_id
                   AND teaches.class_id = class_course_section.class_id
-                  AND class_course_section.title LIKE :title
-                  AND teacher_account.first_name LIKE :teacherFName
-                  AND teacher_account.last_name LIKE :teacherLName";
+                  AND teacher_account.teacher_id LIKE :teacher_id";
 
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':title', '%'.$title.'%');
-    $stmt->bindValue(':teacherFName', '%'.$teacherFName.'%');
-    $stmt->bindValue(':teacherLName', '%'.$teacherLName.'%');
+    $stmt->bindValue(':teacher_id', '%'.$teacher_id.'%');
 
     try{
-      // $stmt->execute(['email' => $this->email, 'password' => $this->password]);
       $stmt->execute();
     }catch (Exception $e){
       // fail JSON response

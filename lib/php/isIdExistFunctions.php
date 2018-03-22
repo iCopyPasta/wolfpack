@@ -56,9 +56,15 @@
   $qJSON = json_decode($teacher->select(), true);
   // if a row was returned then the class_id exists
   return array_key_exists(1, $qJSON);
-}
+  }
 
-
+  function isStudentIsInExist($aStudentId, $aClassId){
+    include_once('C_StudentIsIn.php');
+    $teacher = new StudentIsIn($aStudentId, $aClassId);
+    $qJSON = json_decode($teacher->select(), true);
+    // if a row was returned then the class_id exists
+    return array_key_exists(1, $qJSON);
+  }
 
 
 ?>
