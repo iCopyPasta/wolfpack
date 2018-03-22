@@ -150,6 +150,12 @@ public class SignUp extends AppCompatActivity {
             String the_password = ((EditText) findViewById(R.id.password)).
                     getText().toString();
 
+            String confirmPassword = ((EditText) findViewById(R.id.confirmPassword)).
+                    getText().toString();
+
+            String user_title = ((AutoCompleteTextView) findViewById(R.id.user_title)).
+                    getText().toString();
+
             //Request Permission for Internet
             Log.i("SignUp", "about to send data over");
 
@@ -162,7 +168,7 @@ public class SignUp extends AppCompatActivity {
                 Log.i("SignUp", "We have permissions!!");
                 showProgress(true);
                 mAuthTask = new UserLoginTask();
-                mAuthTask.execute(first_name, last_name, the_email, the_password);
+                mAuthTask.execute(user_title, first_name, last_name, the_email, the_password, confirmPassword);
             }
         }
     }
@@ -173,8 +179,8 @@ public class SignUp extends AppCompatActivity {
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 10;
+        //TODO: REPLACE BEFORE END OF SEMESTER WITH VALID PASSWORD LOGIC
+        return password.length() > 0;
     }
 
     /**
@@ -235,8 +241,14 @@ public class SignUp extends AppCompatActivity {
 
                 Log.i(TAG, "setting call with parameters");
                 Call<LoginDetails> call =
-                        webService.attemptSignUp("attemptSignUp",params[0], params[1], params[2], params[3]);
-
+                        webService.attemptSignUp(
+                                "attemptSignUp",
+                                params[0],
+                                params[1],
+                                params[2],
+                                params[3],
+                                params[4],
+                                params[5]);
 
                 Log.i(TAG, "waiting on potential values");
 
@@ -248,6 +260,13 @@ public class SignUp extends AppCompatActivity {
                 Log.i("SignUp", "Finished");
 
                 return loginDetails != null;
+            } catch(java.net.ConnectException e){
+                Log.e(TAG, e.getMessage());
+                return null;
+            } catch (IllegalStateException e) {
+                Log.e(TAG, e.getMessage());
+                return null;
+
             } catch (Exception e){
                 Log.e(TAG, e.getMessage());
                 return false;
@@ -266,18 +285,20 @@ public class SignUp extends AppCompatActivity {
                 String message = loginDetails.getMessage();
 
                 Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(getApplicationContext(), StudentPage.class);
+                Intent intent = new Intent(getApplicationContext(), LoginPage.class);
                 startActivity(intent);
+                
+                //Do NOT add to the backstack!
+                finish();
 
             } else {
                 if(loginDetails == null)
-                    Toast.makeText(SignUp.this, "Null", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUp.this, "Null Val", Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(SignUp.this, loginDetails.toString(), Toast.LENGTH_SHORT).show();
 
                 //String message = loginDetails[0].getMessage();
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError(getString(R.string.error_authentication_failure));
                 mPasswordView.requestFocus();
             }
         }

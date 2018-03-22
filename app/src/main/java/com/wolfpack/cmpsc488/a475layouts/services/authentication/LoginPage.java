@@ -331,7 +331,7 @@ public class LoginPage extends AppCompatActivity {
 
 
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError(getString(R.string.error_authentication_failure));
                 mPasswordView.requestFocus();
             }
         }
