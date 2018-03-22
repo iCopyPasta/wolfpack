@@ -73,4 +73,13 @@
     if($qJSON[1]['is_confirmed'] == 1) return true;
     else return false;
   }
+
+  function isTeacherConfirmed($email){
+    include_once('C_TeacherAccount.php');
+    $teacher = new TeacherAccount('%', '%', '%', '%', $email, '%', '%', '%');
+    $qJSON = json_decode($teacher->select(), true);
+    // if a row was returned then the class_id exists
+    if($qJSON[1]['is_confirmed'] == 1) return true;
+    else return false;
+  }
 ?>
