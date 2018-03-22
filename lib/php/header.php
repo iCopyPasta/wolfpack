@@ -32,7 +32,7 @@
     <span class="navbar-text">
       <?php if (isset($_SESSION['user'])) {
         // logged in
-        echo "Hello ".$_SESSION['user'].". Not you? <a href=\"pages\logout.php\">
+        echo "Hello ".$_SESSION['user'].". Not you? <a href=\"../../../wolfpack/pages/logout.php\">
                                             click here to log out</a>"; 
         } else {
         // not logged in
