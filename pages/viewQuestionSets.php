@@ -70,7 +70,7 @@
             
             
     <?php 
-      include_once('..\lib\php\Connection.php');
+      include_once('../lib/php/Connection.php');
       $connection = new Connection;
       $pdo = $connection->getConnection();
 

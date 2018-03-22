@@ -11,10 +11,10 @@
 
         $class_id = $_GET["class_id"];    
         $question_set_id = $_GET["question_set_id"];
-        include("..\lib\php\confirmClassOwnership.php");
+        include("../lib/php/confirmClassOwnership.php");
         
         if (! confirmClassOwnership($class_id,$_SESSION['id'])) {
-            header("Location: ..\index.php");
+            header("Location: ../index.php");
         }
 ?>
 
