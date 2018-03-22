@@ -66,7 +66,7 @@
     </div>
      
     <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:960px">
-
+        <a style="text-decoration: none" href ="create_question_set.php"> <button class="btn btn-info btn-lg btn-block" >Create New Question Set</button></a><br>
         <a style="text-decoration: none"> <button id="createQuestionButton" class="btn btn-info btn-lg btn-block">Create New Question</button></a>
     </div>
       
@@ -132,13 +132,18 @@
         foreach($removeZerothIndex as $value){
           $question_type = $value['question_type'];
           $description = $value['description'];
+          $answers = $value['potential_answers'];
+          $correct_answers = $value['correct_answers'];
+          
           echo "<div class=\"card mb-4\">
           <div class=\"card-header\">
-            <h4 class=\"my-0 font-weight-normal\">Question Type: $question_type</h4>
+            <h4 class=\"my-0 font-weight-normal\">$description</h4>
           </div>
           <div class=\"card-body\">
-            <h5 class=\"card-title pricing-card-title\">$description</h5>
-            
+            <h5 class=\"card-title pricing-card-title\">$answers</h5>
+          </div>
+          <div class=\"card-footer\">
+            <h6>$correct_answers</h6>
           </div>
         </div>";
         }                               

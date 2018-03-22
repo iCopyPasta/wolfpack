@@ -24,7 +24,7 @@
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="..\css\special\modalcss.css" media="screen" />  
+    <link rel="stylesheet" type="text/css" href="..\css\special\modalcss.css" media="screen"/>  
 
     <!-- Custom styles for this template -->
     <style>
@@ -94,11 +94,9 @@
       
 
     <div class="container">
-    <h1 class="display-5 text-center"><a href="..\index.php"> <button type="button" class="btn btn-primary" >Return back to Dashboard</button></a></h1>
+    <h1 class="display-5 text-center"><a href="..\index.php"> <button type="button" class="btn btn-primary">Return back to Dashboard</button></a></h1>
         <div class="card-deck mb-3 text-center">
-        <?php
-    
-        
+        <?php        
         
         foreach($question_sets as $value){
     
@@ -109,7 +107,7 @@
           </div>
         </div>";
         }                               
-            
+        
         if (empty($question_sets)) {
             echo "<br><H3 class=\"display-5 text-center\">You have no question sets! Create one!</H3>";
         }
