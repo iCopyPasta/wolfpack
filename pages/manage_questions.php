@@ -11,6 +11,22 @@
 
 ?>
 
+<script type='text/javascript'>
+
+  function addAnswer()
+  {
+    //append a new textfield to dynamicArea
+
+    var parent = document.getElementById("questionDeck");
+    var newChild = "<div class=\"card mb-4\"><div class=\"card-header\"><h4 class=\"my-0 font-weight-normal\">$description</h4></div><div class=\"card-body\"><h5 class=\"card-title pricing-card-title\">$answers</h5></div><div class=\"card-footer\"><h6>$correct_answers</h6></div></div>"; 
+
+    parent.insertAdjacentHTML('beforeend', newChild);
+
+    numberOfChoices++;
+  }
+
+</script>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -120,7 +136,7 @@
 
     <div class="container">
     <h1 class="display-5 text-center">Current Questions</h1>
-        <div class="card-deck mb-3 text-center">
+        <div class="card-deck mb-3 text-center" id="questionDeck">
         <?php
         
          $retVal = searchQuestionsByTeacherID($_SESSION['id']);
@@ -128,12 +144,22 @@
          $removeZerothIndex = $retVal;
          unset($removeZerothIndex[0]);
         
-        
         foreach($removeZerothIndex as $value){
           $question_type = $value['question_type'];
           $description = $value['description'];
-          $answers = $value['potential_answers'];
-          $correct_answers = $value['correct_answers'];
+          
+          $answers = json_decode($value['potential_answers'], TRUE);
+          if(is_null($answers) || empty($answers))
+            $answers = "There are no answers!";
+          else
+            $answers = implode("<br>", $answers);
+
+          $correct_answers = json_decode($value['correct_answers'], TRUE);
+          if(is_null($correct_answers) || empty($correct_answers))
+            $correct_answers = "There are no correct answers!";
+          else
+            $correct_answers = implode(" ", $correct_answers);
+          
           
           echo "<div class=\"card mb-4\">
           <div class=\"card-header\">
@@ -145,7 +171,7 @@
           <div class=\"card-footer\">
             <h6>$correct_answers</h6>
           </div>
-        </div>";
+        </div>";        
         }                               
             
         if (empty($removeZerothIndex)) {
@@ -165,6 +191,8 @@
     </div>
 
 
+
+    
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
