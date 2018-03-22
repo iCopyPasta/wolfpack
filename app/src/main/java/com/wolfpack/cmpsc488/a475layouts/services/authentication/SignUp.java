@@ -287,7 +287,7 @@ public class SignUp extends AppCompatActivity {
                 Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), LoginPage.class);
                 startActivity(intent);
-                
+
                 //Do NOT add to the backstack!
                 finish();
 

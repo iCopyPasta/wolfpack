@@ -80,7 +80,7 @@ public interface WolfpackClient{
     @POST(FEED)
     Call<LoginDetails> attemptSignUp(
             @Field("inputMethodName") String methodName,
-            @Field("inputTitle") String inputTitle,
+            @Field("inputUserTitle") String inputTitle,
             @Field("inputFirstName") String first_name,
             @Field("inputLastName") String last_name,
             @Field("inputEmail") String email,
