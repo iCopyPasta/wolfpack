@@ -26,9 +26,9 @@
     var numberOfChoices = 2;
     function typeChanged() {
         
-        if(document.getElementById('type').value == "true/false") {
+        if(document.getElementById('type').value == "True/False") {
             //t/f selected
-            dynamicArea.innerHTML = "<div class=\"form-group\"><label for=\"Answer 1\">Answer 1</label><input type=\"text\" class=\"form-control\"rows=\"3\" required><input id=\"1\" type=\"checkbox\">This item is a correct answer</div><div class=\"form-group\"><label for=\"Answer 1\">Answer 1</label><input type=\"text\" class=\"form-control\"rows=\"3\" required><input id=\"2\" type=\"checkbox\">This item is a correct answer</div>";
+            dynamicArea.innerHTML = "<div class=\"form-group\"><input type=\"text\" class=\"form-control\"rows=\"3\" required value=\"True\" disabled><input id=\"1\" type=\"checkbox\">This item is a correct answer</div><div class=\"form-group\"><input type=\"text\" class=\"form-control\"rows=\"3\" required value=\"False\" disabled><input id=\"2\" type=\"checkbox\">This item is a correct answer</div>";
         }
         else {
             //m/c selected
