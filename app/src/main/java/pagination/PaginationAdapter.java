@@ -153,8 +153,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void clearData(){
-        Log.i(TAG, "clearData: " + "removing values");
         serverTotal = Integer.MAX_VALUE;
+        pageNumber = 1;
         items.clear();
         notifyDataSetChanged();
     }
@@ -174,6 +174,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public synchronized int getLastPageNumber(){
+        Log.i(TAG, "getLastPageNumber: " + pageNumber);
         return pageNumber;
     }
 
