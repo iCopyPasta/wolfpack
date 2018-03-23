@@ -84,8 +84,8 @@
         case "attemptLoginStudent":
            
             
-            //$url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_in_student.php";
-            $url = "http://192.168.1.57/pages/Sign_in_student.php";
+            $url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_in_student.php";
+            //$url = "http://192.168.1.57/pages/Sign_in_student.php";
             
             $fields = build_fields($fields, 
                          array("inputEmail", "inputPassword", "android"),
@@ -160,6 +160,7 @@
             break;
 
 	case "findEnrolledClasses":
+         //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchClassesForStudent.php"
 	     $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/hughes.php";
 	
             $fields = build_fields($fields,
