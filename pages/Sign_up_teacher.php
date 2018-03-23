@@ -97,18 +97,18 @@
       }
     } // email,pw1,pw2 null
     else {
-      //android email,pw1,pw2 null
+      //android email || pw1 || pw2 || fname || lname || title are null
       if(boolval($android)){
         $response = array();
-        $response["message"] = "ERROR: email and pw cannot be null";
+        $response["message"] = "ERROR: fields cannot be null";
         $response["success"] = 0;
         echo json_encode($response);
         exit(0);
       }
-      //web email,pw1,pw2 null
+      //web email || pw1 || pw2 || fname || lname || title are null
       else{
         $response = array();
-        $response["message"] = "ERROR: email and pw cannot be null";
+        $response["message"] = "ERROR: fields cannot be null";
         $response["success"] = 0;
         echo json_encode($response);
         $matchPWString = '<div class="alert alert-danger">
