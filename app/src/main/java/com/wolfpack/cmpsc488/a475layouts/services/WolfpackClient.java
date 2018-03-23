@@ -102,6 +102,14 @@ public interface WolfpackClient{
                                             @Field("inputMethodName") String methodName
     );
 
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<ResponseBody> testEnrollInClass(
+            @Field("inputStudentId") String student_id,
+            @Field("inputClassId") String class_id,
+            @Field("inputMethodName") String methodName
+    );
+
     @POST(FEED)
     Call<BasicWolfpackResponse> uploadSinglePic(
             @Header("Content-Type") String contentType,

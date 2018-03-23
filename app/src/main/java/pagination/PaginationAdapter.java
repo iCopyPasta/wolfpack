@@ -1,6 +1,9 @@
 package pagination;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,11 +16,15 @@ import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentPage;
+import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+
+import okhttp3.ResponseBody;
 import pagination.models.SearchResultSection;
+import retrofit2.Call;
 
 /**
  * Created by peo5032 on 3/7/18.
@@ -125,6 +132,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if(holder instanceof ItemViewHolder){
             SearchResultSection item = items.get(position);
             ItemViewHolder viewHolder = (ItemViewHolder) holder;
+            viewHolder.class_id = item.getClassId();
             viewHolder.offering.setText(item.getOffering());
             viewHolder.location.setText(item.getLocation());
             viewHolder.title.setText(item.getTitle());
@@ -190,7 +198,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class ItemViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener{
+        Boolean isRunning = false;
+        String class_id;
         TextView title;
         TextView description;
         TextView location;
@@ -210,8 +221,61 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         @Override
         public void onClick(View view){
-            Toast.makeText(view.getContext(), "clicked!", Toast.LENGTH_SHORT).show();
+
+            //TODO: get student_id from shared preferences
+            SharedPreferences sharedPref = view.getContext().getSharedPreferences(
+                    view.getContext().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+            //String student_id = sharedPref.getString(view.getContext().getString(0), "");
+            String student_id = "test";
+
+            if(!isRunning){
+                isRunning = true;
+                new AsyncEnrollBackgroundTask().execute(student_id,class_id);
+            }
 
         }
+
+        class AsyncEnrollBackgroundTask extends AsyncTask<String, Void, Boolean>{
+
+            @Override
+            protected Boolean doInBackground(String... strings) {
+
+
+                try{
+                    WolfpackClient client = WolfpackClient.retrofit.create(WolfpackClient.class);
+                    Call<ResponseBody> call = client.testEnrollInClass(strings[0], strings[1],"enrollInClass");
+                    //call.execute();
+
+
+                }
+                 catch (IllegalStateException e) {
+                    Log.e(TAG, e.getMessage());
+                    return false;
+
+                } catch (Exception e){
+                    Log.e(TAG, e.getMessage());
+                    return false;
+                }
+
+                /*catch(java.net.ConnectException e){
+                    Log.e(TAG, e.getMessage());
+                    Toast.makeText(itemView.getContext(), "could not find server", Toast.LENGTH_SHORT).show();
+                    return false;
+                }*/
+
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean status){
+                if(status){
+                    isRunning = false;
+                    Toast.makeText(itemView.getContext(), "fake enrolled!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
+
+
 }
