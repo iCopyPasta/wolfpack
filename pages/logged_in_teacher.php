@@ -154,7 +154,7 @@
         }                               //TODO: link poll class to the class poll using the proper parameter send structure
             
         if (empty($removeZerothIndex)) {
-            echo "<br><H3 class=\"display-5 text-center\">You have no classes! Create one!</H3>";
+            echo "<br><h3 class=\"display-5 text-center\">You have no classes! Create one!</h3>";
         }
         
         ?>

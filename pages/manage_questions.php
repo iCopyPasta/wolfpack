@@ -121,57 +121,53 @@
     <div class="container">
     <h1 class="display-5 text-center">Current Questions</h1>
         <div class="card-deck mb-3 text-center" id="questionDeck">
+          <?php
+
+           $retVal = searchQuestionsByTeacherID($_SESSION['id']);
+           $retVal = json_decode($retVal,true);
+           $removeZerothIndex = $retVal;
+           unset($removeZerothIndex[0]);
+
+          foreach($removeZerothIndex as $value){
+            $question_type = $value['question_type'];
+            $description = $value['description'];
+
+            $answers = json_decode($value['potential_answers'], TRUE);
+            if(is_null($answers) || empty($answers))
+              $answers = "There are no answers!";
+            else
+              $answers = implode("<br>", $answers);
+
+            $correct_answers = json_decode($value['correct_answers'], TRUE);
+            if(is_null($correct_answers) || empty($correct_answers))
+              $correct_answers = "There are no correct answers!";
+            else
+              $correct_answers = implode(" ", $correct_answers);
+
+
+            echo "<div class=\"card mb-4\">
+            <div class=\"card-header\">
+              <h4 class=\"my-0 font-weight-normal\">$description</h4>
+            </div>
+            <div class=\"card-body\">
+              <h5 class=\"card-title pricing-card-title\">$answers</h5>
+            </div>
+            <div class=\"card-footer\">
+              <h6>$correct_answers</h6>
+            </div>
+          </div>";        
+          }                               
+
+          if (empty($removeZerothIndex)) {
+              echo "<h3 class=\"display-5 text-center\">Get started by creating some questions!</h3>";
+          }
+
+          ?>
+        </div>
+      
         <?php
-        
-         $retVal = searchQuestionsByTeacherID($_SESSION['id']);
-         $retVal = json_decode($retVal,true);
-         $removeZerothIndex = $retVal;
-         unset($removeZerothIndex[0]);
-        
-        foreach($removeZerothIndex as $value){
-          $question_type = $value['question_type'];
-          $description = $value['description'];
-          
-          $answers = json_decode($value['potential_answers'], TRUE);
-          if(is_null($answers) || empty($answers))
-            $answers = "There are no answers!";
-          else
-            $answers = implode("<br>", $answers);
-
-          $correct_answers = json_decode($value['correct_answers'], TRUE);
-          if(is_null($correct_answers) || empty($correct_answers))
-            $correct_answers = "There are no correct answers!";
-          else
-            $correct_answers = implode(" ", $correct_answers);
-          
-          
-          echo "<div class=\"card mb-4\">
-          <div class=\"card-header\">
-            <h4 class=\"my-0 font-weight-normal\">$description</h4>
-          </div>
-          <div class=\"card-body\">
-            <h5 class=\"card-title pricing-card-title\">$answers</h5>
-          </div>
-          <div class=\"card-footer\">
-            <h6>$correct_answers</h6>
-          </div>
-        </div>";        
-        }                               
-            
-        if (empty($removeZerothIndex)) {
-            echo "<br><H3 class=\"display-5 text-center\">You have no questions! Create one!</H3>";
-        }
-        
-        ?>
-
-      </div>
-      
-      
-
-      <?php
-
         include("../lib/php/footer.php");
-    ?>
+        ?>
     </div>
 
 
