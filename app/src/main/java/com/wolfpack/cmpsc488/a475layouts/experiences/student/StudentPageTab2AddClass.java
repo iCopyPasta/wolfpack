@@ -201,7 +201,7 @@ public class StudentPageTab2AddClass extends Fragment {
                 Log.i(TAG, result.toString());
                 adapter.setServerTotal(result.getTotalPages());
                 items.addAll(result.getDetailedObjects());
-                adapter.notifyItemInserted(items.size() - 1);
+                //adapter.notifyItemInserted(items.size() - 1);
                 adapter.notifyDataSetChanged();
 
                 Log.i(TAG, "result: " + result.toString());

@@ -34,6 +34,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int visibleThreshold = 5;
     private int serverTotal = Integer.MAX_VALUE;
     private int lastVisibleItem, totalItemCount;
+    private int pageNumber = 1;
 
     public PaginationAdapter(
             RecyclerView recyclerView,
@@ -52,18 +53,19 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Log.i(TAG, "onScrolled called");
                 super.onScrolled(recyclerView, dx, dy);
 
-                totalItemCount = linearLayoutManager.getItemCount();
+                /*totalItemCount = linearLayoutManager.getItemCount();
                 Log.i(TAG, "onScrollState: totalItemCount = " + totalItemCount);
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
                 Log.i(TAG, "onScrolledState: lastVisibleItem = " + lastVisibleItem);
 
-                if(!isLoading && totalItemCount < serverTotal){
+                if(!isLoading && getLastPageNumber() < serverTotal){
                     if(loadmore != null){
+                        Log.i(TAG, "onScrolled: " + serverTotal);
                         Log.i(TAG, "calling onLoadMore");
                         loadmore.onLoadMore();
                         isLoading = true;
                     }
-                }
+                }*/
 
             }
 
@@ -77,6 +79,21 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if (!recyclerView.canScrollVertically(1)) {
                     //Toast.makeText(recyclerView.getContext(),"Last",Toast.LENGTH_SHORT).show();
+
+                    totalItemCount = linearLayoutManager.getItemCount();
+                Log.i(TAG, "onScrollState: totalItemCount = " + totalItemCount);
+                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                Log.i(TAG, "onScrolledState: lastVisibleItem = " + lastVisibleItem);
+
+                if(!isLoading && pageNumber < serverTotal){
+                    if(loadmore != null){
+                        Log.i(TAG, "onScrolled: " + serverTotal);
+                        Log.i(TAG, "calling onLoadMore");
+                        pageNumber++;
+                        loadmore.onLoadMore();
+                        isLoading = true;
+                    }
+                }
 
                 }
             }
@@ -126,15 +143,20 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return items.size();
     }
 
-    public int getRowsPerPage(){ return visibleThreshold; }
+    public int getRowsPerPage(){
+        return visibleThreshold;
+    }
 
     public void setServerTotal(int totalItemCount){
+        Log.i(TAG, "setServerTotal: " + totalItemCount);
         this.serverTotal = totalItemCount;
     }
 
     public void clearData(){
+        Log.i(TAG, "clearData: " + "removing values");
         serverTotal = Integer.MAX_VALUE;
         items.clear();
+        notifyDataSetChanged();
     }
 
     @Override
@@ -151,13 +173,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.isLoading = false;
     }
 
-    public int getLastPageNumber(){
-        int retValint = items.size() / visibleThreshold;
-        Log.i(TAG, "retValint = "  + retValint);
-        if(retValint <= 1)
-            return 1;
-        else
-            return retValint;
+    public synchronized int getLastPageNumber(){
+        return pageNumber;
     }
 
     //View Holders
