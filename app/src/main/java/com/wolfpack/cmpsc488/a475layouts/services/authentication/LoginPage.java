@@ -219,14 +219,14 @@ public class LoginPage extends AppCompatActivity {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<String, Void, LoginDetails> {
 
         LoginDetails loginDetails;
 
         Response<LoginDetails> response;
 
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected LoginDetails doInBackground(String... params) {
             // TODO: attempt authentication against a network service.
 
             try {
@@ -254,11 +254,9 @@ public class LoginPage extends AppCompatActivity {
 
                 Log.i(TAG, "waiting on potential values");
 
-                //TODO: ADD SECURE TRY-CATCH BLOCKS FOR VARIOUS POSSIBILITIES!
-                Log.i(TAG, response.body().toString());
                 loginDetails = response.body();
 
-                return loginDetails != null && loginDetails.getStatus() > 0;
+                return loginDetails;
 
             } catch(java.net.ConnectException e){
                 Log.e(TAG, e.getMessage());
@@ -270,13 +268,13 @@ public class LoginPage extends AppCompatActivity {
 
             } catch (Exception e){
                 Log.e(TAG, e.getMessage());
-                return false;
+                return null;
             }
 
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final LoginDetails success) {
 
             String buttonName;
 
@@ -303,7 +301,7 @@ public class LoginPage extends AppCompatActivity {
             showProgress(false);
 
 
-            if (success) {
+            if (success != null && success.getSuccess() > 0) {
                 Log.i(TAG, "successful login");
 
                 //SHARED PREFERENCES UPDATE
@@ -315,20 +313,18 @@ public class LoginPage extends AppCompatActivity {
                 editor.putBoolean(getString(R.string.SKIP_LOGIN), true);
                 editor.putString(getString(R.string.USER_MODE), mode);
                 editor.putString(getString(R.string.USER_EMAIL), mEmailView.getText().toString());
-
-                Log.i(TAG, "email entered = "+mEmailView.getText().toString());
+                editor.putString(getString(R.string.STUDENT_ID), success.getStudentId());
 
                 editor.apply(); //dedicate to persistent storage in background thread
 
                 //FEEDBACK FROM SERVER
+                //TODO: remove later on
                 String message = loginDetails.getMessage();
 
                 Toast.makeText(LoginPage.this, message, Toast.LENGTH_SHORT).show();
 
                 if(intent != null)
                     startActivity(intent);
-
-
 
             } else {
                 mPasswordView.setError(getString(R.string.error_authentication_failure));
