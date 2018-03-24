@@ -161,6 +161,23 @@
             build_curlreq($fields, $postvars, $url);
 
             break;
+            
+        case "enrollForClass":
+            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/enrollForClass.php";
+            //$url = "http://192.168.1.57/lib/php/enrollForClass.php";
+            
+            $fields = build_fields($fields,
+                                   array('inputStudentId', 'inputClassId',"android"),
+                                   $inputStudentId,
+                                   $inputClassId,
+                                   $android
+                                   );
+            
+            $postvars = http_build_query($fields);
+
+            build_curlreq($fields, $postvars, $url);
+
+            break;
 
         case "uploadSinglePic":
   
@@ -182,10 +199,10 @@
             break;
 
 	     case "findEnrolledClasses":
-            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchClassesForStudent.php"
+            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchClassesForStudent.php";
 	
             $fields = build_fields($fields,
-	                           array("currentPage", "rowsPerPage","student_id","android"),
+	                               array("currentPage", "rowsPerPage","student_id","android"),
                                    $currentPage,
                                    $rowsPerPage,
                                    $student_id,

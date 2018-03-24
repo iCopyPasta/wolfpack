@@ -36,24 +36,25 @@
         $connection = new Connection;
         $pdo = $connection->getConnection();
         
-        // find out how many rows are in the table
+        
         $sql = "IF EXISTS (
                         SELECT * 
                         FROM answers 
-                        WHERE student_id = :inputStudentId,
-                        session_id = :inputSessionId,
-                        question_history_id = :inputQuestionHistoryId,
-                        answer_type = :inputAnswerType,
+                        WHERE student_id = :inputStudentId
+                        AND session_id = :inputSessionId
+                        AND question_history_id = :inputQuestionHistoryId
+                        AND answer_type = :inputAnswerType
                         )
                     UPDATE answers 
-                    SET answer = :inputAnswer, 
-                    WHERE student_id = :inputStudentId,
-                          session_id = :inputSessionId,
-                          question_history_id = :inputQuestionHistoryId,
-                          answer_type = :inputAnswerType
+                    SET answer = :inputAnswer 
+                    WHERE student_id = :inputStudentId
+                          AND session_id = :inputSessionId
+                          AND question_history_id = :inputQuestionHistoryId
+                          AND answer_type = :inputAnswerType;
                     ELSE
                     INSERT INTO answers (student_id, session_id, question_history_id, answer_type, answer)
-                    VALUES(:inputStudentId, :inputSessionId, :inputQuestionHistoryId, :inputAnswerType,  :inputAnswer)";
+                    VALUES(:inputStudentId, :inputSessionId, :inputQuestionHistoryId, :inputAnswerType,  :inputAnswer);
+                    END IF";
         $result = $pdo->prepare($sql);
         $result->bindValue(':inputStudentId', $inputStudentId, PDO::PARAM_INT);
         $result->bindValue(':inputSessionId', $inputSessionId, PDO::PARAM_INT);
