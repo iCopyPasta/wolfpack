@@ -123,6 +123,7 @@
 
     <div class="container">
     <h1 class="display-5 text-center">Current Classes</h1>
+    <a style="text-decoration: none" href ="manage_class.php"> <button id="manageClassButton" class="btn btn-info btn-lg btn-block" >Manage My Classes</button></a>
         <div class="card-deck mb-3 text-center">
         <?php
         
