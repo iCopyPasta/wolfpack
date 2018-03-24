@@ -30,7 +30,7 @@ import android.widget.Toast;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyJobService;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
-
+// given our class id, we ask if there is an active session here!
 public class StudentClassPageTab1Sessionlist extends Fragment {
 
     private static final String TAG = "TCPTab1Sessionlist";
@@ -41,7 +41,6 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
     private ListView mListViewSessions;
     private static String[] sessionlistTemp = {"Session 01", "Session 02", "Session XD"};
 
-    //private JobScheduler jobScheduler;
     private MyStartedService mService;
 
     private final ServiceConnection mServiceConn = new ServiceConnection() {

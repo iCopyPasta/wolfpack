@@ -16,7 +16,7 @@ import com.wolfpack.cmpsc488.a475layouts.R;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class StudentQuestionCompletePage extends AppCompatActivity implements ActiveSessionDialog.ActiveSessionDialogListener {
+public class StudentQuestionCompletePage extends AppCompatActivity{
     public static final String TAG = "SQuestionCompletePage";
 
 
@@ -71,9 +71,9 @@ public class StudentQuestionCompletePage extends AppCompatActivity implements Ac
 
 
 
-    /**
+/*    *//**
      * ActiveSessionDialog.ActiveSessionDialogListener function implementation
-     */
+     *//*
 
     @Override
     public void onPositiveClick() {
@@ -83,7 +83,7 @@ public class StudentQuestionCompletePage extends AppCompatActivity implements Ac
     @Override
     public void onNegativeClick() {
 
-    }
+    }*/
 
 
 

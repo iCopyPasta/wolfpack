@@ -1,21 +1,34 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.app.DialogFragment;
+import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
 
 import java.util.ArrayList;
 
-public class StudentSessionPage extends AppCompatActivity implements ActiveSessionDialog.ActiveSessionDialogListener {
+
+// given MY_SERVICE_QUESTION_SET_ID, MY_SERVICE_QUESTION_SESSION_ID
+// we ask if there is an active question here!
+public class StudentSessionPage extends AppCompatActivity {
 
     public static final String TAG = "SSessionCompletePage";
 
@@ -25,11 +38,6 @@ public class StudentSessionPage extends AppCompatActivity implements ActiveSessi
     private TextView mTextViewSessionName;
     private TextView mTextViewQuestionNotice;
 
-    private RecyclerView mRecyclerViewQuestions;
-
-    //private String[] questionlistTemp = {}
-    private int[] questionlistTemp = {1000,2934, 2882, 1111, 1939};
-
     //activeSession refers to if there is an active session for the class (not necessarily this session)
     private boolean activeSession = true;
 
@@ -38,15 +46,73 @@ public class StudentSessionPage extends AppCompatActivity implements ActiveSessi
     private boolean isActiveSession = false;
     private boolean isActiveQuestion = false;
 
+    // question set information if one is active
+    private String questionSetId = null;
+    private String questionSessionId = null;
 
-    private Bundle bundle;
+    private MyStartedService mService;
+
+    private final ServiceConnection mServiceConn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            MyStartedService.MyServiceBinder myServiceBinder =
+                    (MyStartedService.MyServiceBinder) iBinder;
+
+            mService = myServiceBinder.getService();
+
+            if(mService == null){
+                Log.e(TAG, "mService is null");
+            } else{
+                Log.i(TAG, "onServiceConnected: myService is not null: ");
+                if(questionSessionId != null && questionSetId != null)
+                    mService.searchActiveQuestion(questionSetId);
+
+            }
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            if(mService != null){
+                Log.i(TAG, "onServiceDisconnected: " + TAG + " disconnected from MyStartedService");
+            }
+        }
+    };
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle info = intent.getExtras();
+            Log.i(TAG, "onReceive: " + "service message received");
+
+            if(info != null){
+                //force into StudentQuestionActivePage
+                Toast.makeText(getApplicationContext(), "QUESTION FOUND", Toast.LENGTH_SHORT)
+                        .show();
+
+                
+            }
+            else{
+                Log.i(TAG, "onReceive: " + "no active questionId for " +
+                        "questionSessionId = " + questionSessionId + ", " +
+                        "quesitonSetId = " + questionSetId);
+
+                if(questionSessionId != null && questionSetId != null)
+                    mService.searchActiveQuestion(questionSetId);
+            }
+
+
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_page);
 
-        bundle = getIntent().getExtras();
+        Bundle bundle = getIntent().getExtras();
+
 
         try{
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorStudentPrimary)));
@@ -61,12 +127,15 @@ public class StudentSessionPage extends AppCompatActivity implements ActiveSessi
             mTextViewSessionName = findViewById(R.id.sessionNameTextView);
             mTextViewQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
 
-            //TODO: add recycler view
-            //mRecyclerViewQuestions = findViewById(R.id.questionListRecycleView):
-
 
             //decide how to handle it
             if (isActiveSession){
+                questionSetId = bundle.getString(
+                        MyStartedService.MY_SERVICE_QUESTION_SET_ID);
+
+                questionSessionId = bundle.getString(
+                        MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
+
                 handleActiveSession();
             }
             else{
@@ -79,97 +148,55 @@ public class StudentSessionPage extends AppCompatActivity implements ActiveSessi
 
         }
         catch(NullPointerException e){
-            Log.i(TAG, e.toString());
+            Log.i(TAG, e.getMessage());
             throw e;
         }
 
 
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
 
-    //if this session is active
+        //bind to custom service
+        Intent serviceIntent = new Intent(StudentSessionPage.this , MyStartedService.class);
+        startService(serviceIntent);
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .registerReceiver(mReceiver, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_QUESTION));
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+
+        unbindService(mServiceConn);
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .unregisterReceiver(mReceiver);
+    }
+
+
+    // provided we are an active session, query to see if a brand new question exists
     private void handleActiveSession(){
-        //TODO: query for the session name (or maybe done by caller)
 
-        //TODO: start an async task to query if the session is still alive
-        //TODO: start an async task to query if a question is live
+
 
     }
 
     //if this session is completed
     private void handleCompletedSession(){
-        mTextViewQuestionNotice.setVisibility(View.GONE);
-
-        sessionName = (String) bundle.get("sessionName");
-
-        mTextViewSessionName.setText(sessionName);
-
-        //TODO: start an async task to query if there is an active session
-
-        //TODO: populate a list (recycle view) here
 
 
     }
 
-
-
-    //temporary code to access question page
-    public void gotoQuestionPage(View view){
-        String str = ((Button) view).getText().toString();
-        int pos = 0;
-        switch(str){
-            case "question1": pos = 1; break;
-            case "question2": pos = 2; break;
-            case "question3": pos = 3; break;
-            case "question4": pos = 4; break;
-            case "question5": pos = 5; break;
-        }
-
-        Intent intent = new Intent(this, StudentQuestionCompletePage.class);
-        intent.putExtra("className", className);
-        intent.putExtra("sessionName", sessionName);
-        intent.putExtra("isActive", false);
-        intent.putExtra("questionId", questionlistTemp[pos]);
-
-        startActivity(intent);
-
-    }
-
-
-
-    //TODO: move this to an async task (created in handleCompletedSession)
     @Override
     protected void onResume() {
         super.onResume();
-
-        //checking if there is an active session, but the active session is not this active session
-        if (activeSession && !isActiveSession) {
-            DialogFragment dialogFragment = new ActiveSessionDialog();
-            dialogFragment.show(getFragmentManager(), "SessionActive");
-        }
-
     }
 
-
-
-    /**
-     * ActiveSessionDialog.ActiveSessionDialogListener function implementation
-     */
-
-    @Override
-    public void onPositiveClick() {
-        //send user to an active session's page
-        Intent intent = new Intent(getApplicationContext(), StudentSessionPage.class);
-        intent.putExtra("className", className);
-        //TODO: decide who gets the session name
-        //intent.putExtra("sessionName", "");
-        intent.putExtra("isActive", true);
-        startActivity(intent);
-        finish();
-    }
-
-    @Override
-    public void onNegativeClick() {
-        //nothing happens
-    }
 }
