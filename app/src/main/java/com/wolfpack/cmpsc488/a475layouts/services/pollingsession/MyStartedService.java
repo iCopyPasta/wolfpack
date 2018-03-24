@@ -68,6 +68,36 @@ public class MyStartedService extends Service {
             (new ServiceJobAsyncTask()).execute(params);
     }
 
+     public void searchActiveSession(String inputClassId){
+         if(!isRunning)
+             (new ServiceJobAsyncTask()).execute("searchActiveSession", inputClassId);
+
+     }
+
+     public void searchActiveQuestion(String inputQuestionSetId){
+         if(!isRunning)
+             (new ServiceJobAsyncTask()).execute("searchActiveQuestion", inputQuestionSetId);
+
+     }
+
+     public void searchLiveQuestionInfo(String inputQuestionId){
+         if(!isRunning)
+             (new ServiceJobAsyncTask()).execute("searchLiveQuestionInfo", inputQuestionId);
+
+     }
+
+     public void submitAnswer(String inputStudentId,
+                              String inputSessionId,
+                              String inputQuestionHistoryId,
+                              String inputAnswerType){
+         if(!isRunning)
+             (new ServiceJobAsyncTask()).execute("submitAnswer",
+                     inputStudentId,
+                     inputSessionId,
+                     inputQuestionHistoryId,
+                     inputAnswerType);
+     }
+
 
     class ServiceJobAsyncTask extends AsyncTask<String, Void, String> {
 
