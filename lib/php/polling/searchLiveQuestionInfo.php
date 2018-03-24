@@ -13,6 +13,16 @@
     ensure you are using POST variables for the aforementioned variables
 
     Example Return JSON Value:
+    {
+    "results": [{
+        "question_id": "2015",
+        "teacher_id": "1",
+        "question_type": "Multiple Choice",
+        "description": "This is a True/False Question",
+        "potential_answers": "[\"This is the right answer\",\"This is the wrong answer\"]",
+        "correct_answers": "[\"1\"]"
+    }]
+}
     
     */
     

@@ -17,6 +17,7 @@
     ensure you are using POST variables for the aforementioned variables
 
     Example Return JSON Value:
+    {"success":1,"message":"answer successfully submitted"}
     
     */
     

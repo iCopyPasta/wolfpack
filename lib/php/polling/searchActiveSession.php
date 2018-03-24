@@ -14,7 +14,8 @@
     ensure you are using POST variables for the aforementioned variables
 
     Example Return JSON Value:
-    
+    {"results":[{"question_set_id":"1021","question_session_id":"107"}]}
+    //array is empty if nothing is found
     */
     
 
