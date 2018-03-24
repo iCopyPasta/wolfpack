@@ -22,7 +22,7 @@
         //in an ideal world, we'd perform sanitation!
         
         $inputQuestionSetId = isset($_POST["inputQuestionSetId"]) ? (int) $_POST["inputQuestionSetId"] : null;        
-        include_once('Connection.php');
+        include_once('../Connection.php');
         $connection = new Connection;
         $pdo = $connection->getConnection();
         

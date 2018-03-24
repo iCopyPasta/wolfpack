@@ -23,7 +23,7 @@
         
         $inputClassId = isset($_POST["inputClassId"]) ? (int) $_POST["inputClassId"] : null;        
         
-        include_once('Connection.php');
+        include_once('../Connection.php');
         $connection = new Connection;
         $pdo = $connection->getConnection();
         

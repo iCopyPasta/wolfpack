@@ -29,13 +29,12 @@
         
         $inputQuestionHistoryId = isset($_POST["inputQuestionHistoryId"]) ? (int) $_POST["inputQuestionHistoryId"] : null;
         
-        $inputAnswerType = isset($_POST["inputAnswerType"]) ? (int) $_POST["inputAnswerType"] : null;
-        $inputAnswer = isset($_POST["inputAnswer"]) ? (int) $_POST["inputAnswer"] : null;
+        $inputAnswerType = isset($_POST["inputAnswerType"]) ? $_POST["inputAnswerType"] : null;
+        $inputAnswer = isset($_POST["inputAnswer"]) ? $_POST["inputAnswer"] : null;
         
-        include_once('Connection.php');
+        include_once('../Connection.php');
         $connection = new Connection;
         $pdo = $connection->getConnection();
-        
         
         $sql = "IF EXISTS (
                         SELECT * 
@@ -45,7 +44,7 @@
                         AND question_history_id = :inputQuestionHistoryId
                         AND answer_type = :inputAnswerType
                         )
-                    UPDATE answers 
+                    THEN UPDATE answers 
                     SET answer = :inputAnswer 
                     WHERE student_id = :inputStudentId
                           AND session_id = :inputSessionId
@@ -65,7 +64,21 @@
 
         
         try {
-            $result->execute();
+            $worked = $result->execute();
+            
+            if($worked){
+                $response = array();
+                $response["success"] = 1;
+                $response["message"] = "answer successfully submitted";
+                echo json_encode($response);
+
+            }
+            else{
+                $response = array();
+                $response["success"] = 0;
+                $response["message"] = "did not submit answer";
+                echo json_encode($response);
+            }
         }catch (Exception $e) {
             // fail JSON response
             $response = array();
@@ -75,18 +88,9 @@
             die();
             exit();
         }
-
-        $response = array();
-        
-        $response["success"] = 1;
-        $response["message"] = "answer submitted";
-        
-        echo json_encode($response);
         die();
         exit();
               
-    } else{
-        echo "";
     }
 
 ?>
