@@ -47,8 +47,8 @@
             $response = array();
             $response["message"] = "Success(android): email + password found";
             $response["success"] = 1;
-            echo json_encode($response);
-            exit(0);
+            $response["student_id"] = $qJSON[1]['student_id'];
+            return json_encode($response);
           } //web login success
           else {
             $response = array();
