@@ -14,7 +14,12 @@ import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.ClassListRes
 import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.ClassResult;
 import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.SearchClassResult;
 import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.SearchResultSection;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveQuestionInfo;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveSessionInfo;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.PollingResults;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -120,7 +125,6 @@ public interface WolfpackClient{
 
     );
 
-    //Change to your JSON response
     @FormUrlEncoded
     @POST(FEED)
     Call<ClassListResult<ClassResult>> findEnrolledClasses(
@@ -140,43 +144,43 @@ public interface WolfpackClient{
     // Polling Calls
     @FormUrlEncoded
     @POST(FEED)
-    Call<List<Object>> searchActiveSession(
-            @Field("inputClassId") String  student_id,
+    Call<PollingResults<ActiveSessionInfo>> searchActiveSession(
+            @Field("inputClassId") String inputClassId,
             @Field("inputMethodName") String methodName
     );
 
     @FormUrlEncoded
     @POST(FEED)
     Call<ResponseBody> testActiveSession(
-            @Field("inputClassId") String  student_id,
+            @Field("inputClassId") String inputClassId,
             @Field("inputMethodName") String methodName
     );
 
     @FormUrlEncoded
     @POST(FEED)
-    Call<List<Object>> searchActiveQuestion(
-            @Field("inputQuestionSetId") String  student_id,
+    Call<PollingResults<ActiveQuestionInfo>> searchActiveQuestion(
+            @Field("inputQuestionSetId") String inputQuestionSetId,
             @Field("inputMethodName") String methodName
     );
 
     @FormUrlEncoded
     @POST(FEED)
     Call<ResponseBody> testActiveQuestion(
-            @Field("inputQuestionSetId") String  student_id,
+            @Field("inputQuestionSetId") String  inputQuestionSetId,
             @Field("inputMethodName") String methodName
     );
 
     @FormUrlEncoded
     @POST(FEED)
-    Call<List<Object>> searchLiveQuestionInfo(
-            @Field("inputQuestionId") String  student_id,
+    Call<PollingResults<QuestionInformation>> searchLiveQuestionInfo(
+            @Field("inputQuestionId") String  inputQuestionId,
             @Field("inputMethodName") String methodName
     );
 
     @FormUrlEncoded
     @POST(FEED)
     Call<ResponseBody> testLiveQuestionInfo(
-            @Field("inputQuestionId") String  student_id,
+            @Field("inputQuestionId") String  inputQuestionId,
             @Field("inputMethodName") String methodName
     );
 

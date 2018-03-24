@@ -8,11 +8,35 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
+import com.wolfpack.cmpsc488.a475layouts.services.data_retrieval.BasicWolfpackResponse;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveQuestionInfo;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveSessionInfo;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.PollingResults;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
+
+import java.util.ArrayList;
 import java.util.Random;
+
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 
 public class MyStartedService extends Service {
 
     private final String TAG = "MyStartedService";
+    public static final String MY_SERVICE_ACTIVE_SESSION = "MY_SERVICE_ACTIVE_SESSION";
+    public static final String MY_SERVICE_ACTIVE_QUESTION = "MY_SERVICE_ACTIVE_QUESTION";
+    public static final String MY_SERVICE_QUESTION_INFO = "MY_SERVICE_QUESTION_INFO";
+    public static final String MY_SERVICE_SUBMIT_ANSWER = "MY_SERVICE_SUBMIT_ANSWER";
+    public static final String MY_SERVICE_QUESTION_SET_ID = "MY_SERVICE_QUESTION_SET_ID";
+    public static final String MY_SERVICE_QUESTION_SESSION_ID = "MY_SERVICE_QUESTION_SESSION_ID";
+    public static final String MY_SERVICE_QUESTION_ID= "MY_SERVICE_QUESTION_ID";
+    public static final String MY_SERVICE_QUESTION_HISTORY_ID = "MY_SERVICE_QUESTION_HISTORY_ID";
+    public static final String MY_SERVICE_QUESTION_INFO_JSON = "MY_SERVICE_QUESTION_INFO_JSON";
+    public static final String MY_SERVICE_ANSWER_STATUS = "MY_SERVICE_ANSWER_STATUS";
+    public static final String MY_SERVICE_ANSWER_MESSAGE = "MY_SERVICE_ANSWER_MESSAGE";
+    
     private boolean isRunning = false;
 
     private final Binder mBinder = new MyServiceBinder();
@@ -89,77 +113,268 @@ public class MyStartedService extends Service {
      public void submitAnswer(String inputStudentId,
                               String inputSessionId,
                               String inputQuestionHistoryId,
-                              String inputAnswerType){
+                              String inputAnswerType,
+                              String inputAnswer){
          if(!isRunning)
              (new ServiceJobAsyncTask()).execute("submitAnswer",
                      inputStudentId,
                      inputSessionId,
                      inputQuestionHistoryId,
-                     inputAnswerType);
+                     inputAnswerType,
+                     inputAnswer);
      }
 
 
-    class ServiceJobAsyncTask extends AsyncTask<String, Void, String> {
+    class ServiceJobAsyncTask extends AsyncTask<String, Void, Object> {
 
         private final String TAG = "ServiceJobAT";
-
-
+        private int id = 0;
 
         @Override
-        protected String doInBackground(String... params) {
+        protected Object doInBackground(String... params) {
             isRunning = true;
-
-            for (String el:params) {
-                Log.i(TAG, "doInBackground: " + el);
-            }
-
-            //TODO: perform actual network request based off of parameters
+            Object response = null;
 
             try {
-                Thread.sleep(5000);
-                //simulate our network call
+                //TODO: set this interval in preferences
+                //any request will wait for at least 5 seconds before retrying
+                //TODO: fix this interval!
+                Thread.sleep(1000);
 
-            }  catch (InterruptedException e) {
-                e.printStackTrace();
+                //determine which method wants to run on the background thread
+                //set that 'id' to use in onPostExecute
+
+                WolfpackClient client = WolfpackClient.retrofit.create(WolfpackClient.class);
+                WolfpackClient debugClient = WolfpackClient.debugRetrofit.create(WolfpackClient.class);
+
+                switch (params[0]){
+                    case "searchActiveSession":{
+                        id = 1;
+
+                        Call<PollingResults<ActiveSessionInfo>> call = client.searchActiveSession(
+                                params[1],
+                                "searchActiveSession"
+                        );
+
+                        //PollingResults<ActiveSessionInfo>
+                        response = call.execute().body();
+                    }
+
+                        break;
+                    case "searchActiveQuestion":{
+                        id = 2;
+                        Call<PollingResults<ActiveQuestionInfo>> call = client.searchActiveQuestion(
+                                params[1],
+                                "searchActiveQuestion"
+                        );
+
+                        //PollingResults<ActiveQuestionInfo>
+                        response = call.execute().body();
+                    }
+                        break;
+                    case "searchLiveQuestionInfo": {
+                        id = 3;
+                        Call<ResponseBody> call = client.testLiveQuestionInfo(
+                                params[1],
+                                "searchLiveQuestionInfo"
+                        );
+
+                        //PollingResults<QuestionInformation>
+                        response = call.execute().body();
+                    }
+                        break;
+                    case "submitAnswer": {
+                        id = 4;
+                        Call<BasicWolfpackResponse> call = client.submitAnswer(
+                                params[1],
+                                params[2],
+                                params[3],
+                                params[4],
+                                params[5],
+                                "submitAnswer"
+                        );
+
+                        //BasicWolfpackResponse
+                        response = call.execute().body();
+
+                    }
+                        break;
+                }
+
+            }catch(java.net.ConnectException e){
+                Log.e(TAG, e.getMessage());
+                return null;
+            }
+            catch (IllegalStateException e){
+                Log.e(TAG, e.getMessage());
+                return null;
+
+            } catch (Exception e){
+                Log.e(TAG, e.getClass().toString() + e.getMessage());
+                return null;
             }
 
-            String[] testValues = {"poll", "no poll","no poll"};
-            Random random = new Random();
-            int randomInteger = random.nextInt(testValues.length);
-            Log.i(TAG, "doInBackground: " + randomInteger);
-
-            return testValues[randomInteger];
+            return response;
         }
 
         @Override
-        protected void onPostExecute(final String params){
+        protected void onPostExecute(final Object result){
             isRunning = false;
 
-            //TODO: logic based on the response we get from the server
-            switch (params){
-                case "poll": {
-                    Intent intent = new Intent("ServiceMessage");
-                    intent.putExtra("key", "poll");
+            switch (id){
+                case 1:{
+                    Intent intent = new Intent(MY_SERVICE_ACTIVE_SESSION);
 
-                    //send our response back
-                    LocalBroadcastManager.getInstance(
-                            getApplicationContext())
-                            .sendBroadcast(intent);
+                    try{
+
+                        if(result != null)
+                        {
+                            @SuppressWarnings("unchecked")
+                            String questionSetId = ((PollingResults<ActiveSessionInfo>) result).getResults()
+                                    .get(0).getQuestionSetId();
+
+                            @SuppressWarnings("unchecked")
+                            String questionSessionId = ((PollingResults<ActiveSessionInfo>) result).getResults()
+                                .get(0).getQuestionSessionId();
+                            intent.putExtra(MY_SERVICE_QUESTION_SET_ID, questionSetId);
+                            intent.putExtra(MY_SERVICE_QUESTION_SESSION_ID, questionSessionId);
+
+                            //send our response back
+                            LocalBroadcastManager.getInstance(
+                                    getApplicationContext())
+                                    .sendBroadcast(intent);
+                        }
+                        else{
+                            Log.e(TAG, "onPostExecute: " + "result was null" );
+                        }
+
+                    } catch(NullPointerException e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    } catch (ClassCastException e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    } catch (Exception e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    }
+
+                } break;
+
+                case 2:{
+                    Intent intent = new Intent(MY_SERVICE_ACTIVE_QUESTION);
+                    try{
+
+                        if(result != null)
+                        {
+                            @SuppressWarnings("unchecked")
+                            String questionId = ((PollingResults<ActiveQuestionInfo>) result).getResults()
+                                    .get(0).getQuestionId();
+
+                            @SuppressWarnings("unchecked")
+                            String getQuestionHistoryId = ((PollingResults<ActiveQuestionInfo>) result).getResults()
+                                    .get(0).getQuestionHistoryId();
+                            intent.putExtra(MY_SERVICE_QUESTION_ID, questionId);
+                            intent.putExtra(MY_SERVICE_QUESTION_HISTORY_ID, getQuestionHistoryId);
+
+                            //send our response back
+                            LocalBroadcastManager.getInstance(
+                                    getApplicationContext())
+                                    .sendBroadcast(intent);
+                        }
+                        else{
+                            Log.e(TAG, "onPostExecute: " + "result was null" );
+                        }
+
+                    } catch(NullPointerException e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    } catch (ClassCastException e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    } catch (Exception e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    }
+
+                } break;
+
+                case 3:{
+                    Intent intent = new Intent(MY_SERVICE_QUESTION_INFO);
+                    try{
+
+                        if(result != null)
+                        {
+                            @SuppressWarnings("unchecked")
+                             String questionJSON = ((ResponseBody) result).string();
+
+                            Log.i(TAG, "QUESTION INFO JSON = " + questionJSON);
+                            //perform conversation later on
+                            intent.putExtra(MY_SERVICE_QUESTION_INFO_JSON, questionJSON);
+
+                            //send our response back
+                            LocalBroadcastManager.getInstance(
+                                    getApplicationContext())
+                                    .sendBroadcast(intent);
+                        }
+                        else{
+                            Log.e(TAG, "onPostExecute: " + "result was null" );
+                        }
+
+                    } catch(NullPointerException e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    } catch (ClassCastException e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    } catch (Exception e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    }
+
                 }
-                break;
 
-                case "no poll": {
-                    Intent intent = new Intent("ServiceMessage");
-                    intent.putExtra("key", "no poll");
 
-                    //send our response back
-                    LocalBroadcastManager.getInstance(
-                            getApplicationContext())
-                            .sendBroadcast(intent);
-                }
+
                     break;
-            }
+                case 4:{
+                    Intent intent = new Intent(MY_SERVICE_SUBMIT_ANSWER);
+                    try{
 
+                        if(result != null)
+                        {
+                            @SuppressWarnings("unchecked")
+                            String message = ((BasicWolfpackResponse) result).getMessage();
+                            int sukmoonChang = ((BasicWolfpackResponse) result).getStatus();
+
+                            Log.i(TAG, "SUBMISSION OF ANSWER = " + message);
+                            //perform conversation later on
+                            intent.putExtra(MY_SERVICE_ANSWER_MESSAGE, message);
+                            intent.putExtra(MY_SERVICE_ANSWER_STATUS, sukmoonChang);
+
+                            //send our response back
+                            LocalBroadcastManager.getInstance(
+                                    getApplicationContext())
+                                    .sendBroadcast(intent);
+                        }
+                        else{
+                            Log.e(TAG, "onPostExecute: " + "result was null" );
+                        }
+
+                    } catch(NullPointerException e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    } catch (ClassCastException e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    } catch (Exception e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    }
+
+                } break;
+
+            }
 
         }
     }
