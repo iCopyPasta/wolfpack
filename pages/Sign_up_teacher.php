@@ -22,24 +22,34 @@
   $insertEmail = (isset($_POST['inputEmail']) ? $_POST['inputEmail'] : null);
   $insertPass = (isset($_POST['inputPassword']) ? $_POST['inputPassword'] : null);
   $insertPass2 = (isset($_POST['inputConfirmPassword']) ? $_POST['inputConfirmPassword'] : null);
+  $first_name = (isset($_POST['first_name']) ? $_POST['first_name'] : null);
+  $last_name = (isset($_POST['last_name']) ? $_POST['last_name'] : null);
+  $title = (isset($_POST['title']) ? $_POST['title'] : null);
   $android = isset($_POST["android"]) ? $_POST["android"] : false;
   $matchPWString = '';
   
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // email,pw1,pw2 are all not null
-    if(!(is_null($insertEmail) && is_null($insertPass) && is_null($insertPass2))) {
-      //email does not already exist
+    // email,pw1,pw2, fname, lname are all not null
+    if(!(is_null($insertEmail) || is_null($insertPass) || is_null($insertPass2) || is_null($first_name) || is_null($last_name) || is_null($title))) {
       $selectTeacherAccount = new TeacherAccount('%','%','%', '%', $insertEmail, '%', '%', '%');
       $qJSON = json_decode($selectTeacherAccount->select(), true);
       $emailExist = isset($qJSON[1]['email']) ? $qJSON[1]['email'] : null;
+
+      //email does not already exist
       if(is_null($emailExist)) {
         //pw1 == pw2
         if(passwordMatch($insertPass, $insertPass2)) {
-         
           //good things happen here!
           $options = ['cost' => 11];
           $hashPassword = password_hash($insertPass, PASSWORD_BCRYPT, $options);
-          $selectTeacherAccount = new TeacherAccount('thisValueIsIgnored','firstname', 'lastname', $hashPassword,$insertEmail, 'undefined', 'undefined', '0');
+          $selectTeacherAccount = new TeacherAccount('thisValueIsIgnored',
+                                                      $first_name,
+                                                      $last_name,
+                                                      $hashPassword,
+                                                      $insertEmail,
+                                                      $title,
+                                                      'undefined', // this is inserted using registerConfirmation.php code below
+                                                      '0');
           echo $selectTeacherAccount->insert(); // insert method returns a json_encoded response
           include('../lib/php/registerConfirmationTeacher.php');
           addUniqueHash($connection,$insertEmail); //sets UniqueID and confirmed vars in db, custom function -TR
@@ -87,18 +97,18 @@
       }
     } // email,pw1,pw2 null
     else {
-      //android email,pw1,pw2 null
+      //android email || pw1 || pw2 || fname || lname || title are null
       if(boolval($android)){
         $response = array();
-        $response["message"] = "ERROR: email and pw cannot be null";
+        $response["message"] = "ERROR: fields cannot be null";
         $response["success"] = 0;
         echo json_encode($response);
         exit(0);
       }
-      //web email,pw1,pw2 null
+      //web email || pw1 || pw2 || fname || lname || title are null
       else{
         $response = array();
-        $response["message"] = "ERROR: email and pw cannot be null";
+        $response["message"] = "ERROR: fields cannot be null";
         $response["success"] = 0;
         echo json_encode($response);
         $matchPWString = '<div class="alert alert-danger">
