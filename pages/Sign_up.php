@@ -203,6 +203,15 @@ body {
                <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
                <h1 class="h3 mb-3 font-weight-normal">Sign up</h1>
 
+               <label for="first_name" class="sr-only">Email address</label>
+               <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name" required autofocus>
+
+               <label for="last_name" class="sr-only">Email address</label>
+               <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Last Name" required autofocus>
+
+               <label for="title" class="sr-only">Email address</label>
+               <input type="text" name="title" id="title" class="form-control" placeholder="Title" required autofocus>
+
                <label for="inputEmail" class="sr-only">Email address</label>
                <input type="email" name="inputEmail" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
 
