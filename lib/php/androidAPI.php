@@ -51,11 +51,17 @@
     $lastName = (isset($_POST['inputLastName']) ? $_POST['inputLastName'] : null);
 
     $classTitle = isset($_POST['inputClassTitle']) ? $_POST['inputClassTitle'] : null;
+    //too lazy to go and fix other usage in searchClassesForStudent.php
     $currentPage = isset($_POST['inputCurrentPage']) ? $_POST['inputCurrentPage'] : null;
+    $currentPage = isset($_POST['currentPage']) ? $_POST['currentPage'] : $currentPage;
+
     $resultsPerPage = isset($_POST['inputResultsPerPage']) ? $_POST['inputResultsPerPage'] : null;
     $pictureContent = isset($_FILES['inputUserPicture']) ? $_FILES['inputUserPicture'] : null;
     $debugResponse = array();
+
+    //too lazy to go and fix other usage in searchClassesForStudent.php
     $rowsPerPage = isset($_POST['inputRowsPerPage']) ? $_POST['inputRowsPerPage'] : null;
+    $rowsPerPage = isset($_POST['rowsPerPage']) ? $_POST['rowsPerPage'] : $rowsPerPage;
     
     
     //camera debugging
@@ -72,8 +78,6 @@
     }*/
 
     
-    
-
     $fields = array();
     $postvars;
     
@@ -84,8 +88,8 @@
         case "attemptLoginStudent":
            
             
-            //$url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_in_student.php";
-            $url = "http://192.168.1.57/pages/Sign_in_student.php";
+            $url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_in_student.php";
+            //$url = "http://192.168.1.57/pages/Sign_in_student.php";
             
             $fields = build_fields($fields, 
                          array("inputEmail", "inputPassword", "android"),
@@ -160,13 +164,14 @@
             break;
 
 	case "findEnrolledClasses":
-	     $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/hughes.php";
+         $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchClassesForStudent.php"
 	
             $fields = build_fields($fields,
-	                           array("inputCurrentPageNumber", "inputEmail","android"),
+	                           array("currentPage", "rowsPerPage","student_id","android"),
                                    $currentPage,
-	                           $email,
-				   $android);
+                                   $rowsPerPage,
+                                   $student_id,
+	                               $android);
 
             $postvars = http_build_query($fields);
 

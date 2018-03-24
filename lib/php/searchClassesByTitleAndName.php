@@ -44,7 +44,7 @@
 
     //default values for important variables for pagination
     $numrows = 0;
-    $rowsPerPage = 10;
+    $rowsPerPage = 5;
     $totalPages = 1;
     $currentPage = 1;
     
@@ -83,9 +83,9 @@
                 AND class_course_section.class_id = teaches.class_id
                 AND teaches.teacher_id = teacher_account.teacher_id";
         $result = $pdo->prepare($sql);
-        $result->bindValue(':firstName', $firstName);
-        $result->bindValue(':lastName', $lastName);
-        $result->bindValue(':title', $title);
+        $result->bindValue(':firstName', $firstName, PDO::PARAM_STR);
+        $result->bindValue(':lastName', $lastName,PDO::PARAM_STR);
+        $result->bindValue(':title', $title,PDO::PARAM_STR);
         
         try {
             $result->execute();
@@ -131,14 +131,20 @@
         echo "total pages: ";echo $totalPages; echo "\n";
         echo "numrows: ";echo $numrows; echo "\n";*/
 
-        $sql = "SELECT class_course_section.class_id, class_course_section.title,
-        class_course_section.description, class_course_section.offering, class_course_section.location
+        $sql = "SELECT class_course_section.class_id, 
+                        class_course_section.title,
+                        class_course_section.description, 
+                        class_course_section.offering, 
+                        class_course_section.location
+                        
                 FROM class_course_section, teaches, teacher_account
                 WHERE teacher_account.first_name LIKE :firstName
                 AND teacher_account.last_name LIKE :lastName
                 AND class_course_section.title LIKE :title
                 AND class_course_section.class_id = teaches.class_id
-                AND teaches.teacher_id = teacher_account.teacher_id";
+                AND teaches.teacher_id = teacher_account.teacher_id
+                LIMIT $offset, $rowsPerPage";
+        
         $result = $pdo->prepare($sql);
         $result->bindValue(':firstName', $firstName);
         $result->bindValue(':lastName', $lastName);
