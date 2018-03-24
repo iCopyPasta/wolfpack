@@ -10,8 +10,18 @@ import android.os.Bundle;
 
 public class ActiveSessionDialog extends DialogFragment {
 
+    public Bundle getInfo() {
+        return info;
+    }
+
+    public void setInfo(Bundle info) {
+        this.info = info;
+    }
+
+    private Bundle info;
+
     public interface ActiveSessionDialogListener{
-        void onPositiveClick();
+        void onPositiveClick(Bundle info);
         void onNegativeClick();
     }
 
@@ -27,7 +37,8 @@ public class ActiveSessionDialog extends DialogFragment {
                 .setPositiveButton("Join", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        mListener.onPositiveClick();
+                        if(info != null)
+                            mListener.onPositiveClick(info);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {

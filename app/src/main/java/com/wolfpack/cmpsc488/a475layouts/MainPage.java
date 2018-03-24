@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentClassPage;
 import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentPage;
 import com.wolfpack.cmpsc488.a475layouts.experiences.teacher.TeacherPage;
 
@@ -77,9 +78,9 @@ public class MainPage extends AppCompatActivity {
         Intent intent = new Intent(this, LoginPage.class);
 
         switch(id){
-            case R.id.teacherSigninButton:
+            /*case R.id.teacherSigninButton:
                 intent.putExtra(BUTTON_CALLED, USER_MODE_TEACHER);
-                break;
+                break;*/
             case R.id.studentSigninButton:
                 intent.putExtra(BUTTON_CALLED, USER_MODE_STUDENT);
                 break;
@@ -107,9 +108,12 @@ public class MainPage extends AppCompatActivity {
     }
 
     public void onToTeacher(View view){
-        Log.i("Main Page", "onToTeacher is called");
-        Intent intent = new Intent(this, TeacherPage.class);
+        Log.i("Main Page", "on??is called");
+        Intent intent = new Intent(MainPage.this, StudentClassPage.class);
+        intent.putExtra("className", "TEST CLASS");
+
         startActivity(intent);
+
     }
 
     public void onCameraExample(View view){

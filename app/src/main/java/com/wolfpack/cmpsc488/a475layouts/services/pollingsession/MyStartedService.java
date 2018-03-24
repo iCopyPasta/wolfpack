@@ -93,6 +93,7 @@ public class MyStartedService extends Service {
     }
 
      public void searchActiveSession(String inputClassId){
+         Log.i(TAG, "searchActiveSession: " + "searching for active session for classId: " + inputClassId);
          if(!isRunning)
              (new ServiceJobAsyncTask()).execute("searchActiveSession", inputClassId);
 
@@ -139,7 +140,7 @@ public class MyStartedService extends Service {
                 //TODO: set this interval in preferences
                 //any request will wait for at least 5 seconds before retrying
                 //TODO: fix this interval!
-                Thread.sleep(1000);
+                Thread.sleep(5000);
 
                 //determine which method wants to run on the background thread
                 //set that 'id' to use in onPostExecute
@@ -239,10 +240,6 @@ public class MyStartedService extends Service {
                             intent.putExtra(MY_SERVICE_QUESTION_SET_ID, questionSetId);
                             intent.putExtra(MY_SERVICE_QUESTION_SESSION_ID, questionSessionId);
 
-                            //send our response back
-                            LocalBroadcastManager.getInstance(
-                                    getApplicationContext())
-                                    .sendBroadcast(intent);
                         }
                         else{
                             Log.e(TAG, "onPostExecute: " + "result was null" );
@@ -256,6 +253,13 @@ public class MyStartedService extends Service {
 
                     } catch (Exception e){
                         Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    }
+                    finally {
+                        //send our response back
+                        LocalBroadcastManager.getInstance(
+                                getApplicationContext())
+                                .sendBroadcast(intent);
 
                     }
 
@@ -277,10 +281,6 @@ public class MyStartedService extends Service {
                             intent.putExtra(MY_SERVICE_QUESTION_ID, questionId);
                             intent.putExtra(MY_SERVICE_QUESTION_HISTORY_ID, getQuestionHistoryId);
 
-                            //send our response back
-                            LocalBroadcastManager.getInstance(
-                                    getApplicationContext())
-                                    .sendBroadcast(intent);
                         }
                         else{
                             Log.e(TAG, "onPostExecute: " + "result was null" );
@@ -294,6 +294,13 @@ public class MyStartedService extends Service {
 
                     } catch (Exception e){
                         Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    }
+                    finally {
+                        //send our response back
+                        LocalBroadcastManager.getInstance(
+                                getApplicationContext())
+                                .sendBroadcast(intent);
 
                     }
 
@@ -312,10 +319,7 @@ public class MyStartedService extends Service {
                             //perform conversation later on
                             intent.putExtra(MY_SERVICE_QUESTION_INFO_JSON, questionJSON);
 
-                            //send our response back
-                            LocalBroadcastManager.getInstance(
-                                    getApplicationContext())
-                                    .sendBroadcast(intent);
+
                         }
                         else{
                             Log.e(TAG, "onPostExecute: " + "result was null" );
@@ -329,6 +333,12 @@ public class MyStartedService extends Service {
 
                     } catch (Exception e){
                         Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    } finally {
+                        //send our response back
+                        LocalBroadcastManager.getInstance(
+                                getApplicationContext())
+                                .sendBroadcast(intent);
 
                     }
 
@@ -351,11 +361,6 @@ public class MyStartedService extends Service {
                             //perform conversation later on
                             intent.putExtra(MY_SERVICE_ANSWER_MESSAGE, message);
                             intent.putExtra(MY_SERVICE_ANSWER_STATUS, sukmoonChang);
-
-                            //send our response back
-                            LocalBroadcastManager.getInstance(
-                                    getApplicationContext())
-                                    .sendBroadcast(intent);
                         }
                         else{
                             Log.e(TAG, "onPostExecute: " + "result was null" );
@@ -370,6 +375,11 @@ public class MyStartedService extends Service {
                     } catch (Exception e){
                         Log.e(TAG, "onPostExecute: " + e.getMessage() );
 
+                    }finally {
+                        //send our response back
+                        LocalBroadcastManager.getInstance(
+                                getApplicationContext())
+                                .sendBroadcast(intent);
                     }
 
                 } break;
