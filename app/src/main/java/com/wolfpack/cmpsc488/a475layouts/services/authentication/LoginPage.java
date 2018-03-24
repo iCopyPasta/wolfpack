@@ -72,6 +72,7 @@ public class LoginPage extends AppCompatActivity {
 
         Intent intent = getIntent();
         mode = intent.getStringExtra(MainPage.BUTTON_CALLED);
+        Log.i(TAG, "onCreate: MODE = " + mode);
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -316,6 +317,8 @@ public class LoginPage extends AppCompatActivity {
                 editor.putString(getString(R.string.STUDENT_ID), success.getStudentId());
 
                 editor.apply(); //dedicate to persistent storage in background thread
+
+                Log.i(TAG, "onPostExecute: STUDENT ID = " + success.getStudentId());
 
                 //FEEDBACK FROM SERVER
                 //TODO: remove later on
