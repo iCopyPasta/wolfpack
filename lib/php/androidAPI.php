@@ -43,25 +43,43 @@
     //list of all aggregated POST variables for android usage
     $android = true;
     $methodName = isset($_POST['inputMethodName']) ? $_POST['inputMethodName'] : null;
+
+    //user information
     $email = isset($_POST['inputEmail']) ? $_POST['inputEmail'] : null;
     $password = isset($_POST['inputPassword']) ? $_POST['inputPassword'] : null;
     $confirmPassword = isset($_POST['inputConfirmPassword']) ? $_POST['inputConfirmPassword'] : null;
     $userTitle = isset($_POST["inputUserTitle"]) ? $_POST["inputUserTitle"]: null;
     $firstName = (isset($_POST['inputFirstName']) ? $_POST['inputFirstName'] : null);
     $lastName = (isset($_POST['inputLastName']) ? $_POST['inputLastName'] : null);
-
+   
+    //search information
     $classTitle = isset($_POST['inputClassTitle']) ? $_POST['inputClassTitle'] : null;
+
+    //pagination variables
     //too lazy to go and fix other usage in searchClassesForStudent.php
     $currentPage = isset($_POST['inputCurrentPage']) ? $_POST['inputCurrentPage'] : null;
     $currentPage = isset($_POST['currentPage']) ? $_POST['currentPage'] : $currentPage;
 
     $resultsPerPage = isset($_POST['inputResultsPerPage']) ? $_POST['inputResultsPerPage'] : null;
-    $pictureContent = isset($_FILES['inputUserPicture']) ? $_FILES['inputUserPicture'] : null;
-    $debugResponse = array();
 
     //too lazy to go and fix other usage in searchClassesForStudent.php
     $rowsPerPage = isset($_POST['inputRowsPerPage']) ? $_POST['inputRowsPerPage'] : null;
     $rowsPerPage = isset($_POST['rowsPerPage']) ? $_POST['rowsPerPage'] : $rowsPerPage;
+
+    //polling variables
+    $inputStudentId = isset($_POST['inputStudentId']) ? $_POST['inputStudentId'] : null;
+    $inputClassId = isset($_POST['inputClassId']) ? $_POST['inputClassId'] : null;
+    $inputQuestionSetId = isset($_POST['inputQuestionSetId']) ? $_POST['inputQuestionSetId'] : null;
+    $inputQuestionId = isset($_POST['inputQuestionId']) ? $_POST['inputQuestionId'] : null;
+    $inputSessionId = isset($_POST['inputSessionId']) ? $_POST['inputSessionId'] : null;
+    $inputQuestionHistoryId = isset($_POST['inputQuestionHistoryId']) ? $_POST['inputQuestionHistoryId'] : null;
+    $inputAnswerType = isset($_POST['inputAnswerType']) ? $_POST['inputAnswerType'] : null;
+    $inputAnswer = isset($_POST['inputAnswer']) ? $_POST['inputAnswer'] : null;
+
+
+    //misc
+    $pictureContent = isset($_FILES['inputUserPicture']) ? $_FILES['inputUserPicture'] : null;
+    $debugResponse = array();
     
     
     //camera debugging
@@ -163,8 +181,8 @@
 
             break;
 
-	case "findEnrolledClasses":
-         $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchClassesForStudent.php"
+	     case "findEnrolledClasses":
+            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchClassesForStudent.php"
 	
             $fields = build_fields($fields,
 	                           array("currentPage", "rowsPerPage","student_id","android"),
@@ -185,6 +203,74 @@
             echo json_encode($response);
             exit(1);
             
+            break;
+            
+        case "searchActiveSession":
+            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchActiveSession.php"
+            $url = "http://192.168.1.57/lib/php/polling/searchActiveSession.php";
+	
+            $fields = build_fields($fields,
+	                           array("inputClassId","android"),
+                                   $inputClassId,
+	                               $android);
+
+            $postvars = http_build_query($fields);
+
+            build_curlreq($fields, $postvars, $url);
+            break;
+            
+        case "searchActiveQuestion":
+            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/searchActiveQuestion.php";
+            $url = "http://192.168.1.57/lib/php/polling/searchActiveQuestion.php";
+            
+            $fields = build_fields($fields, 
+                         array("inputQuestionSetId","android"),
+                        $inputQuestionSetId,
+                        $android);
+            
+            $postvars = http_build_query($fields);
+
+            build_curlreq($fields, $postvars, $url);
+
+            break;
+            
+        case "searchLiveQuestioninfo":
+            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/searchLiveQuestioninfo.php";
+            $url = "http://192.168.1.57/lib/php/polling/searchLiveQuestioninfo.php";
+            
+            $fields = build_fields($fields, 
+                         array("inputQuestionId","android"),
+                        $inputQuestionId,
+                        $android);
+            
+            $postvars = http_build_query($fields);
+
+            build_curlreq($fields, $postvars, $url);
+
+            break;
+            
+        case "submitAnswer":
+            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/submitAnswer.php";
+            $url = "http://192.168.1.57/lib/php/polling/submitAnswer.php";
+            
+            $fields = build_fields($fields, 
+                         array("inputStudentId",
+                               "inputSessionId",
+                               "inputQuestionHistoryId",
+                               "inputAnswerType",
+                               "inputAnswer",
+                               "android"),
+                        $inputStudentId,
+                        $inputSessionId,
+                        $inputQuestionHistoryId,
+                        $inputAnswerType,
+                        $inputAnswer,
+                        $android);
+            
+            $postvars = http_build_query($fields);
+
+            build_curlreq($fields, $postvars, $url);
+
             break;
             
     }
