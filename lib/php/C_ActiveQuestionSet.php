@@ -39,10 +39,12 @@ include_once('isIdExistFunctions.php');
   class ActiveQuestionSet{
     private $class_id;
     private $question_set_Id;
+    private $question_session_id;
 
-    function __construct($class_id, $question_set_Id) {
+    function __construct($class_id, $question_set_Id,$question_session_id) {
       $this->__set('class_id',$class_id);
       $this->__set('question_set_Id',$question_set_Id);
+      $this->__set('question_session_id',$question_session_id);
     }
 
     // magical get
@@ -67,8 +69,8 @@ include_once('isIdExistFunctions.php');
       $pdo = $connection->getConnection();
 
       $sql = "INSERT INTO active_question_set
-                              (class_id, question_set_Id)
-                              VALUES (:class_id, :question_set_Id)";
+                              (class_id, question_set_Id,question_session_id)
+                              VALUES (:class_id, :question_set_Id, :question_session_id)";
       $stmt = $pdo->prepare($sql);
       //include_once('isIdExistFunctions.php');
       $isClassIdExist = isClassIdExist($this->__get('class_id'));
@@ -78,7 +80,7 @@ include_once('isIdExistFunctions.php');
         if($isQuestionSetIdExist){
           // classId and questionSetId exist; attempt to insert
           try{
-            $stmt->execute(['class_id' => $this->class_id, 'question_set_Id' => $this->question_set_Id, ]);
+            $stmt->execute(['class_id' => $this->class_id, 'question_set_Id' => $this->question_set_Id, 'question_session_id' => $this->question_session_id,]);
           }catch (Exception $e){
             // fail JSON response
             $response = array();
@@ -117,10 +119,11 @@ include_once('isIdExistFunctions.php');
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
-      $sql = "DELETE FROM active_question_set WHERE class_id = :class_id AND question_set_id = :question_set_Id";
+      $sql = "DELETE FROM active_question_set WHERE class_id = :class_id AND question_set_id = :question_set_Id AND question_session_id = :question_session_id";
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':class_id', $this->class_id);
       $stmt->bindValue(':question_set_Id', $this->question_set_Id);
+      $stmt->bindValue(':question_session_id', $this->question_session_id);
 
       $isClassIdExist = isClassIdExist($this->__get('class_id'));
       $isQuestionSetIdExist = isQuestionSetIdExist($this->__get('question_set_Id'));
@@ -129,7 +132,7 @@ include_once('isIdExistFunctions.php');
         if($isQuestionSetIdExist){
           // classId and questionSetId exist; attempt to insert
           try{
-            $stmt->execute(['class_id' => $this->class_id, 'question_set_Id' => $this->question_set_Id, ]);
+            $stmt->execute(['class_id' => $this->class_id, 'question_set_Id' => $this->question_set_Id, 'question_session_id' => $this->question_session_id,]);
           }catch (Exception $e){
             // fail JSON response
             $response = array();
@@ -172,11 +175,13 @@ include_once('isIdExistFunctions.php');
       $sql = "SELECT class_id, question_set_Id
               FROM active_question_set
               WHERE class_id LIKE :class_id
-                AND question_set_Id LIKE :question_set_Id";
+                AND question_set_Id LIKE :question_set_Id
+                AND question_session_id LIKE question_session_id";
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':class_id', $this->class_id);
       $stmt->bindValue(':question_set_Id', $this->question_set_Id);
+      $stmt->bindValue(':question_session_id', $this->question_session_id);
 
       try{
         $stmt->execute();
