@@ -87,10 +87,20 @@ public class StudentSessionPage extends AppCompatActivity {
 
             if(info != null){
                 //force into StudentQuestionActivePage
-                Toast.makeText(getApplicationContext(), "QUESTION FOUND", Toast.LENGTH_SHORT)
-                        .show();
+                Intent activeQuestionIntent = new Intent(StudentSessionPage.this,
+                        StudentQuestionActivePage.class);
 
-                
+                activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_ID,
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_ID));
+
+                activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID,
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID));
+
+                activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID
+                        ,questionSessionId);
+
+                startActivity(activeQuestionIntent);
+
             }
             else{
                 Log.i(TAG, "onReceive: " + "no active questionId for " +
