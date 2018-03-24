@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.wolfpack.cmpsc488.a475layouts.R;
@@ -81,6 +82,8 @@ public class StudentQuestionActivePage extends AppCompatActivity {
 
                 answerType = questionInformation.getQuestionType();
                 Log.i(TAG, "onReceive: " + questionInformation.getDescription());
+                Toast.makeText(StudentQuestionActivePage.this, "GOT QUESTION!",
+                        Toast.LENGTH_LONG).show();
 
             }
             else{
