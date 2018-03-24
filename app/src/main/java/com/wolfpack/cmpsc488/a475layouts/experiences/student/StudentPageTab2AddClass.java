@@ -17,15 +17,12 @@ import java.util.ArrayList;
 
 import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
 
-import okhttp3.ResponseBody;
-import pagination.ILoadmore;
-import pagination.PaginationAdapter;
-import pagination.models.SearchClassResult;
-import pagination.models.SearchResultSection;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.ILoadmore;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.PaginationAdapter;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.SearchClassResult;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.SearchResultSection;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
 

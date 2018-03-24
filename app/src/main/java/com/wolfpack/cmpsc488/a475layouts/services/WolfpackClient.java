@@ -8,13 +8,12 @@ import com.wolfpack.cmpsc488.a475layouts.services.data_retrieval.BasicWolfpackRe
 
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
-import pagination.models.ClassListResult;
-import pagination.models.ClassResult;
-import pagination.models.SearchClassResult;
-import pagination.models.SearchResultSection;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.ClassListResult;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.ClassResult;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.SearchClassResult;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.SearchResultSection;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -126,5 +125,15 @@ public interface WolfpackClient{
             @Field("inputUserEmail") String email,
             @Field("inputMethodName") String methodName
     );
+
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<BasicWolfpackResponse> enrollForClass(
+            @Field("inputStudentId") String  student_id,
+            @Field("inputClassId") String class_id,
+            @Field("inputMethodName") String methodName
+    );
+
+
 
 }

@@ -1,4 +1,4 @@
-package pagination;
+package com.wolfpack.cmpsc488.a475layouts.services.pagination;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;

@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,10 +23,9 @@ import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
 
 import java.util.ArrayList;
 
-import pagination.ILoadmore;
-import pagination.models.ClassListResult;
-import pagination.models.ClassResult;
-import retrofit2.Call;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.ClassListResult;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.ClassResult;
+
 import retrofit2.Response;
 
 

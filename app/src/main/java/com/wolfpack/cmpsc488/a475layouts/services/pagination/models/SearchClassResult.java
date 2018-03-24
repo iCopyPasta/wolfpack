@@ -1,4 +1,4 @@
-package pagination.models;
+package com.wolfpack.cmpsc488.a475layouts.services.pagination.models;
 
 import java.util.ArrayList;
 import java.util.List;

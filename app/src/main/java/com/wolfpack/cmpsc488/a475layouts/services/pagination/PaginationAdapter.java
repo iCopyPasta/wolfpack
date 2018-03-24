@@ -1,4 +1,4 @@
-package pagination;
+package com.wolfpack.cmpsc488.a475layouts.services.pagination;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,15 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
-import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentPage;
 import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
-import pagination.models.SearchResultSection;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.SearchResultSection;
+import com.wolfpack.cmpsc488.a475layouts.services.student_class_management.EnrollClassDialog;
+
 import retrofit2.Call;
 
 /**
@@ -31,6 +30,10 @@ import retrofit2.Call;
  */
 
 public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    public interface onClassSelectToEnrollListener{
+        void onClassSelected(String student_id, String class_id);
+    }
 
     private static final int VIEW_TYPE_ITEM = 0, VIEW_TYPE_LOADING = 1;
     private static final String TAG = "PaginationAdapter";
@@ -42,6 +45,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private int serverTotal = Integer.MAX_VALUE;
     private int lastVisibleItem, totalItemCount;
     private int pageNumber = 1;
+    private onClassSelectToEnrollListener mListener;
 
     public PaginationAdapter(
             RecyclerView recyclerView,
@@ -49,6 +53,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ArrayList<SearchResultSection> items){
 
         this.activity = activity;
+        this.mListener = (onClassSelectToEnrollListener) activity;
         this.items = items;
 
         final LinearLayoutManager linearLayoutManager =
@@ -199,7 +204,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener{
+            implements View.OnClickListener {
+
         Boolean isRunning = false;
         String class_id;
         TextView title;
@@ -227,54 +233,19 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     view.getContext().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
             //String student_id = sharedPref.getString(view.getContext().getString(0), "");
-            String student_id = "test";
+            String student_id = "24";
 
-            if(!isRunning){
+            mListener.onClassSelected(student_id,class_id);
+
+
+            /*if(!isRunning){
                 isRunning = true;
                 new AsyncEnrollBackgroundTask().execute(student_id,class_id);
-            }
+            }*/
 
         }
 
-        class AsyncEnrollBackgroundTask extends AsyncTask<String, Void, Boolean>{
 
-            @Override
-            protected Boolean doInBackground(String... strings) {
-
-
-                try{
-                    WolfpackClient client = WolfpackClient.retrofit.create(WolfpackClient.class);
-                    Call<ResponseBody> call = client.testEnrollInClass(strings[0], strings[1],"enrollInClass");
-                    //call.execute();
-
-
-                }
-                 catch (IllegalStateException e) {
-                    Log.e(TAG, e.getMessage());
-                    return false;
-
-                } catch (Exception e){
-                    Log.e(TAG, e.getMessage());
-                    return false;
-                }
-
-                /*catch(java.net.ConnectException e){
-                    Log.e(TAG, e.getMessage());
-                    Toast.makeText(itemView.getContext(), "could not find server", Toast.LENGTH_SHORT).show();
-                    return false;
-                }*/
-
-                return true;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean status){
-                if(status){
-                    isRunning = false;
-                    Toast.makeText(itemView.getContext(), "fake enrolled!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
     }
 
 
