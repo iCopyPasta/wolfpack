@@ -135,6 +135,31 @@
           var activeQuestionId = null;
           var questionSessionID;
           var currentQuestionHistoryID;
+          
+          
+          function postSync(url,params) {
+               var xhttp = new XMLHttpRequest();
+               xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    return this.responseText;
+                    }
+                }
+               
+                xhttp.open("POST", url, false); //THIS IS DUMB
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send(params);
+                return xhttp.onreadystatechange();
+            }
+          
+          
+          function post(url,params) {
+               var xhttp = new XMLHttpRequest();
+               
+                xhttp.open("POST", url, true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send(params);
+            }
+          
         
         function setPollActive() { //session
             var i = 0;
@@ -164,10 +189,10 @@
             var params = "class_id="+class_id+"&question_set_id="+question_set_id;  //create the session object
             questionSessionID = postSync('../lib/php/generateQuestionSession.php',params);
             
-            //console.log("response from server: "+questionSessionID);
+            console.log("response from server: "+questionSessionID);
             
             var activity = 1;
-            params = "class_id="+class_id+"&question_set_id="+question_set_id+"&activity="+activity; //TODO: modify DB and add question session ID to this table to let student retrieve it
+            params = "class_id="+class_id+"&question_set_id="+question_set_id+"&activity="+activity+"&question_session_id="+questionSessionID; 
            
             post('../lib/php/toggleActiveSessionWeb.php',params);
             
@@ -176,7 +201,7 @@
           
           
         function setPollInactive() { //session
-            
+
             if (activeQuestionId != null) {
                 stopPoll(activeQuestionId);
             }
@@ -203,8 +228,8 @@
                 var class_id = <?php echo $class_id; ?>;
                 var question_set_id = <?php echo $question_set_id; ?>;
                 var activity = 0;
-                var params = "class_id="+class_id+"&question_set_id="+question_set_id+"&activity="+activity;
-                console.log(params);
+                var params = "class_id="+class_id+"&question_set_id="+question_set_id+"&activity="+activity+"&question_session_id="+questionSessionID;
+                //console.log(params);
                 post('../lib/php/toggleActiveSessionWeb.php',params);
 
                 isPollActive = 0;
@@ -246,7 +271,7 @@
               
               
               
-             params = "question_id="+question_id+"&question_set_id="+question_set_id+"&activity="+activity; //TODO: add currentQuestionHistoryID into this table by modifying database so that the student can retrieve it
+             params = "question_id="+question_id+"&question_set_id="+question_set_id+"&activity="+activity+"&question_history_id="+currentQuestionHistoryID;
              console.log(params);
              post('../lib/php/toggleActiveQuestionWeb.php',params); 
               
@@ -281,7 +306,7 @@
                 var question_id = buttonId;
                 var question_set_id = <?php echo $question_set_id; ?>;
                 var activity = 0;
-                var params = "question_id="+question_id+"&question_set_id="+question_set_id+"&activity="+activity;
+                var params = "question_id="+question_id+"&question_set_id="+question_set_id+"&activity="+activity+"&question_history_id="+currentQuestionHistoryID;
                 console.log(params);
                 post('../lib/php/toggleActiveQuestionWeb.php',params); 
 
@@ -291,28 +316,7 @@
         
         
         
-        function postSync(url,params) {
-               var xhttp = new XMLHttpRequest();
-               xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    return this.responseText;
-                    }
-                }
-               
-                xhttp.open("POST", url, false);
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.send(params);
-                return xhttp.onreadystatechange();
-            }
-          
-          
-          function post(url,params) {
-               var xhttp = new XMLHttpRequest();
-               
-                xhttp.open("POST", url, true);
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.send(params);
-            }
+        
           
           
           
@@ -329,6 +333,10 @@
             }
             
                 
+        }
+        
+        window.onunload = function() {
+            setPollInactive();
         }
           
           
