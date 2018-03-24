@@ -47,8 +47,6 @@ public interface WolfpackClient{
 
     String FEED = "/lib/php/androidAPI.php";
 
-
-
     Gson gson = new GsonBuilder()
             .setLenient()
             .create();
@@ -72,7 +70,15 @@ public interface WolfpackClient{
 
     @FormUrlEncoded
     @POST(FEED)
-    Call<LoginDetails> attemptLogin(
+    Call<LoginDetails> attemptLoginStudent(
+            @Field("inputMethodName") String methodName,
+            @Field("inputEmail") String email,
+            @Field("inputPassword") String password
+    );
+
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<LoginDetails> attemptLoginTeacher(
             @Field("inputMethodName") String methodName,
             @Field("inputEmail") String email,
             @Field("inputPassword") String password
@@ -82,10 +88,12 @@ public interface WolfpackClient{
     @POST(FEED)
     Call<LoginDetails> attemptSignUp(
             @Field("inputMethodName") String methodName,
+            @Field("inputUserTitle") String inputTitle,
             @Field("inputFirstName") String first_name,
             @Field("inputLastName") String last_name,
             @Field("inputEmail") String email,
-            @Field("inputPassword") String password
+            @Field("inputPassword") String password,
+            @Field("inputConfirmPassword") String confirmPassword
     );
 
     @FormUrlEncoded

@@ -22,7 +22,8 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
+    <string name="prompt_password">Password</string>
+    <string name="confirmPassword">Confirm Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
@@ -95,6 +96,7 @@
     <string name="SKIP_LOGIN">SKIP_LOGIN</string>
     <string name="USER_MODE">USER_MODE</string>
     <string name="USER_EMAIL">USER_EMAIL</string>
+    <string name="STUDENT_ID">STUDENT_ID</string>
 
 
 
@@ -102,6 +104,8 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="classTitle">Class Title</string>
     <string name="Teacher_Name">Teacher Name</string>
+    <string name="error_authentication_failure">Login failed</string>
+    <string name="title_hint">Title</string>
 
 
 </resources>
