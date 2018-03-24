@@ -37,10 +37,12 @@
   class ActiveQuestion{
     private $question_set_id;
     private $question_id;
+    private $question_history_id;
 
-    function __construct($question_set_id, $question_id) {
+    function __construct($question_set_id, $question_id, $question_history_id) {
       $this->__set('question_set_id',$question_set_id);
       $this->__set('question_id',$question_id);
+      $this->__set('question_history_id',$question_history_id);
     }
 
     // magical get
@@ -65,9 +67,10 @@
       $pdo = $connection->getConnection();
 
       $sql = "INSERT INTO active_question
-                              (question_set_id, question_id)
-                              VALUES (:question_set_id, :question_id)";
+                              (question_set_id, question_id,question_history_id)
+                              VALUES (:question_set_id, :question_id, :question_history_id)";
       $stmt = $pdo->prepare($sql);
+      
       include_once('isIdExistFunctions.php');
       $isQuestionSetIdExist = isQuestionSetIdExist($this->__get('question_set_id'));
       $isQuestionIdExist = isQuestionIdExist($this->__get('question_id'));
@@ -76,7 +79,7 @@
         if($isQuestionIdExist){
           // classId and sectionId exist; attempt to insert
           try{
-            $stmt->execute(['question_set_id' => $this->question_set_id, 'question_id' => $this->question_id]);
+            $stmt->execute(['question_set_id' => $this->question_set_id, 'question_id' => $this->question_id,'question_history_id' => $this->question_history_id,]);
           }catch (Exception $e){
             // fail JSON response
             $response = array();
@@ -117,11 +120,13 @@
       $sql = "SELECT question_set_id, question_id
               FROM active_question
               WHERE question_set_id LIKE :question_set_id
-                AND question_id LIKE :question_id";
+                AND question_id LIKE :question_id
+                AND question_history_id LIKE :question_history_id";
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':question_set_id', $this->question_set_id);
       $stmt->bindValue(':question_id', $this->question_id);
+      $stmt->bindValue(':question_history_id', $this->question_history_id);
 
       try{
         $stmt->execute();
@@ -149,13 +154,15 @@
       //$question_set_id, $question_id
       $sql = "DELETE FROM active_question
                 WHERE question_set_id LIKE :question_set_id
-                AND question_id LIKE :question_id";
+                AND question_id LIKE :question_id
+                AND question_history_id LIKE :question_history_id";
       $stmt = $pdo->prepare($sql);
       include_once('isIdExistFunctions.php');
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':question_set_id', $this->question_set_id);
       $stmt->bindValue(':question_id', $this->question_id);
+      $stmt->bindValue(':question_history_id', $this->question_history_id);
 
 //      $isQuestionSetIdExist = isQuestionSetIdExist($this->__get('question_set_id'));
 //      $isQuestionIdExist = isQuestionIdExist($this->__get('question_id'));

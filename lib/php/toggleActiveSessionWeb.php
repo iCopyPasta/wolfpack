@@ -9,8 +9,9 @@
     $class_id = $_POST["class_id"];
     $question_set_id = $_POST["question_set_id"];
     $activity = $_POST["activity"];
+    $question_session_id = $_POST["question_session_id"];
    
-    $ActiveQuestionSetObject = new ActiveQuestionSet($class_id,$question_set_id);
+    $ActiveQuestionSetObject = new ActiveQuestionSet($class_id,$question_set_id,$question_session_id);
 
     if ($activity == 0) {
         $ActiveQuestionSetObject->delete();
