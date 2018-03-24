@@ -161,11 +161,9 @@
             }
           
         
-        function setPollActive() { //session
+        function setPollActive()
+        { //session
             var i = 0;
-            
-        
-            
             
             var buttons = document.getElementsByName("HELLO");
             var mainButton = document.getElementById("togglePollLive");
@@ -200,7 +198,8 @@
         }
           
           
-        function setPollInactive() { //session
+        function setPollInactive()  
+        { //session
 
             if (activeQuestionId != null) {
                 stopPoll(activeQuestionId);
@@ -234,9 +233,7 @@
 
                 isPollActive = 0;
             }
-            
-            
-        }  
+        }
           
           function startPoll(buttonId) { //question
             var i = 0;
@@ -245,52 +242,50 @@
             
             console.log("number of buttons: "+buttons.length);
             
-            for (i = 0; i < buttons.length; ++i) {
+            for (i = 0; i < buttons.length; ++i)
+            {
                 console.log("iteration");
-                if (buttons[i].id != thisButton.id) {
+                if (buttons[i].id != thisButton.id)
+                {
                     buttons[i].className = "btn btn-lg btn-block btn-inactive";
                     buttons[i].disabled = true;
                 }
             }
-              
-              
             
             thisButton.className = "btn btn-danger btn-lg btn-block";
-             thisButton.setAttribute('onclick',"stopPoll("+buttonId+")");
-
-             thisButton.innerHTML = "Set Question Inactive";
+            thisButton.setAttribute('onclick',"stopPoll("+buttonId+")");
+            thisButton.innerHTML = "Set Question Inactive";
             
-             var question_id = buttonId;
-             var question_set_id = <?php echo $question_set_id; ?>;
-             var activity = 1;
+            var question_id = buttonId;
+            var question_set_id = <?php echo $question_set_id; ?>;
+            var activity = 1;
               
+            var params = "session_id="+questionSessionID+"&question_id="+question_id;  //create the session object
+            currentQuestionHistoryID = postSync('../lib/php/generateQuestionHistoryEntry.php',params);  
               
-              
-             var params = "session_id="+questionSessionID+"&question_id="+question_id;  //create the session object
-             currentQuestionHistoryID = postSync('../lib/php/generateQuestionHistoryEntry.php',params);  
-              
-              
-              
-             params = "question_id="+question_id+"&question_set_id="+question_set_id+"&activity="+activity+"&question_history_id="+currentQuestionHistoryID;
-             console.log(params);
-             post('../lib/php/toggleActiveQuestionWeb.php',params); 
-              
-              
-              activeQuestionId = buttonId;
+            params = "question_id="+question_id+"&question_set_id="+question_set_id+"&activity="+activity+"&question_history_id="+currentQuestionHistoryID;
+            console.log(params);
+            post('../lib/php/toggleActiveQuestionWeb.php',params); 
+               
+            activeQuestionId = buttonId;
         }  
           
-          function stopPoll(buttonId) { //question
+          function stopPoll(buttonId)
+        { //question
               
-            if (activeQuestionId != null) {  
+            if (activeQuestionId != null)
+            {  
                 var i = 0;
                 var buttons = document.getElementsByName("HELLO");
                 var thisButton = document.getElementById(buttonId);
 
                 console.log("number of buttons: "+buttons.length);
 
-                for (i = 0; i < buttons.length; ++i) {
+                for (i = 0; i < buttons.length; ++i)
+                {
                     console.log("iteration");
-                    if (buttons[i].id != thisButton.id) {
+                    if (buttons[i].id != thisButton.id)
+                    {
                         buttons[i].className = "btn btn-lg btn-block btn-success";
                         buttons[i].disabled = false;
                     }
@@ -311,36 +306,29 @@
                 post('../lib/php/toggleActiveQuestionWeb.php',params); 
 
                 activeQuestionId = null;
-                }  
-          }
+            }  
+          }          
         
-        
-        
-        
-          
-          
-          
-          
-        
-        window.onbeforeunload = function() { //clear the database if the user closes the page without closing session first
-            if (isPollActive == 1) {
-                if (!confirm("Are you sure you wish to leave the page? You have an active poll running.")) {
+        //clear the database if the user closes the page without closing session first
+        window.onbeforeunload = function()
+        { 
+            if (isPollActive == 1)
+            {
+                if (!confirm("Are you sure you wish to leave the page? You have an active poll running."))
+                {
                     return false;
                 }
-                else {
+                else
+                {
                     setPollInactive();
                 }
-            }
-            
-                
+            }                
         }
         
         window.onunload = function() {
             setPollInactive();
         }
-          
-          
-          
+            
         </script>
 
       <?php
