@@ -126,7 +126,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Signin Template for Bootstrap</title>
+    <title>Student Sign Up</title>
 
     <!-- Bootstrap core CSS
     <link href="../../../../dist/css/bootstrap.min.css" rel="stylesheet">-->
