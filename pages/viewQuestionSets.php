@@ -5,7 +5,7 @@
         // logged in
         
         } else {
-        // not logged in as student
+        // not logged in as teacher
         header("Location: ..\index.php");
         }
 
