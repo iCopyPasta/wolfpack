@@ -80,9 +80,9 @@ public class StudentPageTab1Classlist extends Fragment {
             footView = li.inflate(R.layout.listview_foot_view, null);
             Log.i(TAG, "footView = "+footView);
 
-            //populate list view
-            // TODO: Use database to find classes that the student is enrolled
-            //       Currently it is displaying a hard coded list for demonstrating purposes
+        //populate list view
+        // TODO: Use database to find classes that the student is enrolled
+        //       Currently it is displaying a hard coded list for demonstrating purposes
 
             classlist = new ArrayList<>();
 
@@ -119,11 +119,21 @@ public class StudentPageTab1Classlist extends Fragment {
                     Log.i(TAG, "in mListViewClasses onScroll");
                     Log.i(TAG, "getLastVisiblePosition() = " + view.getLastVisiblePosition() +
                             "\ntotalItemCount == " + (totalItemCount - 1) +
-                            "\nisLoading == " + isLoading);
+                            "\nisLoading == " + isLoading +
+                            "\nclasslist.size() = " + classlist.size() +
+                            "\nvisibleThreshold = " + visibleThreshold);
 
                     //if at the bottom then load more results
-                    if ((view.getLastVisiblePosition() == totalItemCount - 1 && mListViewClasses.getCount() >= StudentPageTab1Classlist.this.totalItemCount && !isLoading) || isInitialState) {
-                        Log.i(TAG, "about to start background task");
+                    if (!isLoading &&
+                            mListViewClasses.getCount() >= StudentPageTab1Classlist.this.totalItemCount &&
+                            view.getLastVisiblePosition() == totalItemCount - 1
+                            ){
+
+//                            view.getLastVisiblePosition() < 8 || (
+//                            view.getLastVisiblePosition() == totalItemCount - 1 &&
+//                            mListViewClasses.getCount() >= StudentPageTab1Classlist.this.totalItemCount
+//                            && !isLoading)) {
+                        Log.i(TAG, "loading more results");
                         isLoading = true;
                         isInitialState = false;
                         currentPage = classlist.size() / visibleThreshold;
@@ -155,6 +165,8 @@ public class StudentPageTab1Classlist extends Fragment {
 
     private class MyAdapter extends BaseAdapter{
 
+        final String TAG = "MyAdapter";
+
         private Context context;
         //private ArrayList<ClassResult> classlist;
 /*        private ArrayList<ClassResult> list;
@@ -173,7 +185,7 @@ public class StudentPageTab1Classlist extends Fragment {
 
         @Override
         public int getCount() {
-            return classlistTemp.length;
+            return mListViewClasses.getCount();
         }
 
         @Override
@@ -203,8 +215,8 @@ public class StudentPageTab1Classlist extends Fragment {
             try {
                 Log.i(TAG, "class_name = "+classlist.get(i).getCourseDescription());
                 Log.i(TAG, "teacher_name = " +classlist.get(i).getCourseInstructor());
-                class_name.setText(classlist.get(i).getCourseInstructor());
-                teacher_name.setText(classlist.get(i).getCourseDescription());
+                class_name.setText(classlist.get(i).getCourseDescription());
+                teacher_name.setText(classlist.get(i).getCourseInstructor());
             }
             catch(IndexOutOfBoundsException e){
                 Log.e(TAG, e.getMessage());
@@ -216,10 +228,8 @@ public class StudentPageTab1Classlist extends Fragment {
 
 
 
-
-
-
-    class ClassesResultBackgroundTask extends AsyncTask<Object, Void, ClassListResult<ClassResult>>{
+    @SuppressLint("StaticFieldLeak")
+    private class ClassesResultBackgroundTask extends AsyncTask<Object, Void, ClassListResult<ClassResult>>{
 
         private static final String TAG = "ClassesResultTask";
 
@@ -241,6 +251,8 @@ public class StudentPageTab1Classlist extends Fragment {
 
                 Log.i(TAG, "currentPage = "+ (int) params[0] +
                         "\nemail = " + (String) params[1]);
+
+                Thread.sleep(1500);
 
                 Call<ClassListResult<ClassResult>> call = client.findEnrolledClasses(
                         (int) params[0],
@@ -278,10 +290,32 @@ public class StudentPageTab1Classlist extends Fragment {
                 Log.i(TAG, result.toString());
                 //update data adapter and UI
                 mListViewClasses.setVisibility(View.VISIBLE);
-                classlist.addAll((ArrayList<ClassResult>) result.getResults());
+                //classlist.addAll((ArrayList<ClassResult>) result.getResults());
+                classlist.add(result.getResults().get(0));
+                adapter.notifyDataSetChanged();
+                //classlist.add(result.getResults().get(1));
+                //adapter.notifyDataSetChanged();
+                //classlist.add(result.getResults().get(2));
+                //adapter.notifyDataSetChanged();
+                //classlist.add(result.getResults().get(3));
+                //adapter.notifyDataSetChanged();
+                //classlist.add(result.getResults().get(4));
+                //adapter.notifyDataSetChanged();
+
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < classlist.size(); i++){
+                    sb.append("classlist[" + i + "] = " + classlist.get(i) + "\n");
+                }
+
+                Log.i(TAG, sb.toString());
+
                 adapter.notifyDataSetChanged();
 
-                totalItemCount = result.getTotalResults();
+                //totalItemCount = result.getTotalResults();
+                //totalItemCount = result.getCurrentPage() * 5;
+                totalItemCount += 5;
+                totalItemCount = 1;
+
 
                 //remove loading view after update listview
                 mListViewClasses.removeFooterView(footView);
