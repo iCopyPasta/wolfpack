@@ -34,9 +34,9 @@ public interface WolfpackClient{
     //Reference for converting JSON to POJO
     //http://www.jsonschema2pojo.org/
 
-    String BASE_URL = "http://wolfpack.cs.hbg.psu.edu";
+    String BASE_URL = "http://wolfpack.cs.hbg.psu.edu/";
 
-    String FEED = "/pages/androidAPI.php";
+    String FEED = "/lib/php/androidAPI.php";
 
 
     Gson gson = new GsonBuilder()
@@ -98,8 +98,10 @@ public interface WolfpackClient{
     @FormUrlEncoded
     @POST(FEED)
     Call<ClassListResult<ClassResult>> findEnrolledClasses(
-            @Field("inputCurrentPageNumber") int currentPage,
-            @Field("inputUserEmail") String email,
+            @Field("currentPage") int currentPage,
+            @Field("rowsPerPage") int rowsPerPage,
+            @Field("student_id") int student_id,
+            //@Field("inputUserEmail") String email,
             @Field("inputMethodName") String methodName
     );
 

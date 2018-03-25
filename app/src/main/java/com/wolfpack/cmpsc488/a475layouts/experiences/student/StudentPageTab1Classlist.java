@@ -56,6 +56,7 @@ public class StudentPageTab1Classlist extends Fragment {
     private ArrayList<ClassResult> classlist;
 
     private String email;
+    private int student_id;
 
 
     @SuppressLint("InflateParams")
@@ -131,7 +132,10 @@ public class StudentPageTab1Classlist extends Fragment {
                         Log.i(TAG, "currentPage == "+currentPage);
                         new ClassesResultBackgroundTask().execute(
                                 currentPage,
-                                "dev@dev.com" //email
+                                //"dev@dev.com" //email
+                                5,
+                                //student_id
+                                7502 // TODO: change for real student
                         );
 
                     }
@@ -144,6 +148,7 @@ public class StudentPageTab1Classlist extends Fragment {
                     getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
             email = sharedPref.getString(getString(R.string.USER_EMAIL), "none");
+            //student_id = sharedPref.getString(getString(R.string.USER_ID), "none");
             Log.i(TAG, "finished onCreateView in StudentPageTab1Classlist");
         }
         catch(NullPointerException e){
@@ -201,10 +206,17 @@ public class StudentPageTab1Classlist extends Fragment {
             class_description.setText(classdesclistTemp[i]);*/
 
             try {
-                Log.i(TAG, "class_name = "+classlist.get(i).getCourseDescription());
-                Log.i(TAG, "teacher_name = " +classlist.get(i).getCourseInstructor());
-                class_name.setText(classlist.get(i).getCourseInstructor());
-                teacher_name.setText(classlist.get(i).getCourseDescription());
+//                Log.i(TAG, "class_name = "+classlist.get(i).getCourseDescription());
+//                Log.i(TAG, "teacher_name = " +classlist.get(i).getCourseInstructor());
+//                class_name.setText(classlist.get(i).getCourseInstructor());
+//                teacher_name.setText(classlist.get(i).getCourseDescription());
+                String course = classlist.get(i).getTitle();
+                String teacher = classlist.get(i).getFirstName() + " " + classlist.get(i).getLastName();
+
+                Log.i(TAG, "class_name = " + course);
+                Log.i(TAG, "teacher_name = " + teacher);
+                class_name.setText(course);
+                teacher_name.setText(teacher);
             }
             catch(IndexOutOfBoundsException e){
                 Log.e(TAG, e.getMessage());
@@ -219,7 +231,8 @@ public class StudentPageTab1Classlist extends Fragment {
 
 
 
-    class ClassesResultBackgroundTask extends AsyncTask<Object, Void, ClassListResult<ClassResult>>{
+    @SuppressLint("StaticFieldLeak")
+    class ClassesResultBackgroundTask extends AsyncTask<Integer, Void, ClassListResult<ClassResult>>{
 
         private static final String TAG = "ClassesResultTask";
 
@@ -232,19 +245,21 @@ public class StudentPageTab1Classlist extends Fragment {
         }
 
         @Override
-        protected ClassListResult<ClassResult> doInBackground(Object... params) {
+        protected ClassListResult<ClassResult> doInBackground(Integer... params) {
 
             try{
                 Log.i(TAG, "starting task");
                 client = StudentPage.getWolfpackClientInstance();
                 Log.i(TAG, "configuring params");
 
-                Log.i(TAG, "currentPage = "+ (int) params[0] +
-                        "\nemail = " + (String) params[1]);
+                Log.i(TAG, "currentPage = "+ params[0] +
+                        "\nrowsPerPage = " + params[1] +
+                        "\nstudent_id = " + params[2]);
 
                 Call<ClassListResult<ClassResult>> call = client.findEnrolledClasses(
-                        (int) params[0],
-                        (String) params[1],
+                        params[0],
+                        params[1],
+                        params[2],
                         "findEnrolledClasses");
 
                 Log.i(TAG, "waiting for results");
@@ -274,14 +289,15 @@ public class StudentPageTab1Classlist extends Fragment {
 
         @Override
         protected void onPostExecute(final ClassListResult<ClassResult> result){
-            if (result != null) {
+            if (result != null && result.getSuccess() != 0) {
                 Log.i(TAG, result.toString());
                 //update data adapter and UI
                 mListViewClasses.setVisibility(View.VISIBLE);
                 classlist.addAll((ArrayList<ClassResult>) result.getResults());
                 adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
 
-                totalItemCount = result.getTotalResults();
+                totalItemCount = Integer.parseInt(result.getTotalResults());
 
                 //remove loading view after update listview
                 mListViewClasses.removeFooterView(footView);
