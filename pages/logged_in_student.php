@@ -59,60 +59,66 @@
   <body>
 
     <?php include("../lib/php/header.php"); ?>
+    <?php include("../lib/php/selectClassesTaken.php"); ?>
 
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-3 mx-auto text-center">
       <h1 class="display-4">Student Center</h1>
       <?php echo "Welcome back, ".$_SESSION['user']."!" ?>
     </div>
-    <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:960px">
+    <!-- <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:960px">                   TODO: MAYBE IMPLEMENT THIS SEARCH HERE?
       <h1 class="display-5">Search for a class to add</h1>
       <input class="form-control mr-sm-2" type="text" placeholder="Search" style="width:30%;display:inline; " aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </div> -->
+      
+      <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:960px">
+      
+        <a style="text-decoration: none" href ="joinClass.php"> <button class="btn btn-info btn-lg btn-block" >Join a Class</button></a><br>
     </div>
+      
 
     <div class="container">
     <h1 class="display-5 text-center">Current Classes</h1>
       <div class="card-deck mb-3 text-center">
-        <div class="card mb-4 box-shadow">
-          <div class="card-header">
-            <h4 class="my-0 font-weight-normal">CMPSC 488</h4>
+        <?php
+        
+         $retVal = searchClassesTaken($_SESSION['id']);
+         $retVal = json_decode($retVal,true);
+         $removeZerothIndex = $retVal;
+         unset($removeZerothIndex[0]);
+        
+        
+        foreach($removeZerothIndex as $value){
+          $classId = $value['class_id'];
+          $title = $value['title'];
+          $description = $value['description'];
+          $offering = $value['offering'];
+          $location = $value['location'];
+          echo "<div class=\"card mb-4 box-shadow\">
+          <div class=\"card-header\">
+            <h4 class=\"my-0 font-weight-normal\">$title</h4>
           </div>
-          <div class="card-body">
-            <h1 class="card-title pricing-card-title">35 <small class="text-muted">/ 50</small></h1>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li>Added: 1-12-18</li>
+          <div class=\"card-body\">
+            <h1 class=\"card-title pricing-card-title\"><small>$location</small></h1>
+            <ul class=\"list-unstyled mt-3 mb-4\">
+              <li>$description</li>
+              <li>$offering</li>
             </ul>
-            <button type="button" class="btn btn-lg btn-block btn-primary">Enter Class</button>
+            <a href=\"studentPoll.php?class_id=$classId\"> <button type=\"button\" class=\"btn btn-lg btn-block btn-primary\">Enter Poll</button></a>
           </div>
-        </div>
-        <div class="card mb-4 box-shadow">
-          <div class="card-header">
-            <h4 class="my-0 font-weight-normal">CMPSC 462</h4>
-          </div>
-          <div class="card-body">
-            <h1 class="card-title pricing-card-title">0 <small class="text-muted">/ 10</small></h1>
-            <ul class="list-unstyled mt-3 mb-4">
-                <li>Added: 1-14-18</li>
-            </ul>
-            <button type="button" class="btn btn-lg btn-block btn-primary">Enter Class</button>
-          </div>
-        </div>
-        <div class="card mb-4 box-shadow">
-          <div class="card-header">
-            <h4 class="my-0 font-weight-normal">CMPSC 463</h4>
-          </div>
-          <div class="card-body">
-            <h1 class="card-title pricing-card-title">7 <small class="text-muted">/ 11</small></h1>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li>Added: 1-17-18</li>
-            </ul>
-            <button type="button" class="btn btn-lg btn-block btn-primary">Enter Class</button>
-          </div>
-        </div>
+        </div>";
+        }                               //TODO: create studentPoll.php
+            
+        if (empty($removeZerothIndex)) {
+            echo "<br><h3 class=\"display-5 text-center\">You have no classes! Create one!</h3>";
+        }
+        
+        ?>
+
       </div>
       
-      <h1 class="display-5 text-center">Invitations</h1>
-      
+      <h1 class="display-5 text-center">Invitations?</h1>
+      <!--
       <div class="card-deck mb-3 text-center">
         <div class="card bg-secondary mb-4 text-white">
           <div class="card-header">
@@ -139,7 +145,7 @@
           </div>
         </div>
       </div>
-
+-->
       <?php
 
         include("../lib/php/footer.php");
