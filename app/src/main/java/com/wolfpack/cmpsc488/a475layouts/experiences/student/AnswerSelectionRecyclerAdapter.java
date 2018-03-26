@@ -48,9 +48,10 @@ class AnswerSelectionRecyclerViewHolder extends RecyclerView.ViewHolder implemen
 
 public class AnswerSelectionRecyclerAdapter extends RecyclerView.Adapter<AnswerSelectionRecyclerViewHolder>{
 
-    //turn into POJO
+
     public static final String TAG = "selectionAdapter";
 
+    //turn into POJO
     private List<String> items = new ArrayList<>();
     private List<AnswerSelectionRecyclerViewHolder> itemViews = new ArrayList<>();
 
@@ -96,12 +97,5 @@ public class AnswerSelectionRecyclerAdapter extends RecyclerView.Adapter<AnswerS
     public int getItemCount() {
         return items.size();
     }
-
-
-
-
-
-
-
 
 }

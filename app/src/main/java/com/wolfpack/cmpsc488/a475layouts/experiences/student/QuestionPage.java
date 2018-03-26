@@ -29,8 +29,10 @@ public class QuestionPage extends AppCompatActivity {
 
     protected TextView mTextViewQuestion;
     protected RecyclerView mRecyclerViewSelection;
-    protected RecyclerView mRecyclerViewChoice;
     protected RadioGroup mRadioGroupTrueFalse;
+    protected RadioGroup mRadioGroupChoice;
+    protected RecyclerView mRecyclerViewChoice;
+
 
     protected String className;
     protected String sessionName;
@@ -52,15 +54,14 @@ public class QuestionPage extends AppCompatActivity {
             Log.i(TAG, "super class onCreate");
 
             mTextViewQuestion = findViewById(R.id.questionTextView);
-            //mRecyclerViewChoice = findViewById(R.id.choiceRecyclerView);
             mRecyclerViewSelection = findViewById(R.id.selectionRecyclerView);
             mRadioGroupTrueFalse = findViewById(R.id.trueFalseRadioGroup);
+            mRadioGroupChoice = findViewById(R.id.choiceRadioGroup);
+            mRecyclerViewChoice = findViewById(R.id.choiceRecyclerView);
 
             Log.i(TAG, "mTextViewQuestion = " + mTextViewQuestion.getText().toString());
             Log.i(TAG, "mRecyclerViewSelection = " + mRecyclerViewSelection);
             Log.i(TAG, "mRadioGroupTrueFalse= " + mRadioGroupTrueFalse);
-
-
 
         }
         catch (NullPointerException e){

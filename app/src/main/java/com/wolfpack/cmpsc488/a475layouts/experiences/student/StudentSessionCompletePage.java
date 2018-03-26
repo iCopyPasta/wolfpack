@@ -75,14 +75,23 @@ public class StudentSessionCompletePage extends SessionPage {
                             Intent intent = new Intent(getApplicationContext(), StudentQuestionCompletePage.class);
                             intent.putExtra("sessionName", sessionName);
                             intent.putExtra("questionDesc", adapter.getItem(position));
+
+
                             if (position == 0) {
-                                intent.putExtra("questionType", QuestionPage.QUESTION_TYPE_SELECTION);
+                                intent.putExtra("questionType", QuestionPage.QUESTION_TYPE_CHOICE);
                                 intent.putExtra("answerList", new ArrayList<>(Arrays.asList(answerlistTemp)));
-                                int[] correctAns = {2, 8, 9, 10, 11, 14};
-                                int[] studentAns = {2, 9, 10, 11};
+                                Integer[] correctAns = {9, 10, 11};
                                 intent.putExtra("correctAnswers", new ArrayList<>(Arrays.asList(correctAns)));
-                                intent.putExtra("studentAnswers", new ArrayList<>(Arrays.asList(studentAns)));
+                                intent.putExtra("studentAnswer", 9);
                             }
+//                            if (position == 0) {
+//                                intent.putExtra("questionType", QuestionPage.QUESTION_TYPE_SELECTION);
+//                                intent.putExtra("answerList", new ArrayList<>(Arrays.asList(answerlistTemp)));
+//                                Integer[] correctAns = {2, 8, 9, 10, 11, 14};
+//                                Integer[] studentAns = {2, 9, 10, 11};
+//                                intent.putExtra("correctAnswers", new ArrayList<>(Arrays.asList(correctAns)));
+//                                intent.putExtra("studentAnswers", new ArrayList<>(Arrays.asList(studentAns)));
+//                            }
                             else if (position == 1){
                                 intent.putExtra("questionType", QuestionPage.QUESTION_TYPE_TRUE_FALSE);
                                 intent.putExtra("correctAnswer", false);

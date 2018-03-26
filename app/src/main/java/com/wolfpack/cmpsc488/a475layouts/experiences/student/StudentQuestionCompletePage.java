@@ -27,7 +27,7 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
 
     private RecyclerView.LayoutManager recyclerLayoutManager;
     private AnswerSelectionRecyclerAdapter selectionAdapter;
-
+    private AnswerChoiceRecyclerAdapter choiceAdapter;
 
 
     private String defaultQuestion = "Rick Astley's never gonna:";
@@ -127,14 +127,42 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
         }
 
         Log.i(TAG, "true = " + trueButton+ "\nfalse = " + falseButton);
-
-
-        //TODO: highlight selected answer
+        Log.i(TAG, "finished handleQuestionTrueFalse");
     }
 
     private void handleQuestionChoice(Bundle info){
-        mRecyclerViewSelection.setVisibility(View.VISIBLE);
-        //TODO: populate list with answers and highlight selected answer
+        mRadioGroupChoice.setVisibility(View.VISIBLE);
+        mRecyclerViewChoice.setVisibility(View.VISIBLE);
+
+        ArrayList<String> answerList = info.getStringArrayList("answerList");
+        ArrayList<Integer> correctAnswers = info.getIntegerArrayList("correctAnswers");
+        int studentAnswer = info.getInt("studentAnswer");
+
+//        Log.i(TAG, "correctAnswers = ");
+//        StringBuilder sb = new StringBuilder();
+//        for (int i = 0; i < correctAnswers.size(); i++){
+//            sb.append(correctAnswers.get(i));
+//            sb.append("\n");
+//        }
+//        Log.i(TAG, sb.toString());
+//        Log.i(TAG, "studentAnswer = " + studentAnswer);
+
+
+        mRecyclerViewChoice.setHasFixedSize(false);
+        recyclerLayoutManager = new LinearLayoutManager(this);
+        mRecyclerViewChoice.setLayoutManager(recyclerLayoutManager);
+        choiceAdapter = new AnswerChoiceRecyclerAdapter(getApplicationContext(), answerList, correctAnswers, studentAnswer, true);
+
+        choiceAdapter.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                //do nothing
+            }
+        });
+
+        mRecyclerViewChoice.setAdapter(choiceAdapter);
+
+        Log.i(TAG, "finished handleQuestionChoice");
     }
 
 
