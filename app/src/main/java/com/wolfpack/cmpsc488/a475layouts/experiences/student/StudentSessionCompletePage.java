@@ -75,10 +75,22 @@ public class StudentSessionCompletePage extends SessionPage {
                             Intent intent = new Intent(getApplicationContext(), StudentQuestionCompletePage.class);
                             intent.putExtra("sessionName", sessionName);
                             intent.putExtra("questionDesc", adapter.getItem(position));
-                            intent.putExtra("answerList", new ArrayList<>(Arrays.asList(answerlistTemp)));
-                            intent.putExtra("questionType", QuestionPage.QUESTION_TYPE_SELECTION);
-                            startActivity(intent);
+                            if (position == 0) {
+                                intent.putExtra("questionType", QuestionPage.QUESTION_TYPE_SELECTION);
+                                intent.putExtra("answerList", new ArrayList<>(Arrays.asList(answerlistTemp)));
+                                int[] correctAns = {2, 8, 9, 10, 11, 14};
+                                int[] studentAns = {2, 9, 10, 11};
+                                intent.putExtra("correctAnswers", new ArrayList<>(Arrays.asList(correctAns)));
+                                intent.putExtra("studentAnswers", new ArrayList<>(Arrays.asList(studentAns)));
                             }
+                            else if (position == 1){
+                                intent.putExtra("questionType", QuestionPage.QUESTION_TYPE_TRUE_FALSE);
+                                intent.putExtra("correctAnswer", false);
+                                intent.putExtra("studentAnswer", false);
+                            }
+
+                            startActivity(intent);
+                        }
                     });
 
             mRecyclerViewQuestion.setAdapter(adapter);

@@ -1,5 +1,6 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,17 +78,12 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
 
     private void handleQuestionSelection(Bundle info){
         mRecyclerViewSelection.setVisibility(View.VISIBLE);
-        //TODO: populate list with answers and highlight selected answers
+        //TODO: highlight selected answers and correct answers
 
         ArrayList<String> answerList = info.getStringArrayList("answerList");
-//        StringBuilder sb = new StringBuilder();
-//        Log.d(TAG, "answerList = ");
-//        for (int i = 0; i < answerList.size(); i++) {
-//            sb.append(answerList.get(i));
-//            sb.append("\n");
-//        }
-//        Log.d(TAG, sb.toString());
-//        Log.d(TAG, "done listing");
+        ArrayList<Integer> correctAnswers = info.getIntegerArrayList("correctAnswers");
+        ArrayList<Integer> studentAnswers = info.getIntegerArrayList("studentAnswers");
+
 
         mRecyclerViewSelection.setHasFixedSize(false);
         recyclerLayoutManager = new LinearLayoutManager(this);
@@ -106,8 +103,32 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
     }
 
 
+    //@SuppressLint("ResourceAsColor")
     private void handleQuestionTrueFalse(Bundle info){
         mRadioGroupTrueFalse.setVisibility(View.VISIBLE);
+
+        boolean correctAnswer = info.getBoolean("correctAnswer");
+        boolean studentAnswer = info.getBoolean("studentAnswer");
+
+        RadioButton trueButton= (RadioButton) mRadioGroupTrueFalse.getChildAt(0);
+        RadioButton falseButton = (RadioButton) mRadioGroupTrueFalse.getChildAt(1);
+
+        mRadioGroupTrueFalse.check((studentAnswer) ? trueButton.getId() : falseButton.getId());
+        trueButton.setClickable(false);
+        falseButton.setClickable(false);
+
+        if (correctAnswer){
+            trueButton.setBackgroundColor(getResources().getColor(R.color.colorCorrectAnswer));
+            falseButton.setBackgroundColor(getResources().getColor(R.color.colorWrongAnswer));
+        }
+        else {
+            trueButton.setBackgroundColor(getResources().getColor(R.color.colorWrongAnswer));
+            falseButton.setBackgroundColor(getResources().getColor(R.color.colorCorrectAnswer));
+        }
+
+        Log.i(TAG, "true = " + trueButton+ "\nfalse = " + falseButton);
+
+
         //TODO: highlight selected answer
     }
 
