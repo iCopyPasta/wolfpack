@@ -13,11 +13,9 @@ import android.widget.TextView;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
 
-import java.util.ArrayList;
+public class StudentSessionActivePage extends AppCompatActivity { //implements ActiveSessionDialog.ActiveSessionDialogListener {
 
-public class StudentSessionPage extends AppCompatActivity implements ActiveSessionDialog.ActiveSessionDialogListener {
-
-    public static final String TAG = "SSessionCompletePage";
+    public static final String TAG = "SSessionActivePage";
 
     private String className = "";
     private String sessionName = "";
@@ -35,7 +33,7 @@ public class StudentSessionPage extends AppCompatActivity implements ActiveSessi
 
     //isActiveSession refers to if there the current session is STILL active
     //isActiveQuestion refers to querying the database if there is an active question
-    private boolean isActiveSession = false;
+    //private boolean isActiveSession = false;
     private boolean isActiveQuestion = false;
 
 
@@ -55,14 +53,18 @@ public class StudentSessionPage extends AppCompatActivity implements ActiveSessi
             className = (String) bundle.get("className");
 
             //is this THE active session?
-            isActiveSession = (boolean) bundle.get("isActive");
+            //isActiveSession = (boolean) bundle.get("isActive");
 
             //get all the views
             mTextViewSessionName = findViewById(R.id.sessionNameTextView);
             mTextViewQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
-
-            //TODO: add recycler view
             mRecyclerViewQuestions = findViewById(R.id.questionListRecycleView);
+
+            sessionName = (String) bundle.get("sessionName");
+            mTextViewSessionName.setText(sessionName);
+
+            mTextViewQuestionNotice.setVisibility(View.VISIBLE);
+
 
 //            mRecyclerViewQuestions.addOnItemTouchListener(
 //                    new RecyclerItemClickListener(context, recyclyerView, new Re)
@@ -71,13 +73,16 @@ public class StudentSessionPage extends AppCompatActivity implements ActiveSessi
 
 
 
+
+
+
             //decide how to handle it
-            if (isActiveSession){
-                handleActiveSession();
-            }
-            else{
-                handleCompletedSession();
-            }
+//            if (isActiveSession){
+//                handleActiveSession();
+//            }
+//            else{
+//                handleCompletedSession();
+//            }
 
 
             Log.i(TAG, "className = "+className);
@@ -144,38 +149,38 @@ public class StudentSessionPage extends AppCompatActivity implements ActiveSessi
 
 
     //TODO: move this to an async task (created in handleCompletedSession)
-    @Override
-    protected void onResume() {
-        super.onResume();
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//
+//        //checking if there is an active session, but the active session is not this active session
+//        if (activeSession && !isActiveSession) {
+//            DialogFragment dialogFragment = new ActiveSessionDialog();
+//            dialogFragment.show(getFragmentManager(), "SessionActive");
+//        }
+//
+//    }
 
-        //checking if there is an active session, but the active session is not this active session
-        if (activeSession && !isActiveSession) {
-            DialogFragment dialogFragment = new ActiveSessionDialog();
-            dialogFragment.show(getFragmentManager(), "SessionActive");
-        }
-
-    }
 
 
-
-    /**
-     * ActiveSessionDialog.ActiveSessionDialogListener function implementation
-     */
-
-    @Override
-    public void onPositiveClick() {
-        //send user to an active session's page
-        Intent intent = new Intent(getApplicationContext(), StudentSessionPage.class);
-        intent.putExtra("className", className);
-        //TODO: decide who gets the session name
-        //intent.putExtra("sessionName", "");
-        intent.putExtra("isActive", true);
-        startActivity(intent);
-        finish();
-    }
-
-    @Override
-    public void onNegativeClick() {
-        //nothing happens
-    }
+//    /**
+//     * ActiveSessionDialog.ActiveSessionDialogListener function implementation
+//     */
+//
+//    @Override
+//    public void onPositiveClick() {
+//        //send user to an active session's page
+//        Intent intent = new Intent(getApplicationContext(), StudentSessionActivePage.class);
+//        intent.putExtra("className", className);
+//        //TODO: decide who gets the session name
+//        //intent.putExtra("sessionName", "");
+//        intent.putExtra("isActive", true);
+//        startActivity(intent);
+//        finish();
+//    }
+//
+//    @Override
+//    public void onNegativeClick() {
+//        //nothing happens
+//    }
 }

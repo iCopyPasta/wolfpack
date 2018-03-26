@@ -113,7 +113,7 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
         //Toast.makeText(getApplicationContext(), "Hello from onPositiveClick", Toast.LENGTH_LONG).show();
 
         //send user to an active session's page
-        Intent intent = new Intent(getApplicationContext(), StudentSessionPage.class);
+        Intent intent = new Intent(getApplicationContext(), StudentSessionActivePage.class);
         intent.putExtra("className", className);
         //TODO: decide who gets the session name
         //intent.putExtra("sessionName", "");

@@ -27,35 +27,43 @@ public class StudentQuestionCompletePage extends AppCompatActivity implements Ac
     private String defaultQuestion = "Rick Astley's never gonna:";
     private String[] defaultAnswers = {"Give you up", "Let you down", "Make you cry", "Hurt you"};
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_page);
 
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorStudentPrimary)));
+        try {
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorStudentPrimary)));
 
 
-        // TODO: get question/answers/timer from server
-        mTextViewQuestion = findViewById(R.id.questionTextView);
-        mTextViewQuestion.setText(defaultQuestion);
+            mTextViewQuestion = findViewById(R.id.questionTextView);
+            //mTextViewQuestion.setText(defaultQuestion);
 
-        mListViewAnswers = findViewById(R.id.answerListView);
 
-        ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
-                getApplicationContext(),
-                android.R.layout.simple_list_item_1,
-                defaultAnswers);
+            mListViewAnswers = findViewById(R.id.answerListView);
 
-        mListViewAnswers.setAdapter(mAdapter);
+            ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
+                    getApplicationContext(),
+                    android.R.layout.simple_list_item_1,
+                    defaultAnswers);
 
-        mListViewAnswers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(),
-                        "You Chose: " + defaultAnswers[position],
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+            mListViewAnswers.setAdapter(mAdapter);
+
+            mListViewAnswers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                    Toast.makeText(getApplicationContext(),
+                            "You Chose: " + defaultAnswers[position],
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        catch (NullPointerException e){
+            Log.i(TAG, e.getMessage());
+            throw e;
+        }
 
     }
 

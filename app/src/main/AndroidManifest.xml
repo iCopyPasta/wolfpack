@@ -64,7 +64,11 @@
 
 
         <activity
-            android:name=".experiences.student.StudentSessionPage"
+            android:name=".experiences.student.StudentSessionActivePage"
+            android:label="@string/title_activity_student_session_page"/>
+
+        <activity
+            android:name=".experiences.student.StudentSessionCompletePage"
             android:label="@string/title_activity_student_session_page"/>
 
 

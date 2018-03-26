@@ -45,11 +45,12 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
             mListViewSessions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    //go to a completed session (no constant checking done on StudentSessionPage)
-                    Intent intent = new Intent(getActivity(), StudentSessionPage.class);
+                    //go to a completed session (no constant checking done on StudentSessionActivePage)
+                    Intent intent = new Intent(getActivity(), StudentSessionCompletePage.class);
                     intent.putExtra("className", className);
                     intent.putExtra("sessionName", mListViewSessions.getItemAtPosition(position).toString());
                     intent.putExtra("isActive", false);
+                    Log.d(TAG, "starting StudentSessionCompletePage Activity");
                     startActivity(intent);
                 }
             });
