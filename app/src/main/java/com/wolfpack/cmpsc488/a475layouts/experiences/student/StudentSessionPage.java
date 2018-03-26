@@ -62,7 +62,13 @@ public class StudentSessionPage extends AppCompatActivity implements ActiveSessi
             mTextViewQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
 
             //TODO: add recycler view
-            //mRecyclerViewQuestions = findViewById(R.id.questionListRecycleView):
+            mRecyclerViewQuestions = findViewById(R.id.questionListRecycleView);
+
+//            mRecyclerViewQuestions.addOnItemTouchListener(
+//                    new RecyclerItemClickListener(context, recyclyerView, new Re)
+//            );
+
+
 
 
             //decide how to handle it
