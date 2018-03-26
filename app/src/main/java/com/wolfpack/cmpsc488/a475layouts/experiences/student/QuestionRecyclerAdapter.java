@@ -15,14 +15,14 @@ import java.util.List;
 
 class QuestionRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public TextView question_desc;
+    public TextView questionDesc;
 
     private ItemClickListener itemClickListener;
 
 
     public QuestionRecyclerViewHolder(View view) {
         super(view);
-        question_desc = (TextView) view.findViewById(R.id.textViewQuestion);
+        questionDesc = (TextView) view.findViewById(R.id.textViewQuestion);
 
         itemView.setOnClickListener(this);
     }
@@ -33,8 +33,8 @@ class QuestionRecyclerViewHolder extends RecyclerView.ViewHolder implements View
 
 
     @Override
-    public void onClick(View v) {
-        itemClickListener.onClick(v, getAdapterPosition());
+    public void onClick(View view) {
+        itemClickListener.onClick(view, getAdapterPosition());
     }
 }
 
@@ -71,7 +71,7 @@ public class QuestionRecyclerAdapter extends RecyclerView.Adapter<QuestionRecycl
 
     @Override
     public void onBindViewHolder(QuestionRecyclerViewHolder holder, int position) {
-        holder.question_desc.setText((String) items.get(position));
+        holder.questionDesc.setText((String) items.get(position));
         holder.setItemClickListener(itemClickListener);
     }
 

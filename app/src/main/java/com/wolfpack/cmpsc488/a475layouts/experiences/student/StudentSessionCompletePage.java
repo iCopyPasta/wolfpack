@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class StudentSessionCompletePage extends AppCompatActivity {
+public class StudentSessionCompletePage extends SessionPage {
 
 
     public static final String TAG = "SSeshCmplt";
@@ -34,6 +34,7 @@ public class StudentSessionCompletePage extends AppCompatActivity {
     private RecyclerView.LayoutManager recyclerLayoutManager;
 
     private String[] questionlistTemp = {"What does that say?", "How are you doing today?"};
+    private String[] answerlistTemp = {"Wrong answer 1", "Wrong answer 2", "Mutex", "Wrong answer 3", "answer x", "answer 17", "answer z", "answer y", "answer 42", "don’t let this man distract you from the fact that in 1998,", "The Undertaker threw Mankind off the Hell in the Cell", "and plummeted 16ft into the announcers table", "my name is what?", "my name is who?", "slim shady"};
     private List<String> questionlistTempList = new ArrayList<String>();
 
     private QuestionRecyclerAdapter adapter;
@@ -58,10 +59,12 @@ public class StudentSessionCompletePage extends AppCompatActivity {
             mTextViewQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
             mRecyclerViewQuestion = findViewById(R.id.questionListRecycleView);
 
+            //set misc
             mTextViewSessionName.setText(sessionName);
             mTextViewQuestionNotice.setVisibility(View.GONE);
             mRecyclerViewQuestion.setVisibility(View.VISIBLE);
 
+            //setup recycler view
             mRecyclerViewQuestion.setHasFixedSize(false);
             recyclerLayoutManager = new LinearLayoutManager(this);
             mRecyclerViewQuestion.setLayoutManager(recyclerLayoutManager);
@@ -72,8 +75,10 @@ public class StudentSessionCompletePage extends AppCompatActivity {
                             Intent intent = new Intent(getApplicationContext(), StudentQuestionCompletePage.class);
                             intent.putExtra("sessionName", sessionName);
                             intent.putExtra("questionDesc", adapter.getItem(position));
+                            intent.putExtra("answerList", new ArrayList<>(Arrays.asList(answerlistTemp)));
+                            intent.putExtra("questionType", QuestionPage.QUESTION_TYPE_SELECTION);
                             startActivity(intent);
-                        }
+                            }
                     });
 
             mRecyclerViewQuestion.setAdapter(adapter);

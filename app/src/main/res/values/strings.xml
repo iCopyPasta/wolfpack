@@ -65,6 +65,11 @@
     <string name="title_activity_student_question_page">Question</string>
     <string name="default_question_text">default</string>
 
+    <string name="answerTrue">True</string>
+    <string name="answerFalse">False</string>
+
+
+
 
     <!--TEACHER-->
 
