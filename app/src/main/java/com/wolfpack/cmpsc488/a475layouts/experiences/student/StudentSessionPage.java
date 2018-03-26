@@ -34,6 +34,7 @@ public class StudentSessionPage extends AppCompatActivity {
 
     private String className = "";
     private String sessionName = "";
+    private String classId = null;
 
     private TextView mTextViewSessionName;
     private TextView mTextViewQuestionNotice;
@@ -65,7 +66,7 @@ public class StudentSessionPage extends AppCompatActivity {
             } else{
                 Log.i(TAG, "onServiceConnected: myService is not null: ");
                 if(questionSessionId != null && questionSetId != null)
-                    mService.searchActiveQuestion(questionSetId);
+                    mService.searchActiveQuestion(questionSetId, "true");
 
             }
 
@@ -79,6 +80,7 @@ public class StudentSessionPage extends AppCompatActivity {
         }
     };
 
+    //receiver for an active question
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -107,8 +109,46 @@ public class StudentSessionPage extends AppCompatActivity {
                         "questionSessionId = " + questionSessionId + ", " +
                         "quesitonSetId = " + questionSetId);
 
-                if(questionSessionId != null && questionSetId != null)
-                    mService.searchActiveQuestion(questionSetId);
+                //make sure we are still alive!
+                mService.searchActiveSession(classId, "false");
+
+
+            }
+
+
+        }
+    };
+
+    //reciever to make sure THIS session is still alive
+    private BroadcastReceiver mReceiver2 = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle info = intent.getExtras();
+            Log.i(TAG, "onReceive: " + "service message received");
+
+            if(info != null){
+                Log.i(TAG, "onReceive: " + "active poll still found for class " + classId);
+                mService.searchActiveSession(classId, "false");
+
+                //ask for an active question!
+                if(questionSessionId != null && questionSetId != null){
+                    Log.i(TAG, "onReceive: " + "Looking for active question again");
+
+                    mService.searchActiveQuestion(questionSetId, "true");
+                }
+            }
+            else{
+                Toast.makeText(StudentSessionPage.this, "Inactive", Toast.LENGTH_SHORT)
+                        .show();
+
+                Intent finishedCycle = new Intent(StudentSessionPage.this,
+                        StudentClassPage.class);
+
+                finishedCycle.putExtra("finishedCycle", true);
+                finishedCycle.putExtra("classId", classId);
+                finishedCycle.putExtra("className", className);
+                startActivity(finishedCycle);
+                finish();
             }
 
 
@@ -129,6 +169,7 @@ public class StudentSessionPage extends AppCompatActivity {
 
 
             className = (String) bundle.get("className");
+            classId = bundle.getString("classId");
 
             //is this THE active session?
             isActiveSession = (boolean) bundle.get("isActive");
@@ -177,6 +218,10 @@ public class StudentSessionPage extends AppCompatActivity {
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .registerReceiver(mReceiver, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_QUESTION));
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .registerReceiver(mReceiver2, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_SESSION));
     }
 
     @Override
@@ -188,6 +233,10 @@ public class StudentSessionPage extends AppCompatActivity {
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .unregisterReceiver(mReceiver);
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .unregisterReceiver(mReceiver2);
     }
 
 

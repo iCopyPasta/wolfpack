@@ -92,22 +92,22 @@ public class MyStartedService extends Service {
             (new ServiceJobAsyncTask()).execute(params);
     }
 
-     public void searchActiveSession(String inputClassId){
+     public void searchActiveSession(String inputClassId, String firstTime){
          Log.i(TAG, "searchActiveSession: " + "searching for active session for classId: " + inputClassId);
          if(!isRunning)
-             (new ServiceJobAsyncTask()).execute("searchActiveSession", inputClassId);
+             (new ServiceJobAsyncTask()).execute("searchActiveSession", inputClassId, firstTime);
 
      }
 
-     public void searchActiveQuestion(String inputQuestionSetId){
+     public void searchActiveQuestion(String inputQuestionSetId, String firstTime){
          if(!isRunning)
-             (new ServiceJobAsyncTask()).execute("searchActiveQuestion", inputQuestionSetId);
+             (new ServiceJobAsyncTask()).execute("searchActiveQuestion", inputQuestionSetId, firstTime);
 
      }
 
-     public void searchLiveQuestionInfo(String inputQuestionId){
+     public void searchLiveQuestionInfo(String inputQuestionId, String firstTime){
          if(!isRunning)
-             (new ServiceJobAsyncTask()).execute("searchLiveQuestionInfo", inputQuestionId);
+             (new ServiceJobAsyncTask()).execute("searchLiveQuestionInfo", inputQuestionId, firstTime);
 
      }
 
@@ -138,18 +138,25 @@ public class MyStartedService extends Service {
 
             try {
                 //TODO: set this interval in preferences
+                long sleepTimeRequestedByUser = 0L;
                 //any request will wait for at least 5 seconds before retrying
-                //TODO: fix this interval!
-                Thread.sleep(5000);
 
                 //determine which method wants to run on the background thread
                 //set that 'id' to use in onPostExecute
+                //TODO: implement interval logic appropriately
+
+
 
                 WolfpackClient client = WolfpackClient.retrofit.create(WolfpackClient.class);
                 WolfpackClient debugClient = WolfpackClient.debugRetrofit.create(WolfpackClient.class);
 
                 switch (params[0]){
                     case "searchActiveSession":{
+                        if(!params[2].equals("true")){
+                            Thread.sleep(5000);
+
+                        }
+
                         id = 1;
 
                         Call<PollingResults<ActiveSessionInfo>> call = client.searchActiveSession(
@@ -163,6 +170,10 @@ public class MyStartedService extends Service {
 
                         break;
                     case "searchActiveQuestion":{
+                        if(!params[2].equals("true")){
+                            Thread.sleep(5000);
+
+                        }
                         id = 2;
                         Call<PollingResults<ActiveQuestionInfo>> call = client.searchActiveQuestion(
                                 params[1],
@@ -174,6 +185,10 @@ public class MyStartedService extends Service {
                     }
                         break;
                     case "searchLiveQuestionInfo": {
+                        if(!params[2].equals("true")){
+                            Thread.sleep(5000);
+
+                        }
                         id = 3;
                         Call<ResponseBody> call = client.testLiveQuestionInfo(
                                 params[1],

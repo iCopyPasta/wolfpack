@@ -111,6 +111,8 @@ public class MainPage extends AppCompatActivity {
         Log.i("Main Page", "on??is called");
         Intent intent = new Intent(MainPage.this, StudentClassPage.class);
         intent.putExtra("className", "TEST CLASS");
+        //TODO: USED ONLY FOR TESTING
+        intent.putExtra("classId", "279");
 
         startActivity(intent);
 

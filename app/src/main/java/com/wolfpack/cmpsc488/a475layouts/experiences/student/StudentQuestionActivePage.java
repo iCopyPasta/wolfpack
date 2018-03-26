@@ -51,7 +51,7 @@ public class StudentQuestionActivePage extends AppCompatActivity {
             } else{
                 Log.i(TAG, "onServiceConnected: myService is not null: ");
                 if(questionId != null)
-                    mService.searchLiveQuestionInfo(questionId);
+                    mService.searchLiveQuestionInfo(questionId, "true");
             }
 
         }

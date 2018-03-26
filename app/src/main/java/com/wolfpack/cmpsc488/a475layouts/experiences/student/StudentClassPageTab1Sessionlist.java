@@ -55,7 +55,7 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
                 Log.e(TAG, "mService is null");
             } else{
                 Log.i(TAG, "onServiceConnected: myService is not null: ");
-                mService.searchActiveSession(classId);
+                mService.searchActiveSession(classId, "true");
 
             }
 
@@ -89,7 +89,7 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
             }
             else{
                 Log.i(TAG, "onReceive: " + "no poll found for class " + classId);
-                mService.searchActiveSession(classId);
+                mService.searchActiveSession(classId, "false");
             }
 
 
@@ -98,9 +98,8 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //TODO: DO NOT OVERWRITE; USED ONLY FOR TESTING
 
-        classId = "279";
+        classId = ((StudentClassPage) getActivity()).getClassId();
 
         View rootView = inflater.inflate(R.layout.fragment_student_class_page_tab1_sessionlist, container, false);
 
@@ -128,6 +127,7 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
                     intent.putExtra("className", className);
                     intent.putExtra("sessionName", mListViewSessions.getItemAtPosition(position).toString());
                     intent.putExtra("isActive", false);
+                    intent.putExtra("classId", classId);
                     startActivity(intent);
                 }
             });
@@ -140,13 +140,9 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
         return rootView;
     }
 
-    //-----experimentation with background work
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-
-        //define our receivers and listeners
-
 
 
     }
