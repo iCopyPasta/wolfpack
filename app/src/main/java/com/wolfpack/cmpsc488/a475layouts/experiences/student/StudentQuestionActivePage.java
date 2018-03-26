@@ -78,24 +78,30 @@ public class StudentQuestionActivePage extends AppCompatActivity {
 
             if(info != null){
                 Log.i(TAG, "onReceive: " + "mReceiver -> message received");
-                //an active question! set up our information on the activity
-                questionStringJSON = info.getString(
-                        MyStartedService.MY_SERVICE_QUESTION_INFO_JSON,""
-                );
 
-                Log.i(TAG, "OUR QUESTION JSON: " + questionInformation);
+                // an active question! set up our information on the activity
+                // only need to set values once, in case of multiple requests due to timing
+                if(questionInformation == null){
+                    questionStringJSON = info.getString(
+                            MyStartedService.MY_SERVICE_QUESTION_INFO_JSON,""
+                    );
 
-                //make our object when we receive a question
-                questionInformation = gson.fromJson(questionStringJSON,
-                        QuestionInformation.class);
+                    Log.i(TAG, "OUR QUESTION JSON: " + questionStringJSON);
 
-                answerType = questionInformation.getQuestionType();
-                Log.i(TAG, "onReceive: " + questionInformation.getDescription());
-                Toast.makeText(StudentQuestionActivePage.this,
-                        questionInformation.getQuestionType(),
-                        Toast.LENGTH_LONG).show();
+                    //make our object when we receive a question
+                    questionInformation = gson.fromJson(questionStringJSON,
+                            QuestionInformation.class);
 
-                mService.searchActiveQuestion(questionSetId,"true");
+                    answerType = questionInformation.getQuestionType();
+
+
+                    Log.i(TAG, "onReceive: " + questionInformation.getDescription());
+                    Toast.makeText(StudentQuestionActivePage.this,
+                            questionInformation.getQuestionType(),
+                            Toast.LENGTH_LONG).show();
+                }
+
+                mService.searchActiveQuestion(questionSetId,"false");
 
             }
             else{
@@ -134,6 +140,10 @@ public class StudentQuestionActivePage extends AppCompatActivity {
                 Log.i(TAG, "onReceive: " + "activeQuestionReceiver -> message received");
                 //ask again to make sure
                 mService.searchActiveQuestion(questionSetId, "false");
+
+                if(questionInformation == null){
+                    mService.searchLiveQuestionInfo(questionId, "true");
+                }
 
             }
             else{

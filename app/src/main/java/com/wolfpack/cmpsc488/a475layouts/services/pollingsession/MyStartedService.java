@@ -93,26 +93,26 @@ public class MyStartedService extends Service {
             (new ServiceJobAsyncTask()).execute(params);
     }
 
-     public void searchActiveSession(String inputClassId, String firstTime){
+     public synchronized void searchActiveSession(String inputClassId, String firstTime){
          Log.i(TAG, "searchActiveSession: " + "searching for active session for classId: " + inputClassId);
          if(!isRunning)
              (new ServiceJobAsyncTask()).execute("searchActiveSession", inputClassId, firstTime);
 
      }
 
-     public void searchActiveQuestion(String inputQuestionSetId, String firstTime){
+     public synchronized void searchActiveQuestion(String inputQuestionSetId, String firstTime){
          if(!isRunning)
              (new ServiceJobAsyncTask()).execute("searchActiveQuestion", inputQuestionSetId, firstTime);
 
      }
 
-     public void searchLiveQuestionInfo(String inputQuestionId, String firstTime){
+     public synchronized void searchLiveQuestionInfo(String inputQuestionId, String firstTime){
          if(!isRunning)
              (new ServiceJobAsyncTask()).execute("searchLiveQuestionInfo", inputQuestionId, firstTime);
 
      }
 
-     public void submitAnswer(String inputStudentId,
+     public synchronized void submitAnswer(String inputStudentId,
                               String inputSessionId,
                               String inputQuestionHistoryId,
                               String inputAnswerType,
