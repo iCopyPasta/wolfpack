@@ -50,6 +50,7 @@ public class StudentSessionPage extends AppCompatActivity {
     // question set information if one is active
     private String questionSetId = null;
     private String questionSessionId = null;
+    private boolean foundQuestion;
 
     private MyStartedService mService;
 
@@ -64,9 +65,11 @@ public class StudentSessionPage extends AppCompatActivity {
             if(mService == null){
                 Log.e(TAG, "mService is null");
             } else{
-                Log.i(TAG, "onServiceConnected: myService is not null: ");
-                if(questionSessionId != null && questionSetId != null)
+                if(questionSessionId != null && questionSetId != null){
+                    Log.i(TAG, "onServiceConnected: myService and questionSetId and questionSessionId are not null");
                     mService.searchActiveQuestion(questionSetId, "true");
+
+                }
 
             }
 
@@ -88,6 +91,9 @@ public class StudentSessionPage extends AppCompatActivity {
             Log.i(TAG, "onReceive: " + "service message received");
 
             if(info != null){
+
+                foundQuestion = true;
+
                 //force into StudentQuestionActivePage
                 Intent activeQuestionIntent = new Intent(StudentSessionPage.this,
                         StudentQuestionActivePage.class);
@@ -119,10 +125,7 @@ public class StudentSessionPage extends AppCompatActivity {
                 //make sure we are still alive!
                 mService.searchActiveSession(classId, "false");
 
-
             }
-
-
         }
     };
 
@@ -135,13 +138,15 @@ public class StudentSessionPage extends AppCompatActivity {
 
             if(info != null){
                 Log.i(TAG, "onReceive: " + "active poll still found for class " + classId);
-                mService.searchActiveSession(classId, "false");
 
                 //ask for an active question!
                 if(questionSessionId != null && questionSetId != null){
                     Log.i(TAG, "onReceive: " + "Looking for active question again");
 
-                    mService.searchActiveQuestion(questionSetId, "true");
+                    if(!foundQuestion && questionSetId != null){
+                        Log.i(TAG, "onReceive: " + "re-seeking active question");
+                        mService.searchActiveQuestion(questionSetId, "false");
+                    }
                 }
             }
             else{
@@ -157,8 +162,6 @@ public class StudentSessionPage extends AppCompatActivity {
                 startActivity(finishedCycle);
                 finish();
             }
-
-
         }
     };
 
@@ -184,6 +187,7 @@ public class StudentSessionPage extends AppCompatActivity {
             //get all the views
             mTextViewSessionName = findViewById(R.id.sessionNameTextView);
             mTextViewQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
+            foundQuestion = false;
 
 
             //decide how to handle it

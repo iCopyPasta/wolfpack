@@ -38,6 +38,7 @@ public class StudentQuestionActivePage extends AppCompatActivity {
     private String classId = null;
     private String className = null;
     private String questionSetId = null;
+    private int errorCount = 0;
 
     private MyStartedService mService;
 
@@ -99,30 +100,39 @@ public class StudentQuestionActivePage extends AppCompatActivity {
                     Toast.makeText(StudentQuestionActivePage.this,
                             questionInformation.getQuestionType(),
                             Toast.LENGTH_LONG).show();
+
+                    //is there yet an active question?
+                    mService.searchActiveQuestion(questionSetId,"false");
+
                 }
 
-                mService.searchActiveQuestion(questionSetId,"false");
 
             }
             else{
-                Log.e(TAG, "onReceive: " + "error in retrieving question info " + classId);
-                Toast.makeText(StudentQuestionActivePage.this,
-                        "Error", Toast.LENGTH_SHORT).show();
-                //go back!
-                Intent activeSessionIntent = new Intent(StudentQuestionActivePage.this,
-                        StudentSessionPage.class);
+                errorCount++;
+                mService.searchLiveQuestionInfo(questionSetId, "false");
 
-                activeSessionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
-                        questionSetId);
+                if(errorCount > 3){
+                    Log.e(TAG, "onReceive: " + "error in retrieving question info " + classId);
+                    Toast.makeText(StudentQuestionActivePage.this,
+                            "Error", Toast.LENGTH_SHORT).show();
+                    //go back!
+                    Intent activeSessionIntent = new Intent(StudentQuestionActivePage.this,
+                            StudentSessionPage.class);
 
-                activeSessionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID,
-                        questionSessionId);
+                    activeSessionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
+                            questionSetId);
 
-                activeSessionIntent.putExtra("classId", classId);
-                activeSessionIntent.putExtra("className", className);
-                activeSessionIntent.putExtra("isActive", true);
-                startActivity(activeSessionIntent);
-                finish();
+                    activeSessionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID,
+                            questionSessionId);
+
+                    activeSessionIntent.putExtra("classId", classId);
+                    activeSessionIntent.putExtra("className", className);
+                    activeSessionIntent.putExtra("isActive", true);
+                    startActivity(activeSessionIntent);
+                    finish();
+                }
+
 
             }
 
@@ -138,11 +148,13 @@ public class StudentQuestionActivePage extends AppCompatActivity {
 
             if(info != null){
                 Log.i(TAG, "onReceive: " + "activeQuestionReceiver -> message received");
-                //ask again to make sure
-                mService.searchActiveQuestion(questionSetId, "false");
-
-                if(questionInformation == null){
-                    mService.searchLiveQuestionInfo(questionId, "true");
+                //ask again to make sure we're an alive session
+                if(questionInformation != null){
+                    mService.searchActiveQuestion(questionSetId, "false");
+                }
+                //you may not have gotten an answer for your life info, yet, try up to 3 times
+                else{
+                    mService.searchLiveQuestionInfo(questionId,"false");
                 }
 
             }
