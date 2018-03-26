@@ -35,6 +35,9 @@ public class StudentQuestionActivePage extends AppCompatActivity {
     private String answer = null;
     private final String TAG = "QuestionActivePage";
     private Gson gson = null;
+    private String classId = null;
+    private String className = null;
+    private String questionSetId = null;
 
     private MyStartedService mService;
 
@@ -64,6 +67,7 @@ public class StudentQuestionActivePage extends AppCompatActivity {
         }
     };
 
+    //received live question information
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -85,10 +89,72 @@ public class StudentQuestionActivePage extends AppCompatActivity {
                 Toast.makeText(StudentQuestionActivePage.this, "GOT QUESTION!",
                         Toast.LENGTH_LONG).show();
 
+                mService.searchActiveQuestion(questionSetId,"false");
+
             }
             else{
-                Log.i(TAG, "onReceive: " + "no longer an active question");
+                Log.e(TAG, "onReceive: " + "error in retrieving question info " + classId);
+                Toast.makeText(StudentQuestionActivePage.this,
+                        "Error", Toast.LENGTH_SHORT).show();
+                //go back!
+                Intent activeSessionIntent = new Intent(StudentQuestionActivePage.this,
+                        StudentSessionPage.class);
+
+                activeSessionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
+                        questionSetId);
+
+                activeSessionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID,
+                        questionSessionId);
+
+                activeSessionIntent.putExtra("classId", classId);
+                activeSessionIntent.putExtra("className", className);
+                activeSessionIntent.putExtra("isActive", true);
+                startActivity(activeSessionIntent);
+                finish();
+
             }
+
+        }
+    };
+
+    //receiver to make sure we have an active question, yet.
+    //receiver for an active question
+    private BroadcastReceiver activeQuestionReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle info = intent.getExtras();
+            Log.i(TAG, "onReceive: " + "service message received");
+
+            if(info != null){
+                //ask again to make sure
+                mService.searchActiveQuestion(questionSetId, "false");
+
+            }
+            else{
+                Log.i(TAG, "onReceive: " + "no active questionId for " +
+                        "questionSessionId = " + questionSessionId + ", " +
+                        "quesitonSetId = " + questionSetId);
+                Log.i(TAG, "onReceive: " + "sending BACK to StudentSessionPage");
+
+                //extras to give back
+                Intent activeSessionIntent = new Intent(StudentQuestionActivePage.this,
+                        StudentSessionPage.class);
+
+                activeSessionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
+                        questionSetId);
+
+                activeSessionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID,
+                        questionSessionId);
+
+                activeSessionIntent.putExtra("classId", classId);
+                activeSessionIntent.putExtra("className", className);
+                activeSessionIntent.putExtra("isActive", true);
+                startActivity(activeSessionIntent);
+                finish();
+
+
+            }
+
 
         }
     };
@@ -127,10 +193,17 @@ public class StudentQuestionActivePage extends AppCompatActivity {
             questionHistoryId = callerInfo.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID,
                     "");
 
+            questionSetId = callerInfo.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
+                    "");
+
+
             SharedPreferences sharedPref = getSharedPreferences(
                     getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
             studentId = sharedPref.getString(getString(R.string.STUDENT_ID),"");
+
+            classId = callerInfo.getString("classId");
+            className = callerInfo.getString("className");
 
         }
 
@@ -154,6 +227,11 @@ public class StudentQuestionActivePage extends AppCompatActivity {
 
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
+                .registerReceiver(activeQuestionReceiver,
+                        new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_QUESTION));
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
                 .registerReceiver(submitAnswerReceiver, new IntentFilter(
                         MyStartedService.MY_SERVICE_SUBMIT_ANSWER));
 
@@ -168,6 +246,10 @@ public class StudentQuestionActivePage extends AppCompatActivity {
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .unregisterReceiver(submitAnswerReceiver);
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .unregisterReceiver(activeQuestionReceiver);
 
         LocalBroadcastManager.getInstance(
                 getApplicationContext())

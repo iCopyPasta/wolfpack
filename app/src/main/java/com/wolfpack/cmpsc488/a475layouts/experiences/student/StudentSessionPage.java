@@ -30,7 +30,7 @@ import java.util.ArrayList;
 // we ask if there is an active question here!
 public class StudentSessionPage extends AppCompatActivity {
 
-    public static final String TAG = "SSessionCompletePage";
+    public static final String TAG = "SSessionPage";
 
     private String className = "";
     private String sessionName = "";
@@ -100,6 +100,13 @@ public class StudentSessionPage extends AppCompatActivity {
 
                 activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID
                         ,questionSessionId);
+
+                activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
+                        questionSetId);
+
+                //extras to get back
+                activeQuestionIntent.putExtra("classId", classId);
+                activeQuestionIntent.putExtra("className", className);
 
                 startActivity(activeQuestionIntent);
 
