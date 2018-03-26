@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
 import com.wolfpack.cmpsc488.a475layouts.services.data_retrieval.BasicWolfpackResponse;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveQuestionInfo;
@@ -153,7 +154,7 @@ public class MyStartedService extends Service {
                 switch (params[0]){
                     case "searchActiveSession":{
                         if(!params[2].equals("true")){
-                            Thread.sleep(5000);
+                            Thread.sleep(2000);
 
                         }
 
@@ -171,7 +172,7 @@ public class MyStartedService extends Service {
                         break;
                     case "searchActiveQuestion":{
                         if(!params[2].equals("true")){
-                            Thread.sleep(5000);
+                            Thread.sleep(2000);
 
                         }
                         id = 2;
@@ -186,14 +187,15 @@ public class MyStartedService extends Service {
                         break;
                     case "searchLiveQuestionInfo": {
                         if(!params[2].equals("true")){
-                            Thread.sleep(5000);
+                            Thread.sleep(2000);
 
                         }
                         id = 3;
-                        Call<ResponseBody> call = client.testLiveQuestionInfo(
+                        Call<PollingResults<QuestionInformation>> call = client.searchLiveQuestionInfo(
                                 params[1],
                                 "searchLiveQuestionInfo"
                         );
+
 
                         //PollingResults<QuestionInformation>
                         response = call.execute().body();
@@ -327,8 +329,15 @@ public class MyStartedService extends Service {
 
                         if(result != null)
                         {
+                            String questionJSON = null;
+
                             @SuppressWarnings("unchecked")
-                             String questionJSON = ((ResponseBody) result).string();
+                            QuestionInformation questionInformation =
+                                    ((PollingResults<QuestionInformation>) result).getResults()
+                                    .get(0);
+
+                            questionJSON = new Gson().toJson(questionInformation,
+                                    QuestionInformation.class);
 
                             Log.i(TAG, "QUESTION INFO JSON = " + questionJSON);
                             //perform conversation later on

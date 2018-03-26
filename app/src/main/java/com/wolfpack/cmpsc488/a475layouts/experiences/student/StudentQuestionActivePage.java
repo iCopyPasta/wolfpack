@@ -52,9 +52,11 @@ public class StudentQuestionActivePage extends AppCompatActivity {
             if(mService == null){
                 Log.e(TAG, "mService is null");
             } else{
-                Log.i(TAG, "onServiceConnected: myService is not null: ");
-                if(questionId != null)
+
+                if(questionId != null){
+                    Log.i(TAG, "onServiceConnected: myService and questionId are not null");
                     mService.searchLiveQuestionInfo(questionId, "true");
+                }
             }
 
         }
@@ -72,13 +74,16 @@ public class StudentQuestionActivePage extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle info = intent.getExtras();
-            Log.i(TAG, "onReceive: " + "service message received");
+
 
             if(info != null){
+                Log.i(TAG, "onReceive: " + "mReceiver -> message received");
                 //an active question! set up our information on the activity
                 questionStringJSON = info.getString(
                         MyStartedService.MY_SERVICE_QUESTION_INFO_JSON,""
                 );
+
+                Log.i(TAG, "OUR QUESTION JSON: " + questionInformation);
 
                 //make our object when we receive a question
                 questionInformation = gson.fromJson(questionStringJSON,
@@ -86,10 +91,11 @@ public class StudentQuestionActivePage extends AppCompatActivity {
 
                 answerType = questionInformation.getQuestionType();
                 Log.i(TAG, "onReceive: " + questionInformation.getDescription());
-                Toast.makeText(StudentQuestionActivePage.this, "GOT QUESTION!",
+                Toast.makeText(StudentQuestionActivePage.this,
+                        questionInformation.getQuestionType(),
                         Toast.LENGTH_LONG).show();
 
-                mService.searchActiveQuestion(questionSetId,"false");
+                mService.searchActiveQuestion(questionSetId,"true");
 
             }
             else{
@@ -123,9 +129,9 @@ public class StudentQuestionActivePage extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle info = intent.getExtras();
-            Log.i(TAG, "onReceive: " + "service message received");
 
             if(info != null){
+                Log.i(TAG, "onReceive: " + "activeQuestionReceiver -> message received");
                 //ask again to make sure
                 mService.searchActiveQuestion(questionSetId, "false");
 
