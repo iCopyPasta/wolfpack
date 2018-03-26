@@ -143,6 +143,16 @@ public class StudentSessionPage extends AppCompatActivity {
                 if(questionSessionId != null && questionSetId != null){
                     Log.i(TAG, "onReceive: " + "Looking for active question again");
 
+                    if(!questionSessionId.equals(
+                            info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID))){
+                        //we have a new session!
+                        Toast.makeText(StudentSessionPage.this,
+                                "NEW SESSION",
+                                Toast.LENGTH_SHORT).show();
+
+                        //TODO: in the event of a "switch-a-roo", implement logic
+                    }
+
                     if(!foundQuestion && questionSetId != null){
                         Log.i(TAG, "onReceive: " + "re-seeking active question");
                         mService.searchActiveQuestion(questionSetId, "false");

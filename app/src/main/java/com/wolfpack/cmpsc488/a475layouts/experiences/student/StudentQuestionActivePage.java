@@ -105,8 +105,6 @@ public class StudentQuestionActivePage extends AppCompatActivity {
                     mService.searchActiveQuestion(questionSetId,"false");
 
                 }
-
-
             }
             else{
                 errorCount++;
@@ -151,6 +149,16 @@ public class StudentQuestionActivePage extends AppCompatActivity {
                 //ask again to make sure we're an alive session
                 if(questionInformation != null){
                     mService.searchActiveQuestion(questionSetId, "false");
+
+                    String s = info.getString(MyStartedService.MY_SERVICE_QUESTION_ID);
+                    if(!questionInformation.getQuestionId().equals(s)){
+                        //we have a new question!
+                        Toast.makeText(StudentQuestionActivePage.this,
+                                "NEW QUESTION",
+                                Toast.LENGTH_SHORT).show();
+                        //TODO: in the event of a "switch-a-roo", implement logic
+
+                    }
                 }
                 //you may not have gotten an answer for your life info, yet, try up to 3 times
                 else{
@@ -301,3 +309,27 @@ public class StudentQuestionActivePage extends AppCompatActivity {
     }
 
 }
+
+/*else{ garbage code lel
+        String potentialNewResult = info.getString(
+        MyStartedService.MY_SERVICE_QUESTION_INFO_JSON,""
+        );
+
+        if( potentialNewResult != null &&
+        !questionStringJSON.equals(potentialNewResult)){
+
+        //make our object when we receive a new question
+        questionInformation = gson.fromJson(questionStringJSON,
+        QuestionInformation.class);
+
+        answerType = questionInformation.getQuestionType();
+
+        //is there yet an active question?
+        mService.searchActiveQuestion(questionSetId,"false");
+
+        //we have a new question!
+        Toast.makeText(StudentQuestionActivePage.this,
+        "NEW QUESTION",
+        Toast.LENGTH_SHORT).show();
+        }
+        }*/
