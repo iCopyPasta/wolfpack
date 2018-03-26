@@ -22,18 +22,14 @@ import java.util.List;
 class AnswerChoiceRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     public RadioButton answerItem;
-    private Context context;
 
     private ItemClickListener itemClickListener;
-
 
 
     public AnswerChoiceRecyclerViewHolder(View view, boolean isClickable) {
         super(view);
         answerItem = (RadioButton) view.findViewById(R.id.radioButtonAnswer);
         answerItem.setClickable(isClickable);
-
-        context = view.getContext();
 
         itemView.setOnClickListener(this);
     }
@@ -43,15 +39,14 @@ class AnswerChoiceRecyclerViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     public void setIsCorrectAnswer(boolean isCorrectAnswer){
-        if (isCorrectAnswer){
-            answerItem.setBackgroundColor(context.getResources().getColor(R.color.colorCorrectAnswer));
-        }
+        if (isCorrectAnswer)
+            answerItem.setBackgroundColor(answerItem.getContext().getResources().getColor(R.color.colorCorrectAnswer));
         else
-            answerItem.setBackgroundColor(context.getResources().getColor(R.color.colorWrongAnswer));
+            answerItem.setBackgroundColor(answerItem.getContext().getResources().getColor(R.color.colorWrongAnswer));
 
 //        answerItem.setBackgroundColor((isCorrectAnswer) ?
-//                context.getResources().getColor(R.color.colorCorrectAnswer):
-//                context.getResources().getColor(R.color.colorWrongAnswer));
+//                answerItem.getContext().getResources().getColor(R.color.colorCorrectAnswer):
+//                answerItem.getContext().getResources().getColor(R.color.colorWrongAnswer));
 
     }
 

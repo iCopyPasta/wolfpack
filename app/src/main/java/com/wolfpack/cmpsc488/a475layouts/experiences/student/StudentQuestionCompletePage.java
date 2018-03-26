@@ -58,6 +58,7 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
                 case QUESTION_TYPE_TRUE_FALSE:
                     handleQuestionTrueFalse(bundle);
                     break;
+                //TODO: must look for solution to problem (posted below)
                 case QUESTION_TYPE_CHOICE:
                     handleQuestionChoice(bundle);
                     break;
@@ -75,10 +76,16 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
 
     }
 
-
+    /**
+     * handleQuestionSelection handle the case that the question being displayed is a selection question
+     * Bundle must hold the following:
+     *     "answerList" : List<String> (a list of possible answers)
+     *     "correctAnswers" : List<Integer> (a list of indices into the answerList that are correct answers)
+     *     "studentAnswers" : List<Integer> (a list of indices into the answerList that were the student answers)
+     * @param info
+     */
     private void handleQuestionSelection(Bundle info){
         mRecyclerViewSelection.setVisibility(View.VISIBLE);
-        //TODO: highlight selected answers and correct answers
 
         ArrayList<String> answerList = info.getStringArrayList("answerList");
         ArrayList<Integer> correctAnswers = info.getIntegerArrayList("correctAnswers");
@@ -88,7 +95,7 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
         mRecyclerViewSelection.setHasFixedSize(false);
         recyclerLayoutManager = new LinearLayoutManager(this);
         mRecyclerViewSelection.setLayoutManager(recyclerLayoutManager);
-        selectionAdapter = new AnswerSelectionRecyclerAdapter(answerList, getApplicationContext(), false);
+        selectionAdapter = new AnswerSelectionRecyclerAdapter(getApplicationContext(), answerList, correctAnswers, studentAnswers, false);
 
         selectionAdapter.setItemClickListener(new ItemClickListener() {
             @Override
@@ -103,7 +110,13 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
     }
 
 
-    //@SuppressLint("ResourceAsColor")
+    /**
+     * handleQuestionTrueFalse handle the case that the question being displayed is a true false question
+     * Bundle must hold the following:
+     *     "correctAnswers" : Boolean (the correct answer)
+     *     "studentAnswers" : Boolean (the student's answer)
+     * @param info
+     */
     private void handleQuestionTrueFalse(Bundle info){
         mRadioGroupTrueFalse.setVisibility(View.VISIBLE);
 
@@ -130,6 +143,18 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
         Log.i(TAG, "finished handleQuestionTrueFalse");
     }
 
+
+
+    /**
+     * handleQuestionSelection handle the case that the question being displayed is a selection question
+     * Bundle must hold the following:
+     *     "answerList" : List<String> (a list of possible answers)
+     *     "correctAnswers" : List<Integer> (a list of indices into the answerList that are correct answers)
+     *     "studentAnswers" : Integer (an indices into the answerList that was the student answers)
+     * @param info
+     */
+    //TODO: Choice questions: radio buttons not working, will need to create own version OR
+    //TODO:     find a way to dynamically add more radio buttons to a radio group
     private void handleQuestionChoice(Bundle info){
         mRadioGroupChoice.setVisibility(View.VISIBLE);
         mRecyclerViewChoice.setVisibility(View.VISIBLE);

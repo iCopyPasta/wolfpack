@@ -67,6 +67,7 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
         catch (NullPointerException e){
             Log.i(TAG,"StudentClassPage got NullPointerException");
             Log.i(TAG, e.getMessage());
+            throw e;
         }
 
     }
