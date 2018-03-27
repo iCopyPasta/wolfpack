@@ -144,7 +144,7 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
                     if(!questionSessionId.equals(
                             info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID))){
                         //we have a new session!
-                        Toast.makeText(StudentSessionPage.this,
+                        Toast.makeText(StudentSessionActivePage.this,
                                 "NEW SESSION",
                                 Toast.LENGTH_SHORT).show();
 
