@@ -116,7 +116,7 @@ public class StudentQuestionActivePage extends AppCompatActivity {
                             "Error", Toast.LENGTH_SHORT).show();
                     //go back!
                     Intent activeSessionIntent = new Intent(StudentQuestionActivePage.this,
-                            StudentSessionPage.class);
+                            StudentSessionActivePage.class);
 
                     activeSessionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
                             questionSetId);
@@ -174,7 +174,7 @@ public class StudentQuestionActivePage extends AppCompatActivity {
 
                 //extras to give back
                 Intent activeSessionIntent = new Intent(StudentQuestionActivePage.this,
-                        StudentSessionPage.class);
+                        StudentSessionActivePage.class);
 
                 activeSessionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
                         questionSetId);

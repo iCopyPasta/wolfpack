@@ -72,6 +72,7 @@ public class MainPage extends AppCompatActivity {
     }
 
     public void onLogin(View view){
+        Log.i(TAG, "onLogin is called");
 
         int id = view.getId();
 
@@ -89,6 +90,7 @@ public class MainPage extends AppCompatActivity {
     }
 
     public void onSignUp(View view){
+        Log.i(TAG, "onSignup is called");
         Intent intent = new Intent(this, SignUp.class);
         startActivity(intent);
     }

@@ -119,7 +119,7 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
     public void onPositiveClick(Bundle info){
         Log.i(TAG, "onPositiveClick called, moving to StudentSessionPage" );
 
-        Intent intent = new Intent(StudentClassPage.this, StudentSessionPage.class);
+        Intent intent = new Intent(StudentClassPage.this, StudentSessionActivePage.class);
         intent.putExtra("className", "Test Class");
         intent.putExtra("sessionName", "Active Session");
         intent.putExtra("isActive", true);
