@@ -3,6 +3,8 @@
     <string name="textview">TextView</string>
 
 
+    <string name="default_val">default</string>
+
     <!-- Titles of pages -->
     <string name="title_activity_main_page">Pollato</string>
     <string name="title_activity_login_page">Sign in</string>
@@ -63,6 +65,11 @@
     <!-- Strings for Question Page -->
     <string name="title_activity_student_question_page">Question</string>
     <string name="default_question_text">default</string>
+
+    <string name="answerTrue">True</string>
+    <string name="answerFalse">False</string>
+
+
 
 
     <!--TEACHER-->

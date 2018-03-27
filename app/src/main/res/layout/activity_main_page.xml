@@ -7,6 +7,18 @@
     tools:context="com.wolfpack.cmpsc488.a475layouts.MainPage">
 
     <Button
+        android:id="@+id/button7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="32dp"
+        android:onClick="onToClassPage"
+        android:text="to class page"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button2" />
+
+    <Button
         android:id="@+id/createAccountButton"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="234dp"

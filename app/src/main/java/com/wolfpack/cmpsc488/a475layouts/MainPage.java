@@ -123,4 +123,14 @@ public class MainPage extends AppCompatActivity {
         Intent intent = new Intent(this, CameraExample.class);
         startActivity(intent);
     }
+
+
+    public void onToClassPage(View view){
+        Log.i("Main Page", "onToClassPage is called");
+        Intent intent = new Intent(this, StudentClassPage.class);
+        intent.putExtra("className", "AI");
+        startActivity(intent);
+    }
+
+
 }

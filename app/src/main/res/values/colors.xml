@@ -5,4 +5,7 @@
     <color name="colorAccent">#ff538d</color>
     <color name="colorTeacherPrimary">#39935c</color>
     <color name="colorStudentPrimary">#1783ff</color>
+    <color name="colorWrongAnswer">#ec5151</color>
+    <color name="colorCorrectAnswer">#2788ff</color>
+    <color name="colorStudentAnswer">#82e648</color>
 </resources>

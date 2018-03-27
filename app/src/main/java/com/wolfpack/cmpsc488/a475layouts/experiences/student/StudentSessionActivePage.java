@@ -23,14 +23,12 @@ import android.widget.Toast;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
 
-import java.util.ArrayList;
+public class StudentSessionActivePage extends AppCompatActivity { //implements ActiveSessionDialog.ActiveSessionDialogListener {
 
 
-// given MY_SERVICE_QUESTION_SET_ID, MY_SERVICE_QUESTION_SESSION_ID
-// we ask if there is an active question here!
-public class StudentSessionPage extends AppCompatActivity {
-
-    public static final String TAG = "SSessionPage";
+    // given MY_SERVICE_QUESTION_SET_ID, MY_SERVICE_QUESTION_SESSION_ID
+    // we ask if there is an active question here!
+    public static final String TAG = "SSessionActivePage";
 
     private String className = "";
     private String sessionName = "";
@@ -95,7 +93,7 @@ public class StudentSessionPage extends AppCompatActivity {
                 foundQuestion = true;
 
                 //force into StudentQuestionActivePage
-                Intent activeQuestionIntent = new Intent(StudentSessionPage.this,
+                Intent activeQuestionIntent = new Intent(StudentSessionActivePage.this,
                         StudentQuestionActivePage.class);
 
                 activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_ID,
@@ -160,10 +158,10 @@ public class StudentSessionPage extends AppCompatActivity {
                 }
             }
             else{
-                Toast.makeText(StudentSessionPage.this, "Inactive", Toast.LENGTH_SHORT)
+                Toast.makeText(StudentSessionActivePage.this, "Inactive", Toast.LENGTH_SHORT)
                         .show();
 
-                Intent finishedCycle = new Intent(StudentSessionPage.this,
+                Intent finishedCycle = new Intent(StudentSessionActivePage.this,
                         StudentClassPage.class);
 
                 finishedCycle.putExtra("finishedCycle", true);
@@ -232,7 +230,7 @@ public class StudentSessionPage extends AppCompatActivity {
         super.onStart();
 
         //bind to custom service
-        Intent serviceIntent = new Intent(StudentSessionPage.this , MyStartedService.class);
+        Intent serviceIntent = new Intent(StudentSessionActivePage.this , MyStartedService.class);
         startService(serviceIntent);
         bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
 
