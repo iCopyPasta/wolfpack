@@ -106,8 +106,8 @@
         case "attemptLoginStudent":
            
             
-            //$url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_in_student.php";
-            $url = "http://192.168.1.57/pages/Sign_in_student.php";
+            $url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_in_student.php";
+            //$url = "http://192.168.1.57/pages/Sign_in_student.php";
             
             $fields = build_fields($fields, 
                          array("inputEmail", "inputPassword", "android"),
@@ -123,9 +123,9 @@
             
         case "attemptSignUp":
            
-            //$url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_up.php";
+            $url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_up.php";
             //$url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_up_student.php"; <-- anticipatory
-            $url = "http://192.168.1.57/pages/Sign_up.php";
+            //$url = "http://192.168.1.57/pages/Sign_up.php";
             
             $fields = build_fields($fields, 
                          array("inputEmail", "inputPassword", "inputUserTitle","inputConfirmPassword","inputFirstName","inputLastName","android"),
@@ -144,8 +144,8 @@
             break;
             
         case "findClassesToAdd":
-            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchClassesByTitleAndName.php";
-            $url = "http://192.168.1.57/lib/php/searchClassesByTitleAndName.php";
+            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchClassesByTitleAndName.php";
+            //$url = "http://192.168.1.57/lib/php/searchClassesByTitleAndName.php";
             
             $fields = build_fields($fields,
                                    array('title', 'firstName','lastName','currentPage','rowsPerPage'),
@@ -163,8 +163,8 @@
             break;
             
         case "enrollForClass":
-            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/enrollForClass.php";
-            $url = "http://192.168.1.57/lib/php/enrollForClass.php";
+            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/enrollForClass.php";
+            //$url = "http://192.168.1.57/lib/php/enrollForClass.php";
             
             $fields = build_fields($fields,
                                    array('inputStudentId', 'inputClassId',"android"),
@@ -223,8 +223,8 @@
             break;
             
         case "searchActiveSession":
-            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchActiveSession.php"
-            $url = "http://192.168.1.57/lib/php/polling/searchActiveSession.php";
+            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchActiveSession.php"
+            //$url = "http://192.168.1.57/lib/php/polling/searchActiveSession.php";
 	
             $fields = build_fields($fields,
 	                           array("inputClassId","android"),
@@ -237,8 +237,8 @@
             break;
             
         case "searchActiveQuestion":
-            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/searchActiveQuestion.php";
-            $url = "http://192.168.1.57/lib/php/polling/searchActiveQuestion.php";
+            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/searchActiveQuestion.php";
+            //$url = "http://192.168.1.57/lib/php/polling/searchActiveQuestion.php";
             
             $fields = build_fields($fields, 
                          array("inputQuestionSetId","android"),
@@ -252,8 +252,8 @@
             break;
             
         case "searchLiveQuestionInfo":
-            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/searchLiveQuestionInfo.php";
-            $url = "http://192.168.1.57/lib/php/polling/searchLiveQuestionInfo.php";
+            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/searchLiveQuestionInfo.php";
+            //$url = "http://192.168.1.57/lib/php/polling/searchLiveQuestionInfo.php";
             
             $fields = build_fields($fields, 
                          array("inputQuestionId","android"),
@@ -267,8 +267,8 @@
             break;
             
         case "submitAnswer":
-            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/submitAnswer.php";
-            $url = "http://192.168.1.57/lib/php/polling/submitAnswer.php";
+            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/submitAnswer.php";
+            //$url = "http://192.168.1.57/lib/php/polling/submitAnswer.php";
             
             $fields = build_fields($fields, 
                          array("inputStudentId",
