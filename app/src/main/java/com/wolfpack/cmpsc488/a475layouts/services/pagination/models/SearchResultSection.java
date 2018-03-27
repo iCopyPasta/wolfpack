@@ -1,9 +1,10 @@
-package pagination.models;
+package com.wolfpack.cmpsc488.a475layouts.services.pagination.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ClassResult {
+public class SearchResultSection {
+
 
     @SerializedName("class_id")
     @Expose
@@ -20,12 +21,6 @@ public class ClassResult {
     @SerializedName("location")
     @Expose
     private String location;
-    @SerializedName("first_name")
-    @Expose
-    private String firstName;
-    @SerializedName("last_name")
-    @Expose
-    private String lastName;
 
     public String getClassId() {
         return classId;
@@ -67,28 +62,11 @@ public class ClassResult {
         this.location = location;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
 
 
     @Override
     public String toString(){
-        return "title: " + getTitle() +
-                "\ndescription: " + getDescription() +
-                "\nteacher: " + getFirstName() + " " + getLastName();
+        return "title: " + getTitle() + "\ndescription: " + getDescription()
+                + "offering: " + getOffering() + "location: " + getLocation();
     }
-
 }

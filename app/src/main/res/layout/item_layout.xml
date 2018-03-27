@@ -1,30 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardElevation="8dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="?attr/colorBackgroundFloating"
+    app:cardCornerRadius="@dimen/fab_margin"
+    app:cardElevation="14dp"
+    app:contentPadding="@dimen/cardview_default_radius">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@android:drawable/list_selector_background"
-        android:padding="8dp"
-        >
+        android:orientation="vertical"
+        android:padding="8dp">
 
         <TextView
-            android:id="@+id/txtClassName"
+            android:id="@+id/txtTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/txtSectionNo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:textStyle="bold" />
 
         <TextView
@@ -41,6 +37,12 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/txtDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 

@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,10 +23,9 @@ import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
 
 import java.util.ArrayList;
 
-import pagination.ILoadmore;
-import pagination.models.ClassListResult;
-import pagination.models.ClassResult;
-import retrofit2.Call;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.ClassListResult;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.ClassResult;
+
 import retrofit2.Response;
 
 
@@ -140,13 +137,13 @@ public class StudentPageTab1Classlist extends Fragment {
                         currentPage = classlist.size() / visibleThreshold;
                         currentPage = (currentPage <= 1) ? 1 : currentPage;
                         Log.i(TAG, "currentPage == "+currentPage);
-                        new ClassesResultBackgroundTask().execute(
+                        /*new ClassesResultBackgroundTask().execute(
                                 currentPage,
                                 //"dev@dev.com" //email
                                 5,
                                 //student_id
                                 7502 // TODO: change for real student
-                        );
+                        );*/
 
                     }
 
@@ -259,8 +256,9 @@ public class StudentPageTab1Classlist extends Fragment {
         @Override
         protected ClassListResult<ClassResult> doInBackground(Integer... params) {
 
-            try{
-                Log.i(TAG, "starting task");
+            return null;
+            /*try{
+                *//*Log.i(TAG, "starting task");
                 client = StudentPage.getWolfpackClientInstance();
                 Log.i(TAG, "configuring params");
 
@@ -280,7 +278,8 @@ public class StudentPageTab1Classlist extends Fragment {
                 response = call.execute();
                 Log.i(TAG, "received results");
 
-                return response.body();
+                return null;*//*
+
             }
             catch(java.net.ConnectException e){
                 Log.e(TAG, e.getMessage());
@@ -297,7 +296,7 @@ public class StudentPageTab1Classlist extends Fragment {
             catch (Exception e){
                 Log.e(TAG, e.getClass().toString() + e.getMessage());
                 return null;
-            }
+            }*/
 
         }
 

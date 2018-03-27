@@ -11,16 +11,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
-import pagination.ILoadmore;
-import pagination.PaginationAdapter;
-import pagination.models.SearchClassResult;
-import pagination.models.SearchResultSection;
+
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.ILoadmore;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.PaginationAdapter;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.SearchClassResult;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.SearchResultSection;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -31,7 +31,8 @@ public class StudentPageTab2AddClass extends Fragment {
     ArrayList<SearchResultSection> items = new ArrayList<>();
     PaginationAdapter adapter;
     EditText classIdSearchEditText;
-    EditText teacherNameSearchEditText;
+    EditText teacherFirstName;
+    EditText teacherLastName;
     boolean isBackgroundTaskRunning;
 
     @Override
@@ -45,7 +46,8 @@ public class StudentPageTab2AddClass extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         classIdSearchEditText = getActivity().findViewById(R.id.classIdSearchEditText);
-        teacherNameSearchEditText = getActivity().findViewById(R.id.classTeacherSearchEditText);
+        teacherFirstName = getActivity().findViewById(R.id.classTeacherFirstNameEditText);
+        teacherLastName = getActivity().findViewById(R.id.classTeacherLastNameEditText);
 
 
         // Grab our recycler view and set its adapter;
@@ -66,14 +68,16 @@ public class StudentPageTab2AddClass extends Fragment {
                         } else{
                             isBackgroundTaskRunning = true;
                             new ResultBackgroundTask().execute(
-                                    classIdSearchEditText.getText().toString());
+                                    classIdSearchEditText.getText().toString(),
+                                    teacherFirstName.getText().toString(),
+                                    teacherLastName.getText().toString());
                         }
                     }
                 }
         );
 
         // Set our listener to search based on the correct specification
-        teacherNameSearchEditText.setOnKeyListener(
+        teacherLastName.setOnKeyListener(
                 new View.OnKeyListener() {
                     @Override
                     public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
@@ -82,16 +86,20 @@ public class StudentPageTab2AddClass extends Fragment {
                         if(keyCode == KeyEvent.KEYCODE_ENTER &&
                                 keyEvent.getAction() == KeyEvent.ACTION_UP){
 
-                                if(adapter.getItemCount() == 0){
-                                    Log.i("onKey", "adapter has no items");
-                                }
-
                                 if(isBackgroundTaskRunning){
                                     Log.i("adapter:onLoadMore", "we avoided multiple requests!");
                                 } else{
+
                                     isBackgroundTaskRunning = true;
+                                    if(adapter.getItemCount() > 0){
+                                        adapter.clearData();
+                                        adapter.notifyDataSetChanged();
+                                    }
+
                                     new ResultBackgroundTask().execute(
-                                            classIdSearchEditText.getText().toString());
+                                            classIdSearchEditText.getText().toString(),
+                                            teacherFirstName.getText().toString(),
+                                            teacherLastName.getText().toString());
                                 }
                         }
                         return false;
@@ -114,19 +122,56 @@ public class StudentPageTab2AddClass extends Fragment {
             try {
                 Log.i(TAG, "About to try network request out");
 
-                client = StudentPage.getWolfpackClientInstance();
+                //debugging client:
+                //client = WolfpackClient.debugRetrofit.create(WolfpackClient.class);
+                client = WolfpackClient.retrofit.create(WolfpackClient.class);
 
                 Log.i(TAG, "setting call with parameters");
 
-                Call<SearchClassResult<SearchResultSection>> call = client.findClasses(
-                        adapter.getLastPageNumber(),
+                if(params[0].equals("")){
+                    Log.i(TAG, "doInBackground: set params[0] to wildcard");
+
+                    params[0] = "%";
+                }
+                if(params[1].equals("")){
+                    params[1] = "%";
+
+                }
+                if(params[2].equals("")){
+
+                    params[2] = "%";
+                }
+
+                Call<SearchClassResult<SearchResultSection>> call = client.findClassesToAdd(
                         params[0],
-                        "findClasses");
+                        params[1],
+                        params[2],
+                        adapter.getLastPageNumber(),
+                        adapter.getRowsPerPage(),
+                        "findClassesToAdd"
+                );
+
+                //HTML debugging
+                /*Call<ResponseBody> call = client.testFindClassesToAdd(
+                        params[0],
+                        params[1],
+                        params[2],
+                        1,
+                        5,
+                        "findClassesToAdd");
 
                 Log.i(TAG, "waiting on potential values");
-                response = call.execute();
+
+                Response<ResponseBody> xd = call.execute();
+                System.out.println("response code: " + xd.headers());
+                System.out.println("BODY: " + xd.body().string());
+
+
+                        //response = call.execute();
                 Log.i(TAG, "execution finished, returning body");
 
+                return response.body();*/
+                response = call.execute();
                 return response.body();
 
                 //TODO: ADD SECURE TRY-CATCH BLOCKS FOR VARIOUS POSSIBILITIES!
@@ -150,9 +195,10 @@ public class StudentPageTab2AddClass extends Fragment {
             //we successfully retrieved a valid value back from server
             if(result != null){
                 Log.i(TAG, "result was not null");
-
+                Log.i(TAG, result.toString());
+                adapter.setServerTotal(result.getTotalPages());
                 items.addAll(result.getDetailedObjects());
-                adapter.notifyItemInserted(items.size() - 1);
+                //adapter.notifyItemInserted(items.size() - 1);
                 adapter.notifyDataSetChanged();
 
                 Log.i(TAG, "result: " + result.toString());
@@ -172,8 +218,7 @@ public class StudentPageTab2AddClass extends Fragment {
 
         @Override
         protected void onCancelled() {
-            //TODO: show some error in the screen
-            Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -1,5 +1,5 @@
 
-package pagination.models;
+package com.wolfpack.cmpsc488.a475layouts.services.pagination.models;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;
