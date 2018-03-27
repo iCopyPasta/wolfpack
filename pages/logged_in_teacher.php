@@ -123,6 +123,7 @@
 
     <div class="container">
     <h1 class="display-5 text-center">Current Classes</h1>
+    <a style="text-decoration: none" href ="manage_class.php"> <button id="manageClassButton" class="btn btn-info btn-lg btn-block" >Manage My Classes</button></a>
         <div class="card-deck mb-3 text-center">
         <?php
         
@@ -151,7 +152,7 @@
             <a href=\"choosePolledQuestionSet.php?class_id=$classId\"> <button type=\"button\" class=\"btn btn-lg btn-block btn-primary\">Poll Class</button></a>
           </div>
         </div>";
-        }                               //TODO: link poll class to the class poll using the proper parameter send structure
+        }                               
             
         if (empty($removeZerothIndex)) {
             echo "<br><h3 class=\"display-5 text-center\">You have no classes! Create one!</h3>";

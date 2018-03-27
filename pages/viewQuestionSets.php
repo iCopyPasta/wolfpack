@@ -5,7 +5,7 @@
         // logged in
         
         } else {
-        // not logged in as student
+        // not logged in as teacher
         header("Location: ..\index.php");
         }
 
@@ -20,7 +20,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
 
-    <title>Teacher Center</title>
+    <title>Question Set Manager</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">

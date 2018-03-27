@@ -22,32 +22,40 @@
   $insertEmail = (isset($_POST['inputEmail']) ? $_POST['inputEmail'] : null);
   $insertPass = (isset($_POST['inputPassword']) ? $_POST['inputPassword'] : null);
   $insertPass2 = (isset($_POST['inputConfirmPassword']) ? $_POST['inputConfirmPassword'] : null);
+  $first_name = (isset($_POST['first_name']) ? $_POST['first_name'] : null);
+  $last_name = (isset($_POST['last_name']) ? $_POST['last_name'] : null);
+  $title = (isset($_POST['title']) ? $_POST['title'] : null);
   $android = isset($_POST["android"]) ? $_POST["android"] : false;
   $matchPWString = '';
   
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // email,pw1,pw2 are all not null
-    if(!(is_null($insertEmail) && is_null($insertPass) && is_null($insertPass2))) {
-      //email does not already exist
+    // email,pw1,pw2, fname, lname are all not null
+    if(!(is_null($insertEmail) || is_null($insertPass) || is_null($insertPass2) || is_null($first_name) || is_null($last_name) || is_null($title))) {
       $selectStudentAccount = new StudentAccount('%','%','%', '%', $insertEmail, '%', '%', '%');
       $qJSON = json_decode($selectStudentAccount->select(), true);
       $emailExist = isset($qJSON[1]['email']) ? $qJSON[1]['email'] : null;
+
+      //email does not already exist
       if(is_null($emailExist)) {
         //pw1 == pw2
         if(passwordMatch($insertPass, $insertPass2)) {
-         
           //good things happen here!
           $options = ['cost' => 11];
           $hashPassword = password_hash($insertPass, PASSWORD_BCRYPT, $options);
-          $selectStudentAccount = new StudentAccount('thisValueIsIgnored','firstname', 'lastname', $hashPassword,$insertEmail, 'undefined', 'undefined', '0');
+          $selectStudentAccount = new StudentAccount('thisValueIsIgnored',
+                                                      $first_name,
+                                                      $last_name,
+                                                      $hashPassword,
+                                                      $insertEmail,
+                                                      $title,
+                                                      'undefined', // this is inserted using registerConfirmation.php code below
+                                                      '0');
           echo $selectStudentAccount->insert(); // insert method returns a json_encoded response
           include('../lib/php/registerConfirmation.php');
           addUniqueHash($connection,$insertEmail); //sets UniqueID and confirmed vars in db, custom function -TR
           if(boolval($android)){
             exit(0);
           }
-            
-          
         } //pw1 != pw2
         else {
           //android pw1 != pw2
@@ -87,18 +95,18 @@
       }
     } // email,pw1,pw2 null
     else {
-      //android email,pw1,pw2 null
+      //android email || pw1 || pw2 || fname || lname || title are null
       if(boolval($android)){
         $response = array();
-        $response["message"] = "ERROR: email and pw cannot be null";
+        $response["message"] = "ERROR: fields cannot be null";
         $response["success"] = 0;
         echo json_encode($response);
         exit(0);
       }
-      //web email,pw1,pw2 null
+      //web email || pw1 || pw2 || fname || lname || title are null
       else{
         $response = array();
-        $response["message"] = "ERROR: email and pw cannot be null";
+        $response["message"] = "ERROR: fields cannot be null";
         $response["success"] = 0;
         echo json_encode($response);
         $matchPWString = '<div class="alert alert-danger">
@@ -118,7 +126,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Signin Template for Bootstrap</title>
+    <title>Student Sign Up</title>
 
     <!-- Bootstrap core CSS
     <link href="../../../../dist/css/bootstrap.min.css" rel="stylesheet">-->
@@ -194,6 +202,15 @@ body {
          <form class="form-signin" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
                <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
                <h1 class="h3 mb-3 font-weight-normal">Sign up</h1>
+
+               <label for="first_name" class="sr-only">Email address</label>
+               <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name" required autofocus>
+
+               <label for="last_name" class="sr-only">Email address</label>
+               <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Last Name" required autofocus>
+
+               <label for="title" class="sr-only">Email address</label>
+               <input type="text" name="title" id="title" class="form-control" placeholder="Title" required autofocus>
 
                <label for="inputEmail" class="sr-only">Email address</label>
                <input type="email" name="inputEmail" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>

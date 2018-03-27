@@ -48,8 +48,10 @@
             $response["message"] = "Success(android): email + password found";
             $response["success"] = 1;
             $response["student_id"] = $qJSON[1]['student_id'];
+            
             echo json_encode($response);
             exit(0);
+            
           } //web login success
           else {
             $response = array();
@@ -158,7 +160,7 @@
   <meta name="author" content="">
   <link rel="icon" href="../../../../favicon.ico">
 
-  <title>Signin Template for Bootstrap</title>
+  <title>Student Sign In</title>
 
   <!-- Bootstrap core CSS
   <link href="../../../../dist/css/bootstrap.min.css" rel="stylesheet">-->
