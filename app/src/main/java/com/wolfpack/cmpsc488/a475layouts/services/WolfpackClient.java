@@ -121,8 +121,10 @@ public interface WolfpackClient{
     @FormUrlEncoded
     @POST(FEED)
     Call<ClassListResult<ClassResult>> findEnrolledClasses(
-            @Field("inputCurrentPageNumber") int currentPage,
-            @Field("inputUserEmail") String email,
+            @Field("currentPage") int currentPage,
+            @Field("rowsPerPage") int rowsPerPage,
+            @Field("student_id") int student_id,
+            //@Field("inputUserEmail") String email,
             @Field("inputMethodName") String methodName
     );
 

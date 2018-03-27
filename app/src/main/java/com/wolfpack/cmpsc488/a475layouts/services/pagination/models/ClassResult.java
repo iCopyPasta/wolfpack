@@ -5,33 +5,90 @@ import com.google.gson.annotations.SerializedName;
 
 public class ClassResult {
 
-    @SerializedName("course_instructor")
+    @SerializedName("class_id")
     @Expose
-    private String courseInstructor;
+    private String classId;
     @SerializedName("title")
     @Expose
-    private String courseDescription;
+    private String title;
+    @SerializedName("description")
+    @Expose
+    private String description;
+    @SerializedName("offering")
+    @Expose
+    private String offering;
+    @SerializedName("location")
+    @Expose
+    private String location;
+    @SerializedName("first_name")
+    @Expose
+    private String firstName;
+    @SerializedName("last_name")
+    @Expose
+    private String lastName;
 
-    public String getCourseInstructor() {
-        return courseInstructor;
+    public String getClassId() {
+        return classId;
     }
 
-    public void setCourseInstructor(String courseInstructor) {
-        this.courseInstructor = courseInstructor;
+    public void setClassId(String classId) {
+        this.classId = classId;
     }
 
-    public String getCourseDescription() {
-        return courseDescription;
+    public String getTitle() {
+        return title;
     }
 
-    public void setCourseDescription(String courseDescription) {
-        this.courseDescription = courseDescription;
+    public void setTitle(String title) {
+        this.title = title;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getOffering() {
+        return offering;
+    }
+
+    public void setOffering(String offering) {
+        this.offering = offering;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
 
     @Override
     public String toString(){
-        return "instructor: " + courseInstructor +
-                ", course: " + courseDescription;
+        return "title: " + getTitle() +
+                "\ndescription: " + getDescription() +
+                "\nteacher: " + getFirstName() + " " + getLastName();
     }
 
 }
