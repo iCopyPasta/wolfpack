@@ -223,7 +223,7 @@
             break;
             
         case "searchActiveSession":
-            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchActiveSession.php"
+            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchActiveSession.php";
             //$url = "http://192.168.1.57/lib/php/polling/searchActiveSession.php";
 	
             $fields = build_fields($fields,
