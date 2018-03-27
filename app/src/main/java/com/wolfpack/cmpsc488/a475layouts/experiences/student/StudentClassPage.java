@@ -12,6 +12,7 @@ import android.support.design.widget.TabLayout;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.TabAdapter;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
 //import android.widget.Toolbar;
 
 
@@ -24,7 +25,7 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
 
     private String className;
     private Toolbar classNameDisplay;
-
+    private String classId = null;
 
     private TabAdapter mTabAdapter;
     private ViewPager mViewPage;
@@ -44,6 +45,9 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
             //get class name
             bundle = getIntent().getExtras();
             className = (String) bundle.get("className");
+
+            //get classId
+            classId = bundle.getString("classId");
 
             Log.i(TAG, "in try before classNameDisplay assignment");
 
@@ -102,6 +106,8 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
         return className;
     }
 
+    public String getClassId(){ return classId; }
+
 
 
     /**
@@ -109,15 +115,23 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
      */
 
     @Override
-    public void onPositiveClick(){
-        //Toast.makeText(getApplicationContext(), "Hello from onPositiveClick", Toast.LENGTH_LONG).show();
+    public void onPositiveClick(Bundle info){
+        Log.i(TAG, "onPositiveClick called, moving to StudentSessionPage" );
 
-        //send user to an active session's page
-        Intent intent = new Intent(getApplicationContext(), StudentSessionPage.class);
-        intent.putExtra("className", className);
-        //TODO: decide who gets the session name
-        //intent.putExtra("sessionName", "");
+        Intent intent = new Intent(StudentClassPage.this, StudentSessionPage.class);
+        intent.putExtra("className", "Test Class");
+        intent.putExtra("sessionName", "Active Session");
         intent.putExtra("isActive", true);
+        intent.putExtra("classId", classId);
+
+
+        intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
+                info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID));
+
+        intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID,
+                info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID));
+
+
         startActivity(intent);
 
     }

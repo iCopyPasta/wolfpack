@@ -14,6 +14,14 @@ import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.ClassListRes
 import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.ClassResult;
 import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.SearchClassResult;
 import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.SearchResultSection;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveQuestionInfo;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveSessionInfo;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.PollingResults;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -39,8 +47,6 @@ public interface WolfpackClient{
 
     String FEED = "/lib/php/androidAPI.php";
 
-
-
     Gson gson = new GsonBuilder()
             .setLenient()
             .create();
@@ -64,7 +70,15 @@ public interface WolfpackClient{
 
     @FormUrlEncoded
     @POST(FEED)
-    Call<LoginDetails> attemptLogin(
+    Call<LoginDetails> attemptLoginStudent(
+            @Field("inputMethodName") String methodName,
+            @Field("inputEmail") String email,
+            @Field("inputPassword") String password
+    );
+
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<LoginDetails> attemptLoginTeacher(
             @Field("inputMethodName") String methodName,
             @Field("inputEmail") String email,
             @Field("inputPassword") String password
@@ -74,10 +88,12 @@ public interface WolfpackClient{
     @POST(FEED)
     Call<LoginDetails> attemptSignUp(
             @Field("inputMethodName") String methodName,
+            @Field("inputUserTitle") String inputTitle,
             @Field("inputFirstName") String first_name,
             @Field("inputLastName") String last_name,
             @Field("inputEmail") String email,
-            @Field("inputPassword") String password
+            @Field("inputPassword") String password,
+            @Field("inputConfirmPassword") String confirmPassword
     );
 
     @FormUrlEncoded
@@ -117,7 +133,6 @@ public interface WolfpackClient{
 
     );
 
-    //Change to your JSON response
     @FormUrlEncoded
     @POST(FEED)
     Call<ClassListResult<ClassResult>> findEnrolledClasses(
@@ -136,6 +151,68 @@ public interface WolfpackClient{
             @Field("inputMethodName") String methodName
     );
 
+    // Polling Calls
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<PollingResults<ActiveSessionInfo>> searchActiveSession(
+            @Field("inputClassId") String inputClassId,
+            @Field("inputMethodName") String methodName
+    );
 
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<ResponseBody> testActiveSession(
+            @Field("inputClassId") String inputClassId,
+            @Field("inputMethodName") String methodName
+    );
 
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<PollingResults<ActiveQuestionInfo>> searchActiveQuestion(
+            @Field("inputQuestionSetId") String inputQuestionSetId,
+            @Field("inputMethodName") String methodName
+    );
+
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<ResponseBody> testActiveQuestion(
+            @Field("inputQuestionSetId") String  inputQuestionSetId,
+            @Field("inputMethodName") String methodName
+    );
+
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<PollingResults<QuestionInformation>> searchLiveQuestionInfo(
+            @Field("inputQuestionId") String  inputQuestionId,
+            @Field("inputMethodName") String methodName
+    );
+
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<ResponseBody> testLiveQuestionInfo(
+            @Field("inputQuestionId") String  inputQuestionId,
+            @Field("inputMethodName") String methodName
+    );
+
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<BasicWolfpackResponse> submitAnswer(
+            @Field("inputStudentId") String inputStudentId,
+            @Field("inputSessionId") String  inputSessionId,
+            @Field("inputQuestionHistoryId") String inputQuestionHistoryId,
+            @Field("inputAnswerType") String inputAnswerType,
+            @Field("inputAnswer") String inputAnswer,
+            @Field("inputMethodName") String methodName
+    );
+
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<ResponseBody> testSubmitAnswer(
+            @Field("inputStudentId") String inputStudentId,
+            @Field("inputSessionId") String  inputSessionId,
+            @Field("inputQuestionHistoryId") String inputQuestionHistoryId,
+            @Field("inputAnswerType") String inputAnswerType,
+            @Field("inputAnswer") String inputAnswer,
+            @Field("inputMethodName") String methodName
+    );
 }

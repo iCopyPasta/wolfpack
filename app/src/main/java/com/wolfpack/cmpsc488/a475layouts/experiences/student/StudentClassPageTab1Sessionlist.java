@@ -1,5 +1,8 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
+import android.app.AlertDialog;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
@@ -27,17 +30,17 @@ import android.widget.Toast;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyJobService;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
-
+// given our class id, we ask if there is an active session here!
 public class StudentClassPageTab1Sessionlist extends Fragment {
 
     private static final String TAG = "TCPTab1Sessionlist";
 
     private String className;
+    private String classId;
 
     private ListView mListViewSessions;
     private static String[] sessionlistTemp = {"Session 01", "Session 02", "Session XD"};
 
-    //private JobScheduler jobScheduler;
     private MyStartedService mService;
 
     private final ServiceConnection mServiceConn = new ServiceConnection() {
@@ -52,17 +55,16 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
                 Log.e(TAG, "mService is null");
             } else{
                 Log.i(TAG, "onServiceConnected: myService is not null: ");
-            }
+                mService.searchActiveSession(classId, "true");
 
-            //we can our first initialization of this
-            mService.requestActiveSession("string 1", "string 2", "string 3");
+            }
 
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
             if(mService != null){
-                Log.i(TAG, "onServiceDisconnected: should make null here");
+                Log.i(TAG, "onServiceDisconnected: " + TAG + " disconnected from MyStartedService");
             }
         }
     };
@@ -71,31 +73,34 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle info = intent.getExtras();
+            Log.i(TAG, "onReceive: " + "service message received");
 
             if(info != null){
-                String key = info.getString("key");
 
-                if (key != null) {
-                    switch (key){
+                //TODO: show dialog here!
+                //TODO: implement dialog interface then
+                ActiveSessionDialog activeSessionDialog= new ActiveSessionDialog();
+                activeSessionDialog.setInfo(info);
 
-                        case "poll":
-                            Toast.makeText(getContext(), "move me somewhere", Toast.LENGTH_SHORT).show();
-                            break;
-                        case "no poll":
-                            Toast.makeText(getContext(), "try again", Toast.LENGTH_SHORT).show();
-                            mService.testValue();
-                            break;
-                    }
-                }
+                FragmentManager fragmentManager = getActivity().getFragmentManager();
+
+                activeSessionDialog.show(fragmentManager, TAG);
 
             }
+            else{
+                Log.i(TAG, "onReceive: " + "no poll found for class " + classId);
+                mService.searchActiveSession(classId, "false");
+            }
 
-            Log.i(TAG, "onReceive: " + "service message received");
+
         }
     };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        classId = ((StudentClassPage) getActivity()).getClassId();
+
         View rootView = inflater.inflate(R.layout.fragment_student_class_page_tab1_sessionlist, container, false);
 
         try {
@@ -122,6 +127,7 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
                     intent.putExtra("className", className);
                     intent.putExtra("sessionName", mListViewSessions.getItemAtPosition(position).toString());
                     intent.putExtra("isActive", false);
+                    intent.putExtra("classId", classId);
                     startActivity(intent);
                 }
             });
@@ -134,13 +140,9 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
         return rootView;
     }
 
-    //-----experimentation with background work
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-
-        //define our receivers and listeners
-
 
 
     }
@@ -156,7 +158,7 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
         LocalBroadcastManager.getInstance(
                 getActivity().getApplicationContext())
-                .registerReceiver(mReceiver, new IntentFilter("ServiceMessage"));
+                .registerReceiver(mReceiver, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_SESSION));
 
     }
 
@@ -165,29 +167,11 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
     public void onResume(){
         super.onResume();
 
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            jobScheduler = (JobScheduler) getActivity().getSystemService(
-                    Context.JOB_SCHEDULER_SERVICE);
-
-            PersistableBundle persistableBundle = new PersistableBundle(3);
-            persistableBundle.putString("class", "Tab1SessionList");
-
-            JobInfo jobInfo = new JobInfo.Builder(4242,
-                    new ComponentName(getActivity(), MyJobService.class))
-                    .setOverrideDeadline(10000)
-                    .setExtras(persistableBundle)
-                    .build();
-
-            jobScheduler.schedule(jobInfo);
-        }*/
-
     }
 
     @Override
     public void onStop(){
         super.onStop();
-
-        //jobScheduler = null;
 
         getContext().unbindService(mServiceConn);
 
