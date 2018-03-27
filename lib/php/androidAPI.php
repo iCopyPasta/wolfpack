@@ -128,7 +128,7 @@
             //$url = "http://192.168.1.57/pages/Sign_up.php";
             
             $fields = build_fields($fields, 
-                         array("inputEmail", "inputPassword", "inputUserTitle","inputConfirmPassword","inputFirstName","inputLastName","android"),
+                         array("inputEmail", "inputPassword", "title","inputConfirmPassword","first_name","last_name","android"),
                         $email,
                         $password, 
                         $userTitle,
