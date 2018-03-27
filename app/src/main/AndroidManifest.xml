@@ -37,7 +37,6 @@
         </provider>
 
 
-
         <!--AUTHENTICATION-->
 
         <activity
@@ -62,7 +61,6 @@
             android:label="@string/title_activity_student_class_page"
             android:theme="@style/AppTheme.NoActionBar" />
 
-
         <activity
             android:name=".experiences.student.StudentSessionActivePage"
             android:label="@string/title_activity_student_session_page"/>
@@ -80,9 +78,6 @@
             android:name=".experiences.student.StudentQuestionActivePage"
             android:label="@string/title_activity_student_question_page" />
 
-
-
-
         <!--TEACHER-->
 
         <activity
@@ -95,13 +90,22 @@
             android:label="@string/title_activity_teacher_class_page"
             android:theme="@style/AppTheme.NoActionBar" />
 
-
-
         <!--OTHER ACTIVITIES-->
         <activity
             android:name=".CameraExample"
             android:label="@string/CameraUpload" />
+      
+       <!--SERVICES-->
 
+        <service
+            android:name=".services.pollingsession.MyJobService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".services.pollingsession.MyStartedService"
+            android:enabled="true"
+            android:exported="false"></service>
     </application>
 
 </manifest>

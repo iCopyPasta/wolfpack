@@ -78,9 +78,9 @@ public class MainPage extends AppCompatActivity {
         Intent intent = new Intent(this, LoginPage.class);
 
         switch(id){
-            case R.id.teacherSigninButton:
+            /*case R.id.teacherSigninButton:
                 intent.putExtra(BUTTON_CALLED, USER_MODE_TEACHER);
-                break;
+                break;*/
             case R.id.studentSigninButton:
                 intent.putExtra(BUTTON_CALLED, USER_MODE_STUDENT);
                 break;
@@ -108,9 +108,14 @@ public class MainPage extends AppCompatActivity {
     }
 
     public void onToTeacher(View view){
-        Log.i("Main Page", "onToTeacher is called");
-        Intent intent = new Intent(this, TeacherPage.class);
+        Log.i("Main Page", "on??is called");
+        Intent intent = new Intent(MainPage.this, StudentClassPage.class);
+        intent.putExtra("className", "TEST CLASS");
+        //TODO: USED ONLY FOR TESTING
+        intent.putExtra("classId", "279");
+
         startActivity(intent);
+
     }
 
     public void onCameraExample(View view){

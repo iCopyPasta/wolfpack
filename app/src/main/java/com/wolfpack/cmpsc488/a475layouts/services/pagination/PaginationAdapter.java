@@ -1,6 +1,9 @@
-package pagination;
+package com.wolfpack.cmpsc488.a475layouts.services.pagination;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,10 +15,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
-import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentPage;
+import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
 
 import java.util.ArrayList;
-import pagination.models.SearchResultSection;
+
+import okhttp3.ResponseBody;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.SearchResultSection;
+import com.wolfpack.cmpsc488.a475layouts.services.student_class_management.EnrollClassDialog;
+
+import retrofit2.Call;
 
 /**
  * Created by peo5032 on 3/7/18.
@@ -23,14 +31,21 @@ import pagination.models.SearchResultSection;
 
 public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public interface onClassSelectToEnrollListener{
+        void onClassSelected(String student_id, String class_id);
+    }
+
     private static final int VIEW_TYPE_ITEM = 0, VIEW_TYPE_LOADING = 1;
     private static final String TAG = "PaginationAdapter";
     private ILoadmore loadmore;
     private boolean isLoading;
     private Activity activity;
     private ArrayList<SearchResultSection> items;
-    private int visibleThreshold = 5;
+    private final int visibleThreshold = 5;
+    private int serverTotal = Integer.MAX_VALUE;
     private int lastVisibleItem, totalItemCount;
+    private int pageNumber = 1;
+    private onClassSelectToEnrollListener mListener;
 
     public PaginationAdapter(
             RecyclerView recyclerView,
@@ -38,6 +53,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ArrayList<SearchResultSection> items){
 
         this.activity = activity;
+        this.mListener = (onClassSelectToEnrollListener) activity;
         this.items = items;
 
         final LinearLayoutManager linearLayoutManager =
@@ -48,19 +64,20 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 Log.i(TAG, "onScrolled called");
                 super.onScrolled(recyclerView, dx, dy);
-                /*totalItemCount = linearLayoutManager.getItemCount();
-                Log.i(TAG, "onScrolled: totalItemCount = " + totalItemCount);
-                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                Log.i(TAG, "onScrolled: lastVisibleItem = " + lastVisibleItem);
 
-                if(!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)){
+                /*totalItemCount = linearLayoutManager.getItemCount();
+                Log.i(TAG, "onScrollState: totalItemCount = " + totalItemCount);
+                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                Log.i(TAG, "onScrolledState: lastVisibleItem = " + lastVisibleItem);
+
+                if(!isLoading && getLastPageNumber() < serverTotal){
                     if(loadmore != null){
+                        Log.i(TAG, "onScrolled: " + serverTotal);
                         Log.i(TAG, "calling onLoadMore");
                         loadmore.onLoadMore();
                         isLoading = true;
                     }
                 }*/
-
 
             }
 
@@ -73,19 +90,22 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (!recyclerView.canScrollVertically(1)) {
-                    Toast.makeText(recyclerView.getContext(),"Last",Toast.LENGTH_SHORT).show();
-                    totalItemCount = linearLayoutManager.getItemCount();
-                    Log.i(TAG, "onScrollState: totalItemCount = " + totalItemCount);
-                    lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                    Log.i(TAG, "onScrolledState: lastVisibleItem = " + lastVisibleItem);
+                    //Toast.makeText(recyclerView.getContext(),"Last",Toast.LENGTH_SHORT).show();
 
-                    if(!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)){
-                        if(loadmore != null){
-                            Log.i(TAG, "calling onLoadMore");
-                            loadmore.onLoadMore();
-                            isLoading = true;
-                        }
+                    totalItemCount = linearLayoutManager.getItemCount();
+                Log.i(TAG, "onScrollState: totalItemCount = " + totalItemCount);
+                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                Log.i(TAG, "onScrolledState: lastVisibleItem = " + lastVisibleItem);
+
+                if(!isLoading && pageNumber < serverTotal){
+                    if(loadmore != null){
+                        Log.i(TAG, "onScrolled: " + serverTotal);
+                        Log.i(TAG, "calling onLoadMore");
+                        pageNumber++;
+                        loadmore.onLoadMore();
+                        isLoading = true;
                     }
+                }
 
                 }
             }
@@ -113,15 +133,16 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        //TODO: implement
 
         if(holder instanceof ItemViewHolder){
             SearchResultSection item = items.get(position);
             ItemViewHolder viewHolder = (ItemViewHolder) holder;
-            viewHolder.className.setText(item.getClassTitle());
+            viewHolder.class_id = item.getClassId();
             viewHolder.offering.setText(item.getOffering());
             viewHolder.location.setText(item.getLocation());
-            viewHolder.sectionNo.setText(String.valueOf(item.getClassSectionNumber()));
+            viewHolder.title.setText(item.getTitle());
+            viewHolder.description.setText(item.getDescription());
+
 
         } else if(holder instanceof LoadingViewHolder){
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
@@ -133,6 +154,22 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public int getRowsPerPage(){
+        return visibleThreshold;
+    }
+
+    public void setServerTotal(int totalItemCount){
+        Log.i(TAG, "setServerTotal: " + totalItemCount);
+        this.serverTotal = totalItemCount;
+    }
+
+    public void clearData(){
+        serverTotal = Integer.MAX_VALUE;
+        pageNumber = 1;
+        items.clear();
+        notifyDataSetChanged();
     }
 
     @Override
@@ -149,13 +186,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.isLoading = false;
     }
 
-    public int getLastPageNumber(){
-        int retValint = items.size() / visibleThreshold;
-        Log.i(TAG, "retValint = "  + retValint);
-        if(retValint <= 1)
-            return 1;
-        else
-            return retValint;
+    public synchronized int getLastPageNumber(){
+        Log.i(TAG, "getLastPageNumber: " + pageNumber);
+        return pageNumber;
     }
 
     //View Holders
@@ -166,24 +199,54 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         LoadingViewHolder(View itemView){
             super(itemView);
-            progressBar = (ProgressBar) itemView.findViewById(R.id.paginationProgressBar);
+            progressBar = itemView.findViewById(R.id.paginationProgressBar);
         }
     }
 
-    class ItemViewHolder extends RecyclerView.ViewHolder{
-        TextView className;
-        TextView sectionNo;
+    class ItemViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
+
+        Boolean isRunning = false;
+        String class_id;
+        TextView title;
+        TextView description;
         TextView location;
         TextView offering;
 
         ItemViewHolder(View itemView){
             super(itemView);
-            className = (TextView) itemView.findViewById(R.id.txtClassName);
-            sectionNo = (TextView) itemView.findViewById(R.id.txtSectionNo);
+
+            title= (TextView) itemView.findViewById(R.id.txtTitle);
+            description= (TextView) itemView.findViewById(R.id.txtDescription);
             location = (TextView) itemView.findViewById(R.id.txtLocation);
             offering = (TextView) itemView.findViewById(R.id.txtOffering);
 
+            itemView.setOnClickListener(this);
 
         }
+
+        @Override
+        public void onClick(View view){
+
+            //TODO: get student_id from shared preferences
+            SharedPreferences sharedPref = view.getContext().getSharedPreferences(
+                    view.getContext().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+            //String student_id = sharedPref.getString(view.getContext().getString(0), "");
+            String student_id = "24";
+
+            mListener.onClassSelected(student_id,class_id);
+
+
+            /*if(!isRunning){
+                isRunning = true;
+                new AsyncEnrollBackgroundTask().execute(student_id,class_id);
+            }*/
+
+        }
+
+
     }
+
+
 }

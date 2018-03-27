@@ -1,6 +1,8 @@
 package com.wolfpack.cmpsc488.a475layouts.services.authentication;
 
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose;
+
 
 /**
  * Created by pablo on 2/19/18.
@@ -9,27 +11,15 @@ import com.google.gson.annotations.SerializedName;
 
 public class LoginDetails {
 
-    @SerializedName("success")
-    private int status;
     @SerializedName("message")
+    @Expose
     private String message;
-
-    LoginDetails(int status, String message){
-        this.status = status;
-        this.message = message;
-    }
-
-    LoginDetails(){
-
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
+    @SerializedName("success")
+    @Expose
+    private Integer success;
+    @SerializedName("student_id")
+    @Expose
+    private String studentId;
 
     public String getMessage() {
         return message;
@@ -39,10 +29,22 @@ public class LoginDetails {
         this.message = message;
     }
 
+    public Integer getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(Integer success) {
+        this.success = success;
+    }
+
+    public String getStudentId() {
+        return studentId;
+    }
+
     @Override
     public String toString(){
         return "JSON OBJ: message = " + this.getMessage()
-                + " status = " + this.getStatus();
+                + " status = " + this.getSuccess() + " student_id = " + getStudentId();
     }
 
 

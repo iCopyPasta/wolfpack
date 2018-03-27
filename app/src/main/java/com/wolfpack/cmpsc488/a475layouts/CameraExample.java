@@ -71,30 +71,6 @@ public class CameraExample extends AppCompatActivity {
         Uri number = Uri.parse("tel:7175999005");
         Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
 
-        //EXAMPLE OF INTENT'S STARTING ANOTHER APP
-
-        //VERSION 1 --> A "Just Once" or "Always" type of approach
-        // Verify it resolves
-                /*PackageManager packageManager = getPackageManager();
-                List<ResolveInfo> activities = packageManager.queryIntentActivities(callIntent, 0);
-                boolean isIntentSafe = activities.size() > 0;
-
-                // Start an activity if it's safe
-                if (isIntentSafe) {
-                    startActivity(callIntent);
-                }*/
-
-        //VERSION 2 --> A dynamic array of choices that always appears
-                /*Intent chooser = Intent.createChooser(callIntent, "Choose an app to share with");
-
-                if(callIntent.resolveActivity(getPackageManager()) != null){
-                    startActivity(chooser);
-                }*/
-
-
-        //VERSION 3 --> Camera Application to Show Picture and Usage Back in Application
-
-        //can we write to the public directory?
         requestPermissions();
     }
 
@@ -265,8 +241,6 @@ public class CameraExample extends AppCompatActivity {
     }
 
     public void onCameraUpload(View view){
-        //Toast.makeText(this, "to implement, yet", Toast.LENGTH_SHORT).show();
-
 
         if(!isUploading){
             isUploading = true;
@@ -356,7 +330,6 @@ public class CameraExample extends AppCompatActivity {
 
         @Override
         protected void onCancelled() {
-            //TODO: show some error in the screen
             Toast.makeText(CameraExample.this, "Cancelled", Toast.LENGTH_SHORT).show();
         }
     }

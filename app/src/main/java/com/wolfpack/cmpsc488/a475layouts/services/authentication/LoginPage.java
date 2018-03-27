@@ -72,6 +72,7 @@ public class LoginPage extends AppCompatActivity {
 
         Intent intent = getIntent();
         mode = intent.getStringExtra(MainPage.BUTTON_CALLED);
+        Log.i(TAG, "onCreate: MODE = " + mode);
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -109,7 +110,7 @@ public class LoginPage extends AppCompatActivity {
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+            mPasswordView.setError(getString(R.string.error_authentication_failure));
             focusView = mPasswordView;
             cancel = true;
         }
@@ -133,8 +134,15 @@ public class LoginPage extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
+
             mAuthTask = new UserLoginTask();
-            mAuthTask.execute(email, password);
+            if(mode.equals(MainPage.USER_MODE_STUDENT)){
+                mAuthTask.execute(MainPage.USER_MODE_STUDENT, email, password);
+            }
+            else if(mode.equals(MainPage.USER_MODE_TEACHER)){
+                mAuthTask.execute(MainPage.USER_MODE_TEACHER, email, password);
+
+            }
         }
     }
 
@@ -145,7 +153,25 @@ public class LoginPage extends AppCompatActivity {
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        //return password.length() > 4;
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        //TODO: FOR TESTING PURPOSES!!!
+        return password.length() > 0;
     }
 
     /**
@@ -194,46 +220,62 @@ public class LoginPage extends AppCompatActivity {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<String, Void, LoginDetails> {
 
         LoginDetails loginDetails;
 
         Response<LoginDetails> response;
 
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected LoginDetails doInBackground(String... params) {
             // TODO: attempt authentication against a network service.
 
             try {
                 Log.i(TAG, "About to try network request out");
-                // TODO: attempt authentication against a network service.
 
                 WolfpackClient webService =
                         WolfpackClient.retrofit.create(WolfpackClient.class);
 
+                if (params[0].equals(MainPage.USER_MODE_STUDENT)){
+                    Log.i(TAG, "setting call with parameters for logging in as student");
+                    Call<LoginDetails> call =
+                            webService.attemptLoginStudent("attemptLoginStudent", params[1], params[2]);
 
-                Log.i(TAG, "setting call with parameters");
-                Call<LoginDetails> call =
-                        webService.attemptLogin(true,"attemptLogin", params[0], params[1]);
+                    response = call.execute();
+
+                }
+                else if(params[0].equals(MainPage.USER_MODE_TEACHER)){
+                    Log.i(TAG, "setting call with parameters");
+                    Call<LoginDetails> call =
+                            webService.attemptLoginTeacher("attemptLoginTeacher", params[1], params[2]);
+
+                    response = call.execute();
+
+                }
 
                 Log.i(TAG, "waiting on potential values");
 
-                //TODO: ADD SECURE TRY-CATCH BLOCKS FOR VARIOUS POSSIBILITIES!
-                response = call.execute();
-                Log.i(TAG, response.body().toString());
                 loginDetails = response.body();
-                Log.i("Sign_in", "Finished");
 
-                return loginDetails != null && loginDetails.getStatus() > 0;
+                return loginDetails;
+
+            } catch(java.net.ConnectException e){
+                Log.e(TAG, e.getMessage());
+                Toast.makeText(LoginPage.this, "could not find server", Toast.LENGTH_SHORT).show();
+                return null;
+            } catch (IllegalStateException e) {
+                Log.e(TAG, e.getMessage());
+                return null;
+
             } catch (Exception e){
                 Log.e(TAG, e.getMessage());
-                return false;
+                return null;
             }
 
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final LoginDetails success) {
 
             String buttonName;
 
@@ -249,8 +291,9 @@ public class LoginPage extends AppCompatActivity {
                     intent = new Intent(getApplicationContext(), StudentPage.class);
                 }
 
-                if(buttonName.equals(MainPage.USER_MODE_TEACHER)){
+                else if(buttonName.equals(MainPage.USER_MODE_TEACHER)){
                     //intent = new Intent(getApplicationContext(), SOMETHING.class)
+                    Log.i(TAG, "onPostExecute: " + "send to teacher page");
 
                 }
             }
@@ -259,7 +302,7 @@ public class LoginPage extends AppCompatActivity {
             showProgress(false);
 
 
-            if (success) {
+            if (success != null && success.getSuccess() > 0) {
                 Log.i(TAG, "successful login");
 
                 //SHARED PREFERENCES UPDATE
@@ -270,10 +313,15 @@ public class LoginPage extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putBoolean(getString(R.string.SKIP_LOGIN), true);
                 editor.putString(getString(R.string.USER_MODE), mode);
+                editor.putString(getString(R.string.USER_EMAIL), mEmailView.getText().toString());
+                editor.putString(getString(R.string.STUDENT_ID), success.getStudentId());
 
-                editor.apply(); //dedicate to persistant storage in background thread
+                editor.apply(); //dedicate to persistent storage in background thread
+
+                Log.i(TAG, "onPostExecute: STUDENT ID = " + success.getStudentId());
 
                 //FEEDBACK FROM SERVER
+                //TODO: remove later on
                 String message = loginDetails.getMessage();
 
                 Toast.makeText(LoginPage.this, message, Toast.LENGTH_SHORT).show();
@@ -281,10 +329,8 @@ public class LoginPage extends AppCompatActivity {
                 if(intent != null)
                     startActivity(intent);
 
-
-
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError(getString(R.string.error_authentication_failure));
                 mPasswordView.requestFocus();
             }
         }
