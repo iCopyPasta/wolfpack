@@ -30,9 +30,11 @@
         
         // find out how many rows are in the table
         $sql = "SELECT active_question_set.question_set_id, 
-                       active_question_set.question_session_id
-                FROM active_question_set
-                WHERE active_question_set.class_id = :inputClassId";
+                       active_question_set.question_session_id,
+                       question_set.question_set_name
+                FROM active_question_set, question_set
+                WHERE active_question_set.class_id = :inputClassId
+                      AND question_set.question_set_id = active_question_set.question_set_id";
         $result = $pdo->prepare($sql);
         $result->bindValue(':inputClassId', $inputClassId, PDO::PARAM_INT);
 
@@ -41,8 +43,9 @@
             $result->execute();
         }catch (Exception $e) {
             // fail JSON response
+            echo $e->getMessage();
             $response = array();
-            $response["results"] = array("question_set_id" => null, "question_session_id" => null);
+            $response["results"] = array("question_set_id" => null, "question_session_id" => null, "question_set_name" => null);
             echo json_encode($response);
             die();
             exit();
