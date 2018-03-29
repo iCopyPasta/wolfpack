@@ -172,7 +172,7 @@ public class StudentQuestionActivePage extends AppCompatActivity {
                         "quesitonSetId = " + questionSetId);
                 Log.i(TAG, "onReceive: " + "sending BACK to StudentSessionPage");
 
-                //extras to give back
+                /*//extras to give back
                 Intent activeSessionIntent = new Intent(StudentQuestionActivePage.this,
                         StudentSessionActivePage.class);
 
@@ -185,7 +185,7 @@ public class StudentQuestionActivePage extends AppCompatActivity {
                 activeSessionIntent.putExtra("classId", classId);
                 activeSessionIntent.putExtra("className", className);
                 activeSessionIntent.putExtra("isActive", true);
-                startActivity(activeSessionIntent);
+                startActivity(activeSessionIntent);*/
                 finish();
 
 
@@ -232,7 +232,6 @@ public class StudentQuestionActivePage extends AppCompatActivity {
             questionSetId = callerInfo.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
                     "");
 
-
             SharedPreferences sharedPref = getSharedPreferences(
                     getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
@@ -249,6 +248,11 @@ public class StudentQuestionActivePage extends AppCompatActivity {
     @Override
     public void onStart(){
         super.onStart();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
 
         //bind to custom service
         Intent serviceIntent = new Intent(StudentQuestionActivePage.this ,
@@ -296,7 +300,8 @@ public class StudentQuestionActivePage extends AppCompatActivity {
     private void submitAnswer(View view){
 
         //TODO: create JSON string from user answers
-        answer = "[]";
+        if(answer == null || answer.equals(""))
+            answer = "[]"; //no answer was provided
 
         mService.submitAnswer(
                 studentId,
@@ -309,27 +314,3 @@ public class StudentQuestionActivePage extends AppCompatActivity {
     }
 
 }
-
-/*else{ garbage code lel
-        String potentialNewResult = info.getString(
-        MyStartedService.MY_SERVICE_QUESTION_INFO_JSON,""
-        );
-
-        if( potentialNewResult != null &&
-        !questionStringJSON.equals(potentialNewResult)){
-
-        //make our object when we receive a new question
-        questionInformation = gson.fromJson(questionStringJSON,
-        QuestionInformation.class);
-
-        answerType = questionInformation.getQuestionType();
-
-        //is there yet an active question?
-        mService.searchActiveQuestion(questionSetId,"false");
-
-        //we have a new question!
-        Toast.makeText(StudentQuestionActivePage.this,
-        "NEW QUESTION",
-        Toast.LENGTH_SHORT).show();
-        }
-        }*/

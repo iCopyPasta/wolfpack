@@ -68,7 +68,6 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
                     mService.searchActiveQuestion(questionSetId, "true");
 
                 }
-
             }
 
         }
@@ -157,17 +156,10 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
                     }
                 }
             }
-            else{
+            else{ // we are no longer the active poll
                 Toast.makeText(StudentSessionActivePage.this, "Inactive", Toast.LENGTH_SHORT)
                         .show();
 
-                Intent finishedCycle = new Intent(StudentSessionActivePage.this,
-                        StudentClassPage.class);
-
-                finishedCycle.putExtra("finishedCycle", true);
-                finishedCycle.putExtra("classId", classId);
-                finishedCycle.putExtra("className", className);
-                startActivity(finishedCycle);
                 finish();
             }
         }
@@ -186,29 +178,40 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorStudentPrimary)));
 
 
-            className = (String) bundle.get("className");
-            classId = bundle.getString("classId");
-
-            //is this THE active session?
-            isActiveSession = (boolean) bundle.get("isActive");
-
             //get all the views
             mTextViewSessionName = findViewById(R.id.sessionNameTextView);
-            mTextViewSessionName.setText(bundle.getString(
-                    MyStartedService.MY_SERVICE_QUESTION_SET_NAME,""
-            ));
+
             mTextViewQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
             foundQuestion = false;
 
+            //our app was killed and should be restored
+            if(savedInstanceState != null){
+                onRestoreInstanceState(savedInstanceState);
 
-            //decide how to handle it
-            if (isActiveSession){
+
+            } else{ //grab info from our calling intent
                 questionSetId = bundle.getString(
                         MyStartedService.MY_SERVICE_QUESTION_SET_ID);
 
                 questionSessionId = bundle.getString(
                         MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
 
+                sessionName = bundle.getString(
+                        MyStartedService.MY_SERVICE_QUESTION_SET_NAME);
+
+                className = (String) bundle.get("className");
+                classId = bundle.getString("classId");
+
+                //is this THE active session?
+                isActiveSession = (boolean) bundle.get("isActive");
+
+                mTextViewSessionName.setText(sessionName);
+
+            }
+
+
+            //decide how to handle it
+            if (isActiveSession){
                 handleActiveSession();
             }
             else{
@@ -247,6 +250,42 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+
+        outState.putString(MyStartedService.MY_SERVICE_QUESTION_SET_NAME, sessionName);
+        outState.putString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, questionSetId);
+        outState.putString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, questionSessionId);
+        outState.putString("className", className);
+        outState.putString("classId", classId);
+        outState.putBoolean("isActive",isActiveQuestion);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle inState){
+        super.onRestoreInstanceState(inState);
+
+        sessionName = inState.getString(
+                MyStartedService.MY_SERVICE_QUESTION_SET_NAME,""
+        );
+
+        mTextViewSessionName.setText(sessionName);
+
+        questionSetId = inState.getString(
+                MyStartedService.MY_SERVICE_QUESTION_SET_ID);
+
+        questionSessionId = inState.getString(
+                MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
+
+        className = inState.getString("className");
+
+        classId = inState.getString("classId");
+
+        isActiveQuestion = inState.getBoolean("isActive");
+
+    }
+
+    @Override
     public void onStop(){
         super.onStop();
 
@@ -263,21 +302,16 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
 
 
     // provided we are an active session, query to see if a brand new question exists
-    private void handleActiveSession(){
-
-
-
-    }
+    private void handleActiveSession(){    }
 
     //if this session is completed
-    private void handleCompletedSession(){
-
-
-    }
+    private void handleCompletedSession(){    }
 
     @Override
     protected void onResume() {
         super.onResume();
     }
+
+
 
 }

@@ -39,9 +39,89 @@ public class MyStartedService extends Service {
     public static final String MY_SERVICE_ANSWER_MESSAGE = "MY_SERVICE_ANSWER_MESSAGE";
     public static final String MY_SERVICE_QUESTION_SET_NAME = "MY_SERVICE_QUESTION_SET_NAME";
 
+
+    //polling variables
+    private String studentId = null;
+    private String questionId = null;
+    private String questionSessionId = null;
+    private String questionHistoryId = null;
+    private String classId = null;
+    private String className = null;
+    private String questionSetId = null;
+    private String questionSetName = null;
+
+    //service variables
     private boolean isRunning = false;
 
     private final Binder mBinder = new MyServiceBinder();
+
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public String getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
+    }
+
+    public String getQuestionSessionId() {
+        return questionSessionId;
+    }
+
+    public void setQuestionSessionId(String questionSessionId) {
+        this.questionSessionId = questionSessionId;
+    }
+
+    public String getQuestionHistoryId() {
+        return questionHistoryId;
+    }
+
+    public void setQuestionHistoryId(String questionHistoryId) {
+        this.questionHistoryId = questionHistoryId;
+    }
+
+    public String getClassId() {
+        return classId;
+    }
+
+    public void setClassId(String classId) {
+        this.classId = classId;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getQuestionSetId() {
+        return questionSetId;
+    }
+
+    public void setQuestionSetId(String questionSetId) {
+        this.questionSetId = questionSetId;
+    }
+
+    public String getQuestionSetName() {
+        return questionSetName;
+    }
+
+    public void setQuestionSetName(String questionSetName) {
+        this.questionSetName = questionSetName;
+    }
+
+
+
+
 
     public MyStartedService() {
         Log.i(TAG, "MyStartedService: ");
@@ -126,6 +206,8 @@ public class MyStartedService extends Service {
                      inputAnswerType,
                      inputAnswer);
      }
+
+
 
 
     class ServiceJobAsyncTask extends AsyncTask<String, Void, Object> {
