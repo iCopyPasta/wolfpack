@@ -64,11 +64,11 @@ public class StudentPageTab3Settings extends Fragment {
                         editor.putBoolean(getString(R.string.SKIP_LOGIN), false);
                         editor.putString(getString(R.string.USER_MODE), "none");
 
-                        editor.apply(); //dedicate to persistant storage in background thread
+                        editor.apply(); //dedicate to persistent storage in background thread
                         
-                        intent = new Intent(getActivity(), MainPage.class);
+                        /*intent = new Intent(getActivity(), MainPage.class);*/
                         Log.d(TAG, "onItemClick: transferring to MainPage.class");
-                        startActivity(intent);
+                        getActivity().finish();
                         break;
                     default:
                         Log.i(TAG, "Click out of bounds");
