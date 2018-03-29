@@ -221,8 +221,6 @@
       return json_encode($response);
     }
 
-    //TODO: implement update
-    //TODO: test update
     public function update($newTeacherId, $newDescription, $newQuestionType, $newPotentialAnswers, $newCorrectAnswers){
     //__________________
     //|question          |
@@ -281,7 +279,7 @@
       }catch (Exception $e){
         // fail JSON response
         $response = array();
-        $response["message"] = "ERROR UPDATING: ".$this->question_type." ".$this->description." ".$e->getMessage();
+        $response["message"] = "ERROR UPDATING ".$e->getMessage();
         $response["success"] = 0;
         return json_encode($response);
       }
@@ -290,11 +288,10 @@
       $response = array();
       $response["message"] = "Update successful";
       $response["success"] = 1;
-      $respons2["rowCount"] = $stmt->rowCount();
+      $response["rowCount"] = $stmt->rowCount();
       return json_encode($response);
 
     }
-
 
     //not sure why we need to replace; i'm going to implement update instead
     //TODO: implement replace
