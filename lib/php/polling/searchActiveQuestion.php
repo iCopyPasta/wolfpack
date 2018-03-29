@@ -22,7 +22,7 @@
     if($_SERVER["REQUEST_METHOD"] == "POST"){
         //in an ideal world, we'd perform sanitation!
         
-        $inputQuestionSetId = isset($_POST["inputQuestionSetId"]) ? (int) $_POST["inputQuestionSetId"] : null;        
+        $inputQuestionSetId = isset($_POST["inputQuestionSetId"]) ? $_POST["inputQuestionSetId"] : null;        
         include_once('../Connection.php');
         $connection = new Connection;
         $pdo = $connection->getConnection();
@@ -40,7 +40,7 @@
         }catch (Exception $e) {
             // fail JSON response
             $response = array();
-            $response["results"] = array("question_id" => null, "question_history_id" => null);
+            $response["results"] = array();
             echo json_encode($response);
             die();
             exit();

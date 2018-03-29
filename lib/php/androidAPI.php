@@ -75,6 +75,8 @@
     $inputQuestionHistoryId = isset($_POST['inputQuestionHistoryId']) ? $_POST['inputQuestionHistoryId'] : null;
     $inputAnswerType = isset($_POST['inputAnswerType']) ? $_POST['inputAnswerType'] : null;
     $inputAnswer = isset($_POST['inputAnswer']) ? $_POST['inputAnswer'] : null;
+    $inputQuestionSessionId = isset($_POST["inputQuestionSessionId"]) ? 
+            $_POST["inputQuestionSessionId"] : null;
 
 
     //misc
@@ -223,8 +225,8 @@
             break;
             
         case "searchActiveSession":
-            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/searchActiveSession.php";
-            //$url = "http://192.168.1.57/lib/php/polling/searchActiveSession.php";
+            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/searchActiveSession.php";
+            $url = "http://192.168.1.57/lib/php/polling/searchActiveSession.php";
 	
             $fields = build_fields($fields,
 	                           array("inputClassId","android"),
@@ -237,8 +239,8 @@
             break;
             
         case "searchActiveQuestion":
-            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/searchActiveQuestion.php";
-            //$url = "http://192.168.1.57/lib/php/polling/searchActiveQuestion.php";
+            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/searchActiveQuestion.php";
+            $url = "http://192.168.1.57/lib/php/polling/searchActiveQuestion.php";
             
             $fields = build_fields($fields, 
                          array("inputQuestionSetId","android"),
@@ -252,8 +254,8 @@
             break;
             
         case "searchLiveQuestionInfo":
-            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/searchLiveQuestionInfo.php";
-            //$url = "http://192.168.1.57/lib/php/polling/searchLiveQuestionInfo.php";
+            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/searchLiveQuestionInfo.php";
+            $url = "http://192.168.1.57/lib/php/polling/searchLiveQuestionInfo.php";
             
             $fields = build_fields($fields, 
                          array("inputQuestionId","android"),
@@ -266,9 +268,31 @@
 
             break;
             
+        case "validateSameQuestion":
+            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/validateSameQuestion.php";
+            $url = "http://192.168.1.57/lib/php/polling/validateSameQuestion.php";
+            $fields = build_fields($fields, 
+                         array("inputQuestionSetId",
+                               "inputQuestionId",
+                               "inputQuetsionHistoryId",
+                               "inputQuestionSessionId",
+                               "android"),
+                        $inputQuestionSetId,
+                        $inputQuestionId,
+                        $inputQuestionHistoryId,
+                        $inputQuestionSessionId,
+                        $android); 
+            
+            $postvars = http_build_query($fields);
+
+            build_curlreq($fields, $postvars, $url);
+            
+            break;
+            
+            
         case "submitAnswer":
-            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/submitAnswer.php";
-            //$url = "http://192.168.1.57/lib/php/polling/submitAnswer.php";
+            //$url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/submitAnswer.php";
+            $url = "http://192.168.1.57/lib/php/polling/submitAnswer.php";
             
             $fields = build_fields($fields, 
                          array("inputStudentId",

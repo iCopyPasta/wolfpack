@@ -22,7 +22,7 @@
     if($_SERVER["REQUEST_METHOD"] == "POST"){
         //in an ideal world, we'd perform sanitation!
         
-        $inputClassId = isset($_POST["inputClassId"]) ? (int) $_POST["inputClassId"] : null;        
+        $inputClassId = isset($_POST["inputClassId"]) ? $_POST["inputClassId"] : null;        
         
         include_once('../Connection.php');
         $connection = new Connection;
@@ -45,7 +45,7 @@
             // fail JSON response
             echo $e->getMessage();
             $response = array();
-            $response["results"] = array("question_set_id" => null, "question_session_id" => null, "question_set_name" => null);
+            $response["results"] = array();
             echo json_encode($response);
             die();
             exit();

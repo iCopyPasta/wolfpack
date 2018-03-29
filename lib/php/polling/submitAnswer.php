@@ -25,10 +25,11 @@
     if($_SERVER["REQUEST_METHOD"] == "POST"){
         //in an ideal world, we'd perform sanitation!
         
-        $inputStudentId = isset($_POST["inputStudentId"]) ? (int) $_POST["inputStudentId"] : null;
-        $inputSessionId = isset($_POST["inputSessionId"]) ? (int) $_POST["inputSessionId"] : null;
+        $inputStudentId = isset($_POST["inputStudentId"]) ? $_POST["inputStudentId"] : null;
+        $inputSessionId = isset($_POST["inputSessionId"]) ? $_POST["inputSessionId"] : null;
         
-        $inputQuestionHistoryId = isset($_POST["inputQuestionHistoryId"]) ? (int) $_POST["inputQuestionHistoryId"] : null;
+        $inputQuestionHistoryId = isset($_POST["inputQuestionHistoryId"]) ?
+            $_POST["inputQuestionHistoryId"] : null;
         
         $inputAnswerType = isset($_POST["inputAnswerType"]) ? $_POST["inputAnswerType"] : null;
         $inputAnswer = isset($_POST["inputAnswer"]) ? $_POST["inputAnswer"] : null;
