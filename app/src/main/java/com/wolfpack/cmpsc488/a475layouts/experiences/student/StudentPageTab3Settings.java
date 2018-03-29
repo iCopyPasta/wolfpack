@@ -43,7 +43,7 @@ public class StudentPageTab3Settings extends Fragment {
         mListViewSettings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent intent = null;
+                //Intent intent = null;
 
                 //Activity to start depends on what is clicked
                 switch (settingsListTemp[position]) {
@@ -74,11 +74,11 @@ public class StudentPageTab3Settings extends Fragment {
                         Log.i(TAG, "Click out of bounds");
                 }
 
-                try {
+                /*try {
                     startActivity(intent);
                 } catch (NullPointerException e) {
                     Log.i(TAG, "No activity start");
-                }
+                }*/
             }
         });
 
