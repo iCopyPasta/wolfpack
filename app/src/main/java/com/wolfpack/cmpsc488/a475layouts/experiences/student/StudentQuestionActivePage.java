@@ -15,11 +15,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 
 // given
@@ -96,6 +99,22 @@ public class StudentQuestionActivePage extends AppCompatActivity {
                     questionInformation = gson.fromJson(questionStringJSON,
                             QuestionInformation.class);
 
+                    //https://stackoverflow.com/questions/18544133/parsing-json-array-into-java-util-list-with-gson
+                    Type listType = new TypeToken<List<String>>(){}.getType();
+                    Type listType2 = new TypeToken<List<String>>(){}.getType();
+
+                    potentialAnswers = gson.fromJson(questionInformation.getPotentialAnswers(), listType);
+
+                    for(String el: potentialAnswers){
+                        Log.i(TAG, "onReceive: POTENTIAL ANSWERS: "  + el);
+                    }
+
+                    correctAnswers = gson.fromJson(questionInformation.getCorrectAnswers(), listType2);
+
+                    for(String el: correctAnswers){
+                        Log.i(TAG, "onReceive: CORRECT KEY(S): "  + el);
+                    }
+                    
                     answerType = questionInformation.getQuestionType();
 
 
