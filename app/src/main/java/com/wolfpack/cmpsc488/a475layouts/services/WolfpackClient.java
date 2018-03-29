@@ -18,6 +18,7 @@ import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveQu
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveSessionInfo;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.PollingResults;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ValidateQuestionInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -215,4 +216,16 @@ public interface WolfpackClient{
             @Field("inputAnswer") String inputAnswer,
             @Field("inputMethodName") String methodName
     );
+
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<PollingResults<ValidateQuestionInfo>> validateSameQuestion(
+            @Field("inputQuestionSetId") String  inputQuestionSetId,
+            @Field("inputQuestionId") String  inputQuestionId,
+            @Field("inputQuestionSessionId") String inputQuestionSessionId,
+            @Field("inputQuestionHistoryId") String inputQuestionHistoryId,
+            @Field("inputMethodName") String methodName
+    );
+
+
 }

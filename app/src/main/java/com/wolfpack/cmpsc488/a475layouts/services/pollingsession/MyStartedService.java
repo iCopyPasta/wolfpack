@@ -15,6 +15,7 @@ import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveQu
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveSessionInfo;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.PollingResults;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ValidateQuestionInfo;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -22,6 +23,7 @@ import java.util.Random;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Field;
 
 public class MyStartedService extends Service {
 
@@ -38,9 +40,24 @@ public class MyStartedService extends Service {
     public static final String MY_SERVICE_ANSWER_STATUS = "MY_SERVICE_ANSWER_STATUS";
     public static final String MY_SERVICE_ANSWER_MESSAGE = "MY_SERVICE_ANSWER_MESSAGE";
     public static final String MY_SERVICE_QUESTION_SET_NAME = "MY_SERVICE_QUESTION_SET_NAME";
+    public static final String MY_SERVICE_VALIDATE_ANSWER = "MY_SERVICE_VALIDATE_ANSWER";
 
+    public synchronized boolean isRunning() {
+        return isRunning;
+    }
 
-    //polling variables
+    public synchronized void setRunning(boolean running) {
+        isRunning = running;
+    }
+
+    //service variables
+    private boolean isRunning = false;
+
+    private final Binder mBinder = new MyServiceBinder();
+
+    private ServiceJobAsyncTask ourTask;
+
+    /*//polling variables
     private String studentId = null;
     private String questionId = null;
     private String questionSessionId = null;
@@ -50,10 +67,6 @@ public class MyStartedService extends Service {
     private String questionSetId = null;
     private String questionSetName = null;
 
-    //service variables
-    private boolean isRunning = false;
-
-    private final Binder mBinder = new MyServiceBinder();
 
     public String getStudentId() {
         return studentId;
@@ -117,7 +130,7 @@ public class MyStartedService extends Service {
 
     public void setQuestionSetName(String questionSetName) {
         this.questionSetName = questionSetName;
-    }
+    }*/
 
 
 
@@ -161,51 +174,82 @@ public class MyStartedService extends Service {
 
     // methods to use in order to invoke our background task
 
-    public String testValue(){
-        if(!isRunning)
-            (new ServiceJobAsyncTask()).execute();
-
-        return "async approach started!";
-    }
-
-    //experimental test of String... passing
-    public void requestActiveSession(String... params){
-        if(!isRunning)
-            (new ServiceJobAsyncTask()).execute(params);
-    }
-
      public synchronized void searchActiveSession(String inputClassId, String firstTime){
          Log.i(TAG, "searchActiveSession: " + "searching for active session for classId: " + inputClassId);
-         if(!isRunning)
-             (new ServiceJobAsyncTask()).execute("searchActiveSession", inputClassId, firstTime);
-
+         if(!isRunning()){
+             ourTask = new ServiceJobAsyncTask();
+             ourTask.execute("searchActiveSession", inputClassId, firstTime);
+         }
      }
 
      public synchronized void searchActiveQuestion(String inputQuestionSetId, String firstTime){
-         if(!isRunning)
-             (new ServiceJobAsyncTask()).execute("searchActiveQuestion", inputQuestionSetId, firstTime);
-
+         if(!isRunning()){
+             ourTask = new ServiceJobAsyncTask();
+             ourTask.execute("searchActiveQuestion", inputQuestionSetId, firstTime);
+         }
      }
 
      public synchronized void searchLiveQuestionInfo(String inputQuestionId, String firstTime){
-         if(!isRunning)
-             (new ServiceJobAsyncTask()).execute("searchLiveQuestionInfo", inputQuestionId, firstTime);
-
+         if(!isRunning()){
+             ourTask = new ServiceJobAsyncTask();
+             ourTask.execute("searchLiveQuestionInfo", inputQuestionId, firstTime);
+         }
      }
+
+    //@Field("inputQuestionSetId") String  inputQuestionSetId,
+    //@Field("inputQuestionId") String  inputQuestionId,
+    //@Field("inputQuestionSessionId") String inputQuestionSessionId,
+    //@Field("inputQuestionHistoryId") String inputQuestionHistoryId,
+
+    public synchronized void validateSameQuestion(String inputQuestionSetId,
+                                                  String inputQuestionId,
+                                                  String inputQuestionSessionId,
+                                                  String inputQuestionHistoryId,
+                                                  String firstTime){
+        if(!isRunning()){
+            ourTask = new ServiceJobAsyncTask();
+            ourTask.execute("validateSameQuestion",
+                    inputQuestionSetId,
+                    inputQuestionId,
+                    inputQuestionSessionId,
+                    inputQuestionHistoryId,
+                    firstTime);
+        }
+    }
 
      public synchronized void submitAnswer(String inputStudentId,
                               String inputSessionId,
                               String inputQuestionHistoryId,
                               String inputAnswerType,
-                              String inputAnswer){
-         if(!isRunning)
-             (new ServiceJobAsyncTask()).execute("submitAnswer",
+                              String inputAnswer,
+                              String isFinal){
+         if(!isRunning() && isFinal.equals("false")){
+             ourTask = new ServiceJobAsyncTask();
+             ourTask.execute("submitAnswer",
                      inputStudentId,
                      inputSessionId,
                      inputQuestionHistoryId,
                      inputAnswerType,
                      inputAnswer);
+         }
+         else{
+             if(isRunning()){
+                 if(ourTask != null){
+                     ourTask.cancel(true);
+                 }
+                 ourTask = null;
+             }
+             ourTask = new ServiceJobAsyncTask();
+             ourTask.execute("submitAnswer",
+                         inputStudentId,
+                         inputSessionId,
+                         inputQuestionHistoryId,
+                         inputAnswerType,
+                         inputAnswer);
+
+         }
      }
+
 
 
 
@@ -217,7 +261,7 @@ public class MyStartedService extends Service {
 
         @Override
         protected Object doInBackground(String... params) {
-            isRunning = true;
+            setRunning(true);
             Object response = null;
 
             try {
@@ -282,8 +326,8 @@ public class MyStartedService extends Service {
 
                         //PollingResults<QuestionInformation>
                         response = call.execute().body();
-                    }
-                        break;
+                    } break;
+
                     case "submitAnswer": {
                         id = 4;
                         Call<BasicWolfpackResponse> call = client.submitAnswer(
@@ -300,17 +344,42 @@ public class MyStartedService extends Service {
 
                     }
                         break;
+                    case "validateSameQuestion": {
+                        if(!params[5].equals("true")){
+                            Log.i(TAG, "doInBackground: sleeping in validateSameQuestion");
+                            Thread.sleep(2000);
+                        }
+
+                        id = 5;
+                        //@Field("inputQuestionSetId") String  inputQuestionSetId,
+                        //@Field("inputQuestionId") String  inputQuestionId,
+                        //@Field("inputQuestionSessionId") String inputQuestionSessionId,
+                        //@Field("inputQuestionHistoryId") String inputQuestionHistoryId,
+
+                        Call<PollingResults<ValidateQuestionInfo>> call = client.
+                                validateSameQuestion(params[1],
+                                        params[2],
+                                        params[3],
+                                        params[4],
+                                        "validateSameQuestion");
+
+                        response = call.execute().body();
+
+                    } break;
                 }
 
             }catch(java.net.ConnectException e){
+                setRunning(false);
                 Log.e(TAG, e.getMessage());
                 return null;
             }
             catch (IllegalStateException e){
+                setRunning(false);
                 Log.e(TAG, e.getMessage());
                 return null;
 
             } catch (Exception e){
+                setRunning(false);
                 Log.e(TAG, e.getClass().toString() + e.getMessage());
                 return null;
             }
@@ -320,7 +389,7 @@ public class MyStartedService extends Service {
 
         @Override
         protected void onPostExecute(final Object result){
-            isRunning = false;
+            setRunning(false);
 
             switch (id){
                 case 1:{
@@ -418,7 +487,7 @@ public class MyStartedService extends Service {
 
                         if(result != null)
                         {
-                            String questionJSON = null;
+                            String questionJSON;
 
                             @SuppressWarnings("unchecked")
                             QuestionInformation questionInformation =
@@ -428,10 +497,9 @@ public class MyStartedService extends Service {
                             questionJSON = new Gson().toJson(questionInformation,
                                     QuestionInformation.class);
 
-                            Log.i(TAG, "QUESTION INFO JSON = " + questionJSON);
+                            //Log.i(TAG, "QUESTION INFO JSON = " + questionJSON);
                             //perform conversation later on
                             intent.putExtra(MY_SERVICE_QUESTION_INFO_JSON, questionJSON);
-
 
                         }
                         else{
@@ -474,6 +542,60 @@ public class MyStartedService extends Service {
                             //perform conversation later on
                             intent.putExtra(MY_SERVICE_ANSWER_MESSAGE, message);
                             intent.putExtra(MY_SERVICE_ANSWER_STATUS, sukmoonChang);
+                        }
+                        else{
+                            Log.e(TAG, "onPostExecute: " + "result was null" );
+                        }
+
+                    } catch(NullPointerException e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    } catch (ClassCastException e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    } catch (Exception e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    }finally {
+                        //send our response back
+                        LocalBroadcastManager.getInstance(
+                                getApplicationContext())
+                                .sendBroadcast(intent);
+                    }
+
+                } break;
+
+                case 5:{
+                    Intent intent = new Intent(MY_SERVICE_VALIDATE_ANSWER);
+                    try{
+
+                        if(result != null)
+                        {
+                            Log.i(TAG, "onPostExecute: result was not null: ");
+
+
+
+                            @SuppressWarnings("unchecked")
+                            String getQuestionId = ((PollingResults<ValidateQuestionInfo>) result).getResults()
+                                    .get(0).getQuestionId();
+
+                            @SuppressWarnings("unchecked")
+                            String getQuestionHistoryId = ((PollingResults<ValidateQuestionInfo>) result).getResults()
+                                    .get(0).getQuestionHistoryId();
+
+                            @SuppressWarnings("unchecked")
+                            String getQuesitonSessionId = ((PollingResults<ValidateQuestionInfo>) result).getResults()
+                                    .get(0).getQuestionSessionId();
+
+                            @SuppressWarnings("unchecked")
+                            String getQuestionSetId = ((PollingResults<ValidateQuestionInfo>) result).getResults()
+                                    .get(0).getQuestionSetId();
+
+
+                            intent.putExtra(MY_SERVICE_QUESTION_ID, getQuestionId);
+                            intent.putExtra(MY_SERVICE_QUESTION_HISTORY_ID, getQuestionHistoryId);
+                            intent.putExtra(MY_SERVICE_QUESTION_SESSION_ID, getQuesitonSessionId);
+                            intent.putExtra(MY_SERVICE_QUESTION_SET_ID,getQuestionSetId);
                         }
                         else{
                             Log.e(TAG, "onPostExecute: " + "result was null" );
