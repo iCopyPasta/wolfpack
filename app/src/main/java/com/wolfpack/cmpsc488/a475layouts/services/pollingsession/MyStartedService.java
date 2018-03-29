@@ -37,7 +37,8 @@ public class MyStartedService extends Service {
     public static final String MY_SERVICE_QUESTION_INFO_JSON = "MY_SERVICE_QUESTION_INFO_JSON";
     public static final String MY_SERVICE_ANSWER_STATUS = "MY_SERVICE_ANSWER_STATUS";
     public static final String MY_SERVICE_ANSWER_MESSAGE = "MY_SERVICE_ANSWER_MESSAGE";
-    
+    public static final String MY_SERVICE_QUESTION_SET_NAME = "MY_SERVICE_QUESTION_SET_NAME";
+
     private boolean isRunning = false;
 
     private final Binder mBinder = new MyServiceBinder();
@@ -254,8 +255,14 @@ public class MyStartedService extends Service {
                             @SuppressWarnings("unchecked")
                             String questionSessionId = ((PollingResults<ActiveSessionInfo>) result).getResults()
                                 .get(0).getQuestionSessionId();
+
+                            @SuppressWarnings("unchecked")
+                            String questionSetName = ((PollingResults<ActiveSessionInfo>) result).getResults()
+                                    .get(0).getQuestionSetName();
+
                             intent.putExtra(MY_SERVICE_QUESTION_SET_ID, questionSetId);
                             intent.putExtra(MY_SERVICE_QUESTION_SESSION_ID, questionSessionId);
+                            intent.putExtra(MY_SERVICE_QUESTION_SET_NAME, questionSetName);
 
                         }
                         else{

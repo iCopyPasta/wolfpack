@@ -194,6 +194,9 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
 
             //get all the views
             mTextViewSessionName = findViewById(R.id.sessionNameTextView);
+            mTextViewSessionName.setText(bundle.getString(
+                    MyStartedService.MY_SERVICE_QUESTION_SET_NAME,""
+            ));
             mTextViewQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
             foundQuestion = false;
 
