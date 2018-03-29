@@ -20,6 +20,8 @@ import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.Validate
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.security.auth.login.LoginException;
+
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -156,13 +158,15 @@ public class MyStartedService extends Service {
 
     @Override
     public void onCreate(){
-        isRunning = false;
+        Log.i(TAG, "MY_SERVICE CREATED");
+        setRunning(false);
         super.onCreate();
     }
 
     @Override
     public void onDestroy(){
-        isRunning = false;
+        Log.i(TAG, "MY_SERVICE DESTROYED");
+        setRunning(false);
         super.onDestroy();
     }
 
@@ -230,7 +234,8 @@ public class MyStartedService extends Service {
                      inputSessionId,
                      inputQuestionHistoryId,
                      inputAnswerType,
-                     inputAnswer);
+                     inputAnswer,
+                     isFinal);
          }
          else{
              if(isRunning()){
@@ -245,7 +250,8 @@ public class MyStartedService extends Service {
                          inputSessionId,
                          inputQuestionHistoryId,
                          inputAnswerType,
-                         inputAnswer);
+                         inputAnswer,
+                         isFinal);
 
          }
      }
@@ -323,13 +329,18 @@ public class MyStartedService extends Service {
                                 "searchLiveQuestionInfo"
                         );
 
-
                         //PollingResults<QuestionInformation>
                         response = call.execute().body();
                     } break;
 
                     case "submitAnswer": {
                         id = 4;
+                        if(!params[6].equals("true")){
+                            Log.i(TAG, "doInBackground: sleeping in submitAnswer");
+                            Thread.sleep(3000);
+                        }
+                        Log.i(TAG, "doInBackground: about to submit an answer");
+
                         Call<BasicWolfpackResponse> call = client.submitAnswer(
                                 params[1],
                                 params[2],
@@ -368,7 +379,12 @@ public class MyStartedService extends Service {
                     } break;
                 }
 
-            }catch(java.net.ConnectException e){
+            } catch (InterruptedException e){
+                setRunning(false);
+                Log.e(TAG, e.getMessage());
+                return null;
+            }
+            catch(java.net.ConnectException e){
                 setRunning(false);
                 Log.e(TAG, e.getMessage());
                 return null;

@@ -311,6 +311,7 @@ public class StudentQuestionActivePage extends AppCompatActivity {
     }
 
     private void submitFinalAnswer(){
+        Log.i(TAG, "submitFinalAnswer");
         //TODO: TEST FINAL ANSWER SUBMISSION
         submittedFinalAnswer = true;
         //TODO: create JSON string from user answers
@@ -332,6 +333,7 @@ public class StudentQuestionActivePage extends AppCompatActivity {
 
 
     private void submitPeriodicAnswer(){
+        Log.i(TAG, "submitPeriodicAnswer");
 
         //TODO: TEST PERIODIC ANSWER SUBMISSION
 

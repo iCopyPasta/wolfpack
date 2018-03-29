@@ -132,8 +132,9 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
         intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID,
                 info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID));
 
-        intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_NAME,
+    intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_NAME,
             info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_NAME));
+
 
         startActivity(intent);
 
@@ -141,7 +142,7 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
 
     @Override
     public void onNegativeClick(){
-
+        //Toast.makeText(getApplicationContext(), "Hello from onNegativeClick", Toast.LENGTH_LONG).show();
     }
 
 }
