@@ -19,12 +19,16 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
+    
 
     <title>Question Manager</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="..\css\special\modalcss.css" media="screen" />  
+    
+    <!-- Font Awesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
 
     <!-- Custom styles for this template -->
     <style>
@@ -37,8 +41,8 @@
   }
 }
 
-.container {
-  max-width: 960px;
+.flex-box {
+
 }
 
 .pricing-header {
@@ -46,7 +50,7 @@
 }
 
 .card-deck .card {
-  min-width: 220px;
+  min-width: 500px;
 }
 
 .border-top { border-top: 1px solid #e5e5e5; }
@@ -118,9 +122,9 @@
       
       
 
-    <div class="container">
-    <h1 class="display-5 text-center">Current Questions</h1>
-        <div class="card-deck mb-3 text-center" id="questionDeck">
+    <div class="flex-box">
+        <h1 class="display-5 text-center">Current Questions</h1>
+        <div class="card-deck" id="questionDeck">
           <?php
 
            $retVal = searchQuestionsByTeacherID($_SESSION['id']);
@@ -136,7 +140,11 @@
             if(is_null($answers) || empty($answers))
               $answers = "There are no answers!";
             else
+            {
+              $answers = array_slice($answers, 0, 2);
               $answers = implode("<br>", $answers);
+            }
+              
 
             $correct_answers = json_decode($value['correct_answers'], TRUE);
             if(is_null($correct_answers) || empty($correct_answers))
@@ -145,17 +153,17 @@
               $correct_answers = implode(" ", $correct_answers);
 
 
-            echo "<div class=\"card mb-4\">
+            echo "<div class=\"card bg-secondary text-white mb-3\">
             <div class=\"card-header\">
-              <h4 class=\"my-0 font-weight-normal\">$description</h4>
+              <button type=\"button\" class=\"btn btn-danger btn-sm float-right\">
+                <span class=\"fas fa-trash fa-sm\"></span>
+              </button>
+              <h4 class=\"my-0 font-weight-normal text-truncate\">$description</h4>
             </div>
             <div class=\"card-body\">
-              <h5 class=\"card-title pricing-card-title\">$answers</h5>
+              <h5 class=\"card-title pricing-card-title text-truncate\">$answers</h5>
             </div>
-            <div class=\"card-footer\">
-              <h6>$correct_answers</h6>
-            </div>
-          </div>";        
+            </div>";        
           }                               
 
           if (empty($removeZerothIndex)) {
