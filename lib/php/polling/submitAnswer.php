@@ -37,32 +37,15 @@
         $connection = new Connection;
         $pdo = $connection->getConnection();
         
-        $sql = "IF EXISTS (
-                        SELECT * 
-                        FROM answers 
-                        WHERE student_id = :inputStudentId
-                        AND session_id = :inputSessionId
-                        AND question_history_id = :inputQuestionHistoryId
-                        AND answer_type = :inputAnswerType
-                        )
-                    THEN UPDATE answers 
-                    SET answer = :inputAnswer 
-                    WHERE student_id = :inputStudentId
-                          AND session_id = :inputSessionId
-                          AND question_history_id = :inputQuestionHistoryId
-                          AND answer_type = :inputAnswerType;
-                    ELSE
-                    INSERT INTO answers (student_id, session_id, question_history_id, answer_type, answer)
+        $sql = "REPLACE INTO answers (student_id, session_id, question_history_id, answer_type, answer)
                     VALUES(:inputStudentId, :inputSessionId, :inputQuestionHistoryId, :inputAnswerType,  :inputAnswer);
-                    END IF";
+                    ";
         $result = $pdo->prepare($sql);
         $result->bindValue(':inputStudentId', $inputStudentId, PDO::PARAM_INT);
         $result->bindValue(':inputSessionId', $inputSessionId, PDO::PARAM_INT);
         $result->bindValue(':inputQuestionHistoryId', $inputQuestionHistoryId, PDO::PARAM_INT);
         $result->bindValue(':inputAnswerType', $inputAnswerType, PDO::PARAM_STR);
         $result->bindValue(':inputAnswer', $inputAnswer, PDO::PARAM_STR);
-        
-
         
         try {
             $worked = $result->execute();
