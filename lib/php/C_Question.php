@@ -4,11 +4,28 @@
 
   Example Usage:
 
-  $insertQuestion = new Question('Is this a question?', 'teacher asked field', 'TrueOrFalseTag');
-  $insertQuestion->insert();
+  // insert a Question
+    $question = new Question('%', '1', 'testDeleteQuestion2', 'testDeleteQuestion2', 'none', 'none');
+    echo $question->insert();
 
-  $selectQuestion = new Question('1', '%', '%', '%');
-  $result = json_decode($selectQuestion->select(), true);
+
+  // select a Question
+    $question = new Question('1', '%', '%', '%', '%', '%');
+    $retVal = json_decode($question->select());
+    $question_id = $retVal[1]->question_id;
+    $teacher_id = $retVal[1]->teacher_id;
+    $question_type = $retVal[1]->question_type;
+    $description = $retVal[1]->description;
+    $potential_answers = $retVal[1]->potential_answers;
+    $correct_answers = $retVal[1]->correct_answers;
+
+
+  // delete a Question
+    $question = new Question('%', '1', 'testDeleteQuestion2', 'testDeleteQuestion2', 'none', 'none');
+    echo $question->insert();
+
+    $question = new Question('%', '1', 'testDeleteQuestion2', 'testDeleteQuestion2', 'none', 'none');
+    echo $question->delete();
 
   */
   
@@ -135,6 +152,51 @@
       $retVal = $stmt->fetchAll(PDO::FETCH_ASSOC);
       array_unshift($retVal, $response);
       return json_encode($retVal);
+    }
+
+    public function delete(){
+      $connection = new Connection;
+      $pdo = $connection->getConnection();
+
+      $sql = "DELETE
+              FROM question
+              WHERE question_id LIKE :question_id
+                AND teacher_id LIKE :teacher_id
+                AND question_type LIKE :question_type 
+                AND description LIKE :description
+                AND potential_answers LIKE :potential_answers
+                AND correct_answers LIKE :correct_answers";
+
+      $stmt = $pdo->prepare($sql);
+      $stmt->bindValue(':teacher_id', $this->teacher_id);
+      $stmt->bindValue(':question_type', $this->question_type);
+      $stmt->bindValue(':question_id', $this->question_id);
+      $stmt->bindValue(':description', $this->description);
+      $stmt->bindValue(':potential_answers', $this->potential_answers);
+      $stmt->bindValue(':correct_answers', $this->correct_answers);
+
+      try{
+        $stmt->execute();
+      }catch (Exception $e){
+        // fail JSON response
+        $response = array();
+        $response["message"] = "ERROR DELETING: ".$e->getMessage();
+        $response["success"] = 0;
+        return json_encode($response);
+      }
+
+      $pdo = null;
+      $response = array();
+      $response["message"] = "Success DELETING from Question";
+      $response["success"] = 1;
+      $response["rowCount"] = $stmt->rowCount();
+      return json_encode($response);
+    }
+
+    //TODO: implement replace
+    //TODO: test replace
+    public function replace(){
+
     }
 
   }
