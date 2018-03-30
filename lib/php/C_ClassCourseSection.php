@@ -2,15 +2,54 @@
   /*
   This class is used by the teacher to insert or select table "class_section".
 
+   _____________________
+  |class_course_section |
+  |_____________________|
+  |class_id             |
+  |---------------------|
+  |title                |
+  |description          |
+  |offering             |
+  |location             |
+  |_____________________|
+
   Example Usage:
 
   // insert a new section
-  $aSection = new ClassSection('aaa', 'bbbb', 'cccc');
-  $aSection->insert();
+    $class = new ClassCourseSection('%', 'a title', 'a description', 'a offering', 'a location');
+    $class->insert();
 
   // selecting a section; 0th element is success message; 1th to end are rows from table
-  $aSection = new ClassSection('$', 'aaa', 'bbbb', 'cccc');
-  $myRows = $aSection->select();
+    $class = new ClassCourseSection('276', '%', '%', '%', '%');
+    $retVal = json_decode($class->select());
+    $class_id = $retVal[1]->class_id;
+    $title = $retVal[1]->title;
+    $description = $retVal[1]->description;
+    $offering = $retVal[1]->offering;
+    $location = $retVal[1]->location;
+
+
+  // delete a ClassCourseSection
+    $class = new ClassCourseSection('%', 'testDeleteClass1', 'testDeleteClass1', 'testDeleteClass1', 'testDeleteClass1');
+    echo $class->insert();
+
+    $class = new ClassCourseSection('%', 'testDeleteClass1', 'testDeleteClass1', 'testDeleteClass1', 'testDeleteClass1');
+    echo $class->delete();
+
+  // update a ClassCourseSection
+    $class = new ClassCourseSection('276', '%', '%', '%', '%');
+    $retVal = json_decode($class->select());
+    $class_id = $retVal[1]->class_id;
+    $title = $retVal[1]->title;
+    $description = $retVal[1]->description;
+    $offering = $retVal[1]->offering;
+    $location = $retVal[1]->location;
+
+    $description = "i am only changing the description";
+
+    $retVal = json_decode($class->update($title, $description, $offering, $location));
+
+    var_dump($retVal);
 
   */
 
@@ -118,6 +157,103 @@
 
 
     }
+
+    public function delete(){
+      $connection = new Connection;
+      $pdo = $connection->getConnection();
+
+      $sql = "DELETE
+              FROM class_course_section
+              WHERE class_id LIKE :class_id
+                AND title LIKE :title
+                AND description LIKE :description
+                AND offering LIKE :offering
+                AND location LIKE :location
+                ";
+
+      $stmt = $pdo->prepare($sql);
+      $stmt->bindValue(':class_id', $this->__get('class_id'));
+      $stmt->bindValue(':title', $this->__get('title'));
+      $stmt->bindValue(':description', $this->__get('description'));
+      $stmt->bindValue(':offering', $this->__get('offering'));
+      $stmt->bindValue(':location', $this->__get('location'));
+
+      try{
+        $stmt->execute();
+      }catch (Exception $e){
+        // fail JSON response
+        $response = array();
+        $response["message"] = "ERROR DELETING: ".$e->getMessage();
+        $response["success"] = 0;
+        return json_encode($response);
+      }
+
+      $pdo = null;
+      $response = array();
+      $response["message"] = "Success DELETING from class_course_section";
+      $response["success"] = 1;
+      $response["rowCount"] = $stmt->rowCount();
+      return json_encode($response);
+    }
+
+    public function update($newTitle, $newDescription, $newOffering, $newLocation){
+//      _____________________
+//      |class_course_section |
+//      |_____________________|
+//      |class_id             |
+//      |---------------------|
+//      |title                |
+//      |description          |
+//      |offering             |
+//      |location             |
+//      |_____________________|
+      $connection = new Connection;
+      $pdo = $connection->getConnection();
+      $sql = "UPDATE class_course_section
+              SET title = :newTitle,
+                  description = :newDescription,
+                  offering = :newOffering,
+                  location = :newLocation
+              WHERE class_id LIKE :class_id
+                AND title LIKE :title
+                AND description LIKE :description
+                AND offering LIKE :offering
+                AND location LIKE :location
+                ";
+
+      $stmt = $pdo->prepare($sql);
+
+      $stmt->bindValue(':newTitle', $newTitle);
+      $stmt->bindValue(':newDescription', $newDescription);
+      $stmt->bindValue(':newOffering', $newOffering);
+      $stmt->bindValue(':newLocation', $newLocation);
+
+      $stmt->bindValue(':class_id', $this->__get('class_id'));
+      $stmt->bindValue(':title', $this->__get('title'));
+      $stmt->bindValue(':description', $this->__get('description'));
+      $stmt->bindValue(':offering', $this->__get('offering'));
+      $stmt->bindValue(':location', $this->__get('location'));
+
+      try{
+        $stmt->execute();
+      }catch (Exception $e){
+        // fail JSON response
+        $response = array();
+        $response["message"] = "ERROR UPDATING ".$e->getMessage();
+        $response["success"] = 0;
+        return json_encode($response);
+      }
+
+      // success JSON response
+      $response = array();
+      $response["message"] = "Update successful";
+      $response["success"] = 1;
+      $response["rowCount"] = $stmt->rowCount();
+      return json_encode($response);
+
+    }
+
+
 
   }
 ?>
