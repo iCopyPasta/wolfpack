@@ -245,8 +245,8 @@
                 AND teacher_id LIKE :teacher_id
                 AND question_type LIKE :question_type
                 AND description LIKE :description
-                AND potential_answers = :potential_answers
-                AND correct_answers = :correct_answers
+                AND potential_answers LIKE :potential_answers
+                AND correct_answers LIKE :correct_answers
                 ";
 
       // does the teacher_id exist?
