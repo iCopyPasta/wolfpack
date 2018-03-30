@@ -1,25 +1,47 @@
 <?php
   /*
-  This class is used by the user to:
-    insert a new student account into table "student_account"
-    select from "student_account"
+  This class is used by the teacher to insert a new question into table "question".
 
-  Example usage (see Sign_up.php for more):
-
-    include_once('C_StudentAccount.php');
-
-    $selectStudentAccount = new StudentAccount('thisValueIsIgnored', 'Scott', 'Wilson', $hashPassword, , $insertEmail);
-    $qJSON = json_decode($selectStudentAccount->insert(), true);
-    $success = isset($qJSON[0]['success']) ? $qJSON[0]['success'] : null;
-    $message = isset($qJSON[0]['message']) ? $qJSON[0]['message'] : null;
+   __________________
+  |question_set      |
+  |__________________|
+  |question_set_id   |
+  |------------------|
+  |question_set_name |
+  |teacher_id        |
+  |__________________|
 
 
-    $selectStudentAccount = new StudentAccount('%','%','%','%', $insertEmail);
-    $qJSON = json_decode($selectStudentAccount->select(), true);
-    $success = isset($qJSON[0]['success']) ? $qJSON[0]['success'] : null;
-    $message = isset($qJSON[0]['message']) ? $qJSON[0]['message'] : null;
-    $email = isset($qJSON[1]['email']) ? $qJSON[1]['email'] : null;
-    $firstName = isset($qJSON[1]['first_name']) ? $qJSON[1]['first_name'] : null;
+
+  Example Usage:
+
+    include_once('C_QuestionSet.php');
+
+  // insert a QuestionSet
+    $questionSet = new QuestionSet('%', '1', 'testDeleteQuestionSet');
+    $questionSet->insert();
+
+  // select a QuestionSet
+    $questionSet = new QuestionSet('1', '%', '%');
+    $retVal = json_decode($questionSet->select());
+    $question_set_id = $retVal[1]->question_set_id;
+    $teacher_id = $retVal[1]->teacher_id;
+    $question_set_name = $retVal[1]->question_set_name;
+
+    echo $question_set_name;
+    var_dump($retVal);
+
+  // delete question set
+    $questionSet = new QuestionSet('%', '1', 'testDeleteQuestionSet');
+    $questionSet->delete());
+
+
+  // update a QuestionSet
+    $questionSet = new QuestionSet('%', '1', 'testUpdateQuestionSet');
+    $questionSet->insert();
+    $aNewQuestionSetName = "i'm changing the question set name";
+    $questionSet->update('1', $aNewQuestionSetName);
+
 
   */
 include_once('isIdExistFunctions.php');
@@ -127,6 +149,97 @@ include_once('isIdExistFunctions.php');
       array_unshift($retVal, $response);
 
       return json_encode($retVal);
+    }
+
+    public function delete(){
+      $connection = new Connection;
+      $pdo = $connection->getConnection();
+
+      $sql = "DELETE
+              FROM question_set
+              WHERE question_set_id LIKE :question_set_id
+                AND question_set_name LIKE :question_set_name
+                AND teacher_id LIKE :teacher_id
+                ";
+
+      $stmt = $pdo->prepare($sql);
+      $stmt->bindValue(':question_set_id', $this->__get('question_set_id'));
+      $stmt->bindValue(':question_set_name', $this->__get('question_set_name'));
+      $stmt->bindValue(':teacher_id', $this->__get('teacher_id'));
+
+      try{
+        $stmt->execute();
+      }catch (Exception $e){
+        // fail JSON response
+        $response = array();
+        $response["message"] = "ERROR DELETING: ".$e->getMessage();
+        $response["success"] = 0;
+        return json_encode($response);
+      }
+
+      $pdo = null;
+      $response = array();
+      $response["message"] = "Success DELETING from Question";
+      $response["success"] = 1;
+      $response["rowCount"] = $stmt->rowCount();
+      return json_encode($response);
+    }
+
+    public function update($newTeacherId, $newQuestionSetName){
+//      __________________
+//      |question_set      |
+//      |__________________|
+//      |question_set_id   |
+//      |------------------|
+//      |question_set_name |
+//      |teacher_id        |
+//      |__________________|
+      $connection = new Connection;
+      $pdo = $connection->getConnection();
+      $sql = "UPDATE question_set
+              SET question_set_name = :newQuestionSetName,
+                  teacher_id = :newTeacherId
+              WHERE question_set_id LIKE :question_set_id
+                AND question_set_name LIKE :question_set_name
+                AND teacher_id LIKE :teacher_id
+                ";
+
+      // does the teacher_id exist?
+//      include_once('isIdExistFunctions.php');
+      if(!isTeacherIdExist($this->__get('teacher_id'))){
+        // fail JSON response
+        $response = array();
+        $response["message"] = "ERROR UPDATING: teacher_id ".$this->teacher_id." does not exist: ";
+        $response["success"] = 0;
+        return json_encode($response);
+      }
+
+      $stmt = $pdo->prepare($sql);
+
+      $stmt->bindValue(':newQuestionSetName', $newQuestionSetName);
+      $stmt->bindValue(':newTeacherId', $newTeacherId);
+
+      $stmt->bindValue(':question_set_id', $this->__get('question_set_id'));
+      $stmt->bindValue(':question_set_name', $this->__get('question_set_name'));
+      $stmt->bindValue(':teacher_id', $this->__get('teacher_id'));
+
+      try{
+        $stmt->execute();
+      }catch (Exception $e){
+        // fail JSON response
+        $response = array();
+        $response["message"] = "ERROR UPDATING ".$e->getMessage();
+        $response["success"] = 0;
+        return json_encode($response);
+      }
+
+      // success JSON response
+      $response = array();
+      $response["message"] = "Update successful";
+      $response["success"] = 1;
+      $response["rowCount"] = $stmt->rowCount();
+      return json_encode($response);
+
     }
 
   }
