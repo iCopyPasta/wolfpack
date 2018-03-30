@@ -25,42 +25,44 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="..\css\special\modalcss.css" media="screen" />  
-
+    <!-- Font Awesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="..\css\common\custom.css">
     <!-- Custom styles for this template -->
     <style>
-    html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
+      html
+      {
+        font-size: 14px;
+      }
+      @media (min-width: 768px)
+      {
+        html
+        {
+          font-size: 16px;
+        }
+      }
+      .flex-box
+      {
+        min-width: 500px;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      .pricing-header
+      {
+        max-width: 700px;
+      }
+      .card-deck .card
+      {
+        min-width: 500px;
+      }
+      .clickBox
+      {
+        cursor: pointer;
+      }        
 
-.container {
-  max-width: 960px;
-}
-
-.pricing-header {
-  max-width: 700px;
-}
-
-.card-deck .card {
-  min-width: 220px;
-}
-
-.selected-box {
-  background:lime; 
-}
-        
-.clickBox {
-  cursor: pointer;
-}        
-
-.border-top { border-top: 1px solid #e5e5e5; }
-.border-bottom { border-bottom: 1px solid #e5e5e5; }
-
-.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+      .border-top { border-top: 1px solid #e5e5e5; }
+      .border-bottom { border-bottom: 1px solid #e5e5e5; }
+      .box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
     </style>
   </head>
 
@@ -85,31 +87,45 @@
             
     </div>
 
-    <div class="container">
+    <div class="flex-box">
     <h1 class="display-5 text-center">Current Questions</h1>
         <div class="card-deck mb-3 text-center">
         <?php
         
-         $retVal = searchQuestionsByTeacherID($_SESSION['id']);
-         $retVal = json_decode($retVal,true);
-         $removeZerothIndex = $retVal;
-         unset($removeZerothIndex[0]);
-        
-        
-        foreach($removeZerothIndex as $value){
-          $question_type = $value['question_type'];
-          $description = $value['description'];
-          $question_id = $value['question_id'];    
+           $retVal = searchQuestionsByTeacherID($_SESSION['id']);
+           $retVal = json_decode($retVal,true);
+           $removeZerothIndex = $retVal;
+           unset($removeZerothIndex[0]);
+
+          foreach($removeZerothIndex as $value){
+            $question_type = $value['question_type'];
+            $description = $value['description'];
+            $question_id = $value['question_id'];
+
+            $answers = json_decode($value['potential_answers'], TRUE);
+            if(is_null($answers) || empty($answers))
+              $answers = "There are no answers!";
+            else
+            {
+              $answers = array_slice($answers, 0, 2);
+              $answers = implode("<br>", $answers);
+            }
+
+            $correct_answers = json_decode($value['correct_answers'], TRUE);
+            if(is_null($correct_answers) || empty($correct_answers))
+              $correct_answers = "There are no correct answers!";
+            else
+              $correct_answers = implode(" ", $correct_answers);
+             
             
-          echo "<div class=\" clickBox card mb-4\" id=\"$question_id\" onclick=\"toggleActive($question_id)\"> 
-          <div class=\"card-header\">
-            <h4 class=\"my-0 font-weight-normal\">Question Type: $question_type</h4>
-          </div>
-          <div class=\"card-body\">
-            <h5 class=\"card-title pricing-card-title\">$description</h5>
-            
-          </div>
-        </div>";
+          echo "<div class=\" clickBox card bg-secondary text-white mb-3\" id=\"$question_id\" onclick=\"toggleActive($question_id)\"> 
+                  <div class=\"card-header\">
+                    <h4 class=\"my-0 font-weight-normal text-truncate\">$description</h4>
+                  </div>
+                  <div class=\"card-body\">
+                    <h5 class=\"card-title pricing-card-title text-truncate\">$answers</h5>
+                  </div>
+                </div>";
         }                               
             
         if (empty($removeZerothIndex)) {
@@ -126,11 +142,11 @@
         function toggleActive(question_id) {
             
             if (activeQuestions.has(question_id)) {
-                document.getElementById(question_id).className = "clickBox card mb-4";
+                document.getElementById(question_id).className = "clickBox card bg-secondary text-white mb-3";
                 activeQuestions.delete(question_id);
             }
             else {
-                document.getElementById(question_id).className = "clickBox card mb-4 selected-box";
+                document.getElementById(question_id).className = "clickBox card mb-3 text-white selected-box";
                 activeQuestions.add(question_id);
             }
                 

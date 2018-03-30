@@ -25,8 +25,10 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="..\css\special\modalcss.css" media="screen" />  
-
+    <!-- Font Awesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
     <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="..\css\common\custom.css">
     <style>
     html {
   font-size: 14px;
@@ -134,14 +136,17 @@
           $description = $value['description'];
           $offering = $value['offering'];
           $location = $value['location'];
-          echo "<div class=\"card mb-4 box-shadow\">
+          
+          echo "<div class=\"card mb-3 text-white bg-secondary box-shadow\">
           <div class=\"card-header\">
+            <button type=\"button\" class=\"btn btn-danger btn-sm float-right\">
+              <span class=\"fas fa-trash fa-sm\"></span>
+            </button>
             <h4 class=\"my-0 font-weight-normal\">$title</h4>
           </div>
           <div class=\"card-body\">
             <h1 class=\"card-title pricing-card-title\"><small>$location</small></h1>
             <ul class=\"list-unstyled mt-3 mb-4\">
-              <li>$description</li>
               <li>$offering</li>
             </ul>
             <a href=\"choosePolledQuestionSet.php?class_id=$classId\"> <button type=\"button\" class=\"btn btn-lg btn-block btn-primary\">Poll Class</button></a>
