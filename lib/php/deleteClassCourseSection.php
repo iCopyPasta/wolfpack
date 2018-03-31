@@ -15,26 +15,26 @@
   //    |__________________|
 
   include_once('Connection.php');
-  include_once('C_Question.php');
+  include_once('C_ClassCourseSection.php');
   include_once('isIdExistFunctions.php');
 
   // get question_id from DB
-  $question_id = isset($_POST['question_id']) ? $_POST['question_id'] : null;
-  if(is_null($question_id) || empty($question_id)){
+  $class_id = isset($_POST['class_id']) ? $_POST['class_id'] : null;
+  if(is_null($class_id) || empty($class_id)){
     // fail JSON response
     $response = array();
-    $response["message"] = "ERROR UPDATING, question_id cannot be null or empty";
+    $response["message"] = "ERROR DELETING, class_id cannot be null or empty";
     $response["success"] = 0;
     return json_encode($response);
   }
 
-  if(isQuestionIdExist($question_id)){
-    $question = new Question($question_id, '%', '%', '%', '%', '%');
-    return $question->delete();
+  if(isClassIdExist($class_id)){
+    $class = new ClassCourseSection($class_id, '%', '%', '%', '%');
+    return $class->delete();
   }else{
     // question_id does not exist
     $response = array();
-    $response["message"] = "ERROR UPDATING, question_id: ".$question_id." does not exist";
+    $response["message"] = "ERROR DELETING, class_id: ".$class_id." does not exist";
     $response["success"] = 0;
     return json_encode($response);
   }
