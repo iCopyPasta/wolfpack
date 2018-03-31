@@ -16,6 +16,7 @@
 
   include_once('Connection.php');
   include_once('C_Question.php');
+  include_once('isIdExistFunctions.php');
 
   // get question_id from DB
   $question_id = isset($_POST['question_id']) ? $_POST['question_id'] : null;
