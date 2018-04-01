@@ -24,7 +24,7 @@ import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.Question
 // given
 // we ask for the current question
 // we submit from here
-public class StudentQuestionActivePage extends AppCompatActivity {
+public class StudentQuestionActivePage extends QuestionPage {
     private String studentId = null;
     private String questionId = null;
     private String questionSessionId = null;
@@ -36,7 +36,7 @@ public class StudentQuestionActivePage extends AppCompatActivity {
     private final String TAG = "QuestionActivePage";
     private Gson gson = null;
     private String classId = null;
-    private String className = null;
+    //private String className = null;
     private String questionSetId = null;
     private int errorCount = 0;
 
@@ -97,12 +97,14 @@ public class StudentQuestionActivePage extends AppCompatActivity {
 
 
                     Log.i(TAG, "onReceive: " + questionInformation.getDescription());
-                    Toast.makeText(StudentQuestionActivePage.this,
-                            questionInformation.getQuestionType(),
-                            Toast.LENGTH_LONG).show();
+//                    Toast.makeText(StudentQuestionActivePage.this,
+//                            questionInformation.getQuestionType(),
+//                            Toast.LENGTH_LONG).show();
 
                     //is there yet an active question?
                     mService.searchActiveQuestion(questionSetId,"false");
+
+                    handleActiveQuestion(questionInformation);
 
                 }
             }
@@ -136,6 +138,31 @@ public class StudentQuestionActivePage extends AppCompatActivity {
 
         }
     };
+
+
+    protected void handleActiveQuestion(QuestionInformation info){
+
+        questionDesc = info.getDescription();
+        mTextViewQuestion.setText(info.getDescription());
+
+
+        if (info.getQuestionType().startsWith("True")){
+
+        }
+        else if (info.getQuestionType().startsWith("Multiple")){
+
+        }
+
+
+        Toast.makeText(StudentQuestionActivePage.this,
+                questionInformation.getQuestionType(),
+                Toast.LENGTH_LONG).show();
+
+
+    }
+
+
+
 
     //receiver to make sure we have an active question, yet.
     //receiver for an active question

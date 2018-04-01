@@ -24,13 +24,13 @@ public class StudentSessionCompletePage extends SessionPage {
 
     public static final String TAG = "SSeshCmplt";
 
-    private String className = "";
-    private String sessionName = "";
+    //private String className = "";
+    //private String sessionName = "";
 
-    private TextView mTextViewSessionName;
-    private TextView mTextViewQuestionNotice;
+    //private TextView mTextViewSessionName;
+    //private TextView mTextViewQuestionNotice;
 
-    private RecyclerView mRecyclerViewQuestion;
+    //private RecyclerView mRecyclerViewQuestion;
     private RecyclerView.LayoutManager recyclerLayoutManager;
 
     private String[] questionlistTemp = {"What does that say?", "How are you doing today?"};
@@ -55,19 +55,19 @@ public class StudentSessionCompletePage extends SessionPage {
             sessionName = bundle.getString("sessionName");
 
             //get all the view
-            mTextViewSessionName = findViewById(R.id.sessionNameTextView);
-            mTextViewQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
-            mRecyclerViewQuestion = findViewById(R.id.questionListRecycleView);
+//            mTextViewSessionName = findViewById(R.id.sessionNameTextView);
+//            mTextViewActiveQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
+//            mRecyclerViewQuestionList = findViewById(R.id.questionListRecycleView);
 
             //set misc
             mTextViewSessionName.setText(sessionName);
-            mTextViewQuestionNotice.setVisibility(View.GONE);
-            mRecyclerViewQuestion.setVisibility(View.VISIBLE);
+            mTextViewActiveQuestionNotice.setVisibility(View.GONE);
+            mRecyclerViewQuestionList.setVisibility(View.VISIBLE);
 
             //setup recycler view
-            mRecyclerViewQuestion.setHasFixedSize(false);
+            mRecyclerViewQuestionList.setHasFixedSize(false);
             recyclerLayoutManager = new LinearLayoutManager(this);
-            mRecyclerViewQuestion.setLayoutManager(recyclerLayoutManager);
+            mRecyclerViewQuestionList.setLayoutManager(recyclerLayoutManager);
             adapter = new QuestionRecyclerAdapter(Arrays.asList(questionlistTemp), this);
             adapter.setItemClickListener(new ItemClickListener() {
                         @Override
@@ -102,7 +102,7 @@ public class StudentSessionCompletePage extends SessionPage {
                         }
                     });
 
-            mRecyclerViewQuestion.setAdapter(adapter);
+            mRecyclerViewQuestionList.setAdapter(adapter);
 
 
         }

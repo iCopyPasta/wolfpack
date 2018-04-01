@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
 
 import java.util.List;
 
@@ -34,12 +35,12 @@ public class QuestionPage extends AppCompatActivity {
     protected RecyclerView mRecyclerViewChoice;
 
 
-    protected String className;
-    protected String sessionName;
-    protected String questionDesc;
-    protected int questionType;
+    protected String className = null;
+    protected String sessionName = null;
+    protected String questionDesc = null;
+    protected int questionType = 0;
 
-    protected List<String> answerList;
+    //protected List<String> answerList;
 
 
 
@@ -73,4 +74,16 @@ public class QuestionPage extends AppCompatActivity {
 
 
     }
+
+
+
+
+
+
+//    protected void handleCompleteQuestion(QuestionInformation info){
+//
+//    }
+
+
+
 }

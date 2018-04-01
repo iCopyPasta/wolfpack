@@ -23,19 +23,19 @@ import android.widget.Toast;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
 
-public class StudentSessionActivePage extends AppCompatActivity { //implements ActiveSessionDialog.ActiveSessionDialogListener {
+public class StudentSessionActivePage extends SessionPage { //implements ActiveSessionDialog.ActiveSessionDialogListener {
 
 
     // given MY_SERVICE_QUESTION_SET_ID, MY_SERVICE_QUESTION_SESSION_ID
     // we ask if there is an active question here!
     public static final String TAG = "SSessionActivePage";
 
-    private String className = "";
-    private String sessionName = "";
+    //private String className = "";
+    //private String sessionName = "";
     private String classId = null;
 
-    private TextView mTextViewSessionName;
-    private TextView mTextViewQuestionNotice;
+    //private TextView mTextViewSessionName;
+    //private TextView mTextViewQuestionNotice;
 
     //activeSession refers to if there is an active session for the class (not necessarily this session)
     private boolean activeSession = true;
@@ -102,8 +102,8 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
                 activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID,
                         info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID));
 
-                activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID
-                        ,questionSessionId);
+                activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID,
+                        questionSessionId);
 
                 activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
                         questionSetId);
@@ -127,7 +127,7 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
         }
     };
 
-    //reciever to make sure THIS session is still alive
+    //receiver to make sure THIS session is still alive
     private BroadcastReceiver mReceiver2 = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -177,7 +177,7 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_session_page);
+        //setContentView(R.layout.activity_session_page);
 
         Bundle bundle = getIntent().getExtras();
 
@@ -186,16 +186,22 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorStudentPrimary)));
 
 
-            className = (String) bundle.get("className");
             classId = bundle.getString("classId");
+            className = bundle.getString("className");
+            sessionName = bundle.getString("sessionName");
 
             //is this THE active session?
             isActiveSession = (boolean) bundle.get("isActive");
 
             //get all the views
-            mTextViewSessionName = findViewById(R.id.sessionNameTextView);
-            mTextViewQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
+            //mTextViewSessionName = findViewById(R.id.sessionNameTextView);
+            //mTextViewQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
             foundQuestion = false;
+
+            //set misc (text & visibility)
+            mTextViewSessionName.setText(sessionName);
+            mTextViewActiveQuestionNotice.setVisibility(View.VISIBLE);
+            mRecyclerViewQuestionList.setVisibility(View.GONE);
 
 
             //decide how to handle it
@@ -208,9 +214,9 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
 
                 handleActiveSession();
             }
-            else{
-                handleCompletedSession();
-            }
+//            else{
+//                handleCompletedSession();
+//            }
 
 
             Log.i(TAG, "className = "+className);
@@ -266,11 +272,11 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
 
     }
 
-    //if this session is completed
-    private void handleCompletedSession(){
-
-
-    }
+//    //if this session is completed
+//    private void handleCompletedSession(){
+//
+//
+//    }
 
     @Override
     protected void onResume() {
