@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 
-public interface ItemClickListener {
+public interface ItemChoiceClickListener {
     void onClick (View view, int position);
 }
 

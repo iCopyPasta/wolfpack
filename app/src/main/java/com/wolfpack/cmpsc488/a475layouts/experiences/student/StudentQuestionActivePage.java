@@ -10,15 +10,20 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 // given
@@ -140,17 +145,34 @@ public class StudentQuestionActivePage extends QuestionPage {
     };
 
 
+
+
+
+    private RecyclerView.LayoutManager recyclerLayoutManager;
+    private AnswerChoiceRecyclerAdapter choiceAdapter;
+
+    private Boolean[] studentAnswersChoice = null;
+    private Boolean studentAnswersTrueFalse = null;
+
     protected void handleActiveQuestion(QuestionInformation info){
 
         questionDesc = info.getDescription();
         mTextViewQuestion.setText(info.getDescription());
 
 
-        if (info.getQuestionType().startsWith("True")){
+        Log.i("handleActiveQuestion", "teacher id = " + info.getTeacherId() + "\n" +
+                "question id = " + info.getQuestionId() + "\n" +
+                "question desc = " + info.getDescription() + "\n" +
+                "question type = " + info.getQuestionType() + "\n" +
+                "potential answers = " + info.getPotentialAnswers() + "\n" +
+                "correct answers = " + info.getCorrectAnswers() + "\n");
 
+
+        if (info.getQuestionType().startsWith("True")){
+            handleQuestionTrueFalse(info);
         }
         else if (info.getQuestionType().startsWith("Multiple")){
-
+            handleQuestionChoice(info);
         }
 
 
@@ -161,6 +183,110 @@ public class StudentQuestionActivePage extends QuestionPage {
 
     }
 
+
+    private void handleQuestionChoice(QuestionInformation info){
+        mRecyclerViewChoice.setVisibility(View.VISIBLE);
+
+        //ArrayList<String> answerList = info.getStringArrayList("answerList");
+        //ArrayList<Integer> correctAnswers = info.getIntegerArrayList("correctAnswers");
+        //ArrayList<Integer> studentAnswers = info.getIntegerArrayList("studentAnswers");
+
+        //ArrayList<String> answerList = new ArrayList<>();
+        ArrayList<Integer> correctAnswers = new ArrayList<>();
+
+//        Matcher matcher = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(info.getPotentialAnswers());
+//        while(matcher.find())
+//            answerList.add(matcher.group(1));
+//
+//        matcher = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(info.getPotentialAnswers());
+//        while(matcher.find())
+//            correctAnswers.add(Integer.parseInt(matcher.group(1)));
+
+        String answerString = info.getPotentialAnswers();
+        answerString = answerString.substring(2, answerString.length() - 2);
+        ArrayList<String> answerList = new ArrayList<>(Arrays.asList(answerString.split("\",\"")));
+
+
+        String correctString = info.getCorrectAnswers();
+        correctString = correctString.substring(2, correctString.length() - 2);
+        for (String s : correctString.split("\",\"")){
+            correctAnswers.add(Integer.parseInt(s) - 1);
+        }
+
+        studentAnswersChoice = new Boolean[answerList.size()];
+
+
+        Log.i("handleActiveQuestion", "teacher id = " + info.getTeacherId() + "\n" +
+                "question id = " + info.getQuestionId() + "\n" +
+                "question desc = " + info.getDescription() + "\n" +
+                "question type = " + info.getQuestionType() + "\n" +
+                "potential answers = " + answerList + "\n" +
+                "correct answers = " + correctAnswers
+                + "\n");
+
+
+        mRecyclerViewChoice.setHasFixedSize(false);
+        recyclerLayoutManager = new LinearLayoutManager(this);
+        mRecyclerViewChoice.setLayoutManager(recyclerLayoutManager);
+        choiceAdapter = new AnswerChoiceRecyclerAdapter(getApplicationContext(),
+                answerList,
+                correctAnswers,
+                true);
+
+
+        choiceAdapter.setItemChoiceClickListener(new ItemChoiceClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                studentAnswersChoice[position] = !studentAnswersChoice[position];
+                Toast.makeText(view.getContext(), "Choose answer (" + position + "): " + studentAnswersChoice[position], Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mRecyclerViewChoice.setAdapter(choiceAdapter);
+
+        Log.i(TAG, "finished handleQuestionChoice");
+    }
+
+    private void handleQuestionTrueFalse(QuestionInformation info) {
+        mRadioGroupTrueFalse.setVisibility(View.VISIBLE);
+
+        RadioButton trueButton= (RadioButton) mRadioGroupTrueFalse.getChildAt(0);
+        RadioButton falseButton = (RadioButton) mRadioGroupTrueFalse.getChildAt(1);
+
+        trueButton.setClickable(true);
+        falseButton.setClickable(true);
+
+        trueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                studentAnswersTrueFalse = true;
+                Toast.makeText(getApplicationContext(), "Choice: " + studentAnswersTrueFalse, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        falseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                studentAnswersTrueFalse = false;
+                Toast.makeText(getApplicationContext(), "Choice: " + studentAnswersTrueFalse, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+
+//    public void onTrueFalseButtonClicked(View view){
+//        switch(view.getId()){
+//            case R.id.answerTrue:
+//                studentAnswersTrueFalse = true;
+//                break;
+//            case R.id.answerFalse:
+//                studentAnswersTrueFalse = false;
+//                break;
+//            default:
+//                throw new RuntimeException("True or False not picked somehow");
+//        }
+//    }
 
 
 

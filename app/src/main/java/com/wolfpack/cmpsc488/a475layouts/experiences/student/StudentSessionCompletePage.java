@@ -1,16 +1,13 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
 
@@ -69,7 +66,7 @@ public class StudentSessionCompletePage extends SessionPage {
             recyclerLayoutManager = new LinearLayoutManager(this);
             mRecyclerViewQuestionList.setLayoutManager(recyclerLayoutManager);
             adapter = new QuestionRecyclerAdapter(Arrays.asList(questionlistTemp), this);
-            adapter.setItemClickListener(new ItemClickListener() {
+            adapter.setItemChoiceClickListener(new ItemChoiceClickListener() {
                         @Override
                         public void onClick(View view, int position) {
                             Intent intent = new Intent(getApplicationContext(), StudentQuestionCompletePage.class);
@@ -85,7 +82,7 @@ public class StudentSessionCompletePage extends SessionPage {
 //                                intent.putExtra("studentAnswer", 9);
 //                            }
                             if (position == 0) {
-                                intent.putExtra("questionType", QuestionPage.QUESTION_TYPE_SELECTION);
+                                intent.putExtra("questionType", QuestionPage.QUESTION_TYPE_CHOICE);
                                 intent.putExtra("answerList", new ArrayList<>(Arrays.asList(answerlistTemp)));
                                 Integer[] correctAns = {2, 8, 9, 10, 11, 14};
                                 Integer[] studentAns = {2, 9, 10, 11};
