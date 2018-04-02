@@ -227,41 +227,27 @@
               //var questions = JSON.stringify(Array.from(activeQuestions));
 
 
-                  console.log(activeQuestions);
+              console.log(activeQuestions);
 
-                  var send = new Object();
+              for (let question of activeQuestions) {
+                  post('../lib/php/deleteQuestion.php',"question_id= "+question);
+              } 
                   
                   //LOOP THROUGH ACTIVE QUESTIONS AND POST DELETE FOR EACH
                   
-                  //post('../lib/php/deleteQuestion.php',send);
+              
               
           }
 
 
 
-          function post(path, params, method) { // method: https://stackoverflow.com/questions/133925/javascript-post-request-like-a-form-submit
-              method = method || "post"; // Set method to post by default if not specified.
-
-              // The rest of this code assumes you are not using a library.
-              // It can be made less wordy if you use one.
-              var form = document.createElement("form");
-              form.setAttribute("method", method);
-              form.setAttribute("action", path);
-
-              for(var key in params) {
-                  if(params.hasOwnProperty(key)) {
-                      var hiddenField = document.createElement("input");
-                      hiddenField.setAttribute("type", "hidden");
-                      hiddenField.setAttribute("name", key);
-                      hiddenField.setAttribute("value", params[key]);
-
-                      form.appendChild(hiddenField);
-                  }
-              }
-
-              document.body.appendChild(form);
-              form.submit();
-          } 
+          function post(url,params) {
+               var xhttp = new XMLHttpRequest();
+               
+                xhttp.open("POST", url, true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send(params);
+            } 
         </script> 
     </div>
 

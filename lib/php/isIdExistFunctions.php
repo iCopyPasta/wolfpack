@@ -46,7 +46,7 @@
     $question = new Question($aQuestionId, '%', '%', '%', '%', '%');
     $qJSON = json_decode($question->select(), true);
     // if a row was returned then the class_id exists
-    return array_key_exists(1, $qJSON);
+    return !empty($qJSON);
   }
 
   function isTeacherIdExist($aTeacherId){

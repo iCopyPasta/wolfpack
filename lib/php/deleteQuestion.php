@@ -20,7 +20,9 @@
 
   // get question_id from DB
   $question_id = isset($_POST['question_id']) ? $_POST['question_id'] : null;
+  error_log("Question ID at deleteQuestion: ".$question_id);
   if(is_null($question_id) || empty($question_id)){
+      error_log("deleteQuestion FAIL");
     // fail JSON response
     $response = array();
     $response["message"] = "ERROR UPDATING, question_id cannot be null or empty";
@@ -33,6 +35,7 @@
     return $question->delete();
   }else{
     // question_id does not exist
+    error_log("deleteQuestion FAIL, did not exist");
     $response = array();
     $response["message"] = "ERROR UPDATING, question_id: ".$question_id." does not exist";
     $response["success"] = 0;

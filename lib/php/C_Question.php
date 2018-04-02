@@ -183,27 +183,19 @@
     }
 
     public function delete(){
+        
+        error_log("delete invoked");
       $connection = new Connection;
       $pdo = $connection->getConnection();
 
       $sql = "DELETE
               FROM question
-              WHERE question_id LIKE :question_id
-                AND teacher_id LIKE :teacher_id
-                AND question_type LIKE :question_type 
-                AND description LIKE :description
-                AND potential_answers LIKE :potential_answers
-                AND correct_answers LIKE :correct_answers";
-        
+              WHERE question_id = :question_id";
         //TODO: remove this question from all question sets that it is in (Question_Is_In), along with Question_History, Answers?
-
+   
       $stmt = $pdo->prepare($sql);
-      $stmt->bindValue(':teacher_id', $this->teacher_id);
-      $stmt->bindValue(':question_type', $this->question_type);
       $stmt->bindValue(':question_id', $this->question_id);
-      $stmt->bindValue(':description', $this->description);
-      $stmt->bindValue(':potential_answers', $this->potential_answers);
-      $stmt->bindValue(':correct_answers', $this->correct_answers);
+
 
       try{
         $stmt->execute();
