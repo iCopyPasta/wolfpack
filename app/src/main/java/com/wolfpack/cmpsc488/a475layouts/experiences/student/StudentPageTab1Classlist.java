@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,9 +25,12 @@ import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
 
 import java.util.ArrayList;
 
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.ClasslistPaginationAdapter;
+import com.wolfpack.cmpsc488.a475layouts.services.pagination.ILoadmore;
 import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.ClassListResult;
 import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.ClassResult;
 
+import retrofit2.Call;
 import retrofit2.Response;
 
 
@@ -34,26 +39,19 @@ public class StudentPageTab1Classlist extends Fragment {
 
     private static final String TAG = "SPTab1Classlist";
 
-    private ListView mListViewClasses;
-    private View footView;
-    private MyAdapter adapter;
+    //private static String[] classlistTemp = {"CMPSC 460", "CMPSC 462", "CMPSC 463", "CMPSC 469","CMPSC 472", "CMPSC 488", "COMP 505", "COMP 511", "COMP 512", "COMP 519"};
+    //private static String[] classdesclistTemp = {"Principles of Programming Languages", "Data Structrues", "Design and Analysis of Algorithms", "Formal Languages with Applications", "Operating System Concepts", "Computer Science Project", "Theory of Computation", "Design and Anaylsis of Algorithms", "Advance Operating Systems", "Advanced Topics in Database Management Systems"};
+    //private static String[] classteacherlistTemp = {"Sukmoon Chang", "Jeremy Blum", "Jeremy Blum", "Sukmoon Chang", "Linda Null", "Hyuntae Na", "Thang Bui","Thang Bui", "Linda Null", "Linda Null"};
 
-    private static String[] classlistTemp = {"CMPSC 460", "CMPSC 462", "CMPSC 463", "CMPSC 469","CMPSC 472", "CMPSC 488", "COMP 505", "COMP 511", "COMP 512", "COMP 519"};
-    private static String[] classdesclistTemp = {"Principles of Programming Languages", "Data Structrues", "Design and Analysis of Algorithms", "Formal Languages with Applications", "Operating System Concepts", "Computer Science Project", "Theory of Computation", "Design and Anaylsis of Algorithms", "Advance Operating Systems", "Advanced Topics in Database Management Systems"};
-    private static String[] classteacherlistTemp = {"Sukmoon Chang", "Jeremy Blum", "Jeremy Blum", "Sukmoon Chang", "Linda Null", "Hyuntae Na", "Thang Bui","Thang Bui", "Linda Null", "Linda Null"};
+    private ArrayList<ClassResult> classlist = null;
 
+    private RecyclerView mClasslistRecycler = null;
+    private ClasslistPaginationAdapter adapter = null;
 
     private boolean isLoading = false;
-    private int visibleThreshold = 5;
-    private int lastVisibleItem, totalItemCount = 0;
-    private boolean isInitialState = true;
 
-    private int currentPage = 0;
-
-    private ArrayList<ClassResult> classlist;
-
-    private String email;
-    private int student_id;
+    private String studentId;
+    private String studentEmail;
 
 
     @SuppressLint("InflateParams")
@@ -72,91 +70,70 @@ public class StudentPageTab1Classlist extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         Log.i(TAG, "onActivityCreated");
-
-        LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        try {
-            footView = li.inflate(R.layout.listview_foot_view, null);
-            Log.i(TAG, "footView = "+footView);
-
-            //populate list view
-            // TODO: Use database to find classes that the student is enrolled
-            //       Currently it is displaying a hard coded list for demonstrating purposes
+        try{
+            Log.d(TAG, "getting student information");
+            studentId = ((StudentPage) getActivity()).studentId;
+            studentEmail = ((StudentPage) getActivity()).studentEmail;
 
             classlist = new ArrayList<>();
 
-            mListViewClasses = (ListView) getActivity().findViewById(R.id.classListView);
-            mListViewClasses.setVisibility(View.GONE);
+            Log.d(TAG, "getting recycler view");
+            mClasslistRecycler = getActivity().findViewById(R.id.classlistRecyclerView);
+            mClasslistRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-            Log.i(TAG, "starting: mListViewClasses.size() = "+mListViewClasses.getCount());
+            Log.d(TAG, "setting up and binding adapter");
+            adapter = new ClasslistPaginationAdapter(mClasslistRecycler, classlist);
+            mClasslistRecycler.setAdapter(adapter);
+            mClasslistRecycler.setNestedScrollingEnabled(true);
 
-            adapter = new MyAdapter(getContext());
-
-            mListViewClasses.setAdapter(adapter);
-
-            mListViewClasses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            Log.d(TAG, "setting listeners");
+            Log.d(TAG, "setLoadmore interfaces");
+            adapter.setLoadmore(new ILoadmore() {
                 @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
-                    Intent intent = new Intent(getActivity(), StudentClassPage.class);
-                    intent.putExtra("className", classlistTemp[i]);
-                    Log.i(TAG, "hello from onItemClick");
+                public void onLoadMore() {
+                    if(isLoading){
+                        Log.i("adapter:onLoadMore", "we avoided multiple requests!");
+                    } else{
+                        isLoading = true;
+                        new ClassesResultBackgroundTask().execute(studentId);
+                    }
+                }
+            });
+
+            Log.d(TAG, "setOnClassClickedListener interface");
+            adapter.setOnClassClickedListener(new ClasslistPaginationAdapter.OnClassClickedListener() {
+                @Override
+                public void onClassClicked(String classId, String classTitle, String classDesc, String classOffering, String classLocation, String teacherName) {
+
+                    SharedPreferences sharedPref = getContext().getSharedPreferences(
+                            getContext().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+                    //default is
+                    String student_id = sharedPref.getString(getContext().getString(0), "7502");
+
+                    Intent intent = new Intent(getContext(), StudentClassPage.class);
+
+                    intent.putExtra(getString(R.string.KEY_STUDENT_ID), student_id);
+                    intent.putExtra(getString(R.string.KEY_CLASS_ID), classId);
+                    intent.putExtra(getString(R.string.KEY_CLASS_TITLE), classTitle);
+                    intent.putExtra(getString(R.string.KEY_CLASS_DESCRIPTION), classDesc);
+                    intent.putExtra(getString(R.string.KEY_CLASS_OFFERING), classOffering);
+                    intent.putExtra(getString(R.string.KEY_CLASS_LOCATION), classLocation);
+                    intent.putExtra(getString(R.string.KEY_CLASS_TEACHER_NAME), teacherName);
 
                     startActivity(intent);
                 }
             });
 
-
-            mListViewClasses.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-                }
-
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    Log.i(TAG, "in mListViewClasses onScroll");
-                    Log.i(TAG, "getLastVisiblePosition() = " + view.getLastVisiblePosition() +
-                            "\ntotalItemCount == " + (totalItemCount - 1) +
-                            "\nisLoading == " + isLoading +
-                            "\nclasslist.size() = " + classlist.size() +
-                            "\nvisibleThreshold = " + visibleThreshold);
-
-                    //if at the bottom then load more results
-                    if (!isLoading &&
-                            mListViewClasses.getCount() >= StudentPageTab1Classlist.this.totalItemCount &&
-                            view.getLastVisiblePosition() == totalItemCount - 1
-                            ){
-
-//                            view.getLastVisiblePosition() < 8 || (
-//                            view.getLastVisiblePosition() == totalItemCount - 1 &&
-//                            mListViewClasses.getCount() >= StudentPageTab1Classlist.this.totalItemCount
-//                            && !isLoading)) {
-                        Log.i(TAG, "loading more results");
-                        isLoading = true;
-                        isInitialState = false;
-                        currentPage = classlist.size() / visibleThreshold;
-                        currentPage = (currentPage <= 1) ? 1 : currentPage;
-                        Log.i(TAG, "currentPage == "+currentPage);
-                        /*new ClassesResultBackgroundTask().execute(
-                                currentPage,
-                                //"dev@dev.com" //email
-                                5,
-                                //student_id
-                                7502 // TODO: change for real student
-                        );*/
-
-                    }
-
-                }
-            });
+            mClasslistRecycler.setVisibility(View.VISIBLE);
 
 
-            SharedPreferences sharedPref = getContext().getSharedPreferences(
-                    getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            //load first batch
+            Log.d(TAG, "loading first batch");
+            isLoading = true;
+            new ClassesResultBackgroundTask().execute(studentId);
 
-            email = sharedPref.getString(getString(R.string.USER_EMAIL), "none");
-            //student_id = sharedPref.getString(getString(R.string.USER_ID), "none");
-            Log.i(TAG, "finished onCreateView in StudentPageTab1Classlist");
+
         }
         catch(NullPointerException e){
             Log.e(TAG, e.getClass().toString() + e.getMessage());
@@ -165,83 +142,10 @@ public class StudentPageTab1Classlist extends Fragment {
 
 
 
-    private class MyAdapter extends BaseAdapter{
-
-        final String TAG = "MyAdapter";
-
-        private Context context;
-        //private ArrayList<ClassResult> classlist;
-/*        private ArrayList<ClassResult> list;
-
-        private ILoadmore loadmore;*/
-
-        public MyAdapter (Context context){//, ArrayList<String[]> list){
-            this.context = context;
-            //this.list = list;
-        }
-
-/*        public void addListItemToAdapter(ArrayList<ClassResult> list){
-            classlist.addAll(list);
-            this.notifyDataSetChanged();
-        }*/
-
-        @Override
-        public int getCount() {
-            return mListViewClasses.getCount();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @SuppressLint({"ViewHolder", "InflateParams"})
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            //View v = View.inflate(context, R.layout.listview_student_page_classlist, null);
-            view = getLayoutInflater().inflate(R.layout.listview_student_page_classlist, null);
-
-            TextView class_name = (TextView) view.findViewById(R.id.classNameDisplay);
-            TextView teacher_name = (TextView) view.findViewById(R.id.teacherNameDisplay);
-            //TextView class_description = (TextView) view.findViewById(R.id.classDescriptionDisplay);
-
-            /*class_name.setText(classlistTemp[i]);
-            teacher_name.setText(classteacherlistTemp[i]);
-            class_description.setText(classdesclistTemp[i]);*/
-
-            try {
-//                Log.i(TAG, "class_name = "+classlist.get(i).getCourseDescription());
-//                Log.i(TAG, "teacher_name = " +classlist.get(i).getCourseInstructor());
-//                class_name.setText(classlist.get(i).getCourseInstructor());
-//                teacher_name.setText(classlist.get(i).getCourseDescription());
-                String course = classlist.get(i).getTitle();
-                String teacher = classlist.get(i).getFirstName() + " " + classlist.get(i).getLastName();
-
-                Log.i(TAG, "class_name = " + course);
-                Log.i(TAG, "teacher_name = " + teacher);
-                class_name.setText(course);
-                teacher_name.setText(teacher);
-            }
-            catch(IndexOutOfBoundsException e){
-                Log.e(TAG, e.getMessage());
-            }
-            return view;
-        }
-
-    }
-
-
-
-
 
 
     @SuppressLint("StaticFieldLeak")
-    class ClassesResultBackgroundTask extends AsyncTask<Integer, Void, ClassListResult<ClassResult>>{
+    class ClassesResultBackgroundTask extends AsyncTask<String, Void, ClassListResult<ClassResult>>{
 
         private static final String TAG = "ClassesResultTask";
 
@@ -249,36 +153,30 @@ public class StudentPageTab1Classlist extends Fragment {
         WolfpackClient client;
 
         @Override
-        protected void onPreExecute(){
-            mListViewClasses.addFooterView(footView);
-        }
+        protected ClassListResult<ClassResult> doInBackground(String... params) {
 
-        @Override
-        protected ClassListResult<ClassResult> doInBackground(Integer... params) {
-
-            return null;
-            /*try{
-                *//*Log.i(TAG, "starting task");
+            try{
+                Log.i(TAG, "starting task");
                 client = StudentPage.getWolfpackClientInstance();
                 Log.i(TAG, "configuring params");
 
-                Log.i(TAG, "currentPage = "+ params[0] +
-                        "\nrowsPerPage = " + params[1] +
-                        "\nstudent_id = " + params[2]);
+                Log.i(TAG, "currentPage = "+ adapter.getLastPageNumber() +
+                        "\nrowsPerPage = " + adapter.getRowsPerPage() +
+                        "\nstudent_id = " + params[0]);
 
                 Thread.sleep(1500);
 
                 Call<ClassListResult<ClassResult>> call = client.findEnrolledClasses(
-                        params[0],
-                        params[1],
-                        params[2],
+                        adapter.getLastPageNumber(),
+                        adapter.getRowsPerPage(),
+                        Integer.parseInt(params[0]),
                         "findEnrolledClasses");
 
                 Log.i(TAG, "waiting for results");
                 response = call.execute();
                 Log.i(TAG, "received results");
 
-                return null;*//*
+                return response.body();
 
             }
             catch(java.net.ConnectException e){
@@ -296,47 +194,22 @@ public class StudentPageTab1Classlist extends Fragment {
             catch (Exception e){
                 Log.e(TAG, e.getClass().toString() + e.getMessage());
                 return null;
-            }*/
+            }
 
         }
 
         @Override
         protected void onPostExecute(final ClassListResult<ClassResult> result){
-            if (result != null && result.getSuccess() != 0) {
+            if (result != null) {
                 Log.i(TAG, result.toString());
-                //update data adapter and UI
-                mListViewClasses.setVisibility(View.VISIBLE);
-                classlist.addAll((ArrayList<ClassResult>) result.getResults());
-                adapter.notifyDataSetChanged();
-                adapter.notifyDataSetChanged();
-                //classlist.add(result.getResults().get(1));
-                //adapter.notifyDataSetChanged();
-                //classlist.add(result.getResults().get(2));
-                //adapter.notifyDataSetChanged();
-                //classlist.add(result.getResults().get(3));
-                //adapter.notifyDataSetChanged();
-                //classlist.add(result.getResults().get(4));
-                //adapter.notifyDataSetChanged();
 
-                totalItemCount = Integer.parseInt(result.getTotalResults());
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < classlist.size(); i++){
-                    sb.append("classlist[" + i + "] = " + classlist.get(i) + "\n");
-                }
-
-                Log.i(TAG, sb.toString());
-
+                adapter.setServerTotal(result.getTotalPages());
+                classlist.addAll(result.getResults());
                 adapter.notifyDataSetChanged();
 
-                //totalItemCount = result.getTotalResults();
-                //totalItemCount = result.getCurrentPage() * 5;
-                totalItemCount += 5;
-                totalItemCount = 1;
-
-
-                //remove loading view after update listview
-                mListViewClasses.removeFooterView(footView);
                 isLoading = false;
+                adapter.setLoaded();
+
                 Toast.makeText(getActivity(), "Loaded more", Toast.LENGTH_SHORT).show();
             }
             else{

@@ -43,6 +43,15 @@
 
     <!--STUDENT-->
 
+    <!-- KEYS -->
+    <string name="KEY_STUDENT_ID">KEY_STUDENT_ID</string>
+    <string name="KEY_CLASS_ID">KEY_CLASS_ID</string>
+    <string name="KEY_CLASS_TITLE">KEY_CLASS_TITLE</string>
+    <string name="KEY_CLASS_DESCRIPTION">KEY_CLASS_DESCRIPTION</string>
+    <string name="KEY_CLASS_OFFERING">KEY_CLASS_OFFERING</string>
+    <string name="KEY_CLASS_LOCATION">KEY_CLASS_LOCATION</string>
+    <string name="KEY_CLASS_TEACHER_NAME">KEY_CLASS_TEACHER_NAME</string>
+
     <!-- Strings for Student Page -->
     <string name="title_activity_student_page">Home</string>
     <string name="student_page_tab_classes">Classes</string>
