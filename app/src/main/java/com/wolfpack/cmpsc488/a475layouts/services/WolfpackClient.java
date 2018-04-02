@@ -18,6 +18,7 @@ import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveQu
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveSessionInfo;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.PollingResults;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ValidateQuestionInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ import retrofit2.http.POST;
 public interface WolfpackClient{
 
     //local testing for Pabz (pabz -> Pabz : you are a proper noun my friend)
-    //String BASE_URL = "http://192.168.1.57";
+    String BASE_URL = "http://192.168.1.57";
 
     //local testing for Tyler
     //String BASE_URL = "192.169.1.125";
@@ -43,7 +44,7 @@ public interface WolfpackClient{
     //Reference for converting JSON to POJO
     //http://www.jsonschema2pojo.org/
 
-    String BASE_URL = "http://wolfpack.cs.hbg.psu.edu";
+    //String BASE_URL = "http://wolfpack.cs.hbg.psu.edu";
 
     String FEED = "/lib/php/androidAPI.php";
 
@@ -138,7 +139,7 @@ public interface WolfpackClient{
     Call<ClassListResult<ClassResult>> findEnrolledClasses(
             @Field("currentPage") int currentPage,
             @Field("rowsPerPage") int rowsPerPage,
-            @Field("student_id") int student_id,
+            @Field("inputStudentId") String student_id,
             //@Field("inputUserEmail") String email,
             @Field("inputMethodName") String methodName
     );
@@ -215,4 +216,16 @@ public interface WolfpackClient{
             @Field("inputAnswer") String inputAnswer,
             @Field("inputMethodName") String methodName
     );
+
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<PollingResults<ValidateQuestionInfo>> validateSameQuestion(
+            @Field("inputQuestionSetId") String  inputQuestionSetId,
+            @Field("inputQuestionId") String  inputQuestionId,
+            @Field("inputQuestionSessionId") String inputQuestionSessionId,
+            @Field("inputQuestionHistoryId") String inputQuestionHistoryId,
+            @Field("inputMethodName") String methodName
+    );
+
+
 }
