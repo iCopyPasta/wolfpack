@@ -81,29 +81,41 @@
      
     <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:960px">
         <a style="text-decoration: none" href ="create_question_set.php"> <button class="btn btn-info btn-lg btn-block" >Create New Question Set</button></a><br>
-        <a style="text-decoration: none"> <button id="createQuestionButton" class="btn btn-info btn-lg btn-block">Create New Question</button></a>
+        <a style="text-decoration: none"> <button id="createQuestionButton" class="btn btn-info btn-lg btn-block">Create New Question</button></a><br>
+        <a style="text-decoration: none"> <button id="deleteQuestionButton" class="btn btn-danger btn-lg btn-block" onclick="deleteQuestionSet()">Delete Selected Questions</button></a>
     </div>
       
-      <div id="myModal" class="modal">
-
-          <!-- Modal content -->
-          <div class="modal-content">
+    <div id="createQuestionModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
             <div class="modal-header">
                 <h2>Create a Question</h2>
-              <span class="close">&times;</span>
-              
+                <span class="close">&times;</span>
             </div>
+            
             <div class="modal-body">
-              <?php include("createQuestionFragment.php"); ?>
+                <?php include("createQuestionFragment.php"); ?>
             </div>
-
-          </div>
-
+        </div>
     </div>
       
-      <script>
+    <div id="modifyQuestionModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Modify Question</h2>
+                <span class="close">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <?php include("createQuestionFragment.php"); ?>
+            </div>
+        </div>
+    </div>
+      
+    <script>
         // Get the modal
-        var modal = document.getElementById('myModal');
+        var modal = document.getElementById('createQuestionModal');
 
         // Get the button that opens the modal
         var btn = document.getElementById("createQuestionButton");
@@ -127,7 +139,7 @@
                 modal.style.display = "none";
             }
         }
-      </script>
+    </script>
       
       
       
@@ -166,8 +178,8 @@
 
             echo "<div class=\" clickBox card bg-secondary text-white mb-3\" id=\"$question_id\" onclick=\"toggleActive($question_id)\"> 
             <div class=\"card-header\">
-              <button type=\"button\" class=\"btn btn-danger btn-sm float-right\">
-                <span class=\"fas fa-trash fa-sm\"></span>
+              <button type=\"button\" class=\"btn btn-warning btn-sm float-right\" onclick=\"toggleActive($question_id);editQuestion($question_id)\">
+                <span class=\"fas fa-pencil-alt\"></span>
               </button>
               <h4 class=\"my-0 font-weight-normal text-truncate\">$description</h4>
             </div>
@@ -202,8 +214,13 @@
                   activeQuestions.add(question_id);
               }
           }
-
-          function sendQuestionSet() {
+          
+          function editQuestion(question_id)
+          {
+              
+          }
+          
+          function deleteQuestionSet() {
               var name = document.getElementById("description");
               var error = document.getElementById("error");
               //var questions = JSON.stringify(Array.from(activeQuestions));
@@ -211,13 +228,13 @@
                   error.innerHTML = "<p style=\"color:red\">Please provide a name for your question set.</p>";
               }
               else { //send the request to the server
-                  console.log("name: " + name.value);
                   console.log(activeQuestions);
 
                   var send = new Object();
-                  send.question_set_name = name.value;
-                  send.questions = JSON.stringify(Array.from(activeQuestions));
-                  post('../lib/php/createQuestionSetWeb.php',send);
+                  
+                  //LOOP THROUGH ACTIVE QUESTIONS AND POST DELETE FOR EACH
+                  
+                  post('../lib/php/deleteQuestion.php',send);
               }
           }
 

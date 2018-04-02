@@ -16,6 +16,11 @@ body
   background-color: #036564;
 }
 
+.btn-warning
+{
+  background-color: #DF6E21!important;
+}
+
 /* Header */
 .bg-dark
 {
