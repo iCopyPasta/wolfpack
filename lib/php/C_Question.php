@@ -194,6 +194,8 @@
                 AND description LIKE :description
                 AND potential_answers LIKE :potential_answers
                 AND correct_answers LIKE :correct_answers";
+        
+        //TODO: remove this question from all question sets that it is in (Question_Is_In), along with Question_History, Answers?
 
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':teacher_id', $this->teacher_id);

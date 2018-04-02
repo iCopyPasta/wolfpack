@@ -164,7 +164,7 @@
               $answers = "There are no answers!";
             else
             {
-              $answers = array_slice($answers, 0, 2);
+              $answers = $answers;
               $answers = implode("<br>", $answers);
             }
               
@@ -185,6 +185,7 @@
             </div>
             <div class=\"card-body\">
               <h5 class=\"card-title pricing-card-title text-truncate\">$answers</h5>
+              <h5 class=\"card-title pricing-card-title text-truncate\">Correct Answer(s): $correct_answers</h5>
             </div>
             </div>";        
           }                               
@@ -224,18 +225,16 @@
               var name = document.getElementById("description");
               var error = document.getElementById("error");
               //var questions = JSON.stringify(Array.from(activeQuestions));
-              if (name.value === "") {
-                  error.innerHTML = "<p style=\"color:red\">Please provide a name for your question set.</p>";
-              }
-              else { //send the request to the server
+
+
                   console.log(activeQuestions);
 
                   var send = new Object();
                   
                   //LOOP THROUGH ACTIVE QUESTIONS AND POST DELETE FOR EACH
                   
-                  post('../lib/php/deleteQuestion.php',send);
-              }
+                  //post('../lib/php/deleteQuestion.php',send);
+              
           }
 
 
