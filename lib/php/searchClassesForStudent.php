@@ -76,11 +76,12 @@
         //in an ideal world, we'd perform sanitation!
         
         
-        $student_id = isset($_POST["student_id"]) ? (int) $_POST["student_id"] : $student_id;
+        $student_id = isset($_POST["inputStudentId"]) ? $_POST["inputStudentId"] : $student_id;
+
         
         // get the current page or set a default
-        $currentPage = isset($_POST["currentPage"])? (int) $_POST["currentPage"] : $currentPage;
-        $rowsPerPage = isset($_POST["rowsPerPage"]) ? (int) $_POST["rowsPerPage"] : $rowsPerPage;
+        $currentPage = isset($_POST["currentPage"])?  $_POST["currentPage"] : $currentPage;
+        $rowsPerPage = isset($_POST["rowsPerPage"]) ? $_POST["rowsPerPage"] : $rowsPerPage;
         
         include_once('Connection.php');
         $connection = new Connection;
@@ -89,12 +90,12 @@
         // find out how many rows are in the table
         $sql = "SELECT COUNT(*)
                 FROM student_is_in, class_course_section, teaches, teacher_account
-                WHERE :student_id = student_is_in.student_id
+                WHERE student_is_in.student_id = :studentId
                 AND student_is_in.class_id = class_course_section.class_id
                 AND class_course_section.class_id = teaches.class_id
                 AND teaches.teacher_id = teacher_account.teacher_id";
         $result = $pdo->prepare($sql);
-        $result->bindValue(':student_id', $student_id);
+        $result->bindValue(':studentId', $student_id, PDO::PARAM_INT);
         
         try {
             $result->execute();
@@ -140,14 +141,14 @@
                         teacher_account.last_name
                         
                 FROM student_is_in, class_course_section, teaches, teacher_account
-                WHERE :student_id = student_is_in.student_id
+                WHERE student_is_in.student_id = :studentId
                 AND student_is_in.class_id = class_course_section.class_id
                 AND class_course_section.class_id = teaches.class_id
                 AND teaches.teacher_id = teacher_account.teacher_id
                 LIMIT $offset, $rowsPerPage";
         
         $result = $pdo->prepare($sql);
-        $result->bindValue(':student_id', $student_id);
+        $result->bindValue(':studentId', $student_id, PDO::PARAM_INT);
         
         try {
             $result->execute();

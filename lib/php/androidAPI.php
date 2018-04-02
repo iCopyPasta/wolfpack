@@ -204,10 +204,10 @@
             $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchClassesForStudent.php";
 	
             $fields = build_fields($fields,
-	                               array("currentPage", "rowsPerPage","student_id","android"),
+	                               array("currentPage", "rowsPerPage","inputStudentId","android"),
                                    $currentPage,
                                    $rowsPerPage,
-                                   $student_id,
+                                   $inputStudentId,
 	                               $android);
 
             $postvars = http_build_query($fields);
