@@ -105,21 +105,26 @@ public class StudentPageTab1Classlist extends Fragment {
                 @Override
                 public void onClassClicked(String classId, String classTitle, String classDesc, String classOffering, String classLocation, String teacherName) {
 
-                    SharedPreferences sharedPref = getContext().getSharedPreferences(
-                            getContext().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                    Log.d("onClassClicked", "beginning");
 
-                    //default is
-                    String student_id = sharedPref.getString(getContext().getString(0), "7502");
-
+                    Log.d("onClassClicked", "starting intent");
                     Intent intent = new Intent(getContext(), StudentClassPage.class);
 
-                    intent.putExtra(getString(R.string.KEY_STUDENT_ID), student_id);
-                    intent.putExtra(getString(R.string.KEY_CLASS_ID), classId);
-                    intent.putExtra(getString(R.string.KEY_CLASS_TITLE), classTitle);
-                    intent.putExtra(getString(R.string.KEY_CLASS_DESCRIPTION), classDesc);
-                    intent.putExtra(getString(R.string.KEY_CLASS_OFFERING), classOffering);
-                    intent.putExtra(getString(R.string.KEY_CLASS_LOCATION), classLocation);
-                    intent.putExtra(getString(R.string.KEY_CLASS_TEACHER_NAME), teacherName);
+                    Log.d("onClassClicked", "putting 0");
+                    intent.putExtra(getContext().getString(R.string.KEY_STUDENT_ID), studentId);
+                    Log.d("onClassClicked", "putting 1");
+                    intent.putExtra(getContext().getString(R.string.KEY_CLASS_ID), classId);
+                    Log.d("onClassClicked", "putting 2");
+                    intent.putExtra(getContext().getString(R.string.KEY_CLASS_TITLE), classTitle);
+                    Log.d("onClassClicked", "putting 3");
+                    intent.putExtra(getContext().getString(R.string.KEY_CLASS_DESCRIPTION), classDesc);
+                    Log.d("onClassClicked", "putting 4");
+                    intent.putExtra(getContext().getString(R.string.KEY_CLASS_OFFERING), classOffering);
+                    Log.d("onClassClicked", "putting 5");
+                    intent.putExtra(getContext().getString(R.string.KEY_CLASS_LOCATION), classLocation);
+                    Log.d("onClassClicked", "putting 6");
+                    intent.putExtra(getContext().getString(R.string.KEY_CLASS_TEACHER_NAME), teacherName);
+                    Log.d("onClassClicked", "putting done");
 
                     startActivity(intent);
                 }
@@ -169,7 +174,7 @@ public class StudentPageTab1Classlist extends Fragment {
                 Call<ClassListResult<ClassResult>> call = client.findEnrolledClasses(
                         adapter.getLastPageNumber(),
                         adapter.getRowsPerPage(),
-                        Integer.parseInt(params[0]),
+                        params[0],
                         "findEnrolledClasses");
 
                 Log.i(TAG, "waiting for results");

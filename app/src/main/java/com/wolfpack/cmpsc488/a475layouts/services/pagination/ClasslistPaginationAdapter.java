@@ -1,10 +1,5 @@
 package com.wolfpack.cmpsc488.a475layouts.services.pagination;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,20 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
-import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentClassPage;
-import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
 
 import java.util.ArrayList;
 
-import okhttp3.ResponseBody;
-import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.ClassListResult;
 import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.ClassResult;
 //import com.wolfpack.cmpsc488.a475layouts.services.student_class_management.EnrollClassDialog;
 
-import retrofit2.Call;
 
 public class ClasslistPaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -35,7 +24,7 @@ public class ClasslistPaginationAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     private static final int VIEW_TYPE_ITEM = 0, VIEW_TYPE_LOADING = 1;
-    private static final String TAG = "PaginationAdapter";
+    private static final String TAG = "ClasslistAdapter";
     private ILoadmore loadmore;
     private boolean isLoading;
     private ArrayList<ClassResult> items = new ArrayList<>();
@@ -97,7 +86,7 @@ public class ClasslistPaginationAdapter extends RecyclerView.Adapter<RecyclerVie
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if(viewType == VIEW_TYPE_ITEM){
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.recyclerview_student_page_classlist,
+                    .inflate(R.layout.recyclerview_student_page_classlist_item,
                             parent,
                             false);
 
