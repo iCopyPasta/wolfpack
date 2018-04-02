@@ -48,8 +48,13 @@
 }
 
 .card-deck .card {
-  min-width: 220px;
+  min-width: 200px;
 }
+
+.clickBox
+{
+  cursor: pointer;
+} 
 
 .border-top { border-top: 1px solid #e5e5e5; }
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
@@ -68,7 +73,8 @@
     </div>
      
     <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:960px">
-        <a style="text-decoration: none"> <button id="createClassButton" class="btn btn-info btn-lg btn-block" >Create New Class</button></a>
+        <a style="text-decoration: none"> <button id="createClassButton" class="btn btn-info btn-lg btn-block" >Create New Class</button></a><br>
+        <a style="text-decoration: none"> <button id="deleteQuestionButton" class="btn btn-danger btn-lg btn-block" onclick="deleteClassSet()">Delete Selected Classes</button></a>
     </div>
       
       <div id="myModal" class="modal">
@@ -131,27 +137,29 @@
         
         
         foreach($removeZerothIndex as $value){
-          $classId = $value['class_id'];
+          $class_id = $value['class_id'];
           $title = $value['title'];
           $description = $value['description'];
           $offering = $value['offering'];
           $location = $value['location'];
           
-          echo "<div class=\"card mb-3 text-white bg-secondary box-shadow\">
-          <div class=\"card-header\">
-            <button type=\"button\" class=\"btn btn-danger btn-sm float-right\">
-              <span class=\"fas fa-trash fa-sm\"></span>
-            </button>
-            <h4 class=\"my-0 font-weight-normal\">$title</h4>
-          </div>
-          <div class=\"card-body\">
-            <h1 class=\"card-title pricing-card-title\"><small>$location</small></h1>
+          echo "<div class=\" clickBox card bg-secondary text-white mb-3\" id=\"$class_id\" onclick=\"toggleActive($class_id)\"> 
+            <div class=\"card-header\">
+              <button type=\"button\" class=\"btn btn-warning btn-sm float-right\" onclick=\"toggleActive($class_id);editQuestion($class_id)\">
+                <span class=\"fas fa-pencil-alt\"></span>
+              </button>
+              <h4 class=\"my-0 font-weight-normal text-truncate\">$title</h4>
+            </div>
+            <div class=\"card-body\">
+              <h5 class=\"card-title pricing-card-title text-truncate\">$location</h5>
+            </div>
             <ul class=\"list-unstyled mt-3 mb-4\">
               <li>$offering</li>
             </ul>
-            <a href=\"choosePolledQuestionSet.php?class_id=$classId\"> <button type=\"button\" class=\"btn btn-lg btn-block btn-primary\">Poll Class</button></a>
-          </div>
-        </div>";
+            <div class=\"card-footer\">
+              <a href=\"choosePolledQuestionSet.php?class_id=$class_id\"> <button type=\"button\" class=\"btn btn-lg btn-block btn-primary\">Poll Class</button></a>
+            </div>
+            </div>";     
         }                               //TODO: link poll class to the class poll using the proper parameter send structure
             
         if (empty($removeZerothIndex)) {
@@ -159,15 +167,74 @@
         }
         
         ?>
+      </div>     
 
-      </div>
-      
-      
+      <?php include("../lib/php/footer.php"); ?>
+        
+        <script>
+          var activeClasses = new Set();
 
-      <?php
+          function toggleActive(class_id) {
 
-        include("../lib/php/footer.php");
-    ?>
+              if (activeClasses.has(class_id)) {
+                  document.getElementById(class_id).className = "clickBox card bg-secondary text-white mb-3";
+                  activeClasses.delete(class_id);
+              }
+              else {
+                  document.getElementById(class_id).className = "clickBox card mb-3 text-white selected-box";
+                  activeClasses.add(class_id);
+              }
+          }
+          
+          function editClass(class_id)
+          {
+              
+          }
+          
+          function deleteClassSet() {
+              var name = document.getElementById("description");
+              var error = document.getElementById("error");
+              //var Classes = JSON.stringify(Array.from(activeClasses));
+              if (name.value === "") {
+                  error.innerHTML = "<p style=\"color:red\">Please provide a name for your question set.</p>";
+              }
+              else { //send the request to the server
+                  console.log(activeClasses);
+
+                  var send = new Object();
+                  
+                  //LOOP THROUGH ACTIVE CLASSES AND POST DELETE FOR EACH
+                  
+                  post('../lib/php/deleteClassCourseSection.php',send);
+              }
+          }
+
+
+
+          function post(path, params, method) { // method: https://stackoverflow.com/querstions/133925/javascript-post-request-like-a-form-submit
+              method = method || "post"; // Set method to post by default if not specified.
+
+              // The rest of this code assumes you are not using a library.
+              // It can be made less wordy if you use one.
+              var form = document.createElement("form");
+              form.setAttribute("method", method);
+              form.setAttribute("action", path);
+
+              for(var key in params) {
+                  if(params.hasOwnProperty(key)) {
+                      var hiddenField = document.createElement("input");
+                      hiddenField.setAttribute("type", "hidden");
+                      hiddenField.setAttribute("name", key);
+                      hiddenField.setAttribute("value", params[key]);
+
+                      form.appendChild(hiddenField);
+                  }
+              }
+
+              document.body.appendChild(form);
+              form.submit();
+          } 
+        </script> 
     </div>
 
 

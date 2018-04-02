@@ -125,7 +125,7 @@
 
     <div class="container">
     <h1 class="display-5 text-center">Current Classes</h1>
-    <a style="text-decoration: none" href ="manage_class.php"> <button id="manageClassButton" class="btn btn-info btn-lg btn-block" >Manage My Classes</button></a>
+    <a style="text-decoration: none" href ="manage_class.php"> <button id="manageClassButton" class="btn btn-info btn-lg btn-block" >Manage My Classes</button></a><br>
         <div class="card-deck mb-3 text-center">
         <?php
         
@@ -141,16 +141,17 @@
           $description = $value['description'];
           $offering = $value['offering'];
           $location = $value['location'];
-          echo "<div class=\"card mb-3 bg-secondary text-white box-shadow\">
+          echo "<div class=\"card mb-3 text-white bg-secondary box-shadow\">
           <div class=\"card-header\">
-            <h4 class=\"my-0 font-weight-normal\">$title</h4>
+            <h4 class=\"my-0 text-truncate font-weight-normal\">$title</h4>
           </div>
           <div class=\"card-body\">
-            <h1 class=\"card-title pricing-card-title\"><small>$location</small></h1>
-            <ul class=\"list-unstyled mt-3 mb-4\">
-              <li>$description</li>
-              <li>$offering</li>
-            </ul>
+            <h1 class=\"card-title text-truncate pricing-card-title\"><small>$location</small></h1>
+          </div>
+          <ul class=\"list-unstyled mt-3 mb-4\">
+            <li>$offering</li>
+          </ul>
+          <div class=\"card-footer\">
             <a href=\"choosePolledQuestionSet.php?class_id=$classId\"> <button type=\"button\" class=\"btn btn-lg btn-block btn-primary\">Poll Class</button></a>
           </div>
         </div>";
