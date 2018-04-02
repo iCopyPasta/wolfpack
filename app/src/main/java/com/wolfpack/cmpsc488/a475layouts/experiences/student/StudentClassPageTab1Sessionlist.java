@@ -77,8 +77,6 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
             if(info != null){
 
-                //TODO: show dialog here!
-                //TODO: implement dialog interface then
                 ActiveSessionDialog activeSessionDialog= new ActiveSessionDialog();
                 activeSessionDialog.setInfo(info);
 
@@ -151,6 +149,13 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
     public void onStart(){
         super.onStart();
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onResume(){
+        super.onResume();
+
         //bind to custom service
         Intent serviceIntent = new Intent(getContext() , MyStartedService.class);
         getContext().startService(serviceIntent);
@@ -159,13 +164,6 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
         LocalBroadcastManager.getInstance(
                 getActivity().getApplicationContext())
                 .registerReceiver(mReceiver, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_SESSION));
-
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    public void onResume(){
-        super.onResume();
 
     }
 

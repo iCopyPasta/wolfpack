@@ -9,12 +9,16 @@ import com.google.gson.annotations.SerializedName;
 
 public class ActiveSessionInfo {
 
+
     @SerializedName("question_set_id")
     @Expose
     private String questionSetId;
     @SerializedName("question_session_id")
     @Expose
     private String questionSessionId;
+    @SerializedName("question_set_name")
+    @Expose
+    private String questionSetName;
 
     public String getQuestionSetId() {
         return questionSetId;
@@ -30,6 +34,14 @@ public class ActiveSessionInfo {
 
     public void setQuestionSessionId(String questionSessionId) {
         this.questionSessionId = questionSessionId;
+    }
+
+    public String getQuestionSetName() {
+        return questionSetName;
+    }
+
+    public void setQuestionSetName(String questionSetName) {
+        this.questionSetName = questionSetName;
     }
 
 }
