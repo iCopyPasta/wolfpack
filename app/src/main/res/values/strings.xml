@@ -1,0 +1,118 @@
+<resources>
+    <string name="app_name">Pollato</string>
+    <string name="textview">TextView</string>
+
+
+    <string name="default_val">default</string>
+
+    <!-- Titles of pages -->
+    <string name="title_activity_main_page">Pollato</string>
+    <string name="title_activity_login_page">Sign in</string>
+
+    <string name="title_activity_teacher_page">Home</string>
+    <string name="title_activity_teacher_class_page">Class Name</string>
+
+    <string name="title_activity_class_page">Class Name</string>
+
+
+
+
+    <!-- Strings for Main Page -->
+    <string name="student_sign_in_button">Student</string>
+    <string name="teacher_sign_in_button">Teacher</string>
+    <string name="sign_in">Sign In</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="confirmPassword">Confirm Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="register">Register for an Account</string>
+    <string name="results_go">Results</string>
+    <string name="pending_invites">Pending Invites</string>
+    <string name="class_id">Class ID</string>
+
+
+    <!--STUDENT-->
+
+    <!-- Strings for Student Page -->
+    <string name="title_activity_student_page">Home</string>
+    <string name="student_page_tab_classes">Classes</string>
+    <string name="student_page_tab1_classlist">Class List</string>
+    <string name="student_page_tab2_addclass">Add Class</string>
+    <string name="student_page_tab3_settings">Settings</string>
+
+
+    <!-- Strings for Student Class Page -->
+    <string name="title_activity_student_class_page">Class Name</string>
+    <string name="student_class_page_tab1_session">Sessions</string>
+    <string name="student_class_page_tab2_classinfo">Information</string>
+
+    <!-- Strings for Session Page -->
+    <string name="title_activity_student_session_page">Questions</string>
+    <string name="session_name">default</string>
+    <string name="active_session_notice">Waiting for new question</string>
+
+
+    <!-- Strings for Question Page -->
+    <string name="title_activity_student_question_page">Question</string>
+    <string name="default_question_text">default</string>
+
+    <string name="answerTrue">True</string>
+    <string name="answerFalse">False</string>
+
+
+
+
+    <!--TEACHER-->
+
+    <!-- Strings for Teacher Page -->
+    <string name="teacher_page_tab_classes">Classes</string>
+    <string name="teacher_page_tab1_classlist">Class List</string>
+    <string name="teacher_page_tab2_createclass">Create Class</string>
+    <string name="teacher_page_tab3_settings">Settings</string>
+
+
+    <!-- Strings for Teacher Class Page -->
+    <string name="teacher_class_page_tab_session">Sessions</string>
+    <string name="teacher_class_page_tab_manage">Manage</string>
+    <string name="teacher_class_page_tab_classinfo">Settings</string>
+    <string name="manage_sessions">Manage Sessions</string>
+
+    <string name="manage_questions">Manage Questions</string>
+
+
+
+
+    <string name="action_settings">what?</string>
+    <string name="signup">Sign Up</string>
+    <string name="title_activity_sign_up">Sign up</string>
+    <string name="create_account">Create Account</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="error_missing_permissions">Cannot start without required permissions</string>
+    <string name="preference_file_key">com.wolfpack.cmpsc488.a475layouts</string>
+    <string name="SKIP_LOGIN">SKIP_LOGIN</string>
+    <string name="USER_MODE">USER_MODE</string>
+    <string name="USER_EMAIL">USER_EMAIL</string>
+    <string name="STUDENT_ID">STUDENT_ID</string>
+
+
+
+    <string name="CameraUpload">Upload</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="classTitle">Class Title</string>
+    <string name="Teacher_Name">Teacher Name</string>
+    <string name="error_authentication_failure">Login failed</string>
+    <string name="title_hint">Title</string>
+
+
+</resources>

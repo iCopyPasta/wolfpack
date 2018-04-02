@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.wolfpack.cmpsc488.a475layouts">
+
+    <!-- for camera usage -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainPage"
+            android:label="@string/title_activity_main_page">
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.wolfpack.cmpsc488.a475layouts.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+
+        <!--AUTHENTICATION-->
+
+        <activity
+            android:name=".services.authentication.SignUp"
+            android:label="@string/title_activity_sign_up" />
+
+        <activity
+            android:name=".services.authentication.LoginPage"
+            android:label="@string/title_activity_login_page" />
+
+
+        <!--STUDENT-->
+
+
+        <activity
+            android:name=".experiences.student.StudentPage"
+            android:label="@string/title_activity_student_page"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".experiences.student.StudentClassPage"
+            android:label="@string/title_activity_student_class_page"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".experiences.student.StudentSessionActivePage"
+            android:label="@string/title_activity_student_session_page"/>
+
+        <activity
+            android:name=".experiences.student.StudentSessionCompletePage"
+            android:label="@string/title_activity_student_session_page"/>
+
+
+        <activity
+            android:name=".experiences.student.StudentQuestionCompletePage"
+            android:label="@string/title_activity_student_question_page" />
+
+        <activity
+            android:name=".experiences.student.StudentQuestionActivePage"
+            android:label="@string/title_activity_student_question_page" />
+
+        <!--TEACHER-->
+
+        <activity
+            android:name=".experiences.teacher.TeacherPage"
+            android:label="@string/title_activity_teacher_class_page"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".experiences.teacher.TeacherClassPage"
+            android:label="@string/title_activity_teacher_class_page"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <!--OTHER ACTIVITIES-->
+        <activity
+            android:name=".CameraExample"
+            android:label="@string/CameraUpload" />
+      
+       <!--SERVICES-->
+
+        <service
+            android:name=".services.pollingsession.MyJobService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".services.pollingsession.MyStartedService"
+            android:enabled="true"
+            android:exported="false"></service>
+    </application>
+
+</manifest>
