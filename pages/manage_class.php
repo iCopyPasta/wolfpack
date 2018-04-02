@@ -145,7 +145,7 @@
           
           echo "<div class=\" clickBox card bg-secondary text-white mb-3\" id=\"$class_id\" onclick=\"toggleActive($class_id)\"> 
             <div class=\"card-header\">
-              <button type=\"button\" class=\"btn btn-warning btn-sm float-right\" onclick=\"toggleActive($class_id);editQuestion($class_id)\">
+              <button type=\"button\" class=\"btn btn-warning btn-sm float-right\" onclick=\"toggleActive($class_id);editClass($class_id)\">
                 <span class=\"fas fa-pencil-alt\"></span>
               </button>
               <h4 class=\"my-0 font-weight-normal text-truncate\">$title</h4>
