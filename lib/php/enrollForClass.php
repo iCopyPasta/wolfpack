@@ -34,21 +34,10 @@
         $isClassIdExist = isClassIdExist($inputClassId);*/
         
         //if($isStudentIdExist && $isClassIdExist) {
-            $sql = "IF EXISTS (
-                            SELECT * 
-                            FROM student_is_in 
-                            WHERE student_is_in.student_id = :inputStudentId
-                            AND student_is_in.class_id = :inputClassId 
-                            )
-                        THEN UPDATE student_is_in 
-                        SET class_id = :inputClassId 
-                        WHERE student_id = :inputStudentId;
-
-                        ELSE
-                        INSERT INTO student_is_in
+            $sql = "REPLACE INTO student_is_in
                                   (student_id, class_id)
                                   VALUES (:inputStudentId, :inputClassId);
-                                  END IF";
+                                  ";
 
             $result = $pdo->prepare($sql);
             $result->bindValue(':inputStudentId', $inputStudentId, PDO::PARAM_INT);

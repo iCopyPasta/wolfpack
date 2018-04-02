@@ -75,6 +75,8 @@
     $inputQuestionHistoryId = isset($_POST['inputQuestionHistoryId']) ? $_POST['inputQuestionHistoryId'] : null;
     $inputAnswerType = isset($_POST['inputAnswerType']) ? $_POST['inputAnswerType'] : null;
     $inputAnswer = isset($_POST['inputAnswer']) ? $_POST['inputAnswer'] : null;
+    $inputQuestionSessionId = isset($_POST["inputQuestionSessionId"]) ? 
+            $_POST["inputQuestionSessionId"] : null;
 
 
     //misc
@@ -202,10 +204,10 @@
             $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchClassesForStudent.php";
 	
             $fields = build_fields($fields,
-	                               array("currentPage", "rowsPerPage","student_id","android"),
+	                               array("currentPage", "rowsPerPage","inputStudentId","android"),
                                    $currentPage,
                                    $rowsPerPage,
-                                   $student_id,
+                                   $inputStudentId,
 	                               $android);
 
             $postvars = http_build_query($fields);
@@ -265,6 +267,28 @@
             build_curlreq($fields, $postvars, $url);
 
             break;
+            
+        case "validateSameQuestion":
+            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/validateSameQuestion.php";
+            //$url = "http://192.168.1.57/lib/php/polling/validateSameQuestion.php";
+            $fields = build_fields($fields, 
+                         array("inputQuestionSetId",
+                               "inputQuestionId",
+                               "inputQuetsionHistoryId",
+                               "inputQuestionSessionId",
+                               "android"),
+                        $inputQuestionSetId,
+                        $inputQuestionId,
+                        $inputQuestionHistoryId,
+                        $inputQuestionSessionId,
+                        $android); 
+            
+            $postvars = http_build_query($fields);
+
+            build_curlreq($fields, $postvars, $url);
+            
+            break;
+            
             
         case "submitAnswer":
             $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/submitAnswer.php";
