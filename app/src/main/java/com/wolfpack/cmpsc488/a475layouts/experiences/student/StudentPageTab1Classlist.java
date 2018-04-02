@@ -105,26 +105,17 @@ public class StudentPageTab1Classlist extends Fragment {
                 @Override
                 public void onClassClicked(String classId, String classTitle, String classDesc, String classOffering, String classLocation, String teacherName) {
 
-                    Log.d("onClassClicked", "beginning");
+                    Log.d("onClassClicked", "going to " + classTitle + " page");
 
-                    Log.d("onClassClicked", "starting intent");
                     Intent intent = new Intent(getContext(), StudentClassPage.class);
 
-                    Log.d("onClassClicked", "putting 0");
                     intent.putExtra(getContext().getString(R.string.KEY_STUDENT_ID), studentId);
-                    Log.d("onClassClicked", "putting 1");
                     intent.putExtra(getContext().getString(R.string.KEY_CLASS_ID), classId);
-                    Log.d("onClassClicked", "putting 2");
                     intent.putExtra(getContext().getString(R.string.KEY_CLASS_TITLE), classTitle);
-                    Log.d("onClassClicked", "putting 3");
                     intent.putExtra(getContext().getString(R.string.KEY_CLASS_DESCRIPTION), classDesc);
-                    Log.d("onClassClicked", "putting 4");
                     intent.putExtra(getContext().getString(R.string.KEY_CLASS_OFFERING), classOffering);
-                    Log.d("onClassClicked", "putting 5");
                     intent.putExtra(getContext().getString(R.string.KEY_CLASS_LOCATION), classLocation);
-                    Log.d("onClassClicked", "putting 6");
                     intent.putExtra(getContext().getString(R.string.KEY_CLASS_TEACHER_NAME), teacherName);
-                    Log.d("onClassClicked", "putting done");
 
                     startActivity(intent);
                 }

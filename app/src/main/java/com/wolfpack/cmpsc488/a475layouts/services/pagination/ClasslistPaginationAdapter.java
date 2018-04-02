@@ -28,7 +28,7 @@ public class ClasslistPaginationAdapter extends RecyclerView.Adapter<RecyclerVie
     private ILoadmore loadmore;
     private boolean isLoading;
     private ArrayList<ClassResult> items = new ArrayList<>();
-    private final int visibleThreshold = 5;
+    private final int visibleThreshold = 8;
     private int serverTotal = Integer.MAX_VALUE;
     private int lastVisibleItem, totalItemCount;
     private int pageNumber = 1;

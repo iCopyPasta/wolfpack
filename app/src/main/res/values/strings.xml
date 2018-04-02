@@ -65,6 +65,13 @@
     <string name="student_class_page_tab1_session">Sessions</string>
     <string name="student_class_page_tab2_classinfo">Information</string>
 
+    <string name="class_title_attr">Title:</string>
+    <string name="teacher_name_attr">Teacher:</string>
+    <string name="class_desc_attr">Description:</string>
+    <string name="class_offering_attr">Offering:</string>
+    <string name="class_location_attr">Location:</string>
+
+
     <!-- Strings for Session Page -->
     <string name="title_activity_student_session_page">Questions</string>
     <string name="session_name">default</string>

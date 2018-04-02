@@ -1,12 +1,15 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
 
@@ -14,15 +17,50 @@ public class StudentClassPageTab2Classinfo extends Fragment {
 
     private static final String TAG = "CPTab1Classinfo";
 
-    private ListView mListViewClassinfo;
-    private static String[] classinfoTemp = {"Class ID", "Teacher"};
+    //private ListView mListViewClassinfo;
+    //private static String[] classinfoTemp = {"Class ID", "Teacher"};
+
+    private TextView mTextViewClassTitleData;
+    private TextView mTextViewClassDescData;
+    private TextView mTextViewClassOfferingData;
+    private TextView mTextViewClassLocationData;
+    private TextView mTextViewTeacherNameData;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_student_class_page_tab2_classinfo, container, false);
+        return rootView;
+    }
 
 
-        //populate list view
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        StudentClassPage activity = (StudentClassPage) getActivity();
+
+        try {
+            mTextViewClassTitleData = activity.findViewById(R.id.classTitleDataTextView);
+            mTextViewClassDescData = activity.findViewById(R.id.classDescDataTextView);
+            mTextViewClassOfferingData = activity.findViewById(R.id.classOfferingDataTextView);
+            mTextViewClassLocationData = activity.findViewById(R.id.classLocationDataTextView);
+            mTextViewTeacherNameData = activity.findViewById(R.id.teacherNameDataTextView);
+
+            mTextViewClassTitleData.setText(activity.classTitle);
+            mTextViewClassDescData.setText(activity.classDesc);
+            mTextViewClassOfferingData.setText(activity.classOffering);
+            mTextViewClassLocationData.setText(activity.classLocation);
+            mTextViewTeacherNameData.setText(activity.teacherName);
+        }
+        catch(NullPointerException e){
+            Log.d(TAG, e.getMessage());
+            //throw e;
+        }
+
+
+        /*//populate list view
         // TODO: Use database to find classes that the student is enrolled
         //       Currently it is displaying a hard coded list for demonstrating purposes
 
@@ -33,7 +71,7 @@ public class StudentClassPageTab2Classinfo extends Fragment {
                 android.R.layout.simple_list_item_1,
                 classinfoTemp);
 
-        mListViewClassinfo.setAdapter(mAdapter);
+        mListViewClassinfo.setAdapter(mAdapter);*/
 
         /*
         mListViewClassinfo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -47,8 +85,6 @@ public class StudentClassPageTab2Classinfo extends Fragment {
             }
         });
         */
-
-        return rootView;
     }
 
 
