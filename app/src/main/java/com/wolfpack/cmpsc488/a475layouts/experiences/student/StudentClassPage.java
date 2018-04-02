@@ -23,9 +23,15 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
 
     public static final String TAG = "StudentClassPage";
 
-    private String className;
-    private Toolbar classNameDisplay;
-    private String classId = null;
+    public String studentId;
+    public String classId;
+    public String classTitle;
+    public String classDesc;
+    public String classOffering;
+    public String classLocation;
+    public String teacherName;
+
+    private Toolbar classTitleDisplay;
 
     private TabAdapter mTabAdapter;
     private ViewPager mViewPage;
@@ -42,21 +48,25 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
 
         Bundle bundle;
         try {
-            //get class name
             bundle = getIntent().getExtras();
-            className = (String) bundle.get("className");
 
-            //get classId
-            classId = bundle.getString("classId");
+            //get information
+            studentId = bundle.getString(getString(R.string.KEY_STUDENT_ID));
+            classId = bundle.getString(getString(R.string.KEY_CLASS_ID));
+            classTitle = bundle.getString(getString(R.string.KEY_CLASS_TITLE));
+            classDesc = bundle.getString(getString(R.string.KEY_CLASS_DESCRIPTION));
+            classOffering = bundle.getString(getString(R.string.KEY_CLASS_OFFERING));
+            classLocation = bundle.getString(getString(R.string.KEY_CLASS_LOCATION));
+            teacherName = bundle.getString(getString(R.string.KEY_CLASS_TEACHER_NAME));
 
-            Log.i(TAG, "in try before classNameDisplay assignment");
+            Log.d(TAG, "in try before classTitleDisplay assignment");
 
             //displays class name (eg CMPSC 121) in the toolbar
-            classNameDisplay = (Toolbar) findViewById(R.id.studentToolbarClassPage);
-            setSupportActionBar(classNameDisplay);
-            classNameDisplay.setTitle(className);
+            classTitleDisplay = (Toolbar) findViewById(R.id.studentToolbarClassPage);
+            setSupportActionBar(classTitleDisplay);
+            classTitleDisplay.setTitle(classTitle);
 
-            Log.i(TAG, "className = " + className);
+            Log.i(TAG, "classTitle = " + classTitle);
 
             //setup up viewpager (set up transition between tabs)
             mViewPage = (ViewPager) findViewById(R.id.studentClassPageViewPager);
@@ -66,11 +76,11 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
             tabLayout.setupWithViewPager(mViewPage);
 
 
-            Log.i(TAG, "end of onCreate");
+            Log.d(TAG, "end of onCreate");
         }
         catch (NullPointerException e){
-            Log.i(TAG,"StudentClassPage got NullPointerException");
-            Log.i(TAG, e.getMessage());
+            Log.d(TAG,"StudentClassPage got NullPointerException");
+            Log.d(TAG, e.getMessage());
             throw e;
         }
 
@@ -104,7 +114,7 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
 
 
     public String getClassName() {
-        return className;
+        return classTitle;
     }
 
     public String getClassId(){ return classId; }
@@ -120,7 +130,7 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
         Log.i(TAG, "onPositiveClick called, moving to StudentSessionPage" );
 
         Intent intent = new Intent(StudentClassPage.this, StudentSessionActivePage.class);
-        intent.putExtra("className", "Test Class");
+        intent.putExtra("classTitle", "Test Class");
         intent.putExtra("sessionName", "Active Session");
         intent.putExtra("isActive", true);
         intent.putExtra("classId", classId);

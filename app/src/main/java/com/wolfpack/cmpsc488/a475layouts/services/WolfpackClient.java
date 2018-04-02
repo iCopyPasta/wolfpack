@@ -139,7 +139,7 @@ public interface WolfpackClient{
     Call<ClassListResult<ClassResult>> findEnrolledClasses(
             @Field("currentPage") int currentPage,
             @Field("rowsPerPage") int rowsPerPage,
-            @Field("student_id") int student_id,
+            @Field("inputStudentId") String student_id,
             //@Field("inputUserEmail") String email,
             @Field("inputMethodName") String methodName
     );
