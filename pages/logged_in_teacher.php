@@ -29,37 +29,36 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
     <!-- Custom styles for this template -->
     <link rel="stylesheet" type="text/css" href="..\css\common\custom.css">
+    
     <style>
-    html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
+      html {
+        font-size: 14px;
+      }
+      @media (min-width: 768px) {
+        html {
+          font-size: 16px;
+        }
+      }
 
-.container {
-  max-width: 960px;
-}
+      .container {
+        max-width: 960px;
+      }
 
-.pricing-header {
-  max-width: 700px;
-}
+      .pricing-header {
+        max-width: 700px;
+      }
 
-.card-deck .card {
-  min-width: 220px;
-}
+      .card-deck .card {
+        min-width: 220px;
+      }
 
-.border-top { border-top: 1px solid #e5e5e5; }
-.border-bottom { border-bottom: 1px solid #e5e5e5; }
-
-.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+      .border-top { border-top: 1px solid #e5e5e5; }
+      .border-bottom { border-bottom: 1px solid #e5e5e5; }
+      .box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
     </style>
   </head>
 
   <body>
-
     <?php include("../lib/php/header.php"); ?>
     <?php include("../lib/php/selectClassesTaught.php"); ?>
 
@@ -69,63 +68,13 @@
     </div>
      
     <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:960px">
-      
-        <a style="text-decoration: none" href ="manage_questions.php"> <button class="btn btn-info btn-lg btn-block" >Manage My Questions</button></a><br>
-        <a style="text-decoration: none" href ="create_question_set.php"> <button class="btn btn-info btn-lg btn-block" >Create New Question Set</button></a><br>
-        <a style="text-decoration: none"> <button id="createClassButton" class="btn btn-info btn-lg btn-block" >Create New Class</button></a>
+      <a style="text-decoration: none" href ="manage_questions.php"> <button class="btn btn-info btn-lg btn-block" >Manage My Questions</button></a><br>
+      <a style="text-decoration: none" href ="manage_class.php"> <button id="manageClassButton" class="btn btn-info btn-lg btn-block" >Manage My Classes</button></a><br>
     </div>
-      
-      <div id="myModal" class="modal">
-
-          <!-- Modal content -->
-          <div class="modal-content">
-            <div class="modal-header">
-                <h2>Create a Class</h2>
-              <span class="close">&times;</span>
-              
-            </div>
-            <div class="modal-body">
-              <?php include("createClassFragment.php"); ?>
-            </div>
-
-          </div>
-
-    </div>
-      
-      <script>
-        // Get the modal
-        var modal = document.getElementById('myModal');
-
-        // Get the button that opens the modal
-        var btn = document.getElementById("createClassButton");
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
-
-        // When the user clicks the button, open the modal 
-        btn.onclick = function() {
-            modal.style.display = "block";
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-      </script>
-      
-      
-      
-
+    
     <div class="container">
-    <h1 class="display-5 text-center">Current Classes</h1>
-    <a style="text-decoration: none" href ="manage_class.php"> <button id="manageClassButton" class="btn btn-info btn-lg btn-block" >Manage My Classes</button></a><br>
+        <h1 class="display-5 text-center">Current Classes</h1>
+      
         <div class="card-deck mb-3 text-center">
         <?php
         
@@ -141,20 +90,22 @@
           $description = $value['description'];
           $offering = $value['offering'];
           $location = $value['location'];
-          echo "<div class=\"card mb-3 text-white bg-secondary box-shadow\">
-          <div class=\"card-header\">
-            <h4 class=\"my-0 text-truncate font-weight-normal\">$title</h4>
-          </div>
-          <div class=\"card-body\">
-            <h1 class=\"card-title text-truncate pricing-card-title\"><small>$location</small></h1>
-          </div>
-          <ul class=\"list-unstyled mt-3 mb-4\">
-            <li>$offering</li>
-          </ul>
-          <div class=\"card-footer\">
-            <a href=\"choosePolledQuestionSet.php?class_id=$classId\"> <button type=\"button\" class=\"btn btn-lg btn-block btn-primary\">Poll Class</button></a>
-          </div>
-        </div>";
+          
+          echo
+          "<div class=\"card mb-3 text-white bg-secondary box-shadow\">
+            <div class=\"card-header\">
+              <h4 class=\"my-0 text-truncate font-weight-normal\">$title</h4>
+            </div>
+            <div class=\"card-body\">
+              <h1 class=\"card-title text-truncate pricing-card-title\"><small>$location</small></h1>
+            </div>
+            <ul class=\"list-unstyled mt-3 mb-4\">
+              <li>$offering</li>
+            </ul>
+            <div class=\"card-footer\">
+              <a href=\"choosePolledQuestionSet.php?class_id=$classId\"> <button type=\"button\" class=\"btn btn-lg btn-block btn-primary\">Poll Class</button></a>
+            </div>
+          </div>";
         }                               
             
         if (empty($removeZerothIndex)) {
@@ -162,15 +113,9 @@
         }
         
         ?>
-
       </div>
       
-      
-
-      <?php
-
-        include("../lib/php/footer.php");
-    ?>
+      <?php include("../lib/php/footer.php"); ?>
     </div>
 
 
