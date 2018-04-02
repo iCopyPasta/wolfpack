@@ -8,16 +8,17 @@
 
     <TextView
         android:id="@+id/questionTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:text="@string/default_question_text"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="18sp"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,20 +27,20 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:layout_marginTop="16dp"
         android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@+id/choiceRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/questionTextView" />
 
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/selectionRecyclerView"
+        android:id="@+id/choiceRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/trueFalseRadioGroup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
@@ -48,43 +49,46 @@
         android:id="@+id/trueFalseRadioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view">
+        app:layout_constraintTop_toBottomOf="@+id/choiceRecyclerView">
 
         <RadioButton
             android:id="@+id/answerTrue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:text="@string/answerTrue" />
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+
+            android:text="@string/answerTrue"
+            android:textSize="24sp"/>
 
         <RadioButton
             android:id="@+id/answerFalse"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:text="@string/answerFalse" />
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+
+            android:text="@string/answerFalse"
+            android:textSize="24sp"/>
 
     </RadioGroup>
 
 
-    <RadioGroup
+    <!--<RadioGroup
         android:id="@+id/choiceRadioGroup"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view">
+        tools:layout_editor_absoluteX="206dp"
+        tools:layout_editor_absoluteY="511dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/choiceRecyclerView"
@@ -97,8 +101,7 @@
             app:layout_constraintTop_toBottomOf="@+id/view" />
 
 
-    </RadioGroup>
-
+    </RadioGroup>-->
 
 
 </android.support.constraint.ConstraintLayout>

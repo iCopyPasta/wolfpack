@@ -112,9 +112,9 @@ public class MainPage extends AppCompatActivity {
     public void onToTeacher(View view){
         Log.i("Main Page", "on??is called");
         Intent intent = new Intent(MainPage.this, StudentClassPage.class);
-        intent.putExtra("className", "TEST CLASS");
+        intent.putExtra("className", "Formal Languages");
         //TODO: USED ONLY FOR TESTING
-        intent.putExtra("classId", "279");
+        intent.putExtra("classId", "336");
 
         startActivity(intent);
 

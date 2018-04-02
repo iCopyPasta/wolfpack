@@ -17,7 +17,7 @@ class QuestionRecyclerViewHolder extends RecyclerView.ViewHolder implements View
 
     public TextView questionDesc;
 
-    private ItemClickListener itemClickListener;
+    private ItemChoiceClickListener itemChoiceClickListener;
 
 
     public QuestionRecyclerViewHolder(View view) {
@@ -27,14 +27,14 @@ class QuestionRecyclerViewHolder extends RecyclerView.ViewHolder implements View
         itemView.setOnClickListener(this);
     }
 
-    public void setItemClickListener(ItemClickListener itemClickListener){
-        this.itemClickListener = itemClickListener;
+    public void setItemChoiceClickListener(ItemChoiceClickListener itemChoiceClickListener){
+        this.itemChoiceClickListener = itemChoiceClickListener;
     }
 
 
     @Override
     public void onClick(View view) {
-        itemClickListener.onClick(view, getAdapterPosition());
+        itemChoiceClickListener.onClick(view, getAdapterPosition());
     }
 }
 
@@ -46,15 +46,15 @@ public class QuestionRecyclerAdapter extends RecyclerView.Adapter<QuestionRecycl
     private List<String> items = new ArrayList<>();
     private Context context;
 
-    private ItemClickListener itemClickListener;
+    private ItemChoiceClickListener itemChoiceClickListener;
 
     public QuestionRecyclerAdapter(List<String> items, Context context){
         this.items = items;
         this.context = context;
     }
 
-    public void setItemClickListener(ItemClickListener itemClickListener){
-        this.itemClickListener = itemClickListener;
+    public void setItemChoiceClickListener(ItemChoiceClickListener itemChoiceClickListener){
+        this.itemChoiceClickListener = itemChoiceClickListener;
     }
 
     public String getItem(int position){
@@ -72,7 +72,7 @@ public class QuestionRecyclerAdapter extends RecyclerView.Adapter<QuestionRecycl
     @Override
     public void onBindViewHolder(QuestionRecyclerViewHolder holder, int position) {
         holder.questionDesc.setText((String) items.get(position));
-        holder.setItemClickListener(itemClickListener);
+        holder.setItemChoiceClickListener(itemChoiceClickListener);
     }
 
     @Override

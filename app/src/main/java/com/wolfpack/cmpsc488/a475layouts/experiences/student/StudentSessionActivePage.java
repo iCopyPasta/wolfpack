@@ -23,19 +23,19 @@ import android.widget.Toast;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
 
-public class StudentSessionActivePage extends AppCompatActivity { //implements ActiveSessionDialog.ActiveSessionDialogListener {
+public class StudentSessionActivePage extends SessionPage { //implements ActiveSessionDialog.ActiveSessionDialogListener {
 
 
     // given MY_SERVICE_QUESTION_SET_ID, MY_SERVICE_QUESTION_SESSION_ID
     // we ask if there is an active question here!
     public static final String TAG = "SSessionActivePage";
 
-    private String className = "";
-    private String sessionName = "";
+    //private String className = "";
+    //private String sessionName = "";
     private String classId = null;
 
-    private TextView mTextViewSessionName;
-    private TextView mTextViewQuestionNotice;
+    //private TextView mTextViewSessionName;
+    //private TextView mTextViewQuestionNotice;
 
     //activeSession refers to if there is an active session for the class (not necessarily this session)
     private boolean activeSession = true;
@@ -101,8 +101,8 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
                 activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID,
                         info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID));
 
-                activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID
-                        ,questionSessionId);
+                activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID,
+                        questionSessionId);
 
                 activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
                         questionSetId);
@@ -126,7 +126,7 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
         }
     };
 
-    //reciever to make sure THIS session is still alive
+    //receiver to make sure THIS session is still alive
     private BroadcastReceiver mReceiver2 = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -169,7 +169,7 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_session_page);
+        //setContentView(R.layout.activity_session_page);
 
         Bundle bundle = getIntent().getExtras();
 
@@ -178,18 +178,31 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorStudentPrimary)));
 
 
-            //get all the views
-            mTextViewSessionName = findViewById(R.id.sessionNameTextView);
+            classId = bundle.getString("classId");
+            className = bundle.getString("className");
+            sessionName = bundle.getString("sessionName");
 
-            mTextViewQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
+            //is this THE active session?
+            isActiveSession = (boolean) bundle.get("isActive");
+
+            //get all the views
+            //mTextViewSessionName = findViewById(R.id.sessionNameTextView);
+            //mTextViewQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
             foundQuestion = false;
 
             //our app was killed and should be restored
             if(savedInstanceState != null){
                 onRestoreInstanceState(savedInstanceState);
 
+            //set misc (text & visibility)
+            mTextViewSessionName.setText(sessionName);
+            mTextViewActiveQuestionNotice.setVisibility(View.VISIBLE);
+            mRecyclerViewQuestionList.setVisibility(View.GONE);
 
-            } else{ //grab info from our calling intent
+
+
+            }
+            else{ //grab info from our calling intent
                 questionSetId = bundle.getString(
                         MyStartedService.MY_SERVICE_QUESTION_SET_ID);
 
@@ -210,13 +223,13 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
             }
 
 
-            //decide how to handle it
-            if (isActiveSession){
-                handleActiveSession();
-            }
-            else{
-                handleCompletedSession();
-            }
+//            //decide how to handle it
+//            if (isActiveSession){
+//                handleActiveSession();
+//            }
+//            else{
+//                handleCompletedSession();
+//            }
 
 
             Log.i(TAG, "className = "+className);
@@ -302,10 +315,10 @@ public class StudentSessionActivePage extends AppCompatActivity { //implements A
 
 
     // provided we are an active session, query to see if a brand new question exists
-    private void handleActiveSession(){    }
+    //private void handleActiveSession(){    }
 
     //if this session is completed
-    private void handleCompletedSession(){    }
+    //private void handleCompletedSession(){    }
 
     @Override
     protected void onResume() {

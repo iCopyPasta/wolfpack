@@ -6,10 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.RadioButton;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
 
@@ -17,23 +14,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-class AnswerSelectionRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+class AnswerChoiceOLDRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public CheckBox answerItem;
+    public RadioButton answerItem;
 
-    private ItemClickListener itemClickListener;
+    private ItemChoiceClickListener itemChoiceClickListener;
 
 
-    public AnswerSelectionRecyclerViewHolder(View view, boolean isClickable) {
+    public AnswerChoiceOLDRecyclerViewHolder(View view, boolean isClickable) {
         super(view);
-        answerItem = (CheckBox) view.findViewById(R.id.checkBoxAnswer);
+        answerItem = (RadioButton) view.findViewById(R.id.radioButtonAnswer);
         answerItem.setClickable(isClickable);
 
         itemView.setOnClickListener(this);
     }
 
-    public void setItemClickListener(ItemClickListener itemClickListener){
-        this.itemClickListener = itemClickListener;
+    public void setItemClickListener(ItemChoiceClickListener itemChoiceClickListener){
+        this.itemChoiceClickListener = itemChoiceClickListener;
     }
 
     public void setIsCorrectAnswer(boolean isCorrectAnswer){
@@ -48,7 +45,6 @@ class AnswerSelectionRecyclerViewHolder extends RecyclerView.ViewHolder implemen
 
     }
 
-
     public void setIsStudentAnswer(boolean isStudentAnswer){
         answerItem.setChecked(isStudentAnswer);
     }
@@ -56,13 +52,13 @@ class AnswerSelectionRecyclerViewHolder extends RecyclerView.ViewHolder implemen
 
     @Override
     public void onClick(View view) {
-        itemClickListener.onClick(view, getAdapterPosition());
+        itemChoiceClickListener.onClick(view, getAdapterPosition());
     }
 }
 
 
 
-public class AnswerSelectionRecyclerAdapter extends RecyclerView.Adapter<AnswerSelectionRecyclerViewHolder>{
+public class AnswerChoiceOLDRecyclerAdapter extends RecyclerView.Adapter<AnswerChoiceOLDRecyclerViewHolder>{
 
 
     public static final String TAG = "selectionAdapter";
@@ -70,48 +66,49 @@ public class AnswerSelectionRecyclerAdapter extends RecyclerView.Adapter<AnswerS
     //turn into POJO
     private List<String> answers = new ArrayList<>();
     private List<Integer> correctAnswers = new ArrayList<>();
-    private List<Integer> studentAnswers;
+    private int studentAnswer;
 
-    private List<AnswerSelectionRecyclerViewHolder> itemViews = new ArrayList<>();
+    private List<AnswerChoiceOLDRecyclerViewHolder> itemViews = new ArrayList<>();
 
     private Context context;
     private boolean isClickable;
 
-    private ItemClickListener itemClickListener;
+    private ItemChoiceClickListener itemChoiceClickListener;
 
-    public AnswerSelectionRecyclerAdapter(Context context, List<String> answers, List<Integer> correctAnswers, List<Integer> studentAnswers, boolean isClickable){
+    public AnswerChoiceOLDRecyclerAdapter(Context context, List<String> answers, List<Integer> correctAnswers, int studentAnswer, boolean isClickable){
         this.context = context;
         this.answers = answers;
         this.correctAnswers = correctAnswers;
-        this.studentAnswers = studentAnswers;
+        this.studentAnswer = studentAnswer;
         this.isClickable = isClickable;
     }
-    public void setItemClickListener(ItemClickListener itemClickListener){
-        this.itemClickListener = itemClickListener;
+
+    public void setItemClickListener(ItemChoiceClickListener itemChoiceClickListener){
+        this.itemChoiceClickListener = itemChoiceClickListener;
     }
 
     public String getItem(int position){
         return answers.get(position);
     }
 
-    public CheckBox getItemView(int position){
+    public RadioButton getItemView(int position){
         return itemViews.get(position).answerItem;
     }
 
     @Override
-    public AnswerSelectionRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AnswerChoiceOLDRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View item = inflater.inflate(R.layout.recyclerview_question_page_answer_selection_item, parent, false);
+        View item = inflater.inflate(R.layout.recyclerview_question_page_answer_choice_item, parent, false);
 
-        return new AnswerSelectionRecyclerViewHolder(item, isClickable);
+        return new AnswerChoiceOLDRecyclerViewHolder(item, isClickable);
     }
 
     @Override
-    public void onBindViewHolder(AnswerSelectionRecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(AnswerChoiceOLDRecyclerViewHolder holder, int position) {
         holder.answerItem.setText((String) answers.get(position));
-        holder.setItemClickListener(itemClickListener);
+        holder.setItemClickListener(itemChoiceClickListener);
         holder.setIsCorrectAnswer(correctAnswers.contains(position));
-        holder.setIsStudentAnswer(studentAnswers.contains(position));
+        holder.setIsStudentAnswer(position == studentAnswer);
 
         itemViews.add(holder);
         Log.i(TAG, "itemView.size() = " + itemViews.size());
@@ -122,4 +119,12 @@ public class AnswerSelectionRecyclerAdapter extends RecyclerView.Adapter<AnswerS
         return answers.size();
     }
 
+
+
+
+
+
+
+
 }
+

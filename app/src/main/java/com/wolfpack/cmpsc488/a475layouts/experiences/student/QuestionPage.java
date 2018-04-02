@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
 
 import java.util.List;
 
@@ -22,24 +23,24 @@ public class QuestionPage extends AppCompatActivity {
 
     public static final String TAG = "QuestionPage";
 
-    public static final int QUESTION_TYPE_SELECTION = 1;
+    public static final int QUESTION_TYPE_CHOICE = 1;
     public static final int QUESTION_TYPE_TRUE_FALSE = 2;
-    public static final int QUESTION_TYPE_CHOICE = 3;
+    public static final int QUESTION_TYPE_CHOICE_OLD = 3;
 
 
     protected TextView mTextViewQuestion;
-    protected RecyclerView mRecyclerViewSelection;
-    protected RadioGroup mRadioGroupTrueFalse;
-    protected RadioGroup mRadioGroupChoice;
     protected RecyclerView mRecyclerViewChoice;
+    protected RadioGroup mRadioGroupTrueFalse;
+    protected RadioGroup mRadioGroupChoiceOLD;
+    protected RecyclerView mRecyclerViewChoiceOLD;
 
 
-    protected String className;
-    protected String sessionName;
-    protected String questionDesc;
-    protected int questionType;
+    protected String className = null;
+    protected String sessionName = null;
+    protected String questionDesc = null;
+    protected int questionType = 0;
 
-    protected List<String> answerList;
+    //protected List<String> answerList;
 
 
 
@@ -54,13 +55,13 @@ public class QuestionPage extends AppCompatActivity {
             Log.i(TAG, "super class onCreate");
 
             mTextViewQuestion = findViewById(R.id.questionTextView);
-            mRecyclerViewSelection = findViewById(R.id.selectionRecyclerView);
-            mRadioGroupTrueFalse = findViewById(R.id.trueFalseRadioGroup);
-            mRadioGroupChoice = findViewById(R.id.choiceRadioGroup);
             mRecyclerViewChoice = findViewById(R.id.choiceRecyclerView);
+            mRadioGroupTrueFalse = findViewById(R.id.trueFalseRadioGroup);
+            //mRadioGroupChoiceOLD = findViewById(R.id.choiceRadioGroup);
+            //mRecyclerViewChoiceOLD = findViewById(R.id.choiceRecyclerView);
 
             Log.i(TAG, "mTextViewQuestion = " + mTextViewQuestion.getText().toString());
-            Log.i(TAG, "mRecyclerViewSelection = " + mRecyclerViewSelection);
+            Log.i(TAG, "mRecyclerViewChoice = " + mRecyclerViewChoice);
             Log.i(TAG, "mRadioGroupTrueFalse= " + mRadioGroupTrueFalse);
 
         }
@@ -73,4 +74,16 @@ public class QuestionPage extends AppCompatActivity {
 
 
     }
+
+
+
+
+
+
+//    protected void handleCompleteQuestion(QuestionInformation info){
+//
+//    }
+
+
+
 }

@@ -1,16 +1,13 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
 
@@ -24,13 +21,13 @@ public class StudentSessionCompletePage extends SessionPage {
 
     public static final String TAG = "SSeshCmplt";
 
-    private String className = "";
-    private String sessionName = "";
+    //private String className = "";
+    //private String sessionName = "";
 
-    private TextView mTextViewSessionName;
-    private TextView mTextViewQuestionNotice;
+    //private TextView mTextViewSessionName;
+    //private TextView mTextViewQuestionNotice;
 
-    private RecyclerView mRecyclerViewQuestion;
+    //private RecyclerView mRecyclerViewQuestion;
     private RecyclerView.LayoutManager recyclerLayoutManager;
 
     private String[] questionlistTemp = {"What does that say?", "How are you doing today?"};
@@ -55,21 +52,21 @@ public class StudentSessionCompletePage extends SessionPage {
             sessionName = bundle.getString("sessionName");
 
             //get all the view
-            mTextViewSessionName = findViewById(R.id.sessionNameTextView);
-            mTextViewQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
-            mRecyclerViewQuestion = findViewById(R.id.questionListRecycleView);
+//            mTextViewSessionName = findViewById(R.id.sessionNameTextView);
+//            mTextViewActiveQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
+//            mRecyclerViewQuestionList = findViewById(R.id.questionListRecycleView);
 
             //set misc
             mTextViewSessionName.setText(sessionName);
-            mTextViewQuestionNotice.setVisibility(View.GONE);
-            mRecyclerViewQuestion.setVisibility(View.VISIBLE);
+            mTextViewActiveQuestionNotice.setVisibility(View.GONE);
+            mRecyclerViewQuestionList.setVisibility(View.VISIBLE);
 
             //setup recycler view
-            mRecyclerViewQuestion.setHasFixedSize(false);
+            mRecyclerViewQuestionList.setHasFixedSize(false);
             recyclerLayoutManager = new LinearLayoutManager(this);
-            mRecyclerViewQuestion.setLayoutManager(recyclerLayoutManager);
+            mRecyclerViewQuestionList.setLayoutManager(recyclerLayoutManager);
             adapter = new QuestionRecyclerAdapter(Arrays.asList(questionlistTemp), this);
-            adapter.setItemClickListener(new ItemClickListener() {
+            adapter.setItemChoiceClickListener(new ItemChoiceClickListener() {
                         @Override
                         public void onClick(View view, int position) {
                             Intent intent = new Intent(getApplicationContext(), StudentQuestionCompletePage.class);
@@ -85,7 +82,7 @@ public class StudentSessionCompletePage extends SessionPage {
 //                                intent.putExtra("studentAnswer", 9);
 //                            }
                             if (position == 0) {
-                                intent.putExtra("questionType", QuestionPage.QUESTION_TYPE_SELECTION);
+                                intent.putExtra("questionType", QuestionPage.QUESTION_TYPE_CHOICE);
                                 intent.putExtra("answerList", new ArrayList<>(Arrays.asList(answerlistTemp)));
                                 Integer[] correctAns = {2, 8, 9, 10, 11, 14};
                                 Integer[] studentAns = {2, 9, 10, 11};
@@ -102,7 +99,7 @@ public class StudentSessionCompletePage extends SessionPage {
                         }
                     });
 
-            mRecyclerViewQuestion.setAdapter(adapter);
+            mRecyclerViewQuestionList.setAdapter(adapter);
 
 
         }

@@ -1,33 +1,22 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
-import android.annotation.SuppressLint;
-import android.graphics.drawable.ColorDrawable;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.RadioButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
 
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class StudentQuestionCompletePage extends QuestionPage {//implements ActiveSessionDialog.ActiveSessionDialogListener {
     public static final String TAG = "SQuestionCompletePage";
 
     private RecyclerView.LayoutManager recyclerLayoutManager;
-    private AnswerSelectionRecyclerAdapter selectionAdapter;
     private AnswerChoiceRecyclerAdapter choiceAdapter;
+    //private AnswerChoiceOLDRecyclerAdapter choiceAdapter;
 
 
     private String defaultQuestion = "Rick Astley's never gonna:";
@@ -52,16 +41,16 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
 
 
             switch (questionType){
-                case QUESTION_TYPE_SELECTION:
-                    handleQuestionSelection(bundle);
+                case QUESTION_TYPE_CHOICE:
+                    handleQuestionChoice(bundle);
                     break;
                 case QUESTION_TYPE_TRUE_FALSE:
                     handleQuestionTrueFalse(bundle);
                     break;
-                //TODO: must look for solution to problem (posted below)
-                case QUESTION_TYPE_CHOICE:
-                    handleQuestionChoice(bundle);
-                    break;
+                /*//TODO: must look for solution to problem (posted below)
+                case QUESTION_TYPE_CHOICE_OLD:
+                    //handleQuestionChoice(bundle);
+                    break;*/
                 default:
                     throw new RuntimeException("questionType is out of range");
             }
@@ -84,29 +73,29 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
      *     "studentAnswers" : List<Integer> (a list of indices into the answerList that were the student answers)
      * @param info
      */
-    private void handleQuestionSelection(Bundle info){
-        mRecyclerViewSelection.setVisibility(View.VISIBLE);
+    private void handleQuestionChoice(Bundle info){
+        mRecyclerViewChoice.setVisibility(View.VISIBLE);
 
         ArrayList<String> answerList = info.getStringArrayList("answerList");
         ArrayList<Integer> correctAnswers = info.getIntegerArrayList("correctAnswers");
         ArrayList<Integer> studentAnswers = info.getIntegerArrayList("studentAnswers");
 
 
-        mRecyclerViewSelection.setHasFixedSize(false);
+        mRecyclerViewChoice.setHasFixedSize(false);
         recyclerLayoutManager = new LinearLayoutManager(this);
-        mRecyclerViewSelection.setLayoutManager(recyclerLayoutManager);
-        selectionAdapter = new AnswerSelectionRecyclerAdapter(getApplicationContext(), answerList, correctAnswers, studentAnswers, false);
+        mRecyclerViewChoice.setLayoutManager(recyclerLayoutManager);
+        choiceAdapter = new AnswerChoiceRecyclerAdapter(getApplicationContext(), answerList, correctAnswers, studentAnswers, false);
 
-        selectionAdapter.setItemClickListener(new ItemClickListener() {
+        choiceAdapter.setItemChoiceClickListener(new ItemChoiceClickListener() {
             @Override
             public void onClick(View view, int position) {
                 //do nothing
             }
         });
 
-        mRecyclerViewSelection.setAdapter(selectionAdapter);
+        mRecyclerViewChoice.setAdapter(choiceAdapter);
 
-        Log.i(TAG, "finished handleQuestionSelection");
+        Log.i(TAG, "finished handleQuestionChoice");
     }
 
 
@@ -144,20 +133,19 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
     }
 
 
-
     /**
-     * handleQuestionSelection handle the case that the question being displayed is a selection question
+     * handleQuestionChoiceOLD handle the case that the question being displayed is a selection question
      * Bundle must hold the following:
      *     "answerList" : List<String> (a list of possible answers)
      *     "correctAnswers" : List<Integer> (a list of indices into the answerList that are correct answers)
      *     "studentAnswers" : Integer (an indices into the answerList that was the student answers)
      * @param info
-     */
-    //TODO: Choice questions: radio buttons not working, will need to create own version OR
+     *//*
+    //TODO: ChoiceOLD questions: radio buttons not working, will need to create own version OR
     //TODO:     find a way to dynamically add more radio buttons to a radio group
-    private void handleQuestionChoice(Bundle info){
-        mRadioGroupChoice.setVisibility(View.VISIBLE);
-        mRecyclerViewChoice.setVisibility(View.VISIBLE);
+    private void handleQuestionChoiceOLD(Bundle info){
+        mRadioGroupChoiceOLD.setVisibility(View.VISIBLE);
+        mRecyclerViewChoiceOLD.setVisibility(View.VISIBLE);
 
         ArrayList<String> answerList = info.getStringArrayList("answerList");
         ArrayList<Integer> correctAnswers = info.getIntegerArrayList("correctAnswers");
@@ -173,22 +161,22 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
 //        Log.i(TAG, "studentAnswer = " + studentAnswer);
 
 
-        mRecyclerViewChoice.setHasFixedSize(false);
+        mRecyclerViewChoiceOLD.setHasFixedSize(false);
         recyclerLayoutManager = new LinearLayoutManager(this);
-        mRecyclerViewChoice.setLayoutManager(recyclerLayoutManager);
-        choiceAdapter = new AnswerChoiceRecyclerAdapter(getApplicationContext(), answerList, correctAnswers, studentAnswer, true);
+        mRecyclerViewChoiceOLD.setLayoutManager(recyclerLayoutManager);
+        choiceAdapter = new AnswerChoiceOLDOLDRecyclerAdapter(getApplicationContext(), answerList, correctAnswers, studentAnswer, true);
 
-        choiceAdapter.setItemClickListener(new ItemClickListener() {
+        choiceAdapter.setItemChoiceClickListener(new ItemChoiceClickListener() {
             @Override
             public void onClick(View view, int position) {
                 //do nothing
             }
         });
 
-        mRecyclerViewChoice.setAdapter(choiceAdapter);
+        mRecyclerViewChoiceOLD.setAdapter(choiceAdapter);
 
-        Log.i(TAG, "finished handleQuestionChoice");
-    }
+        Log.i(TAG, "finished handleQuestionChoiceOLD");
+    }*/
 
 
 
