@@ -19,7 +19,7 @@ import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.Question
 import java.util.List;
 
 
-public class QuestionPage extends AppCompatActivity {
+public abstract class QuestionPage extends AppCompatActivity {
 
     public static final String TAG = "QuestionPage";
 
@@ -80,10 +80,36 @@ public class QuestionPage extends AppCompatActivity {
 
 
 
-//    protected void handleCompleteQuestion(QuestionInformation info){
-//
-//    }
+    protected void handleCompleteQuestion(QuestionInformation info){
 
+    }
+
+
+    protected void handleActiveQuestion(QuestionInformation info){
+        questionDesc = info.getDescription();
+        mTextViewQuestion.setText(questionDesc);
+
+
+        Log.i("handleActiveQuestion",
+                "teacher id = " + info.getTeacherId() + "\n" +
+                "question id = " + info.getQuestionId() + "\n" +
+                "question desc = " + info.getDescription() + "\n" +
+                "question type = " + info.getQuestionType() + "\n" +
+                "potential answers = " + info.getPotentialAnswers() + "\n" +
+                "correct answers = " + info.getCorrectAnswers() + "\n");
+
+
+        if (info.getQuestionType().equals(getString(R.string.QUESTION_TYPE_TRUE_FALSE))){
+            handleQuestionTrueFalse(info);
+        }
+        else if (info.getQuestionType().equals(getString(R.string.QUESTION_TYPE_CHOICE))){
+            handleQuestionChoice(info);
+        }
+    }
+
+
+    protected abstract void handleQuestionChoice(QuestionInformation info);
+    protected abstract void handleQuestionTrueFalse(QuestionInformation info);
 
 
 }

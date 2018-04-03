@@ -78,6 +78,18 @@
     <string name="active_session_notice">Waiting for new question</string>
 
 
+
+
+    <!-- KEYS -->
+    <string name="KEY_TEACHER_ID">KEY_TEACHER_ID</string>
+    <string name="KEY_QUESTION_ID">KEY_QUESTION_ID</string>
+    <string name="KEY_QUESTION_DESCRIPTION">KEY_QUESTION_DESCRIPTION</string>
+    <string name="KEY_QUESTION_TYPE">KEY_QUESTION_TYPE</string>
+    <string name="KEY_QUESTION_POTENTIAL_ANSWERS">KEY_QUESTION_POTENTIAL_ANSWERS</string>
+    <string name="KEY_QUESTION_CORRECT_ANSWERS">KEY_QUESTION_CORRECT_ANSWERS</string>
+
+
+
     <!-- Strings for Question Page -->
     <string name="title_activity_student_question_page">Question</string>
     <string name="default_question_text">default</string>
@@ -85,6 +97,8 @@
     <string name="answerTrue">True</string>
     <string name="answerFalse">False</string>
 
+    <string name="QUESTION_TYPE_CHOICE">Multiple Choice</string>
+    <string name="QUESTION_TYPE_TRUE_FALSE">True/False</string>
 
 
 
