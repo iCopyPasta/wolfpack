@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.RadioButton;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
 
 import java.util.ArrayList;
 
@@ -39,13 +40,15 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
             Log.i(TAG, "mTextViewQuestion = " + mTextViewQuestion);
             Log.i(TAG, "mTextViewQuestion text = " + mTextViewQuestion.getText().toString());
 
+            QuestionInformation info = new QuestionInformation();
+            //info.setQuestionId();
 
             switch (questionType){
                 case QUESTION_TYPE_CHOICE:
-                    handleQuestionChoice(bundle);
+                    handleQuestionChoice(info);
                     break;
                 case QUESTION_TYPE_TRUE_FALSE:
-                    handleQuestionTrueFalse(bundle);
+                    handleQuestionTrueFalse(info);
                     break;
                 /*//TODO: must look for solution to problem (posted below)
                 case QUESTION_TYPE_CHOICE_OLD:
@@ -73,29 +76,29 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
      *     "studentAnswers" : List<Integer> (a list of indices into the answerList that were the student answers)
      * @param info
      */
-    private void handleQuestionChoice(Bundle info){
-        mRecyclerViewChoice.setVisibility(View.VISIBLE);
-
-        ArrayList<String> answerList = info.getStringArrayList("answerList");
-        ArrayList<Integer> correctAnswers = info.getIntegerArrayList("correctAnswers");
-        ArrayList<Integer> studentAnswers = info.getIntegerArrayList("studentAnswers");
-
-
-        mRecyclerViewChoice.setHasFixedSize(false);
-        recyclerLayoutManager = new LinearLayoutManager(this);
-        mRecyclerViewChoice.setLayoutManager(recyclerLayoutManager);
-        choiceAdapter = new AnswerChoiceRecyclerAdapter(getApplicationContext(), answerList, correctAnswers, studentAnswers, false);
-
-        choiceAdapter.setItemChoiceClickListener(new ItemChoiceClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                //do nothing
-            }
-        });
-
-        mRecyclerViewChoice.setAdapter(choiceAdapter);
-
-        Log.i(TAG, "finished handleQuestionChoice");
+    protected void handleQuestionChoice(QuestionInformation info){
+//        mRecyclerViewChoice.setVisibility(View.VISIBLE);
+//
+//        ArrayList<String> answerList = info.getStringArrayList("answerList");
+//        ArrayList<Integer> correctAnswers = info.getIntegerArrayList("correctAnswers");
+//        ArrayList<Integer> studentAnswers = info.getIntegerArrayList("studentAnswers");
+//
+//
+//        mRecyclerViewChoice.setHasFixedSize(false);
+//        recyclerLayoutManager = new LinearLayoutManager(this);
+//        mRecyclerViewChoice.setLayoutManager(recyclerLayoutManager);
+//        choiceAdapter = new AnswerChoiceRecyclerAdapter(getApplicationContext(), answerList, correctAnswers, studentAnswers, false);
+//
+//        choiceAdapter.setItemChoiceClickListener(new ItemChoiceClickListener() {
+//            @Override
+//            public void onClick(View view, int position) {
+//                //do nothing
+//            }
+//        });
+//
+//        mRecyclerViewChoice.setAdapter(choiceAdapter);
+//
+//        Log.i(TAG, "finished handleQuestionChoice");
     }
 
 
@@ -106,30 +109,30 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
      *     "studentAnswers" : Boolean (the student's answer)
      * @param info
      */
-    private void handleQuestionTrueFalse(Bundle info){
-        mRadioGroupTrueFalse.setVisibility(View.VISIBLE);
-
-        boolean correctAnswer = info.getBoolean("correctAnswer");
-        boolean studentAnswer = info.getBoolean("studentAnswer");
-
-        RadioButton trueButton= (RadioButton) mRadioGroupTrueFalse.getChildAt(0);
-        RadioButton falseButton = (RadioButton) mRadioGroupTrueFalse.getChildAt(1);
-
-        mRadioGroupTrueFalse.check((studentAnswer) ? trueButton.getId() : falseButton.getId());
-        trueButton.setClickable(false);
-        falseButton.setClickable(false);
-
-        if (correctAnswer){
-            trueButton.setBackgroundColor(getResources().getColor(R.color.colorCorrectAnswer));
-            falseButton.setBackgroundColor(getResources().getColor(R.color.colorWrongAnswer));
-        }
-        else {
-            trueButton.setBackgroundColor(getResources().getColor(R.color.colorWrongAnswer));
-            falseButton.setBackgroundColor(getResources().getColor(R.color.colorCorrectAnswer));
-        }
-
-        Log.i(TAG, "true = " + trueButton+ "\nfalse = " + falseButton);
-        Log.i(TAG, "finished handleQuestionTrueFalse");
+    protected void handleQuestionTrueFalse(QuestionInformation info){
+//        mRadioGroupTrueFalse.setVisibility(View.VISIBLE);
+//
+//        boolean correctAnswer = info.getBoolean("correctAnswer");
+//        boolean studentAnswer = info.getBoolean("studentAnswer");
+//
+//        RadioButton trueButton= (RadioButton) mRadioGroupTrueFalse.getChildAt(0);
+//        RadioButton falseButton = (RadioButton) mRadioGroupTrueFalse.getChildAt(1);
+//
+//        mRadioGroupTrueFalse.check((studentAnswer) ? trueButton.getId() : falseButton.getId());
+//        trueButton.setClickable(false);
+//        falseButton.setClickable(false);
+//
+//        if (correctAnswer){
+//            trueButton.setBackgroundColor(getResources().getColor(R.color.colorCorrectAnswer));
+//            falseButton.setBackgroundColor(getResources().getColor(R.color.colorWrongAnswer));
+//        }
+//        else {
+//            trueButton.setBackgroundColor(getResources().getColor(R.color.colorWrongAnswer));
+//            falseButton.setBackgroundColor(getResources().getColor(R.color.colorCorrectAnswer));
+//        }
+//
+//        Log.i(TAG, "true = " + trueButton+ "\nfalse = " + falseButton);
+//        Log.i(TAG, "finished handleQuestionTrueFalse");
     }
 
 

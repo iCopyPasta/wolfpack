@@ -13,34 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-class QuestionRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-    public TextView questionDesc;
-
-    private ItemChoiceClickListener itemChoiceClickListener;
 
 
-    public QuestionRecyclerViewHolder(View view) {
-        super(view);
-        questionDesc = (TextView) view.findViewById(R.id.textViewQuestion);
-
-        itemView.setOnClickListener(this);
-    }
-
-    public void setItemChoiceClickListener(ItemChoiceClickListener itemChoiceClickListener){
-        this.itemChoiceClickListener = itemChoiceClickListener;
-    }
-
-
-    @Override
-    public void onClick(View view) {
-        itemChoiceClickListener.onClick(view, getAdapterPosition());
-    }
-}
-
-
-
-public class QuestionRecyclerAdapter extends RecyclerView.Adapter<QuestionRecyclerViewHolder>{
+public class QuestionRecyclerAdapter extends RecyclerView.Adapter<QuestionRecyclerAdapter.QuestionRecyclerViewHolder>{
 
     //turn into POJO
     private List<String> items = new ArrayList<>();
@@ -72,7 +47,7 @@ public class QuestionRecyclerAdapter extends RecyclerView.Adapter<QuestionRecycl
     @Override
     public void onBindViewHolder(QuestionRecyclerViewHolder holder, int position) {
         holder.questionDesc.setText((String) items.get(position));
-        holder.setItemChoiceClickListener(itemChoiceClickListener);
+        //holder.setItemChoiceClickListener(itemChoiceClickListener);
     }
 
     @Override
@@ -84,7 +59,30 @@ public class QuestionRecyclerAdapter extends RecyclerView.Adapter<QuestionRecycl
 
 
 
+    class QuestionRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        public TextView questionDesc;
+
+        //private ItemChoiceClickListener itemChoiceClickListener;
+
+
+        public QuestionRecyclerViewHolder(View view) {
+            super(view);
+            questionDesc = (TextView) view.findViewById(R.id.textViewQuestion);
+
+            itemView.setOnClickListener(this);
+        }
+
+//        public void setItemChoiceClickListener(ItemChoiceClickListener itemChoiceClickListener){
+//            this.itemChoiceClickListener = itemChoiceClickListener;
+//        }
+
+
+        @Override
+        public void onClick(View view) {
+            itemChoiceClickListener.onClick(view, getAdapterPosition());
+        }
+    }
 
 
 }

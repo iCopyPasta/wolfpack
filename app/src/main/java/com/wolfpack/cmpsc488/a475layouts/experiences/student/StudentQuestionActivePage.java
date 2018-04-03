@@ -125,7 +125,7 @@ public class StudentQuestionActivePage extends QuestionPage {
                     Log.i(TAG, "onReceive: " + questionInformation.getDescription());
                     Toast.makeText(StudentQuestionActivePage.this,
                             questionInformation.getQuestionType(),
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
 
                     mService.validateSameQuestion(questionSetId,
                             questionId,
@@ -186,16 +186,10 @@ public class StudentQuestionActivePage extends QuestionPage {
             handleQuestionChoice(info);
         }
 
-
-        Toast.makeText(StudentQuestionActivePage.this,
-                questionInformation.getQuestionType(),
-                Toast.LENGTH_LONG).show();
-
-
     }
 
 
-    private void handleQuestionChoice(QuestionInformation info){
+    protected void handleQuestionChoice(QuestionInformation info){
         mRecyclerViewChoice.setVisibility(View.VISIBLE);
 
         //ArrayList<String> answerList = info.getStringArrayList("answerList");
@@ -248,7 +242,7 @@ public class StudentQuestionActivePage extends QuestionPage {
         choiceAdapter.setItemChoiceClickListener(new ItemChoiceClickListener() {
             @Override
             public void onClick(View view, int position) {
-                studentAnswersChoice[position] = !studentAnswersChoice[position];
+                studentAnswersChoice[position] = (studentAnswersChoice[position] == null) || !studentAnswersChoice[position];
                 Toast.makeText(view.getContext(), "Choose answer (" + position + "): " + studentAnswersChoice[position], Toast.LENGTH_SHORT).show();
             }
         });
@@ -258,7 +252,8 @@ public class StudentQuestionActivePage extends QuestionPage {
         Log.i(TAG, "finished handleQuestionChoice");
     }
 
-    private void handleQuestionTrueFalse(QuestionInformation info) {
+
+    protected void handleQuestionTrueFalse(QuestionInformation info) {
         mRadioGroupTrueFalse.setVisibility(View.VISIBLE);
 
         RadioButton trueButton= (RadioButton) mRadioGroupTrueFalse.getChildAt(0);
@@ -271,7 +266,7 @@ public class StudentQuestionActivePage extends QuestionPage {
             @Override
             public void onClick(View view) {
                 studentAnswersTrueFalse = true;
-                Toast.makeText(getApplicationContext(), "Choice: " + studentAnswersTrueFalse, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Choice: " + studentAnswersTrueFalse, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -279,7 +274,7 @@ public class StudentQuestionActivePage extends QuestionPage {
             @Override
             public void onClick(View view) {
                 studentAnswersTrueFalse = false;
-                Toast.makeText(getApplicationContext(), "Choice: " + studentAnswersTrueFalse, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Choice: " + studentAnswersTrueFalse, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -363,6 +358,7 @@ public class StudentQuestionActivePage extends QuestionPage {
                         Toast.LENGTH_SHORT).show();
 
                 //TODO: show graphic display of dead values?
+                onQuestionComplete();
 
                 submitFinalAnswer();
 
@@ -371,6 +367,41 @@ public class StudentQuestionActivePage extends QuestionPage {
 
         }
     };
+
+
+
+    public void onQuestionComplete(){
+
+        if(answerType.startsWith("Multiple")){
+            choiceAdapter.onQuestionCompleted();
+        }
+        else if (answerType.startsWith("True")){
+            boolean correctAnswer = Boolean.parseBoolean(questionInformation.getCorrectAnswers());
+            RadioButton trueButton= (RadioButton) mRadioGroupTrueFalse.getChildAt(0);
+            RadioButton falseButton = (RadioButton) mRadioGroupTrueFalse.getChildAt(1);
+
+            trueButton.setClickable(false);
+            falseButton.setClickable(false);
+
+            if (correctAnswer){
+                trueButton.setBackgroundColor(getResources().getColor(R.color.colorCorrectAnswer));
+                falseButton.setBackgroundColor(getResources().getColor(R.color.colorWrongAnswer));
+            }
+            else {
+                trueButton.setBackgroundColor(getResources().getColor(R.color.colorWrongAnswer));
+                falseButton.setBackgroundColor(getResources().getColor(R.color.colorCorrectAnswer));
+            }
+
+
+        }
+
+
+
+    }
+
+
+
+
 
     private BroadcastReceiver submitAnswerReceiver = new BroadcastReceiver() {
         @Override

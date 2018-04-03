@@ -9,63 +9,23 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-class AnswerChoiceRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-    public CheckBox answerItem;
-
-    private ItemChoiceClickListener itemChoiceClickListener;
 
 
-    public AnswerChoiceRecyclerViewHolder(View view, boolean isClickable) {
-        super(view);
-        answerItem = (CheckBox) view.findViewById(R.id.checkBoxAnswer);
-        answerItem.setClickable(isClickable);
-
-        itemView.setOnClickListener(this);
-    }
-
-    public void setItemChoiceClickListener(ItemChoiceClickListener itemChoiceClickListener){
-        this.itemChoiceClickListener = itemChoiceClickListener;
-    }
-
-    public void setIsCorrectAnswer(boolean isCorrectAnswer){
-        if (isCorrectAnswer)
-            answerItem.setBackgroundColor(answerItem.getContext().getResources().getColor(R.color.colorCorrectAnswer));
-        else
-            answerItem.setBackgroundColor(answerItem.getContext().getResources().getColor(R.color.colorWrongAnswer));
-
-//        answerItem.setBackgroundColor((isCorrectAnswer) ?
-//                answerItem.getContext().getResources().getColor(R.color.colorCorrectAnswer):
-//                answerItem.getContext().getResources().getColor(R.color.colorWrongAnswer));
-
-    }
-
-
-    public void setIsStudentAnswer(boolean isStudentAnswer){
-        answerItem.setChecked(isStudentAnswer);
-    }
-
-
-    //TODO: this onClick is not working
-    @Override
-    public void onClick(View view) {
-        itemChoiceClickListener.onClick(view, getAdapterPosition());
-    }
-}
-
-
-
-public class AnswerChoiceRecyclerAdapter extends RecyclerView.Adapter<AnswerChoiceRecyclerViewHolder>{
+public class AnswerChoiceRecyclerAdapter
+        extends RecyclerView.Adapter<AnswerChoiceRecyclerAdapter.AnswerChoiceRecyclerViewHolder>
+{
 
 
     public static final String TAG = "selectionAdapter";
 
     //turn into POJO
+    private List<QuestionInformation> questionInformationList = new ArrayList<>();
     private List<String> answers = new ArrayList<>();
     private List<Integer> correctAnswers = new ArrayList<>();
     private List<Integer> studentAnswers = null;
@@ -75,7 +35,7 @@ public class AnswerChoiceRecyclerAdapter extends RecyclerView.Adapter<AnswerChoi
     private Context context;
     private boolean isClickable;
 
-    private ItemChoiceClickListener itemChoiceClickListener;
+    private ItemChoiceClickListener itemChoiceClickListener = null;
 
     //for complete page
     public AnswerChoiceRecyclerAdapter(Context context, List<String> answers, List<Integer> correctAnswers, List<Integer> studentAnswers, boolean isClickable){
@@ -117,7 +77,7 @@ public class AnswerChoiceRecyclerAdapter extends RecyclerView.Adapter<AnswerChoi
     @Override
     public void onBindViewHolder(AnswerChoiceRecyclerViewHolder holder, int position) {
         holder.answerItem.setText((String) answers.get(position));
-        holder.setItemChoiceClickListener(itemChoiceClickListener);
+        //holder.setItemChoiceClickListener(itemChoiceClickListener);
 
         //if not active question
         if (studentAnswers != null) {
@@ -133,5 +93,81 @@ public class AnswerChoiceRecyclerAdapter extends RecyclerView.Adapter<AnswerChoi
     public int getItemCount() {
         return answers.size();
     }
+
+
+
+    public void onQuestionCompleted(){
+
+        int i = 0;
+        for (AnswerChoiceRecyclerViewHolder holder : itemViews){
+            holder.answerItem.setClickable(false);
+            holder.setIsCorrectAnswer(correctAnswers.contains(i++));
+        }
+
+        itemChoiceClickListener = null;
+
+        notifyDataSetChanged();
+
+    }
+
+
+
+
+
+
+
+
+    // View Holder
+    class AnswerChoiceRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        public CheckBox answerItem;
+
+        //private ItemChoiceClickListener itemChoiceClickListener;
+
+
+        public AnswerChoiceRecyclerViewHolder(View view, boolean isClickable) {
+            super(view);
+            answerItem = (CheckBox) view.findViewById(R.id.checkBoxAnswer);
+            answerItem.setClickable(isClickable);
+            answerItem.setOnClickListener(this);
+            //itemView.setOnClickListener(this);
+        }
+
+//        public void setItemChoiceClickListener(ItemChoiceClickListener itemChoiceClickListener){
+//            this.itemChoiceClickListener = itemChoiceClickListener;
+//        }
+
+        public void setIsCorrectAnswer(boolean isCorrectAnswer) {
+            if (isCorrectAnswer)
+                answerItem.setBackgroundColor(answerItem.getContext().getResources().getColor(R.color.colorCorrectAnswer));
+            else
+                answerItem.setBackgroundColor(answerItem.getContext().getResources().getColor(R.color.colorWrongAnswer));
+
+//        answerItem.setBackgroundColor((isCorrectAnswer) ?
+//                answerItem.getContext().getResources().getColor(R.color.colorCorrectAnswer):
+//                answerItem.getContext().getResources().getColor(R.color.colorWrongAnswer));
+
+        }
+
+
+        private void setIsStudentAnswer(boolean isStudentAnswer) {
+            answerItem.setChecked(isStudentAnswer);
+        }
+
+
+        //TODO: this onClick is not working
+        @Override
+        public void onClick(View view) {
+            if (itemChoiceClickListener != null) {
+                itemChoiceClickListener.onClick(view, getAdapterPosition());
+                Log.w(TAG,"itemChoiceClickListener != null");
+            }
+            Log.w(TAG, "itemChoiceClickListener == null for some damn reason");
+
+        }
+    }
+
+
+
 
 }
