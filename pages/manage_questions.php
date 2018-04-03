@@ -229,13 +229,11 @@
 
               console.log(activeQuestions);
 
-              for (let question of activeQuestions) {
+              for (let question of activeQuestions) {  //LOOP THROUGH ACTIVE QUESTIONS AND POST DELETE FOR EACH
                   post('../lib/php/deleteQuestion.php',"question_id= "+question);
+                  document.getElementById(question).style.display = "none";
               } 
-                  
-                  //LOOP THROUGH ACTIVE QUESTIONS AND POST DELETE FOR EACH
-                  
-              
+
               
           }
 

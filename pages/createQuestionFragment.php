@@ -90,12 +90,12 @@
         send.correct_answers = JSON.stringify(correctAnswers);
         
         
-        post('../lib/php/createQuestionWeb.php', send);
+        postFrag('../lib/php/createQuestionWeb.php', send);
         
     }
     
     
-function post(path, params, method) { // method: https://stackoverflow.com/questions/133925/javascript-post-request-like-a-form-submit
+function postFrag(path, params, method) { // method: https://stackoverflow.com/questions/133925/javascript-post-request-like-a-form-submit
     method = method || "post"; // Set method to post by default if not specified.
 
     // The rest of this code assumes you are not using a library.

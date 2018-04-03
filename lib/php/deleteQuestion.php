@@ -33,6 +33,7 @@
   if(isQuestionIdExist($question_id)){
     $question = new Question($question_id, '%', '%', '%', '%', '%');
     return $question->delete();
+
   }else{
     // question_id does not exist
     error_log("deleteQuestion FAIL, did not exist");
