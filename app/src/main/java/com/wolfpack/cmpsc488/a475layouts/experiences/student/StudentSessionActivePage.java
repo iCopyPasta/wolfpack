@@ -150,10 +150,8 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
                         //TODO: in the event of a "switch-a-roo", implement logic
                     }
 
-                    if(!foundQuestion && questionSetId != null){
-                        Log.i(TAG, "onReceive: " + "re-seeking active question");
-                        mService.searchActiveQuestion(questionSetId, "false");
-                    }
+                    Log.i(TAG, "onReceive: " + "re-seeking active question");
+                    mService.searchActiveQuestion(questionSetId, "false");
                 }
             }
             else{ // we are no longer the active poll
@@ -222,16 +220,6 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
 
             }
 
-
-//            //decide how to handle it
-//            if (isActiveSession){
-//                handleActiveSession();
-//            }
-//            else{
-//                handleCompletedSession();
-//            }
-
-
             Log.i(TAG, "className = "+className);
             Log.i(TAG, "sessionName = "+sessionName);
 
@@ -247,19 +235,6 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
     @Override
     public void onStart(){
         super.onStart();
-
-        //bind to custom service
-        Intent serviceIntent = new Intent(StudentSessionActivePage.this , MyStartedService.class);
-        startService(serviceIntent);
-        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
-
-        LocalBroadcastManager.getInstance(
-                getApplicationContext())
-                .registerReceiver(mReceiver, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_QUESTION));
-
-        LocalBroadcastManager.getInstance(
-                getApplicationContext())
-                .registerReceiver(mReceiver2, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_SESSION));
     }
 
     @Override
@@ -313,16 +288,25 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
                 .unregisterReceiver(mReceiver2);
     }
 
-
-    // provided we are an active session, query to see if a brand new question exists
-    //private void handleActiveSession(){    }
-
-    //if this session is completed
-    //private void handleCompletedSession(){    }
-
     @Override
     protected void onResume() {
+
         super.onResume();
+
+        super.onStart();
+
+        //bind to custom service
+        Intent serviceIntent = new Intent(StudentSessionActivePage.this , MyStartedService.class);
+        startService(serviceIntent);
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .registerReceiver(mReceiver, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_QUESTION));
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .registerReceiver(mReceiver2, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_SESSION));
     }
 
 
