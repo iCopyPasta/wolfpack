@@ -46,7 +46,7 @@ public class StudentPageTab1Classlist extends Fragment {
     private ArrayList<ClassResult> classlist = null;
 
     private RecyclerView mClasslistRecycler = null;
-    private ClasslistPaginationAdapter adapter = null;
+    public ClasslistPaginationAdapter adapter = null;
 
     private boolean isLoading = false;
 

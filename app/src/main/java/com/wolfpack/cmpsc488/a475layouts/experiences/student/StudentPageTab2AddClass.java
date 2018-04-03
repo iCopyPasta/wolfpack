@@ -208,6 +208,8 @@ public class StudentPageTab2AddClass extends Fragment {
                 isBackgroundTaskRunning = false;
                 adapter.setLoaded();
                 Log.i(TAG, "we made it all the way to onPostExecute");
+
+                //TODO: start ClassesResultBackgroundTask to update classlist in different tab
             }
             else{
                 classIdSearchEditText.setEnabled(true);

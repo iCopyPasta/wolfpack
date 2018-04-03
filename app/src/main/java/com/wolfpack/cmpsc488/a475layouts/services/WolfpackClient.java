@@ -35,7 +35,7 @@ import retrofit2.http.POST;
 public interface WolfpackClient{
 
     //local testing for Pabz (pabz -> Pabz : you are a proper noun my friend)
-    String BASE_URL = "http://192.168.1.57";
+    //String BASE_URL = "http://192.168.1.57";
 
     //local testing for Tyler
     //String BASE_URL = "192.169.1.125";
@@ -44,7 +44,7 @@ public interface WolfpackClient{
     //Reference for converting JSON to POJO
     //http://www.jsonschema2pojo.org/
 
-    //String BASE_URL = "http://wolfpack.cs.hbg.psu.edu";
+    String BASE_URL = "http://wolfpack.cs.hbg.psu.edu";
 
     String FEED = "/lib/php/androidAPI.php";
 

@@ -119,7 +119,7 @@ public class AnswerChoiceRecyclerAdapter extends RecyclerView.Adapter<AnswerChoi
         holder.answerItem.setText((String) answers.get(position));
         holder.setItemChoiceClickListener(itemChoiceClickListener);
 
-        //if active question
+        //if not active question
         if (studentAnswers != null) {
             holder.setIsCorrectAnswer(correctAnswers.contains(position));
             holder.setIsStudentAnswer(studentAnswers.contains(position));

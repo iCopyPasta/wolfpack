@@ -232,8 +232,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             SharedPreferences sharedPref = view.getContext().getSharedPreferences(
                     view.getContext().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-            //String student_id = sharedPref.getString(view.getContext().getString(0), "");
-            String student_id = "24";
+            String student_id = sharedPref.getString(view.getContext().getString(R.string.STUDENT_ID), "");
 
             mListener.onClassSelected(student_id,class_id);
 
