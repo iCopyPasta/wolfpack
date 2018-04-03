@@ -164,6 +164,8 @@
 
 
   <!-- Custom styles for this template -->
+  <link rel="stylesheet" type="text/css" href="..\css\common\custom.css">
+  
   <style>
     html,
 
@@ -183,7 +185,6 @@
       justify-content: center;
       padding-top: 40px;
       padding-bottom: 40px;
-      background-color: #f5f5f5;
     }
 
     .form-signin {

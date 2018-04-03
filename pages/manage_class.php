@@ -143,22 +143,21 @@
           $offering = $value['offering'];
           $location = $value['location'];
           
-          echo "<div class=\" clickBox card bg-secondary text-white mb-3\" id=\"$class_id\" onclick=\"toggleActive($class_id)\"> 
+          echo
+            "<div class=\" clickBox card bg-secondary text-white mb-3\" id=\"$class_id\" onclick=\"toggleActive($class_id)\"> 
             <div class=\"card-header\">
               <button type=\"button\" class=\"btn btn-warning btn-sm float-right\" onclick=\"toggleActive($class_id);editClass($class_id)\">
                 <span class=\"fas fa-pencil-alt\"></span>
               </button>
-              <h4 class=\"my-0 font-weight-normal text-truncate\">$title</h4>
+              <h2 class=\"my-0 font-weight-normal text-truncate\">$title</h2>
             </div>
             <div class=\"card-body\">
-              <h5 class=\"card-title pricing-card-title text-truncate\">$location</h5>
+              <h3 class=\"card-title text-truncate pricing-card-title\"><small>$location</small></h3>
+              <h7 class=\"card-title pricing-card-title\"><small>$description</small></h7>
             </div>
             <ul class=\"list-unstyled mt-3 mb-4\">
               <li>$offering</li>
             </ul>
-            <div class=\"card-footer\">
-              <a href=\"choosePolledQuestionSet.php?class_id=$class_id\"> <button type=\"button\" class=\"btn btn-lg btn-block btn-primary\">Poll Class</button></a>
-            </div>
             </div>";     
         }                               //TODO: link poll class to the class poll using the proper parameter send structure
             

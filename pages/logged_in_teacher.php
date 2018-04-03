@@ -94,10 +94,10 @@
           echo
           "<div class=\"card mb-3 text-white bg-secondary box-shadow\">
             <div class=\"card-header\">
-              <h4 class=\"my-0 text-truncate font-weight-normal\">$title</h4>
+              <h2 class=\"my-0 text-truncate font-weight-normal\">$title</h2>
             </div>
             <div class=\"card-body\">
-              <h1 class=\"card-title text-truncate pricing-card-title\"><small>$location</small></h1>
+              <h3 class=\"card-title text-truncate pricing-card-title\"><small>$location</small></h3>
             </div>
             <ul class=\"list-unstyled mt-3 mb-4\">
               <li>$offering</li>
