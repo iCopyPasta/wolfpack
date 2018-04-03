@@ -164,7 +164,7 @@
               $answers = "There are no answers!";
             else
             {
-              $answers = array_slice($answers, 0, 2);
+              $answers = $answers;
               $answers = implode("<br>", $answers);
             }
               
@@ -185,6 +185,7 @@
             </div>
             <div class=\"card-body\">
               <h5 class=\"card-title pricing-card-title text-truncate\">$answers</h5>
+              <h5 class=\"card-title pricing-card-title text-truncate\">Correct Answer(s): $correct_answers</h5>
             </div>
             </div>";        
           }                               
@@ -224,45 +225,29 @@
               var name = document.getElementById("description");
               var error = document.getElementById("error");
               //var questions = JSON.stringify(Array.from(activeQuestions));
-              if (name.value === "") {
-                  error.innerHTML = "<p style=\"color:red\">Please provide a name for your question set.</p>";
-              }
-              else { //send the request to the server
-                  console.log(activeQuestions);
 
-                  var send = new Object();
+
+              console.log(activeQuestions);
+
+              for (let question of activeQuestions) {
+                  post('../lib/php/deleteQuestion.php',"question_id= "+question);
+              } 
                   
                   //LOOP THROUGH ACTIVE QUESTIONS AND POST DELETE FOR EACH
                   
-                  post('../lib/php/deleteQuestion.php',send);
-              }
+              
+              
           }
 
 
 
-          function post(path, params, method) { // method: https://stackoverflow.com/questions/133925/javascript-post-request-like-a-form-submit
-              method = method || "post"; // Set method to post by default if not specified.
-
-              // The rest of this code assumes you are not using a library.
-              // It can be made less wordy if you use one.
-              var form = document.createElement("form");
-              form.setAttribute("method", method);
-              form.setAttribute("action", path);
-
-              for(var key in params) {
-                  if(params.hasOwnProperty(key)) {
-                      var hiddenField = document.createElement("input");
-                      hiddenField.setAttribute("type", "hidden");
-                      hiddenField.setAttribute("name", key);
-                      hiddenField.setAttribute("value", params[key]);
-
-                      form.appendChild(hiddenField);
-                  }
-              }
-
-              document.body.appendChild(form);
-              form.submit();
-          } 
+          function post(url,params) {
+               var xhttp = new XMLHttpRequest();
+               
+                xhttp.open("POST", url, true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send(params);
+            } 
         </script> 
     </div>
 
