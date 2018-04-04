@@ -83,9 +83,9 @@
                 AND class_course_section.class_id = teaches.class_id
                 AND teaches.teacher_id = teacher_account.teacher_id";
         $result = $pdo->prepare($sql);
-        $result->bindValue(':firstName', $firstName, PDO::PARAM_STR);
-        $result->bindValue(':lastName', $lastName,PDO::PARAM_STR);
-        $result->bindValue(':title', $title,PDO::PARAM_STR);
+        $result->bindValue(':firstName', '%'.$firstName.'%', PDO::PARAM_STR);
+        $result->bindValue(':lastName', '%'.$lastName.'%', PDO::PARAM_STR);
+        $result->bindValue(':title', '%'.$title.'%', PDO::PARAM_STR);
         
         try {
             $result->execute();
@@ -146,9 +146,9 @@
                 LIMIT $offset, $rowsPerPage";
         
         $result = $pdo->prepare($sql);
-        $result->bindValue(':firstName', $firstName);
-        $result->bindValue(':lastName', $lastName);
-        $result->bindValue(':title', $title);
+        $result->bindValue(':firstName', '%'.$firstName.'%', PDO::PARAM_STR);
+        $result->bindValue(':lastName', '%'.$lastName.'%', PDO::PARAM_STR);
+        $result->bindValue(':title', '%'.$title.'%', PDO::PARAM_STR);
         
         try {
             $result->execute();
