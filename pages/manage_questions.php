@@ -99,8 +99,7 @@
         </div>
     </div>
       
-    <div id="modifyQuestionModal" class="modal">
-        <!-- Modal content -->
+   <!-- <div id="modifyQuestionModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Modify Question</h2>
@@ -108,10 +107,10 @@
             </div>
             
             <div class="modal-body">
-                <?php include("createQuestionFragment.php"); ?>
+                <?php //include("createQuestionFragment.php"); ?>
             </div>
         </div>
-    </div>
+    </div> -->
       
     <script>
         // Get the modal

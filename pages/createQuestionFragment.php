@@ -4,12 +4,12 @@
 
     <form id="question_form">
          <select name="question_type" id="type" name ="question_type" onchange="typeChanged()" required>
-          <option disabled selected value> -- select an option -- </option>
+          <option disabled selected value=' -- select an option -- '> -- select an option -- </option>
           <option value="True/False">True/False</option>
           <option value="Multiple Choice">Multiple Choice</option>
         </select>
         <div class="form-group" id="questionForm">
-        <label for="Question Description">
+        <label  for="Question Description">
           Question Description</label>
         <input type="text" class="form-control" id="description" rows="3" name="description" required>
       </div>
@@ -48,7 +48,10 @@
     }
     
     function resetForm()  {
-        //Add functionality
+        numberOfChoices = 2;
+        document.getElementById('type').value = ' -- select an option -- ';
+        document.getElementById('dynamicArea').innerHTML = "";
+        document.getElementById('description').value = "";
     }
   
     function processForm() {
