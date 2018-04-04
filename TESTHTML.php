@@ -46,11 +46,31 @@
   <?php
       $alertString="";
       if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        include('pages/searchActiveSessionByClassAndStudent_student.php');
+        include('lib/php/updateQuestionSet.php');
+        include('lib/php/deleteQuestionSet.php');
+        include('lib/php/C_ClassCourseSection.php');
+
+//        $question_set = new QuestionSet('%','1','testUpdateQuestionSet');
+//        var_dump($question_set->insert());
+
+        $class = new ClassCourseSection('276', '%', '%', '%', '%');
+//        var_dump($class->insert());
+
+        var_dump($class->update('testClass2', 'testClass2', 'testClass2', 'testClass2'));
 
 
-        $retVal = searchActiveSessionByClassAndStudent('1', '1', '13', '1');
-        var_dump($retVal);
+
+
+
+
+
+
+
+
+
+
+//        $retVal = searchActiveSessionByClassAndStudent('1', '1', '13', '1');
+//        var_dump($retVal);
 
 
 //        // select a course
