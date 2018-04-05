@@ -55,7 +55,6 @@
         $pdo = $connection->getConnection();
         
         $proceed = sanityCheck($inputStudentId, $inputClassId);
-        echo $proceed."\n";
         
         $sql = "DELETE FROM student_is_in
                 WHERE student_is_in.student_id = :inputStudentId AND
