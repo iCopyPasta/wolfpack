@@ -1,31 +1,27 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
 
-public class StudentClassPageTab2Classinfo extends Fragment {
+public class StudentClassPageTab2Classinfo extends Fragment
+{
 
     private static final String TAG = "CPTab1Classinfo";
 
-    //private ListView mListViewClassinfo;
-    //private static String[] classinfoTemp = {"Class ID", "Teacher"};
 
     private TextView mTextViewClassTitleData;
     private TextView mTextViewClassDescData;
     private TextView mTextViewClassOfferingData;
     private TextView mTextViewClassLocationData;
     private TextView mTextViewTeacherNameData;
-
 
 
     @Override
@@ -85,7 +81,16 @@ public class StudentClassPageTab2Classinfo extends Fragment {
             }
         });
         */
-    }
 
+
+        ((Button) getActivity().findViewById(R.id.dropClassButton)).setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                AlertDropDialog alertDialog = new AlertDropDialog();
+                alertDialog.show(getActivity().getFragmentManager(), "Drop Confirmation");
+            }
+        });
+    }
 
 }
