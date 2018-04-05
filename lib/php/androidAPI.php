@@ -40,8 +40,15 @@
         
     }
 
-    //list of all aggregated POST variables for android usage
     $android = true;
+    $BASE_PATH = "http://wolfpack.cs.hbg.psu.edu/";
+    //$BASE_PATH="http://192.168.1.57/";
+    $BASE_PAGES = "pages/";
+    $BASE_LIB = "lib/php/";
+    $BASE_POLLING = "lib/php/polling/";
+    
+    //list of all aggregated POST variables for mobile usage
+    
     $methodName = isset($_POST['inputMethodName']) ? $_POST['inputMethodName'] : null;
 
     //user information
@@ -106,11 +113,9 @@
             
         //add as many necessary method invocations
         case "attemptLoginStudent":
-           
-            
-            $url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_in_student.php";
-            //$url = "http://192.168.1.57/pages/Sign_in_student.php";
-            
+                       
+            $url = $BASE_PATH.$BASE_PAGES."Sign_in_student.php";
+ 
             $fields = build_fields($fields, 
                          array("inputEmail", "inputPassword", "android"),
                         $email,
@@ -125,9 +130,7 @@
             
         case "attemptSignUp":
            
-            $url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_up.php";
-            //$url = "http://wolfpack.cs.hbg.psu.edu/pages/Sign_up_student.php"; <-- anticipatory
-            //$url = "http://192.168.1.57/pages/Sign_up.php";
+            $url = $BASE_PATH.$BASE_PAGES."Sign_up.php";
             
             $fields = build_fields($fields, 
                          array("inputEmail", "inputPassword", "title","inputConfirmPassword","first_name","last_name","android"),
@@ -146,8 +149,7 @@
             break;
             
         case "findClassesToAdd":
-            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchClassesByTitleAndName.php";
-            //$url = "http://192.168.1.57/lib/php/searchClassesByTitleAndName.php";
+            $url = $BASE_PATH.$BASE_LIB."searchClassesByTitleAndName.php";
             
             $fields = build_fields($fields,
                                    array('title', 'firstName','lastName','currentPage','rowsPerPage'),
@@ -165,8 +167,7 @@
             break;
             
         case "enrollForClass":
-            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/enrollForClass.php";
-            //$url = "http://192.168.1.57/lib/php/enrollForClass.php";
+            $url = $BASE_PATH.$BASE_LIB."enrollForClass.php";
             
             $fields = build_fields($fields,
                                    array('inputStudentId', 'inputClassId',"android"),
@@ -180,6 +181,22 @@
             build_curlreq($fields, $postvars, $url);
 
             break;
+            
+        case "dropClass":
+            $url = $BASE_PATH.$BASE_LIB."dropClass.php";
+            
+            $fields = build_fields($fields,
+                                   array('inputStudentId', 'inputClassId',"android"),
+                                   $inputStudentId,
+                                   $inputClassId,
+                                   $android
+                                   );
+            
+            $postvars = http_build_query($fields);
+
+            build_curlreq($fields, $postvars, $url);
+
+            break;    
 
         case "uploadSinglePic":
   
@@ -201,7 +218,7 @@
             break;
 
 	     case "findEnrolledClasses":
-            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/searchClassesForStudent.php";
+            $url = $BASE_PATH.$BASE_LIB."searchClassesForStudent.php";
 	
             $fields = build_fields($fields,
 	                               array("currentPage", "rowsPerPage","inputStudentId","android"),
@@ -225,8 +242,7 @@
             break;
             
         case "searchActiveSession":
-            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/searchActiveSession.php";
-            //$url = "http://192.168.1.57/lib/php/polling/searchActiveSession.php";
+            $url = $BASE_PATH.$BASE_POLLING."searchActiveSession.php";
 	
             $fields = build_fields($fields,
 	                           array("inputClassId","android"),
@@ -239,8 +255,7 @@
             break;
             
         case "searchActiveQuestion":
-            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/searchActiveQuestion.php";
-            //$url = "http://192.168.1.57/lib/php/polling/searchActiveQuestion.php";
+            $url = $BASE_PATH.$BASE_POLLING."searchActiveQuestion.php";
             
             $fields = build_fields($fields, 
                          array("inputQuestionSetId","android"),
@@ -254,8 +269,7 @@
             break;
             
         case "searchLiveQuestionInfo":
-            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/searchLiveQuestionInfo.php";
-            //$url = "http://192.168.1.57/lib/php/polling/searchLiveQuestionInfo.php";
+            $url = $BASE_PATH.$BASE_POLLING."searchLiveQuestionInfo.php";
             
             $fields = build_fields($fields, 
                          array("inputQuestionId","android"),
@@ -269,8 +283,8 @@
             break;
             
         case "validateSameQuestion":
-            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/validateSameQuestion.php";
-            //$url = "http://192.168.1.57/lib/php/polling/validateSameQuestion.php";
+            $url = $BASE_PATH.$BASE_POLLING."validateSameQuestion.php";
+
             $fields = build_fields($fields, 
                          array("inputQuestionSetId",
                                "inputQuestionId",
@@ -291,8 +305,7 @@
             
             
         case "submitAnswer":
-            $url = "http://wolfpack.cs.hbg.psu.edu/lib/php/polling/submitAnswer.php";
-            //$url = "http://192.168.1.57/lib/php/polling/submitAnswer.php";
+            $url = $BASE_PATH.$BASE_POLLING."submitAnswer.php";
             
             $fields = build_fields($fields, 
                          array("inputStudentId",
