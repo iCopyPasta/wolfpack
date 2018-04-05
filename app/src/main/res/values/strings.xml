@@ -143,6 +143,7 @@
     <string name="Teacher_Name">Teacher Name</string>
     <string name="error_authentication_failure">Login failed</string>
     <string name="title_hint">Title</string>
+    <string name="drop_class">DROP CLASS</string>
 
 
 </resources>

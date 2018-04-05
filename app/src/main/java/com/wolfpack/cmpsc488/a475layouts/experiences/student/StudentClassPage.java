@@ -1,7 +1,11 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
+import android.annotation.SuppressLint;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,17 +13,28 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import android.support.design.widget.TabLayout;
+import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.TabAdapter;
+import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
+import com.wolfpack.cmpsc488.a475layouts.services.data_retrieval.BasicWolfpackResponse;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
+
+import java.io.IOException;
+
+import retrofit2.Call;
 //import android.widget.Toolbar;
 
 
 // TODO: pass class name and change toolbar name
 
 
-public class StudentClassPage extends AppCompatActivity implements ActiveSessionDialog.ActiveSessionDialogListener {
+public class StudentClassPage extends AppCompatActivity
+        implements
+        ActiveSessionDialog.ActiveSessionDialogListener,
+        AlertDropDialog.AlertDropDialogListener {
+
 
     public static final String TAG = "StudentClassPage";
 
@@ -93,16 +108,13 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
     protected void onResume() {
         super.onResume();
 
-        // TODO: Check server if there is a question active
-//        if (activeSession) {
-//            DialogFragment dialogFragment = new ActiveSessionDialog();
-//            dialogFragment.show(getFragmentManager(), "SessionActive");
-//        }
-
     }
 
-
-
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        stopService(new Intent(StudentClassPage.this, MyStartedService.class));
+    }
 
     private void setupViewPager(ViewPager viewPager){
         TabAdapter adapter = new TabAdapter(getSupportFragmentManager());
@@ -151,8 +163,68 @@ public class StudentClassPage extends AppCompatActivity implements ActiveSession
     }
 
     @Override
-    public void onNegativeClick(){
-        //Toast.makeText(getApplicationContext(), "Hello from onNegativeClick", Toast.LENGTH_LONG).show();
+    public void onNegativeClick(){}
+
+    @SuppressLint("StaticFieldLeak")
+    @Override
+    public void onDropPositiveClick() {
+        DropBackgroundTask task = new DropBackgroundTask();
+        task.execute();
+
     }
+
+    @Override
+    public void onDropNegativeClick() {}
+
+    public class DropBackgroundTask extends AsyncTask<String, Void, Boolean>{
+
+        String student_id = null;
+        String class_id = null;
+
+        @Override
+        protected void onPreExecute(){
+            //SHARED PREFERENCES UPDATE
+            SharedPreferences sharedPref = getSharedPreferences(
+                    getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+            student_id = sharedPref.getString(getString(R.string.STUDENT_ID),"");
+            class_id = classId;
+        }
+
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+
+            WolfpackClient client = WolfpackClient.retrofit.create(WolfpackClient.class);
+            BasicWolfpackResponse response;
+
+            Call<BasicWolfpackResponse> result = client.dropClass(
+                    student_id,
+                    class_id,
+                    "dropClass");
+
+            try {
+                 response = result.execute().body();
+            } catch (IOException e) {
+                Log.e(TAG, "doInBackground: IOException: " + e.getMessage());
+                return false;
+            } catch(Exception e){
+                Log.e(TAG, "doInBackground: " + e.getMessage());
+                return false;
+            }
+
+            return response != null && response.getStatus() > 0;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean result){
+            if(result){
+                finish();
+            }
+
+
+        }
+    }
+
 
 }

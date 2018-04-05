@@ -110,16 +110,6 @@ public interface WolfpackClient{
 
     @FormUrlEncoded
     @POST(FEED)
-    Call<ResponseBody> testFindClassesToAdd(@Field("inputClassTitle") String title,
-                                            @Field("inputFirstName") String firstName,
-                                            @Field("inputLastName") String lastName,
-                                            @Field("inputCurrentPage") int currentPage,
-                                            @Field("inputRowsPerPage") int rowsPerPage,
-                                            @Field("inputMethodName") String methodName
-    );
-
-    @FormUrlEncoded
-    @POST(FEED)
     Call<ResponseBody> testEnrollInClass(
             @Field("inputStudentId") String student_id,
             @Field("inputClassId") String class_id,
@@ -140,7 +130,6 @@ public interface WolfpackClient{
             @Field("currentPage") int currentPage,
             @Field("rowsPerPage") int rowsPerPage,
             @Field("inputStudentId") String student_id,
-            //@Field("inputUserEmail") String email,
             @Field("inputMethodName") String methodName
     );
 
@@ -152,6 +141,16 @@ public interface WolfpackClient{
             @Field("inputMethodName") String methodName
     );
 
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<BasicWolfpackResponse> dropClass(
+            @Field("inputStudentId") String student_id,
+            @Field("inputClassId") String class_id,
+            @Field("inputMethodName") String methodName
+    );
+
+
+
     // Polling Calls
     @FormUrlEncoded
     @POST(FEED)
@@ -160,12 +159,6 @@ public interface WolfpackClient{
             @Field("inputMethodName") String methodName
     );
 
-    @FormUrlEncoded
-    @POST(FEED)
-    Call<ResponseBody> testActiveSession(
-            @Field("inputClassId") String inputClassId,
-            @Field("inputMethodName") String methodName
-    );
 
     @FormUrlEncoded
     @POST(FEED)
@@ -174,12 +167,6 @@ public interface WolfpackClient{
             @Field("inputMethodName") String methodName
     );
 
-    @FormUrlEncoded
-    @POST(FEED)
-    Call<ResponseBody> testActiveQuestion(
-            @Field("inputQuestionSetId") String  inputQuestionSetId,
-            @Field("inputMethodName") String methodName
-    );
 
     @FormUrlEncoded
     @POST(FEED)
@@ -188,27 +175,10 @@ public interface WolfpackClient{
             @Field("inputMethodName") String methodName
     );
 
-    @FormUrlEncoded
-    @POST(FEED)
-    Call<ResponseBody> testLiveQuestionInfo(
-            @Field("inputQuestionId") String  inputQuestionId,
-            @Field("inputMethodName") String methodName
-    );
 
     @FormUrlEncoded
     @POST(FEED)
     Call<BasicWolfpackResponse> submitAnswer(
-            @Field("inputStudentId") String inputStudentId,
-            @Field("inputSessionId") String  inputSessionId,
-            @Field("inputQuestionHistoryId") String inputQuestionHistoryId,
-            @Field("inputAnswerType") String inputAnswerType,
-            @Field("inputAnswer") String inputAnswer,
-            @Field("inputMethodName") String methodName
-    );
-
-    @FormUrlEncoded
-    @POST(FEED)
-    Call<ResponseBody> testSubmitAnswer(
             @Field("inputStudentId") String inputStudentId,
             @Field("inputSessionId") String  inputSessionId,
             @Field("inputQuestionHistoryId") String inputQuestionHistoryId,
