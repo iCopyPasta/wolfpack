@@ -179,10 +179,10 @@ public class StudentQuestionActivePage extends QuestionPage {
                 "correct answers = " + info.getCorrectAnswers() + "\n");
 
 
-        if (info.getQuestionType().startsWith("True")){
+        if (info.getQuestionType().equals(getString(R.string.QUESTION_TYPE_TRUE_FALSE))){
             handleQuestionTrueFalse(info);
         }
-        else if (info.getQuestionType().startsWith("Multiple")){
+        else if (info.getQuestionType().equals(getString(R.string.QUESTION_TYPE_CHOICE))){
             handleQuestionChoice(info);
         }
 
@@ -358,6 +358,7 @@ public class StudentQuestionActivePage extends QuestionPage {
                         Toast.LENGTH_SHORT).show();
 
                 //TODO: show graphic display of dead values?
+                //Log.d("WHAT THE FUCK!!!!", "starting onQuestionComplete()");
                 onQuestionComplete();
 
                 submitFinalAnswer();
@@ -371,11 +372,14 @@ public class StudentQuestionActivePage extends QuestionPage {
 
 
     public void onQuestionComplete(){
+        Log.d("WHAT THE FUCK!!!!", "in onQuestionComplete");
 
-        if(answerType.startsWith("Multiple")){
+        if(answerType.equals(getString(R.string.QUESTION_TYPE_CHOICE))){
+            //Log.d("WHAT THE FUCK!!!!", "question is a " + getString(R.string.QUESTION_TYPE_CHOICE));
             choiceAdapter.onQuestionCompleted();
         }
-        else if (answerType.startsWith("True")){
+        else if (answerType.equals(getString(R.string.QUESTION_TYPE_TRUE_FALSE))){
+            //Log.d("WHAT THE FUCK!!!!", "question is a " + getString(R.string.QUESTION_TYPE_TRUE_FALSE));
             boolean correctAnswer = Boolean.parseBoolean(questionInformation.getCorrectAnswers());
             RadioButton trueButton= (RadioButton) mRadioGroupTrueFalse.getChildAt(0);
             RadioButton falseButton = (RadioButton) mRadioGroupTrueFalse.getChildAt(1);
