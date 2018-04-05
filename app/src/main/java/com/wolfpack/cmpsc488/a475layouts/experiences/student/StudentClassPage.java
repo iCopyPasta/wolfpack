@@ -108,16 +108,13 @@ public class StudentClassPage extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-        // TODO: Check server if there is a question active
-//        if (activeSession) {
-//            DialogFragment dialogFragment = new ActiveSessionDialog();
-//            dialogFragment.show(getFragmentManager(), "SessionActive");
-//        }
-
     }
 
-
-
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        stopService(new Intent(StudentClassPage.this, MyStartedService.class));
+    }
 
     private void setupViewPager(ViewPager viewPager){
         TabAdapter adapter = new TabAdapter(getSupportFragmentManager());
@@ -171,6 +168,8 @@ public class StudentClassPage extends AppCompatActivity
     @SuppressLint("StaticFieldLeak")
     @Override
     public void onDropPositiveClick() {
+        DropBackgroundTask task = new DropBackgroundTask();
+        task.execute();
 
     }
 
@@ -198,7 +197,7 @@ public class StudentClassPage extends AppCompatActivity
 
             WolfpackClient client = WolfpackClient.retrofit.create(WolfpackClient.class);
             BasicWolfpackResponse response;
-            
+
             Call<BasicWolfpackResponse> result = client.dropClass(
                     student_id,
                     class_id,
