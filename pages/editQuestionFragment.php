@@ -1,4 +1,23 @@
 <!doctype html>
+
+<?php
+
+    include("../lib/php/selectQuestionByQuestionId.php");
+    
+     $retval = selectQuestionByQuestionId($edit_question_id);
+     $retval = json_decode($retval,true);
+    
+     $edit_id = $edit_question_id;
+     $edit_teacher_id = $retval[0]['teacher_id'];
+     $edit_question_type = $retval[0]['question_type'];
+     $edit_description = $retval[0]['description'];
+     $edit_potential_answers = $retval[0]['potential_answers'];
+     $edit_correct_answers = $retval[0]['correct_answers'];
+?>
+
+
+
+
 <html lang="en">
   <div class="modal-body">
 
@@ -13,7 +32,8 @@
           Question Description</label>
         <input type="text" class="form-control" id="description" rows="3" name="description" required>
       </div>
-        <div id="dynamicArea">        
+        <div id="dynamicArea"> 
+            <div id="newChoice"></div>
       </div>
       <button type="button" onclick="processForm()" class="btn btn-primary">Submit</button>
       <button type="button" onclick="resetForm()" class="btn btn-primary">Reset</button>
@@ -22,8 +42,38 @@
 </html>
 
 <script type='text/javascript'>
+    
     var dynamicArea = document.getElementById("dynamicArea");
-    var numberOfChoices = 2;
+    var numberOfChoices = 1;
+    
+    var question_id = <?php echo $edit_id ?>;
+    var teacher_id = <?php echo $edit_teacher_id ?>;
+    var question_type = "<?php echo $edit_question_type ?>";
+    var description = "<?php echo $edit_description ?>";
+    var potential_answers = <?php echo $edit_potential_answers ?>;
+    var correct_answers = <?php echo $edit_correct_answers ?>;
+    
+ 
+    document.getElementById('type').value = question_type;
+
+    document.getElementById('description').value = description;
+    
+    for (i=0; i< potential_answers.length; i++) {
+        if (question_type == "True/False")
+            populateChoice(potential_answers[i],true);
+        else
+            populateChoice(potential_answers[i],false);
+    }
+    
+    var injectAtEnd = "<div class=\"form-group\"><button type=\"button\" class=\"btn btn-success\" onclick=\"addChoice()\">Add new choice</button>        </div>"
+    dynamicArea.insertAdjacentHTML('beforeend',injectAtEnd);
+    
+    for (i=0; i< correct_answers.length; i++) {
+        document.getElementById(correct_answers[i]).checked = true;
+    }
+    
+    
+    
     function typeChanged() {
         
         if(document.getElementById('type').value == "True/False") {
@@ -34,6 +84,20 @@
             //m/c selected
             dynamicArea.innerHTML = "<div class=\"form-group\"><label for=\"Answer 1\">Answer 1</label><input type=\"text\" class=\"form-control\"rows=\"3\" required><input id=\"1\" type=\"checkbox\">This item is a correct answer</div><div id=\"newChoice\"></div><div class=\"form-group\"><button type=\"button\" class=\"btn btn-success\" onclick=\"addChoice()\">Add new choice</button>        </div>";
         }
+    }
+    
+    function populateChoice(value, isTrueFalse) {
+        //append a new textfield to dynamicArea
+      
+        var parent = document.getElementById("newChoice");
+        if (isTrueFalse)
+            var newChild = "<div class=\"form-group\"><label for=\"Answer "+numberOfChoices+"\">Answer "+numberOfChoices+"</label><input type=\"text\" class=\"form-control\"rows=\"3\" value="+value+" required disabled><input id=\""+numberOfChoices+"\" type=\"checkbox\">This item is a correct answer</div>";
+        else
+            var newChild = "<div class=\"form-group\"><label for=\"Answer "+numberOfChoices+"\">Answer "+numberOfChoices+"</label><input type=\"text\" class=\"form-control\"rows=\"3\" value="+value+" required><input id=\""+numberOfChoices+"\" type=\"checkbox\">This item is a correct answer</div>";
+        
+        parent.insertAdjacentHTML('beforeend', newChild);
+        
+        numberOfChoices++;
     }
     
     function addChoice() {
@@ -89,11 +153,13 @@
         var send = new Object();
         send.question_type = type;
         send.description = desc;
-        send.possible_answers = JSON.stringify(possibleAnswers);
+        send.potential_answers = JSON.stringify(possibleAnswers);
         send.correct_answers = JSON.stringify(correctAnswers);
+        send.question_id = question_id;
+        send.teacher_id = teacher_id;
         
         
-        postFrag('../lib/php/createQuestionWeb.php', send);
+        postFrag('../lib/php/updateQuestion.php', send); 
         
     }
     

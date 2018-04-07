@@ -9,6 +9,26 @@
         header("Location: ..\index.php");
         }
 
+ $edit_question_id = "NOT_SET";
+ 
+ if (isset($_GET["question_id"]))
+    $edit_question_id = $_GET["question_id"];   //Get the edit question id
+                                        
+  include("../lib/php/confirmQuestionOwnership.php");
+
+ if ( $edit_question_id != "NOT_SET" && (! confirmQuestionOwnership($edit_question_id,$_SESSION['id'])) )
+     header("Location: manage_questions.php");
+                                        //make sure the teacher owns this question
+     
+     
+     
+     
+     
+                                        //query and find all information about question
+                                        //populate the edit question fields 
+                                        //submit button calls update question with new fields
+
+
 ?>
 
 <!doctype html>
@@ -94,13 +114,15 @@
             </div>
             
             <div class="modal-body">
-                <?php include("createQuestionFragment.php"); ?>
+                <?php 
+                
+                if ($edit_question_id == "NOT_SET")
+                    include("createQuestionFragment.php"); ?>
             </div>
         </div>
     </div>
       
-    <div id="modifyQuestionModal" class="modal">
-        <!-- Modal content -->
+   <div id="modifyQuestionModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Modify Question</h2>
@@ -108,10 +130,12 @@
             </div>
             
             <div class="modal-body">
-                <?php include("createQuestionFragment.php"); ?>
+                <?php
+                if ($edit_question_id != "NOT_SET")
+                    include("editQuestionFragment.php"); ?>
             </div>
         </div>
-    </div>
+    </div> 
       
     <script>
         // Get the modal
@@ -137,6 +161,39 @@
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
+            }
+        }
+        
+        var question_id_php = "<?php echo $edit_question_id; ?>";
+        var editMode = false;
+        if (question_id_php != "NOT_SET")
+            editMode = true;
+        
+        // Get the modal
+        var modalEdit = document.getElementById('modifyQuestionModal');
+
+
+        // Get the <span> element that closes the modal
+        var spanEdit = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal 
+        if (editMode) {
+            modalEdit.style.display = "block";
+        }
+        else
+            modalEdit.style.display = "none";
+
+        // When the user clicks on <span> (x), close the modal
+        spanEdit.onclick = function() {
+            modalEdit.style.display = "none";
+            window.location = "manage_questions.php";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modalEdit) {
+                modalEdit.style.display = "none";
+                window.location = "manage_questions.php";
             }
         }
     </script>
@@ -178,9 +235,9 @@
 
             echo "<div class=\" clickBox card bg-secondary text-white mb-3\" id=\"$question_id\" onclick=\"toggleActive($question_id)\"> 
             <div class=\"card-header\">
-              <button type=\"button\" class=\"btn btn-warning btn-sm float-right\" onclick=\"toggleActive($question_id);editQuestion($question_id)\">
-                <span class=\"fas fa-pencil-alt\"></span>
-              </button>
+              <a  href=\"manage_questions.php?question_id=$question_id\"> <button style=\"text-decoration: none\" type=\"button\" class=\"btn btn-warning btn-sm float-right\" \">
+                <span style= \"color:black\" class=\"fas fa-pencil-alt\"></span>
+              </button></a>
               <h4 class=\"my-0 font-weight-normal text-truncate\">$description</h4>
             </div>
             <div class=\"card-body\">

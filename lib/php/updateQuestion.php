@@ -51,5 +51,6 @@
   if(empty($new_potential_answers)) $new_potential_answers = $old_potential_answers;
   if(empty($new_correct_answers)) $new_correct_answers = $old_correct_answers;
 
-  return $question->update($new_teacher_id, $new_description, $new_question_type, $new_potential_answers, $new_correct_answers);
+  $question->update($new_teacher_id, $new_description, $new_question_type, $new_potential_answers, $new_correct_answers);
+  header("Location: ..\..\pages\manage_questions.php");
 ?>
