@@ -68,14 +68,25 @@
   $selectPotentialAnswers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   // get the count of potential_answers
-  $countPotentialAnswers = count(json_decode($selectPotentialAnswers[0]['potential_answers']));
+  if (empty($selectPotentialAnswers) ) {
+      $countPotentialAnswers = 0;
+      error_log("setting countPotentialAnswers to 0, no answers found.");
+  }
+  else
+      $countPotentialAnswers = count(json_decode($selectPotentialAnswers[0]['potential_answers']));
 
   // fail if count == 0; there are no potential_answers
   if($countPotentialAnswers == 0) {
     $response = array();
-    $response["message"] = "ERROR count of potential answers cannot be 0";
-    $response["success"] = 0;
-    return json_encode($response);
+    $response["message"] = "Success calculating live statistics";
+    $response["success"] = 1;
+    
+    $retVal = "No submissions detected.";
+    $retVal = array($retVal);
+    array_unshift($retVal, $response);
+  
+    echo json_encode($retVal);
+    return json_encode($retVal);
   }
 
   //initialize retVal array to 0
@@ -104,6 +115,7 @@
   $retVal = array($retVal);
   array_unshift($retVal, $response);
 
+  echo $retVal;
   return $retVal;
 
 ?>

@@ -130,6 +130,22 @@
         ?>
 
       </div>
+        
+        </div>
+      
+      <div class="container">
+      
+      <div id="LiveStatsWidget"class="px-3 py-3 pt-md-1 pb-md-4 mx-auto text-center" style="display:none">
+      <h1 class="display-4">Live Stats</h1>
+    </div>
+      <div id="LiveStatsZone">LIVE STATS GO HERE</div>
+      
+      
+      </div>
+      <?php
+
+        include("../lib/php/footer.php");
+    ?>
       
       <script>
           
@@ -270,9 +286,13 @@
             post('../lib/php/toggleActiveQuestionWeb.php',params); 
                
             activeQuestionId = buttonId;
+            document.getElementById("LiveStatsWidget").style.display = "block";
+            document.getElementById('LiveStatsWidget').scrollIntoView();
+            document.getElementById("LiveStatsZone").style.display = "block";
+            liveStats();
         }  
           
-          function stopPoll(buttonId)
+    function stopPoll(buttonId)
         { //question
               
             if (activeQuestionId != null)
@@ -308,15 +328,54 @@
                 post('../lib/php/toggleActiveQuestionWeb.php',params); 
 
                 activeQuestionId = null;
+                document.getElementById("LiveStatsWidget").style.display = "none";
+                //document.getElementById("LiveStatsZone").innerHTML = "";
+                //document.getElementById("LiveStatsZone").style.display = "none";
             }  
-          }          
+          }
+          
+          
+          
+        function liveStats(fn = shouldContinue, interval=5000) { //TODO: change these default values
+            console.log("liveStats called.");
+            interval = interval || 1000,
+            canPoll = true;
+
+            (function p() {
+                console.log("function iteration.");
+                if (fn())  { // ensures the function exucutes
+                    setTimeout(p, interval);
+                }
+            })();
+        }
+          
+          
+       function shouldContinue() {
+           console.log("shouldContinue called.");
+            if (activeQuestionId == null) {
+                // no need to execute further
+                return false;
+            }
+           
+            var params = "session_id="+questionSessionID+"&question_history_id="+currentQuestionHistoryID;  //create the session object
+            var liveResults;
+            liveResults = JSON.parse(postSync('../lib/php/liveStatistics.php',params));
+           
+            document.getElementById("LiveStatsZone").innerHTML = "Here are the stats: " + liveResults[1];
+           console.log("LiveStatsZone changed to: "+ document.getElementById("LiveStatsZone").innerHTML );
+            
+           return true;
+       }
+          
+          
+          
         
         //clear the database if the user closes the page without closing session first
         window.onbeforeunload = function()
         { 
             if (isPollActive == 1)
             {
-                if (!confirm("Are you sure you wish to leave the page? You have an active poll running."))
+                if (!confirm("Are you sure you wish to leave the page? You have an active poll running.")) //this is bugged
                 {
                     return false;
                 }
@@ -333,11 +392,9 @@
             
         </script>
 
-      <?php
-
-        include("../lib/php/footer.php");
-    ?>
-    </div>
+      
+    
+      
 
 
     <!-- Bootstrap core JavaScript
