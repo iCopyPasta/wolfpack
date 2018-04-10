@@ -311,30 +311,6 @@ public class StudentQuestionActivePage extends QuestionPage {
 
                     Log.i(TAG, "onReceive: android sees same exact question ");
 
-                    String newQuestionId =
-                            info.getString(MyStartedService.MY_SERVICE_QUESTION_ID);
-                    String newQuestionSessionId =
-                            info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
-                    String newQuestionHistoryId =
-                            info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID);
-                    String newQuestionSetId =
-                            info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID);
-
-                    //we have a new question
-                    if(!questionInformation.getQuestionId().equals(newQuestionId) ||
-                            !questionHistoryId.equals(newQuestionHistoryId)
-                            ){
-
-                        //we have a new question!
-                        Toast.makeText(StudentQuestionActivePage.this,
-                                "NEW QUESTION",
-                                Toast.LENGTH_SHORT).show();
-
-                        //TODO: quesiton has ended, BUT new question is already available
-                        submitFinalAnswer();
-
-                    }
-
                     submitPeriodicAnswer();
                     Log.i(TAG, "onReceive: ");
                 }
@@ -394,6 +370,9 @@ public class StudentQuestionActivePage extends QuestionPage {
 
 
         }
+
+        //TODO: add new script call to ensure we can fetch a new question
+        //TODO: display dialog to confirm that we can join a new question from this page
 
 
 
@@ -514,7 +493,7 @@ public class StudentQuestionActivePage extends QuestionPage {
 
     private void submitFinalAnswer(){
         Log.i(TAG, "submitFinalAnswer");
-        //TODO: TEST FINAL ANSWER SUBMISSION
+
         submittedFinalAnswer = true;
         //TODO: create JSON string from user answers
         if(answer == null || answer.equals(""))
@@ -536,8 +515,6 @@ public class StudentQuestionActivePage extends QuestionPage {
 
     private void submitPeriodicAnswer(){
         Log.i(TAG, "submitPeriodicAnswer");
-
-        //TODO: TEST PERIODIC ANSWER SUBMISSION
 
         //TODO: create JSON string from user answers
         if(answer == null || answer.equals(""))
