@@ -138,7 +138,7 @@
       <div id="LiveStatsWidget"class="px-3 py-3 pt-md-1 pb-md-4 mx-auto text-center" style="display:none">
       <h1 class="display-4">Live Stats</h1>
     </div>
-      <div id="LiveStatsZone">LIVE STATS GO HERE</div>
+      <div id="LiveStatsZone"></div>
       
       
       </div>
@@ -329,8 +329,8 @@
 
                 activeQuestionId = null;
                 document.getElementById("LiveStatsWidget").style.display = "none";
-                //document.getElementById("LiveStatsZone").innerHTML = "";
-                //document.getElementById("LiveStatsZone").style.display = "none";
+                document.getElementById("LiveStatsZone").innerHTML = "";
+                document.getElementById("LiveStatsZone").style.display = "none";
             }  
           }
           
