@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveCombinationResults;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
 
 import java.lang.reflect.Type;
@@ -149,6 +150,32 @@ public class StudentQuestionActivePage extends QuestionPage {
                     finish();
                 }
 
+
+            }
+
+        }
+    };
+
+    private BroadcastReceiver combinationQuery = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle info = intent.getExtras();
+            Log.i(TAG, "onReceive: combinationQuery" );
+
+            if(info != null){
+                String newQuestionId =
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_ID, "");
+                String newQuestionSessionId =
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, "");
+                String newQuestionHistoryId =
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, "");
+                String newQuestionSetId =
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, "");
+
+                Log.i(TAG, "onReceive: questionId: " + newQuestionId);
+                Log.i(TAG, "onReceive: newQuestionSessionId " + newQuestionSessionId);
+                Log.i(TAG, "onReceive: newQuestionHistoryId " + newQuestionHistoryId);
+                Log.i(TAG, "onReceive: newQuestionSetId " + newQuestionSetId);
 
             }
 
@@ -330,7 +357,7 @@ public class StudentQuestionActivePage extends QuestionPage {
 
                 //we have a new question!
                 Toast.makeText(StudentQuestionActivePage.this,
-                        "LE NEW Q OR SESSION",
+                        "Question Over",
                         Toast.LENGTH_SHORT).show();
 
                 //TODO: show graphic display of dead values?
@@ -347,6 +374,7 @@ public class StudentQuestionActivePage extends QuestionPage {
 
 
     public void onQuestionComplete(){
+        Log.i(TAG, "onQuestionComplete: ON QUESTION COMPLETED");
 
         if(answerType.startsWith("Multiple")){
             choiceAdapter.onQuestionCompleted();
@@ -371,14 +399,7 @@ public class StudentQuestionActivePage extends QuestionPage {
 
         }
 
-        //TODO: add new script call to ensure we can fetch a new question
-        //TODO: display dialog to confirm that we can join a new question from this page
-
-
-
     }
-
-
 
 
 
@@ -470,6 +491,11 @@ public class StudentQuestionActivePage extends QuestionPage {
                 .registerReceiver(submitAnswerReceiver, new IntentFilter(
                         MyStartedService.MY_SERVICE_SUBMIT_ANSWER));
 
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .registerReceiver(combinationQuery, new IntentFilter(
+                        MyStartedService.MY_SERVICE_VALIDATE_COMBO));
+
     }
 
     @Override
@@ -489,6 +515,10 @@ public class StudentQuestionActivePage extends QuestionPage {
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .unregisterReceiver(questionInfoReceiver);
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .unregisterReceiver(combinationQuery);
     }
 
     private void submitFinalAnswer(){
@@ -509,6 +539,9 @@ public class StudentQuestionActivePage extends QuestionPage {
                 answer,
                 "true"
         );
+
+        //TODO: display dialog to confirm that we can join a new question from this page
+        mService.searchActiveSandQ(classId, questionSetId, "false");
 
     }
 
