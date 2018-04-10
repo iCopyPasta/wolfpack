@@ -177,6 +177,21 @@ public class StudentQuestionActivePage extends QuestionPage {
                 Log.i(TAG, "onReceive: newQuestionHistoryId " + newQuestionHistoryId);
                 Log.i(TAG, "onReceive: newQuestionSetId " + newQuestionSetId);
 
+
+                if(!newQuestionSessionId.equals(questionSessionId)){
+                    //TODO: put 'your session has expired' dialog alert
+                    Toast.makeText(getApplicationContext(),"New Session",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                else if(!newQuestionId.equals("") &&
+                        !newQuestionId.equals(questionId)){
+                    //TODO: put 'new question, Join?' dialog alert
+                    Toast.makeText(getApplicationContext(),"New Question",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else
+                    mService.searchActiveSandQ(classId, questionSetId, "false");
             }
 
         }
@@ -401,8 +416,6 @@ public class StudentQuestionActivePage extends QuestionPage {
 
     }
 
-
-
     private BroadcastReceiver submitAnswerReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -424,6 +437,11 @@ public class StudentQuestionActivePage extends QuestionPage {
             else{
                 Log.i(TAG, "onReceive: " + "our question was not uploaded");
 
+            }
+
+            if(submittedFinalAnswer){
+                //TODO: display dialog to confirm that we can join a new question from this page
+                mService.searchActiveSandQ(classId, questionSetId, "false");
             }
         }
     };
@@ -540,8 +558,7 @@ public class StudentQuestionActivePage extends QuestionPage {
                 "true"
         );
 
-        //TODO: display dialog to confirm that we can join a new question from this page
-        mService.searchActiveSandQ(classId, questionSetId, "false");
+
 
     }
 

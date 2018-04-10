@@ -312,7 +312,7 @@ public class MyStartedService extends Service {
 
                     case "searchActiveSessionAndQuestion":{
                         if(!params[3].equals("true")){
-                            Log.i(TAG, "doInBackground: sleeping in validateSameQuestion");
+                            Log.i(TAG, "doInBackground: sleeping in searchActiveSessionAndQuestion");
                             Thread.sleep(2000);
                         }
                         id = 6;
