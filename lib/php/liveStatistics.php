@@ -116,6 +116,6 @@
   array_unshift($retVal, $response);
 
   echo $retVal;
-  return $retVal;
+  return json_encode($retVal);
 
 ?>
