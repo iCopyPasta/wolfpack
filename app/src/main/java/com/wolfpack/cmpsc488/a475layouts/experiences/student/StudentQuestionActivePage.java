@@ -204,8 +204,9 @@ public class StudentQuestionActivePage extends QuestionPage {
     private RecyclerView.LayoutManager recyclerLayoutManager;
     private AnswerChoiceRecyclerAdapter choiceAdapter;
 
-    private Boolean[] studentAnswersChoice = null;
-    private Boolean studentAnswersTrueFalse = null;
+    //private boolean[] studentAnswersChoice = null;
+    //private boolean[] studentAnswersTrueFalse = null;
+    private boolean[] studentAnswers = null;
 
     protected void handleActiveQuestion(QuestionInformation info){
 
@@ -260,7 +261,7 @@ public class StudentQuestionActivePage extends QuestionPage {
             correctAnswers.add(Integer.parseInt(s) - 1);
         }
 
-        studentAnswersChoice = new Boolean[answerList.size()];
+        studentAnswers = new boolean[answerList.size()];
 
 
         Log.i("handleActiveQuestion", "teacher id = " + info.getTeacherId() + "\n" +
@@ -284,8 +285,8 @@ public class StudentQuestionActivePage extends QuestionPage {
         choiceAdapter.setItemChoiceClickListener(new ItemChoiceClickListener() {
             @Override
             public void onClick(View view, int position) {
-                studentAnswersChoice[position] = (studentAnswersChoice[position] == null) || !studentAnswersChoice[position];
-                Toast.makeText(view.getContext(), "Choose answer (" + position + "): " + studentAnswersChoice[position], Toast.LENGTH_SHORT).show();
+                studentAnswers[position] = !studentAnswers[position];
+                Toast.makeText(view.getContext(), "Choose answer (" + position + "): " + studentAnswers[position], Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -296,6 +297,8 @@ public class StudentQuestionActivePage extends QuestionPage {
 
 
     protected void handleQuestionTrueFalse(QuestionInformation info) {
+        studentAnswers = new boolean[]{false, false};
+
         mRadioGroupTrueFalse.setVisibility(View.VISIBLE);
 
         RadioButton trueButton= (RadioButton) mRadioGroupTrueFalse.getChildAt(0);
@@ -307,7 +310,8 @@ public class StudentQuestionActivePage extends QuestionPage {
         trueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                studentAnswersTrueFalse = true;
+                studentAnswers[0] = true;
+                studentAnswers[1] = false;
                 //Toast.makeText(getApplicationContext(), "Choice: " + studentAnswersTrueFalse, Toast.LENGTH_SHORT).show();
             }
         });
@@ -315,7 +319,8 @@ public class StudentQuestionActivePage extends QuestionPage {
         falseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                studentAnswersTrueFalse = false;
+                studentAnswers[0] = false;
+                studentAnswers[1] = true;
                 //Toast.makeText(getApplicationContext(), "Choice: " + studentAnswersTrueFalse, Toast.LENGTH_SHORT).show();
             }
         });
@@ -543,11 +548,25 @@ public class StudentQuestionActivePage extends QuestionPage {
         Log.i(TAG, "submitFinalAnswer");
 
         submittedFinalAnswer = true;
-        //TODO: create JSON string from user answers
+
         if(answer == null || answer.equals(""))
         {
-            answer = "[\"0\"]"; //no answer was provided
+            //answer = "[\"0\"]"; //no answer was provided
+            StringBuilder sb = new StringBuilder();
+            sb.append("[");
+            for (int i = 0; i < studentAnswers.length; i++){
+                sb.append("\"");
+                if(studentAnswers[i])
+                  sb.append(i);
+                //sb.append(studentAnswers[i] ? 1 : 0);
+                sb.append("\"");
+                if (i + 1 != studentAnswers.length)
+                    sb.append(",");
+            }
+            sb.append("]");
+            answer = sb.toString();
         }
+
 
         mService.submitAnswer(
                 studentId,
@@ -566,9 +585,21 @@ public class StudentQuestionActivePage extends QuestionPage {
     private void submitPeriodicAnswer(){
         Log.i(TAG, "submitPeriodicAnswer");
 
-        //TODO: create JSON string from user answers
         if(answer == null || answer.equals(""))
-            answer = "[]"; //no answer was provided
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.append("[");
+            for (int i = 0; i < studentAnswers.length; i++){
+                sb.append("\"");
+                sb.append(studentAnswers[i] ? 1 : 0);
+                sb.append("\"");
+                if (i + 1 != studentAnswers.length)
+                    sb.append(",");
+            }
+            sb.append("]");
+            answer = sb.toString();
+        }
+
 
         mService.submitAnswer(
                 studentId,
@@ -578,8 +609,6 @@ public class StudentQuestionActivePage extends QuestionPage {
                 answer,
                 "false"
         );
-
-        answer = null;
 
     }
 
