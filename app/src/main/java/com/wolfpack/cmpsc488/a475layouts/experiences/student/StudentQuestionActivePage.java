@@ -225,10 +225,10 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
                 "correct answers = " + info.getCorrectAnswers() + "\n");
 
 
-        if (info.getQuestionType().startsWith("True")){
+        if (info.getQuestionType().equals(getString(R.string.QUESTION_TYPE_TRUE_FALSE))){
             handleQuestionTrueFalse(info);
         }
-        else if (info.getQuestionType().startsWith("Multiple")){
+        else if (info.getQuestionType().equals(getString(R.string.QUESTION_TYPE_CHOICE))){
             handleQuestionChoice(info);
         }
 
@@ -356,6 +356,7 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
                         Toast.LENGTH_SHORT).show();
 
                 //TODO: show graphic display of dead values?
+                //Log.d("WHAT THE FUCK!!!!", "starting onQuestionComplete()");
                 onQuestionComplete();
 
                 submitFinalAnswer();
@@ -369,12 +370,16 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
 
 
     public void onQuestionComplete(){
+      
         Log.i(TAG, "onQuestionComplete: ON QUESTION COMPLETED");
 
-        if(answerType.startsWith("Multiple")){
+
+        if(answerType.equals(getString(R.string.QUESTION_TYPE_CHOICE))){
+            //Log.d("WHAT THE FUCK!!!!", "question is a " + getString(R.string.QUESTION_TYPE_CHOICE));
             choiceAdapter.onQuestionCompleted();
         }
-        else if (answerType.startsWith("True")){
+        else if (answerType.equals(getString(R.string.QUESTION_TYPE_TRUE_FALSE))){
+            //Log.d("WHAT THE FUCK!!!!", "question is a " + getString(R.string.QUESTION_TYPE_TRUE_FALSE));
             boolean correctAnswer = Boolean.parseBoolean(questionInformation.getCorrectAnswers());
             RadioButton trueButton= (RadioButton) mRadioGroupTrueFalse.getChildAt(0);
             RadioButton falseButton = (RadioButton) mRadioGroupTrueFalse.getChildAt(1);
@@ -383,12 +388,12 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
             falseButton.setClickable(false);
 
             if (correctAnswer){
-                trueButton.setBackgroundColor(getResources().getColor(R.color.colorCorrectAnswer));
-                falseButton.setBackgroundColor(getResources().getColor(R.color.colorWrongAnswer));
+                trueButton.setTextColor(getResources().getColor(R.color.colorCorrectAnswer));
+                falseButton.setTextColor(getResources().getColor(R.color.colorWrongAnswer));
             }
             else {
-                trueButton.setBackgroundColor(getResources().getColor(R.color.colorWrongAnswer));
-                falseButton.setBackgroundColor(getResources().getColor(R.color.colorCorrectAnswer));
+                trueButton.setTextColor(getResources().getColor(R.color.colorWrongAnswer));
+                falseButton.setTextColor(getResources().getColor(R.color.colorCorrectAnswer));
             }
 
 
