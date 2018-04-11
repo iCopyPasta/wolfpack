@@ -303,6 +303,23 @@
             
             break;
             
+        case "searchActiveSessionAndQuestion":
+            $url = $BASE_PATH.$BASE_POLLING."searchActiveSessionAndQuestion.php";
+
+            $fields = build_fields($fields, 
+                         array("inputQuestionSetId",
+                               "inputClassId",
+                               "android"),
+                        $inputQuestionSetId,
+                        $inputClassId,
+                        $android); 
+            
+            $postvars = http_build_query($fields);
+
+            build_curlreq($fields, $postvars, $url);
+            
+            break;
+            
             
         case "submitAnswer":
             $url = $BASE_PATH.$BASE_POLLING."submitAnswer.php";
