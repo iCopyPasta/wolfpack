@@ -98,7 +98,7 @@ public class StudentQuestionActivePage extends QuestionPage {
                             MyStartedService.MY_SERVICE_QUESTION_INFO_JSON,""
                     );
 
-                    Log.i(TAG, "OUR QUESTION JSON: " + questionStringJSON);
+                    //Log.i(TAG, "OUR QUESTION JSON: " + questionStringJSON);
 
                     //make our object when we receive a question
                     questionInformation = gson.fromJson(questionStringJSON,
@@ -149,8 +149,6 @@ public class StudentQuestionActivePage extends QuestionPage {
 
                     finish();
                 }
-
-
             }
 
         }
@@ -177,7 +175,6 @@ public class StudentQuestionActivePage extends QuestionPage {
                 Log.i(TAG, "onReceive: newQuestionHistoryId " + newQuestionHistoryId);
                 Log.i(TAG, "onReceive: newQuestionSetId " + newQuestionSetId);
 
-
                 if(!newQuestionSessionId.equals(questionSessionId)){
                     //TODO: put 'your session has expired' dialog alert
                     Toast.makeText(getApplicationContext(),"New Session",
@@ -196,16 +193,10 @@ public class StudentQuestionActivePage extends QuestionPage {
 
         }
     };
-
-
-
-
-
+    
     private RecyclerView.LayoutManager recyclerLayoutManager;
     private AnswerChoiceRecyclerAdapter choiceAdapter;
 
-    //private boolean[] studentAnswersChoice = null;
-    //private boolean[] studentAnswersTrueFalse = null;
     private boolean[] studentAnswers = null;
 
     protected void handleActiveQuestion(QuestionInformation info){
@@ -235,20 +226,8 @@ public class StudentQuestionActivePage extends QuestionPage {
     protected void handleQuestionChoice(QuestionInformation info){
         mRecyclerViewChoice.setVisibility(View.VISIBLE);
 
-        //ArrayList<String> answerList = info.getStringArrayList("answerList");
-        //ArrayList<Integer> correctAnswers = info.getIntegerArrayList("correctAnswers");
-        //ArrayList<Integer> studentAnswers = info.getIntegerArrayList("studentAnswers");
-
-        //ArrayList<String> answerList = new ArrayList<>();
         ArrayList<Integer> correctAnswers = new ArrayList<>();
 
-//        Matcher matcher = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(info.getPotentialAnswers());
-//        while(matcher.find())
-//            answerList.add(matcher.group(1));
-//
-//        matcher = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(info.getPotentialAnswers());
-//        while(matcher.find())
-//            correctAnswers.add(Integer.parseInt(matcher.group(1)));
 
         String answerString = info.getPotentialAnswers();
         answerString = answerString.substring(2, answerString.length() - 2);
@@ -326,21 +305,6 @@ public class StudentQuestionActivePage extends QuestionPage {
         });
 
     }
-
-
-//    public void onTrueFalseButtonClicked(View view){
-//        switch(view.getId()){
-//            case R.id.answerTrue:
-//                studentAnswersTrueFalse = true;
-//                break;
-//            case R.id.answerFalse:
-//                studentAnswersTrueFalse = false;
-//                break;
-//            default:
-//                throw new RuntimeException("True or False not picked somehow");
-//        }
-//    }
-
 
 
     //receiver for validating the active question
