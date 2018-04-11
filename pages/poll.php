@@ -29,13 +29,14 @@
 
     <title>Polling</title>
 
+    <!-- Font Awesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="..\css\special\modalcss.css" media="screen" />  
-    <!-- Font Awesome -->
-    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="..\css\common\custom.css">
     <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="..\css\common\custom.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
     <style>
     html {
   font-size: 14px;
@@ -134,18 +135,16 @@
         </div>
       
       <div class="container">
-      
-      <div id="LiveStatsWidget"class="px-3 py-3 pt-md-1 pb-md-4 mx-auto text-center" style="display:none">
-      <h1 class="display-4">Live Stats</h1>
-    </div>
-      <div id="LiveStatsZone"></div>
-      
-      
+        <div id="LiveStatsWidget"class="px-3 py-3 pt-md-1 pb-md-4 mx-auto text-center" style="display:none">
+            <h1 class="display-4">Live Stats</h1>
+        </div>
+          
+        <div id="LiveStatsZone"></div>
       </div>
       <?php
 
         include("../lib/php/footer.php");
-    ?>
+        ?>
       
       <script>
           
@@ -154,7 +153,7 @@
           var questionSessionID;
           var currentQuestionHistoryID;
           
-          
+        
           function postSync(url,params) {
                var xhttp = new XMLHttpRequest();
                xhttp.onreadystatechange = function() {
@@ -284,6 +283,9 @@
             params = "question_id="+question_id+"&question_set_id="+question_set_id+"&activity="+activity+"&question_history_id="+currentQuestionHistoryID;
             console.log(params);
             post('../lib/php/toggleActiveQuestionWeb.php',params); 
+            
+            //Refresh the LiveStatsCanvas from previous questions
+            document.getElementById("LiveStatsZone").innerHTML = "";
                
             activeQuestionId = buttonId;
             document.getElementById("LiveStatsWidget").style.display = "block";
@@ -329,8 +331,6 @@
 
                 activeQuestionId = null;
                 document.getElementById("LiveStatsWidget").style.display = "none";
-                document.getElementById("LiveStatsZone").innerHTML = "";
-                document.getElementById("LiveStatsZone").style.display = "none";
             }  
           }
           
@@ -361,13 +361,70 @@
             var liveResults;
             liveResults = JSON.parse(postSync('../lib/php/liveStatistics.php',params));
            
-            document.getElementById("LiveStatsZone").innerHTML = "Here are the stats: " + liveResults[1];
-           console.log("LiveStatsZone changed to: "+ document.getElementById("LiveStatsZone").innerHTML );
+           
+            /*if(typeof liveResults[1] === 'string')
+            {
+                //Wait for answers
+            }
+            else
+            {*/
+                manageBarChart(liveResults[1]);
+            //}
+
+            
+            console.log("LiveStatsZone changed to: "+ document.getElementById("LiveStatsZone").innerHTML);
             
            return true;
        }
+        
+            function manageBarChart(questionData)
+            {
+                console.log("manageBarChart called.");
+                var liveStatsChart;
+                
+                if(document.getElementById('LiveStatsCanvas')) //There is a chart already there.
+                {
+                    console.log("updateBarChart called.");
+                    newData = [0, 0, 0, 0, 0, 0, 0];
+                    liveStatsChart.data.datasets.forEach((dataset) => {
+                        dataset.data.push(newData);
+                    });
+                    liveStatsChart.update();
+                }
+                else    //Must create a new chart
+                {
+                    document.getElementById('LiveStatsZone').innerHTML="<canvas id=\"LiveStatsCanvas\"></canvas>";
+                    var myChart = document.getElementById('LiveStatsCanvas').getContext('2d');
+
+                    var liveStatsChart = new Chart(myChart, {
+                        //Type of Chart
+                        type:'horizontalBar',
+
+                        //Data for the chart
+                        data: {
+                            labels: ["1", "2", "3", "4", "5", "6", "7"],
+                            datasets: [{
+                                label:"Answers",
+                                backgroundColor: 'rgb(255, 99, 132)',
+                                borderColor: 'rgb(255, 99, 132)',
+                                data: [0, 10, 5, 2, 20, 30, 45],
+                            }]
+                        },
+
+                        //Config options
+                        options:{
+                            legend:{
+                                display: false
+                            }
+                        }
+                    });
+                }
+            }
           
-          
+            function updateChart(data)
+            {
+
+            }
           
         
         //clear the database if the user closes the page without closing session first
