@@ -445,7 +445,6 @@ public class StudentQuestionActivePage extends QuestionPage {
             }
 
             if(submittedFinalAnswer){
-                //TODO: display dialog to confirm that we can join a new question from this page
                 mService.searchActiveSandQ(classId, questionSetId, "false");
             }
         }
@@ -544,24 +543,32 @@ public class StudentQuestionActivePage extends QuestionPage {
                 .unregisterReceiver(combinationQuery);
     }
 
-    private void submitFinalAnswer(){
+    private synchronized void submitFinalAnswer(){
         Log.i(TAG, "submitFinalAnswer");
 
         submittedFinalAnswer = true;
+        int count = 0;
 
         if(answer == null || answer.equals(""))
         {
-            //answer = "[\"0\"]"; //no answer was provided
+            for(boolean el: studentAnswers){
+                if(el)
+                    count++;
+            }
+
             StringBuilder sb = new StringBuilder();
             sb.append("[");
+            Log.i(TAG, "submitPeriodicAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
             for (int i = 0; i < studentAnswers.length; i++){
-                sb.append("\"");
-                if(studentAnswers[i])
-                  sb.append(i);
-                //sb.append(studentAnswers[i] ? 1 : 0);
-                sb.append("\"");
-                if (i + 1 != studentAnswers.length)
-                    sb.append(",");
+                if(studentAnswers[i]){
+                    sb.append("\"");
+                    sb.append(i);
+                    sb.append("\"");
+                    if (count > 1){
+                        sb.append(",");
+                        count--;
+                    }
+                }
             }
             sb.append("]");
             answer = sb.toString();
@@ -576,25 +583,36 @@ public class StudentQuestionActivePage extends QuestionPage {
                 answer,
                 "true"
         );
+        Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
 
-
-
+        answer = null;
     }
 
 
-    private void submitPeriodicAnswer(){
+    private synchronized void submitPeriodicAnswer(){
         Log.i(TAG, "submitPeriodicAnswer");
 
+        int count = 0;
         if(answer == null || answer.equals(""))
         {
+            for(boolean el: studentAnswers){
+                if(el)
+                    count++;
+            }
+
             StringBuilder sb = new StringBuilder();
             sb.append("[");
+            Log.i(TAG, "submitPeriodicAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
             for (int i = 0; i < studentAnswers.length; i++){
-                sb.append("\"");
-                sb.append(studentAnswers[i] ? 1 : 0);
-                sb.append("\"");
-                if (i + 1 != studentAnswers.length)
-                    sb.append(",");
+                if(studentAnswers[i]){
+                    sb.append("\"");
+                    sb.append(i);
+                    sb.append("\"");
+                    if (count > 1){
+                        sb.append(",");
+                        count--;
+                    }
+                }
             }
             sb.append("]");
             answer = sb.toString();
@@ -609,6 +627,9 @@ public class StudentQuestionActivePage extends QuestionPage {
                 answer,
                 "false"
         );
+        Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
+
+        answer = null;
 
     }
 
