@@ -1,5 +1,6 @@
 package com.wolfpack.cmpsc488.a475layouts.services.pollingsession;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -11,6 +12,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
 import com.wolfpack.cmpsc488.a475layouts.services.data_retrieval.BasicWolfpackResponse;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveCombinationResults;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveQuestionInfo;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveSessionInfo;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.PollingResults;
@@ -43,6 +45,7 @@ public class MyStartedService extends Service {
     public static final String MY_SERVICE_ANSWER_MESSAGE = "MY_SERVICE_ANSWER_MESSAGE";
     public static final String MY_SERVICE_QUESTION_SET_NAME = "MY_SERVICE_QUESTION_SET_NAME";
     public static final String MY_SERVICE_VALIDATE_ANSWER = "MY_SERVICE_VALIDATE_ANSWER";
+    public static final String MY_SERVICE_VALIDATE_COMBO = "MY_SERVICE_VALIDATE_COMBO";
 
     public synchronized boolean isRunning() {
         return isRunning;
@@ -142,6 +145,19 @@ public class MyStartedService extends Service {
         }
     }
 
+    public synchronized void searchActiveSandQ(String inputClassId,
+                                                            String inputQuestionSetId,
+                                                            String firstTime){
+        Log.i(TAG, "searchActiveSandQ: checking if running: " + isRunning());
+        if(!isRunning()){
+            ourTask = new ServiceJobAsyncTask();
+            ourTask.execute("searchActiveSessionAndQuestion",
+                    inputClassId,
+                    inputQuestionSetId,
+                    firstTime);
+        }
+    }
+
      public synchronized void submitAnswer(String inputStudentId,
                               String inputSessionId,
                               String inputQuestionHistoryId,
@@ -178,7 +194,7 @@ public class MyStartedService extends Service {
      }
 
 
-
+    @SuppressLint("StaticFieldLeak")
     class ServiceJobAsyncTask extends AsyncTask<String, Void, Object> {
 
         private final String TAG = "ServiceJobAT";
@@ -198,10 +214,7 @@ public class MyStartedService extends Service {
                 //set that 'id' to use in onPostExecute
                 //TODO: implement interval logic appropriately
 
-
-
                 WolfpackClient client = WolfpackClient.retrofit.create(WolfpackClient.class);
-                WolfpackClient debugClient = WolfpackClient.debugRetrofit.create(WolfpackClient.class);
 
                 switch (params[0]){
                     case "searchActiveSession":{
@@ -292,6 +305,24 @@ public class MyStartedService extends Service {
                                         params[3],
                                         params[4],
                                         "validateSameQuestion");
+
+                        response = call.execute().body();
+
+                    } break;
+
+                    case "searchActiveSessionAndQuestion":{
+                        if(!params[3].equals("true")){
+                            Log.i(TAG, "doInBackground: sleeping in searchActiveSessionAndQuestion");
+                            Thread.sleep(2000);
+                        }
+                        id = 6;
+
+                        Call<ActiveCombinationResults> call =
+                                client.searchActiveSessionAndQuestion(
+                                        params[1],
+                                        params[2],
+                                        "searchActiveSessionAndQuestion"
+                                );
 
                         response = call.execute().body();
 
@@ -530,6 +561,80 @@ public class MyStartedService extends Service {
                             intent.putExtra(MY_SERVICE_QUESTION_ID, getQuestionId);
                             intent.putExtra(MY_SERVICE_QUESTION_HISTORY_ID, getQuestionHistoryId);
                             intent.putExtra(MY_SERVICE_QUESTION_SESSION_ID, getQuesitonSessionId);
+                            intent.putExtra(MY_SERVICE_QUESTION_SET_ID,getQuestionSetId);
+                        }
+                        else{
+                            Log.e(TAG, "onPostExecute: " + "result was null" );
+                        }
+
+                    } catch(NullPointerException e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    } catch (ClassCastException e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    } catch (Exception e){
+                        Log.e(TAG, "onPostExecute: " + e.getMessage() );
+
+                    }finally {
+                        //send our response back
+                        LocalBroadcastManager.getInstance(
+                                getApplicationContext())
+                                .sendBroadcast(intent);
+                    }
+
+                } break;
+
+                case 6: {
+                    Log.i(TAG, "onPostExecute: using the combination method");
+
+                    Intent intent = new Intent(MY_SERVICE_VALIDATE_COMBO);
+                    try{
+
+                        if(result != null)
+                        {
+                            Log.i(TAG, "onPostExecute: result was not null: ");
+                            String getQuestionId;
+                            String getQuestionHistoryId;
+                            String getQuestionSessionId;
+                            String getQuestionSetId;
+
+                            if(((ActiveCombinationResults) result)
+                                    .getActiveQuestionResults().size() > 0){
+
+                                getQuestionId = ((ActiveCombinationResults) result)
+                                        .getActiveQuestionResults()
+                                        .get(0).getQuestionId();
+
+                                getQuestionHistoryId = ((ActiveCombinationResults) result)
+                                        .getActiveQuestionResults()
+                                        .get(0).getQuestionHistoryId();
+                            } else{
+                                Log.i(TAG, "onPostExecute: else!");
+                                getQuestionId = "";
+                                getQuestionHistoryId = "";
+                            }
+
+                            if(((ActiveCombinationResults) result)
+                                    .getActiveSessionResults().size() > 0) {
+
+
+                                getQuestionSessionId = ((ActiveCombinationResults) result)
+                                        .getActiveSessionResults()
+                                        .get(0).getQuestionSessionId();
+
+                                getQuestionSetId = ((ActiveCombinationResults) result)
+                                        .getActiveSessionResults()
+                                        .get(0).getQuestionSetId();
+                            } else{
+                                getQuestionSessionId = "";
+                                getQuestionSetId = "";
+                            }
+
+
+                            intent.putExtra(MY_SERVICE_QUESTION_ID, getQuestionId);
+                            intent.putExtra(MY_SERVICE_QUESTION_HISTORY_ID, getQuestionHistoryId);
+                            intent.putExtra(MY_SERVICE_QUESTION_SESSION_ID, getQuestionSessionId);
                             intent.putExtra(MY_SERVICE_QUESTION_SET_ID,getQuestionSetId);
                         }
                         else{

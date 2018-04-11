@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveCombinationResults;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
 
 import java.lang.reflect.Type;
@@ -97,7 +98,7 @@ public class StudentQuestionActivePage extends QuestionPage {
                             MyStartedService.MY_SERVICE_QUESTION_INFO_JSON,""
                     );
 
-                    Log.i(TAG, "OUR QUESTION JSON: " + questionStringJSON);
+                    //Log.i(TAG, "OUR QUESTION JSON: " + questionStringJSON);
 
                     //make our object when we receive a question
                     questionInformation = gson.fromJson(questionStringJSON,
@@ -148,22 +149,54 @@ public class StudentQuestionActivePage extends QuestionPage {
 
                     finish();
                 }
-
-
             }
 
         }
     };
 
+    private BroadcastReceiver combinationQuery = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle info = intent.getExtras();
+            Log.i(TAG, "onReceive: combinationQuery" );
 
+            if(info != null){
+                String newQuestionId =
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_ID, "");
+                String newQuestionSessionId =
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, "");
+                String newQuestionHistoryId =
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, "");
+                String newQuestionSetId =
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, "");
 
+                Log.i(TAG, "onReceive: questionId: " + newQuestionId);
+                Log.i(TAG, "onReceive: newQuestionSessionId " + newQuestionSessionId);
+                Log.i(TAG, "onReceive: newQuestionHistoryId " + newQuestionHistoryId);
+                Log.i(TAG, "onReceive: newQuestionSetId " + newQuestionSetId);
 
+                if(!newQuestionSessionId.equals(questionSessionId)){
+                    //TODO: put 'your session has expired' dialog alert
+                    Toast.makeText(getApplicationContext(),"New Session",
+                            Toast.LENGTH_SHORT).show();
+                }
 
+                else if(!newQuestionId.equals("") &&
+                        !newQuestionId.equals(questionId)){
+                    //TODO: put 'new question, Join?' dialog alert
+                    Toast.makeText(getApplicationContext(),"New Question",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else
+                    mService.searchActiveSandQ(classId, questionSetId, "false");
+            }
+
+        }
+    };
+    
     private RecyclerView.LayoutManager recyclerLayoutManager;
     private AnswerChoiceRecyclerAdapter choiceAdapter;
 
-    //private boolean[] studentAnswersChoice = null;
-    //private boolean[] studentAnswersTrueFalse = null;
     private boolean[] studentAnswers = null;
 
     protected void handleActiveQuestion(QuestionInformation info){
@@ -193,20 +226,8 @@ public class StudentQuestionActivePage extends QuestionPage {
     protected void handleQuestionChoice(QuestionInformation info){
         mRecyclerViewChoice.setVisibility(View.VISIBLE);
 
-        //ArrayList<String> answerList = info.getStringArrayList("answerList");
-        //ArrayList<Integer> correctAnswers = info.getIntegerArrayList("correctAnswers");
-        //ArrayList<Integer> studentAnswers = info.getIntegerArrayList("studentAnswers");
-
-        //ArrayList<String> answerList = new ArrayList<>();
         ArrayList<Integer> correctAnswers = new ArrayList<>();
 
-//        Matcher matcher = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(info.getPotentialAnswers());
-//        while(matcher.find())
-//            answerList.add(matcher.group(1));
-//
-//        matcher = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(info.getPotentialAnswers());
-//        while(matcher.find())
-//            correctAnswers.add(Integer.parseInt(matcher.group(1)));
 
         String answerString = info.getPotentialAnswers();
         answerString = answerString.substring(2, answerString.length() - 2);
@@ -286,21 +307,6 @@ public class StudentQuestionActivePage extends QuestionPage {
     }
 
 
-//    public void onTrueFalseButtonClicked(View view){
-//        switch(view.getId()){
-//            case R.id.answerTrue:
-//                studentAnswersTrueFalse = true;
-//                break;
-//            case R.id.answerFalse:
-//                studentAnswersTrueFalse = false;
-//                break;
-//            default:
-//                throw new RuntimeException("True or False not picked somehow");
-//        }
-//    }
-
-
-
     //receiver for validating the active question
     private BroadcastReceiver validateQuestionReceiver = new BroadcastReceiver() {
         @Override
@@ -315,30 +321,6 @@ public class StudentQuestionActivePage extends QuestionPage {
                 if(questionInformation != null){
 
                     Log.i(TAG, "onReceive: android sees same exact question ");
-
-                    String newQuestionId =
-                            info.getString(MyStartedService.MY_SERVICE_QUESTION_ID);
-                    String newQuestionSessionId =
-                            info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
-                    String newQuestionHistoryId =
-                            info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID);
-                    String newQuestionSetId =
-                            info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID);
-
-                    //we have a new question
-                    if(!questionInformation.getQuestionId().equals(newQuestionId) ||
-                            !questionHistoryId.equals(newQuestionHistoryId)
-                            ){
-
-                        //we have a new question!
-                        Toast.makeText(StudentQuestionActivePage.this,
-                                "NEW QUESTION",
-                                Toast.LENGTH_SHORT).show();
-
-                        //TODO: quesiton has ended, BUT new question is already available
-                        submitFinalAnswer();
-
-                    }
 
                     submitPeriodicAnswer();
                     Log.i(TAG, "onReceive: ");
@@ -359,7 +341,7 @@ public class StudentQuestionActivePage extends QuestionPage {
 
                 //we have a new question!
                 Toast.makeText(StudentQuestionActivePage.this,
-                        "LE NEW Q OR SESSION",
+                        "Question Over",
                         Toast.LENGTH_SHORT).show();
 
                 //TODO: show graphic display of dead values?
@@ -376,6 +358,7 @@ public class StudentQuestionActivePage extends QuestionPage {
 
 
     public void onQuestionComplete(){
+        Log.i(TAG, "onQuestionComplete: ON QUESTION COMPLETED");
 
         if(answerType.startsWith("Multiple")){
             choiceAdapter.onQuestionCompleted();
@@ -400,13 +383,7 @@ public class StudentQuestionActivePage extends QuestionPage {
 
         }
 
-
-
     }
-
-
-
-
 
     private BroadcastReceiver submitAnswerReceiver = new BroadcastReceiver() {
         @Override
@@ -429,6 +406,10 @@ public class StudentQuestionActivePage extends QuestionPage {
             else{
                 Log.i(TAG, "onReceive: " + "our question was not uploaded");
 
+            }
+
+            if(submittedFinalAnswer){
+                mService.searchActiveSandQ(classId, questionSetId, "false");
             }
         }
     };
@@ -496,6 +477,11 @@ public class StudentQuestionActivePage extends QuestionPage {
                 .registerReceiver(submitAnswerReceiver, new IntentFilter(
                         MyStartedService.MY_SERVICE_SUBMIT_ANSWER));
 
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .registerReceiver(combinationQuery, new IntentFilter(
+                        MyStartedService.MY_SERVICE_VALIDATE_COMBO));
+
     }
 
     @Override
@@ -515,26 +501,38 @@ public class StudentQuestionActivePage extends QuestionPage {
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .unregisterReceiver(questionInfoReceiver);
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .unregisterReceiver(combinationQuery);
     }
 
-    private void submitFinalAnswer(){
+    private synchronized void submitFinalAnswer(){
         Log.i(TAG, "submitFinalAnswer");
 
         submittedFinalAnswer = true;
+        int count = 0;
 
         if(answer == null || answer.equals(""))
         {
-            //answer = "[\"0\"]"; //no answer was provided
+            for(boolean el: studentAnswers){
+                if(el)
+                    count++;
+            }
+
             StringBuilder sb = new StringBuilder();
             sb.append("[");
+            Log.i(TAG, "submitPeriodicAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
             for (int i = 0; i < studentAnswers.length; i++){
-                sb.append("\"");
-                if(studentAnswers[i])
-                  sb.append(i);
-                //sb.append(studentAnswers[i] ? 1 : 0);
-                sb.append("\"");
-                if (i + 1 != studentAnswers.length)
-                    sb.append(",");
+                if(studentAnswers[i]){
+                    sb.append("\"");
+                    sb.append(i);
+                    sb.append("\"");
+                    if (count > 1){
+                        sb.append(",");
+                        count--;
+                    }
+                }
             }
             sb.append("]");
             answer = sb.toString();
@@ -549,23 +547,36 @@ public class StudentQuestionActivePage extends QuestionPage {
                 answer,
                 "true"
         );
+        Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
 
+        answer = null;
     }
 
 
-    private void submitPeriodicAnswer(){
+    private synchronized void submitPeriodicAnswer(){
         Log.i(TAG, "submitPeriodicAnswer");
 
+        int count = 0;
         if(answer == null || answer.equals(""))
         {
+            for(boolean el: studentAnswers){
+                if(el)
+                    count++;
+            }
+
             StringBuilder sb = new StringBuilder();
             sb.append("[");
+            Log.i(TAG, "submitPeriodicAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
             for (int i = 0; i < studentAnswers.length; i++){
-                sb.append("\"");
-                sb.append(studentAnswers[i] ? 1 : 0);
-                sb.append("\"");
-                if (i + 1 != studentAnswers.length)
-                    sb.append(",");
+                if(studentAnswers[i]){
+                    sb.append("\"");
+                    sb.append(i);
+                    sb.append("\"");
+                    if (count > 1){
+                        sb.append(",");
+                        count--;
+                    }
+                }
             }
             sb.append("]");
             answer = sb.toString();
@@ -580,6 +591,9 @@ public class StudentQuestionActivePage extends QuestionPage {
                 answer,
                 "false"
         );
+        Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
+
+        answer = null;
 
     }
 
