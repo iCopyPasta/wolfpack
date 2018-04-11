@@ -41,8 +41,8 @@
     }
 
     $android = true;
-    //$BASE_PATH = "http://wolfpack.cs.hbg.psu.edu/";
-    $BASE_PATH="http://192.168.1.57/";
+    $BASE_PATH = "http://wolfpack.cs.hbg.psu.edu/";
+    //$BASE_PATH="http://192.168.1.57/";
     $BASE_PAGES = "pages/";
     $BASE_LIB = "lib/php/";
     $BASE_POLLING = "lib/php/polling/";
