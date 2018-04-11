@@ -66,7 +66,6 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
                 if(questionSessionId != null && questionSetId != null){
                     Log.i(TAG, "onServiceConnected: myService and questionSetId and questionSessionId are not null");
                     mService.searchActiveQuestion(questionSetId, "true");
-
                 }
             }
 
@@ -163,6 +162,16 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
         }
     };
 
+    private BroadcastReceiver submitAnswerReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+        if(questionSessionId != null && questionSetId != null){
+            Log.i(TAG, "submitAnswer allowing restart in SessionActivePage");
+            mService.searchActiveQuestion(questionSetId, "true");
+        }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,8 +237,6 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
             Log.i(TAG, e.getMessage());
             throw e;
         }
-
-
     }
 
     @Override
@@ -286,14 +293,18 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .unregisterReceiver(mReceiver2);
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .unregisterReceiver(submitAnswerReceiver);
+
+
     }
 
     @Override
     protected void onResume() {
 
         super.onResume();
-
-        super.onStart();
 
         //bind to custom service
         Intent serviceIntent = new Intent(StudentSessionActivePage.this , MyStartedService.class);
@@ -307,6 +318,14 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .registerReceiver(mReceiver2, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_SESSION));
+
+        IntentFilter temp = new IntentFilter(MyStartedService.MY_SERVICE_SUBMIT_ANSWER);
+        temp.addAction(MyStartedService.MY_SERVICE_VALIDATE_COMBO);
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .registerReceiver(submitAnswerReceiver, temp
+                );
+
     }
 
 

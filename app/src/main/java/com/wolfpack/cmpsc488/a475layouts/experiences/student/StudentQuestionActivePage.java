@@ -33,7 +33,9 @@ import java.util.List;
 // given
 // we ask for the current question
 // we submit from here
-public class StudentQuestionActivePage extends QuestionPage {
+public class StudentQuestionActivePage extends QuestionPage
+implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
+        AlertNewQuestionDialog.AlertNewQuestionDialogListener{
     private String studentId = null;
     private String questionId = null;
     private String questionSessionId = null;
@@ -51,6 +53,11 @@ public class StudentQuestionActivePage extends QuestionPage {
     private String questionSetId = null;
     private int errorCount = 0;
     private boolean submittedFinalAnswer = false;
+
+    String newQuestionId;
+    String newQuestionSessionId;
+    String newQuestionHistoryId;
+    String newQuestionSetId;
 
     private MyStartedService mService;
 
@@ -161,13 +168,13 @@ public class StudentQuestionActivePage extends QuestionPage {
             Log.i(TAG, "onReceive: combinationQuery" );
 
             if(info != null){
-                String newQuestionId =
+                newQuestionId =
                         info.getString(MyStartedService.MY_SERVICE_QUESTION_ID, "");
-                String newQuestionSessionId =
+                newQuestionSessionId =
                         info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, "");
-                String newQuestionHistoryId =
+                newQuestionHistoryId =
                         info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, "");
-                String newQuestionSetId =
+                newQuestionSetId =
                         info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, "");
 
                 Log.i(TAG, "onReceive: questionId: " + newQuestionId);
@@ -177,15 +184,20 @@ public class StudentQuestionActivePage extends QuestionPage {
 
                 if(!newQuestionSessionId.equals(questionSessionId)){
                     //TODO: put 'your session has expired' dialog alert
-                    Toast.makeText(getApplicationContext(),"New Session",
-                            Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(),"Expired Session",
+                      //      Toast.LENGTH_SHORT).show();
+
+                    new AlertLeaveNewSessionDialog().show(getFragmentManager(), "Exit Session");
+
                 }
 
                 else if(!newQuestionId.equals("") &&
                         !newQuestionId.equals(questionId)){
                     //TODO: put 'new question, Join?' dialog alert
-                    Toast.makeText(getApplicationContext(),"New Question",
-                            Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(),"New Question",
+                      //      Toast.LENGTH_SHORT).show();
+
+                    new AlertNewQuestionDialog().show(getFragmentManager(), "New Question");
                 }
                 else
                     mService.searchActiveSandQ(classId, questionSetId, "false");
@@ -317,13 +329,12 @@ public class StudentQuestionActivePage extends QuestionPage {
             if(info != null){
                 Log.i(TAG, "onReceive: " + "activeQuestionReceiver -> message received");
 
-
                 if(questionInformation != null){
 
                     Log.i(TAG, "onReceive: android sees same exact question ");
 
                     submitPeriodicAnswer();
-                    Log.i(TAG, "onReceive: ");
+                    Log.i(TAG, "onReceive: submitPeriodicAnswers called from validateQuestionReceiver");
                 }
                 //you may not have gotten an answer for your lifetime info, yet, try up to 3 times
                 else{
@@ -389,7 +400,6 @@ public class StudentQuestionActivePage extends QuestionPage {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle info = intent.getExtras();
-            Log.i(TAG, "onReceive: " + "service message received");
 
             if(info != null){
                 //did our answer get successfully submitted?
@@ -522,7 +532,7 @@ public class StudentQuestionActivePage extends QuestionPage {
 
             StringBuilder sb = new StringBuilder();
             sb.append("[");
-            Log.i(TAG, "submitPeriodicAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
+            Log.i(TAG, "submitFinalAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
             for (int i = 0; i < studentAnswers.length; i++){
                 if(studentAnswers[i]){
                     sb.append("\"");
@@ -536,24 +546,24 @@ public class StudentQuestionActivePage extends QuestionPage {
             }
             sb.append("]");
             answer = sb.toString();
+
+            mService.submitAnswer(
+                    studentId,
+                    questionSessionId,
+                    questionHistoryId,
+                    answerType,
+                    answer,
+                    "true"
+            );
+            Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
+
+            answer = null;
         }
 
 
-        mService.submitAnswer(
-                studentId,
-                questionSessionId,
-                questionHistoryId,
-                answerType,
-                answer,
-                "true"
-        );
-        Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
-
-        answer = null;
     }
 
-
-    private synchronized void submitPeriodicAnswer(){
+    private void submitPeriodicAnswer(){
         Log.i(TAG, "submitPeriodicAnswer");
 
         int count = 0;
@@ -580,21 +590,52 @@ public class StudentQuestionActivePage extends QuestionPage {
             }
             sb.append("]");
             answer = sb.toString();
+
+            Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
+            mService.submitAnswer(
+                    studentId,
+                    questionSessionId,
+                    questionHistoryId,
+                    answerType,
+                    answer,
+                    "false"
+            );
+
+            answer = null;
         }
 
 
-        mService.submitAnswer(
-                studentId,
-                questionSessionId,
-                questionHistoryId,
-                answerType,
-                answer,
-                "false"
-        );
-        Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
-
-        answer = null;
 
     }
 
+    @Override
+    public void onLeavePositiveClick() {
+        finish();
+    }
+
+    @Override
+    public void onLeaveNegativeClick() {
+
+    }
+
+    @Override
+    public void onNewQPositiveClick() {
+
+        Intent newQuestion = new Intent(StudentQuestionActivePage.this, StudentQuestionActivePage.class);
+        newQuestion.putExtra("className", className);
+        newQuestion.putExtra("classId", classId);
+        newQuestion.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID, newQuestionSetId);
+        newQuestion.putExtra(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, newQuestionHistoryId);
+        newQuestion.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, newQuestionSessionId);
+        newQuestion.putExtra(MyStartedService.MY_SERVICE_QUESTION_ID, newQuestionId);
+
+        finish();
+        startActivity(newQuestion);
+
+    }
+
+    @Override
+    public void onNewQNegativeClick() {
+
+    }
 }
