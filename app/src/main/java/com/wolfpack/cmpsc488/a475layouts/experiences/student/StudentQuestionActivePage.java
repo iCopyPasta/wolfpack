@@ -388,12 +388,12 @@ public class StudentQuestionActivePage extends QuestionPage {
             falseButton.setClickable(false);
 
             if (correctAnswer){
-                trueButton.setBackgroundColor(getResources().getColor(R.color.colorCorrectAnswer));
-                falseButton.setBackgroundColor(getResources().getColor(R.color.colorWrongAnswer));
+                trueButton.setTextColor(getResources().getColor(R.color.colorCorrectAnswer));
+                falseButton.setTextColor(getResources().getColor(R.color.colorWrongAnswer));
             }
             else {
-                trueButton.setBackgroundColor(getResources().getColor(R.color.colorWrongAnswer));
-                falseButton.setBackgroundColor(getResources().getColor(R.color.colorCorrectAnswer));
+                trueButton.setTextColor(getResources().getColor(R.color.colorWrongAnswer));
+                falseButton.setTextColor(getResources().getColor(R.color.colorCorrectAnswer));
             }
 
 
