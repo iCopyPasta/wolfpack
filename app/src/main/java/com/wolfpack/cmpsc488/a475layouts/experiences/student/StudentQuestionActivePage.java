@@ -380,7 +380,9 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
         }
         else if (answerType.equals(getString(R.string.QUESTION_TYPE_TRUE_FALSE))){
             //Log.d("WHAT THE FUCK!!!!", "question is a " + getString(R.string.QUESTION_TYPE_TRUE_FALSE));
-            boolean correctAnswer = Boolean.parseBoolean(questionInformation.getCorrectAnswers());
+            //boolean correctAnswer = Boolean.parseBoolean(questionInformation.getCorrectAnswers());
+            boolean correctAnswer = questionInformation.getCorrectAnswers().equals("1");
+
             RadioButton trueButton= (RadioButton) mRadioGroupTrueFalse.getChildAt(0);
             RadioButton falseButton = (RadioButton) mRadioGroupTrueFalse.getChildAt(1);
 
