@@ -139,7 +139,9 @@
             <h1 class="display-4">Live Stats</h1>
         </div>
           
-        <div id="LiveStatsZone"></div>
+        <div id="LiveStatsZone">
+            <canvas id="LiveStatsCanvas"></canvas>  
+        </div>
       </div>
       <?php
 
@@ -285,7 +287,7 @@
             post('../lib/php/toggleActiveQuestionWeb.php',params); 
             
             //Refresh the LiveStatsCanvas from previous questions
-            document.getElementById("LiveStatsZone").innerHTML = "";
+            document.getElementById("LiveStatsZone").innerHTML = "<canvas id=\"LiveStatsCanvas\"></canvas>";
                
             activeQuestionId = buttonId;
             document.getElementById("LiveStatsWidget").style.display = "block";
@@ -336,95 +338,89 @@
           
           
           
-        function liveStats(fn = shouldContinue, interval=5000) { //TODO: change these default values
-            console.log("liveStats called.");
-            interval = interval || 1000,
-            canPoll = true;
-
-            (function p() {
-                console.log("function iteration.");
-                if (fn())  { // ensures the function exucutes
-                    setTimeout(p, interval);
-                }
-            })();
-        }
-          
-          
-       function shouldContinue() {
-           console.log("shouldContinue called.");
-            if (activeQuestionId == null) {
-                // no need to execute further
-                return false;
-            }
-           
-            var params = "session_id="+questionSessionID+"&question_history_id="+currentQuestionHistoryID;  //create the session object
-            var liveResults;
-            liveResults = JSON.parse(postSync('../lib/php/liveStatistics.php',params));
-           
-           
-            /*if(typeof liveResults[1] === 'string')
-            {
-                //Wait for answers
-            }
-            else
-            {*/
-                manageBarChart(liveResults[1]);
-            //}
-
-            
-            console.log("LiveStatsZone changed to: "+ document.getElementById("LiveStatsZone").innerHTML);
-            
-           return true;
-       }
-        
-            function manageBarChart(questionData)
-            {
-                console.log("manageBarChart called.");
-                var liveStatsChart;
+            function liveStats(interval=5000)
+            { //TODO: change these default values
+                console.log("liveStats called.");
+                interval = interval || 1000,
+                canPoll = true;
+                var params = "session_id="+questionSessionID+"&question_history_id="+currentQuestionHistoryID;  //create the session object
+                var liveResults;
+                liveResults = JSON.parse(postSync('../lib/php/liveStatistics.php',params));
                 
-                if(document.getElementById('LiveStatsCanvas')) //There is a chart already there.
+                var counter = 0;
+                
+                var myChart = document.getElementById('LiveStatsCanvas').getContext('2d');
+                document.getElementById('LiveStatsCanvas').display = "none";
+                var liveStatsChart = new Chart(myChart, {
+                    //Type of Chart
+                    type:'horizontalBar',
+
+                    //Data for the chart
+                    data: {
+                        labels: ["1", "2", "3", "4", "5", "6", "7"],
+                        datasets: [{
+                            label:"Answers",
+                            backgroundColor: 'rgb(255, 99, 132)',
+                            borderColor: 'rgb(255, 99, 132)',
+                            data: [0, 10, 5, 2, 20, 30, 45],
+                        }]
+                    },
+
+                    //Config options
+                    options:{
+                        legend:{
+                            display: false
+                        },
+                        scales: {
+                            xAxes: [{
+                                ticks: {
+                                    beginAtZero:true,
+                                    stepSize:1
+                                }
+                            }]
+                        }
+                    }
+                });
+                
+                function updateBarChart(questionData)
                 {
                     console.log("updateBarChart called.");
-                    newData = [0, 0, 0, 0, 0, 0, 0];
-                    liveStatsChart.data.datasets.forEach((dataset) => {
-                        dataset.data.push(newData);
-                    });
+                    
+                    
+                    //Generate a new data object to insert into chart
+                    for(var i = 0; i< questionData.length; i++)
+                    {
+                        liveStatsChart.config.data.labels.push(i+1);    //dOESN'T WORK
+                        liveStatsChart.data.datasets[0].data[i] = questionData[i];
+                    }
+                    
                     liveStatsChart.update();
                 }
-                else    //Must create a new chart
+                
+                function updatePoll()
                 {
-                    document.getElementById('LiveStatsZone').innerHTML="<canvas id=\"LiveStatsCanvas\"></canvas>";
-                    var myChart = document.getElementById('LiveStatsCanvas').getContext('2d');
-
-                    var liveStatsChart = new Chart(myChart, {
-                        //Type of Chart
-                        type:'horizontalBar',
-
-                        //Data for the chart
-                        data: {
-                            labels: ["1", "2", "3", "4", "5", "6", "7"],
-                            datasets: [{
-                                label:"Answers",
-                                backgroundColor: 'rgb(255, 99, 132)',
-                                borderColor: 'rgb(255, 99, 132)',
-                                data: [0, 10, 5, 2, 20, 30, 45],
-                            }]
-                        },
-
-                        //Config options
-                        options:{
-                            legend:{
-                                display: false
-                            }
-                        }
-                    });
+                    counter = counter + 1;
+                    console.log("updatePoll");
+                    if (activeQuestionId == null)
+                    {
+                        return;
+                    }
+                    
+                    if(typeof liveResults[1] === 'string')
+                    {
+                        //Wait for answers
+                    }
+                    else
+                    {
+                        document.getElementById('LiveStatsCanvas').display = "block";
+                        updateBarChart(liveResults[1]);
+                    }
+                    
+                    setTimeout(updatePoll, interval);
                 }
-            }
-          
-            function updateChart(data)
-            {
-
-            }
+                
+                updatePoll();
+            } 
           
         
         //clear the database if the user closes the page without closing session first
