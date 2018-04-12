@@ -2,6 +2,7 @@ package com.wolfpack.cmpsc488.a475layouts.services.authentication;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +23,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.CameraExample;
 import com.wolfpack.cmpsc488.a475layouts.MainPage;
@@ -228,7 +228,6 @@ public class LoginPage extends AppCompatActivity {
 
         @Override
         protected LoginDetails doInBackground(String... params) {
-            // TODO: attempt authentication against a network service.
 
             try {
                 Log.i(TAG, "About to try network request out");
@@ -250,7 +249,6 @@ public class LoginPage extends AppCompatActivity {
                             webService.attemptLoginTeacher("attemptLoginTeacher", params[1], params[2]);
 
                     response = call.execute();
-
                 }
 
                 Log.i(TAG, "waiting on potential values");
@@ -261,7 +259,6 @@ public class LoginPage extends AppCompatActivity {
 
             } catch(java.net.ConnectException e){
                 Log.e(TAG, e.getMessage());
-                Toast.makeText(LoginPage.this, "could not find server", Toast.LENGTH_SHORT).show();
                 return null;
             } catch (IllegalStateException e) {
                 Log.e(TAG, e.getMessage());
@@ -274,6 +271,7 @@ public class LoginPage extends AppCompatActivity {
 
         }
 
+        @SuppressLint("ApplySharedPref")
         @Override
         protected void onPostExecute(final LoginDetails success) {
 
@@ -301,7 +299,6 @@ public class LoginPage extends AppCompatActivity {
             mAuthTask = null;
             showProgress(false);
 
-
             if (success != null && success.getSuccess() > 0) {
                 Log.i(TAG, "successful login");
 
@@ -316,18 +313,15 @@ public class LoginPage extends AppCompatActivity {
                 editor.putString(getString(R.string.USER_EMAIL), mEmailView.getText().toString());
                 editor.putString(getString(R.string.STUDENT_ID), success.getStudentId());
 
-                editor.apply(); //dedicate to persistent storage in background thread
+                editor.commit(); //dedicate to persistent storage in UI thread
 
                 Log.i(TAG, "onPostExecute: STUDENT ID = " + success.getStudentId());
 
-                //FEEDBACK FROM SERVER
-                //TODO: remove later on
-                String message = loginDetails.getMessage();
-
-                Toast.makeText(LoginPage.this, message, Toast.LENGTH_SHORT).show();
-
-                if(intent != null)
+                if(intent != null){
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
+                    finish();
+                }
 
             } else {
                 mPasswordView.setError(getString(R.string.error_authentication_failure));

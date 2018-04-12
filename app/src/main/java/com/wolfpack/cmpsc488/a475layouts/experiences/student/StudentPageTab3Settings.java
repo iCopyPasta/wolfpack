@@ -54,7 +54,6 @@ public class StudentPageTab3Settings extends Fragment {
                     case "About":
                         break;
                     case "Logout":
-                        // TODO: exit session when leaving
                         //SHARED PREFERENCES UPDATE
                         Context context = view.getContext();
                         SharedPreferences sharedPref = context.getSharedPreferences(
@@ -65,20 +64,15 @@ public class StudentPageTab3Settings extends Fragment {
                         editor.putString(getString(R.string.USER_MODE), "none");
 
                         editor.apply(); //dedicate to persistent storage in background thread
-                        
-                        /*intent = new Intent(getActivity(), MainPage.class);*/
-                        Log.d(TAG, "onItemClick: transferring to MainPage.class");
+
                         getActivity().finish();
+                        Intent intent = new Intent(getActivity(), MainPage.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
                         break;
                     default:
                         Log.i(TAG, "Click out of bounds");
                 }
-
-                /*try {
-                    startActivity(intent);
-                } catch (NullPointerException e) {
-                    Log.i(TAG, "No activity start");
-                }*/
             }
         });
 
