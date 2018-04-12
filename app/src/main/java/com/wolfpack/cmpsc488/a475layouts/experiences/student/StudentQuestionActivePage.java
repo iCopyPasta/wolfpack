@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wolfpack.cmpsc488.a475layouts.R;
+import com.wolfpack.cmpsc488.a475layouts.services.authentication.LoginDetails;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveCombinationResults;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
@@ -53,7 +54,8 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
     private String questionSetId = null;
     private int errorCount = 0;
     private boolean submittedFinalAnswer = false;
-
+    private boolean isShowing = false;
+    private boolean questionOver = false;
     String newQuestionId;
     String newQuestionSessionId;
     String newQuestionHistoryId;
@@ -117,29 +119,22 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
 
                     potentialAnswers = gson.fromJson(questionInformation.getPotentialAnswers(), listType);
 
-                    for(String el: potentialAnswers){
+                    /*for(String el: potentialAnswers){
                         Log.i(TAG, "onReceive: POTENTIAL ANSWERS: "  + el);
-                    }
+                    }*/
 
                     correctAnswers = gson.fromJson(questionInformation.getCorrectAnswers(), listType2);
 
-                    for(String el: correctAnswers){
+                    /*for(String el: correctAnswers){
                         Log.i(TAG, "onReceive: CORRECT KEY(S): "  + el);
-                    }
+                    }*/
 
                     answerType = questionInformation.getQuestionType();
 
 
-                    Log.i(TAG, "onReceive: " + questionInformation.getDescription());
-                    Toast.makeText(StudentQuestionActivePage.this,
-                            questionInformation.getQuestionType(),
-                            Toast.LENGTH_SHORT).show();
+                    //Log.i(TAG, "onReceive: " + questionInformation.getDescription());
 
-                    mService.validateSameQuestion(questionSetId,
-                            questionId,
-                            questionSessionId,
-                            questionHistoryId,
-                            "true");
+                    mService.searchActiveSandQ(classId, questionSetId, "false");
 
                     handleActiveQuestion(questionInformation);
 
@@ -153,7 +148,6 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
                     Log.e(TAG, "onReceive: " + "error in retrieving question info " + classId);
                     Toast.makeText(StudentQuestionActivePage.this,
                             "Error", Toast.LENGTH_SHORT).show();
-
                     finish();
                 }
             }
@@ -165,7 +159,7 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle info = intent.getExtras();
-            Log.i(TAG, "onReceive: combinationQuery" );
+            //Log.i(TAG, "onReceive: combinationQuery" );
 
             if(info != null){
                 newQuestionId =
@@ -177,30 +171,77 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
                 newQuestionSetId =
                         info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, "");
 
-                Log.i(TAG, "onReceive: questionId: " + newQuestionId);
-                Log.i(TAG, "onReceive: newQuestionSessionId " + newQuestionSessionId);
-                Log.i(TAG, "onReceive: newQuestionHistoryId " + newQuestionHistoryId);
-                Log.i(TAG, "onReceive: newQuestionSetId " + newQuestionSetId);
+                Log.i(TAG, "onReceive: QuestionId: " + questionId + " versus " + newQuestionId);
+                Log.i(TAG, "onReceive: QuestionHistoryId: " + questionHistoryId + " versus " + newQuestionHistoryId);
+                Log.i(TAG, "onReceive: QuestionSessionId: " + questionSessionId + " versus " + newQuestionSessionId);
+                Log.i(TAG, "onReceive: QuestionSetId: " + questionSetId + " versus " + newQuestionSetId);
 
-                if(!newQuestionSessionId.equals(questionSessionId)){
-                    //TODO: put 'your session has expired' dialog alert
-                    //Toast.makeText(getApplicationContext(),"Expired Session",
-                      //      Toast.LENGTH_SHORT).show();
+                if(!questionOver){
+                    //same question as the first time on this activity
+                    if(questionHistoryId.equals(newQuestionHistoryId) &&
+                            questionId.equals(newQuestionId) &&
+                            questionSessionId.equals(newQuestionSessionId) &&
+                            questionSetId.equals(newQuestionSetId)){
+                        Log.i(TAG, "onReceive: same question as when we first entered");
+                        submitPeriodicAnswer();
 
-                    new AlertLeaveNewSessionDialog().show(getFragmentManager(), "Exit Session");
+                    }
+                    //question is over
+                    else if(newQuestionId.equals("") || newQuestionHistoryId.equals("")){
+                        Toast.makeText(getApplicationContext(), "Question Over", Toast.LENGTH_SHORT).show();
+                        Log.i(TAG, "onReceive: original question over");
+                        questionOver = true;
+                        terminateQuestion();
+                    }
+                    else if(newQuestionSessionId.equals("")){
+                        Log.i(TAG, "question isn't over but the session died?");
+                        questionOver = true;
+                        if(!isShowing){
+                            isShowing = true;
+                            new AlertLeaveNewSessionDialog().show(getFragmentManager(), "Exit Session");
+                        }
+                    } else if((!newQuestionId.equals("") &&
+                            !newQuestionId.equals(questionId)) || (!newQuestionHistoryId.equals("") &&
+                            !newQuestionHistoryId.equals(questionHistoryId))){
+                        Log.i(TAG, "onReceive: NEW QUESTION but was in !questionOver ");
+                            terminateQuestion();
+                    }
+                }else{
+                    Log.i(TAG, "ORIGINAL QUESTION OVER ELSE");
+
+                    if(!newQuestionSessionId.equals("") && !newQuestionSessionId.equals(questionSessionId)){
+                        if(!isShowing){
+                            Log.i(TAG, "onReceive: display EXIT SESSION dialog");
+                            isShowing = true;
+                            new AlertLeaveNewSessionDialog().show(getFragmentManager(), "Exit Session");
+                        }
+
+
+                    } else if((!newQuestionId.equals("") &&
+                            !newQuestionId.equals(questionId)) || (!newQuestionHistoryId.equals("") &&
+                            !newQuestionHistoryId.equals(questionHistoryId))){
+                            Log.i(TAG, "onReceive: display NEW QUESTION dialog");
+
+                        if(!isShowing){
+                            isShowing = true;
+                            new AlertNewQuestionDialog().show(getFragmentManager(), "New Question");
+                        }
+                    } else if(newQuestionSessionId.equals("") && newQuestionHistoryId.equals("") &&
+                            newQuestionId.equals("") && newQuestionSetId.equals("")){
+                            if(!isShowing){
+                                Log.i(TAG, "onReceive: ALL VALUES WERE EMPTY FROM RESPONSE ");
+                                isShowing = true;
+                                new AlertLeaveNewSessionDialog().show(getFragmentManager(), "Exit Session");
+                            }
+
+                    }
+                    else{
+                        Log.i(TAG, "onReceive: CONTINUING TO ASK SERVER QUESTION");
+                        mService.searchActiveSandQ(classId, questionSetId, "false");
+                    }
 
                 }
 
-                else if(!newQuestionId.equals("") &&
-                        !newQuestionId.equals(questionId)){
-                    //TODO: put 'new question, Join?' dialog alert
-                    //Toast.makeText(getApplicationContext(),"New Question",
-                      //      Toast.LENGTH_SHORT).show();
-
-                    new AlertNewQuestionDialog().show(getFragmentManager(), "New Question");
-                }
-                else
-                    mService.searchActiveSandQ(classId, questionSetId, "false");
             }
 
         }
@@ -277,7 +318,7 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
             @Override
             public void onClick(View view, int position) {
                 studentAnswers[position] = !studentAnswers[position];
-                Toast.makeText(view.getContext(), "Choose answer (" + position + "): " + studentAnswers[position], Toast.LENGTH_SHORT).show();
+                //Toast.makeText(view.getContext(), "Choose answer (" + position + "): " + studentAnswers[position], Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -320,7 +361,7 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
 
 
     //receiver for validating the active question
-    private BroadcastReceiver validateQuestionReceiver = new BroadcastReceiver() {
+    /*private BroadcastReceiver validateQuestionReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle info = intent.getExtras();
@@ -343,29 +384,12 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
 
             }
             else{
-                Log.i(TAG, "onReceive: " + "no active questionId for " +
-                        "questionSessionId = " + questionSessionId + ", " +
-                        "quesitonSetId = " + questionSetId);
-                Log.i(TAG, "onReceive: " + "sending BACK to StudentSessionPage");
-
-                // something didn't match and we have no results, implying new question
-
-                //we have a new question!
-                Toast.makeText(StudentQuestionActivePage.this,
-                        "Question Over",
-                        Toast.LENGTH_SHORT).show();
-
-                //TODO: show graphic display of dead values?
-                //Log.d("WHAT THE FUCK!!!!", "starting onQuestionComplete()");
-                onQuestionComplete();
-
-                submitFinalAnswer();
 
             }
 
 
         }
-    };
+    };*/
 
 
 
@@ -411,23 +435,13 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
             if(info != null){
                 //did our answer get successfully submitted?
                 Log.i(TAG, "onReceive: " + "our question was uploaded");
-
-                if(!submittedFinalAnswer)
-                    mService.validateSameQuestion(questionSetId,
-                            questionId,
-                            questionSessionId,
-                            questionHistoryId,
-                            "true");
+                    mService.searchActiveSandQ(classId, questionSetId, "false");
 
             }
             else{
                 Log.i(TAG, "onReceive: " + "our question was not uploaded");
-
             }
 
-            if(submittedFinalAnswer){
-                mService.searchActiveSandQ(classId, questionSetId, "false");
-            }
         }
     };
 
@@ -484,10 +498,10 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
                 .registerReceiver(questionInfoReceiver, new IntentFilter(
                         MyStartedService.MY_SERVICE_QUESTION_INFO));
 
-        LocalBroadcastManager.getInstance(
+        /*LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .registerReceiver(validateQuestionReceiver,
-                        new IntentFilter(MyStartedService.MY_SERVICE_VALIDATE_ANSWER));
+                        new IntentFilter(MyStartedService.MY_SERVICE_VALIDATE_ANSWER));*/
 
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
@@ -511,9 +525,9 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
                 getApplicationContext())
                 .unregisterReceiver(submitAnswerReceiver);
 
-        LocalBroadcastManager.getInstance(
+        /*LocalBroadcastManager.getInstance(
                 getApplicationContext())
-                .unregisterReceiver(validateQuestionReceiver);
+                .unregisterReceiver(validateQuestionReceiver);*/
 
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
@@ -539,7 +553,7 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
 
             StringBuilder sb = new StringBuilder();
             sb.append("[");
-            Log.i(TAG, "submitFinalAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
+            //Log.i(TAG, "submitFinalAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
             for (int i = 0; i < studentAnswers.length; i++){
                 if(studentAnswers[i]){
                     sb.append("\"");
@@ -571,7 +585,7 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
     }
 
     private void submitPeriodicAnswer(){
-        Log.i(TAG, "submitPeriodicAnswer");
+        //Log.i(TAG, "submitPeriodicAnswer");
 
         int count = 0;
         if(answer == null || answer.equals(""))
@@ -583,7 +597,7 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
 
             StringBuilder sb = new StringBuilder();
             sb.append("[");
-            Log.i(TAG, "submitPeriodicAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
+            //Log.i(TAG, "submitPeriodicAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
             for (int i = 0; i < studentAnswers.length; i++){
                 if(studentAnswers[i]){
                     sb.append("\"");
@@ -610,9 +624,18 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
 
             answer = null;
         }
+    }
 
+    private void terminateQuestion(){
+        questionOver = true;
+        if(!submittedFinalAnswer){
+            Log.i(TAG, "we haven't submitted our final answer, yet in !questionOver!");
+            submitFinalAnswer();
+            onQuestionComplete();
+        } else{
 
-
+            mService.searchActiveSandQ(classId, questionSetId, "false");
+        }
     }
 
     @Override
