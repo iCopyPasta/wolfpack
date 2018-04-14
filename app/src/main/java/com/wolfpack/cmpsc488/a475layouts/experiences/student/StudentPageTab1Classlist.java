@@ -1,6 +1,7 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,10 +39,7 @@ public class StudentPageTab1Classlist extends Fragment {
 
 
     private static final String TAG = "SPTab1Classlist";
-
-    //private static String[] classlistTemp = {"CMPSC 460", "CMPSC 462", "CMPSC 463", "CMPSC 469","CMPSC 472", "CMPSC 488", "COMP 505", "COMP 511", "COMP 512", "COMP 519"};
-    //private static String[] classdesclistTemp = {"Principles of Programming Languages", "Data Structrues", "Design and Analysis of Algorithms", "Formal Languages with Applications", "Operating System Concepts", "Computer Science Project", "Theory of Computation", "Design and Anaylsis of Algorithms", "Advance Operating Systems", "Advanced Topics in Database Management Systems"};
-    //private static String[] classteacherlistTemp = {"Sukmoon Chang", "Jeremy Blum", "Jeremy Blum", "Sukmoon Chang", "Linda Null", "Hyuntae Na", "Thang Bui","Thang Bui", "Linda Null", "Linda Null"};
+    private static final int FINISHED_STUDENT_PAGE = 0;
 
     private ArrayList<ClassResult> classlist = null;
 
@@ -117,7 +115,7 @@ public class StudentPageTab1Classlist extends Fragment {
                     intent.putExtra(getContext().getString(R.string.KEY_CLASS_LOCATION), classLocation);
                     intent.putExtra(getContext().getString(R.string.KEY_CLASS_TEACHER_NAME), teacherName);
 
-                    startActivity(intent);
+                    startActivityForResult(intent, FINISHED_STUDENT_PAGE);
                 }
             });
 
@@ -136,7 +134,13 @@ public class StudentPageTab1Classlist extends Fragment {
         }
     }
 
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        //deleted the class
+        if (requestCode == FINISHED_STUDENT_PAGE && resultCode == Activity.RESULT_OK){
+            //TODO: modify classlist
+        }
+    }
 
 
 
@@ -160,7 +164,7 @@ public class StudentPageTab1Classlist extends Fragment {
                         "\nrowsPerPage = " + adapter.getRowsPerPage() +
                         "\nstudent_id = " + params[0]);
 
-                Thread.sleep(1500);
+                //Thread.sleep(1500);
 
                 Call<ClassListResult<ClassResult>> call = client.findEnrolledClasses(
                         adapter.getLastPageNumber(),
@@ -199,9 +203,15 @@ public class StudentPageTab1Classlist extends Fragment {
             if (result != null) {
                 Log.i(TAG, result.toString());
 
+                mClasslistRecycler.stopScroll();
+
+                int length = adapter.getItemCount();
+
                 adapter.setServerTotal(result.getTotalPages());
                 classlist.addAll(result.getResults());
                 adapter.notifyDataSetChanged();
+
+                mClasslistRecycler.smoothScrollToPosition(length);
 
                 isLoading = false;
                 adapter.setLoaded();

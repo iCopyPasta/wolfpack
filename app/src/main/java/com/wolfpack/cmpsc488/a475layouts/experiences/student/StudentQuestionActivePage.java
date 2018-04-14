@@ -373,7 +373,7 @@ public class StudentQuestionActivePage extends QuestionPage {
             boolean correctAnswer = questionInformation.getCorrectAnswers().equals("[\"1\"]");
             Log.i(TAG,"correct answer: " + questionInformation.getCorrectAnswers() + "\n" +
                     "boolean is : " + correctAnswer);
-
+          
             RadioButton trueButton= (RadioButton) mRadioGroupTrueFalse.getChildAt(0);
             RadioButton falseButton = (RadioButton) mRadioGroupTrueFalse.getChildAt(1);
 
