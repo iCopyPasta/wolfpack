@@ -16,6 +16,8 @@
 
   include_once('Connection.php');
   include_once('C_ClassCourseSection.php');
+  
+  error_log("Reached updateClassCourseSection");
 
   // get class_id from DB
   $class_id = isset($_POST['class_id']) ? $_POST['class_id'] : null;
@@ -29,6 +31,9 @@
 
   $class = new ClassCourseSection($class_id, '%', '%', '%', '%');
   $retVal = json_decode($class->select());
+  
+  error_log($class_id);
+  error_log(json_encode($retVal));
 
   $old_title = $retVal[1]->title;
   $old_description = $retVal[1]->description;
@@ -47,5 +52,6 @@
   if(empty($new_offering)) $new_offering = $old_offering;
   if(empty($new_location)) $new_location = $old_location;
 
-  return $class->update($new_title, $new_description, $new_offering, $new_location);
+  $class->update($new_title, $new_description, $new_offering, $new_location);
+  header("Location: ..\..\pages\manage_class.php");
 ?>

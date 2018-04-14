@@ -28,10 +28,12 @@
     return json_encode($response);
   }
 
-  if(isClassIdExist($class_id)){
+  if(true){
+      error_log($class_id." good");
     $class = new ClassCourseSection($class_id, '%', '%', '%', '%');
     return $class->delete();
   }else{
+      error_log($class_id." bad");
     // question_id does not exist
     $response = array();
     $response["message"] = "ERROR DELETING, class_id: ".$class_id." does not exist";
