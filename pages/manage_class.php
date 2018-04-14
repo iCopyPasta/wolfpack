@@ -185,10 +185,7 @@
               }
           }
           
-          function editClass(class_id)
-          {
-              
-          }
+
           
           function deleteClassSet() {
               var name = document.getElementById("description");

@@ -174,7 +174,7 @@
 
 
         // Get the <span> element that closes the modal
-        var spanEdit = document.getElementsByClassName("close")[0];
+        var spanEdit = document.getElementsByClassName("close")[1];
 
         // When the user clicks the button, open the modal 
         if (editMode) {
