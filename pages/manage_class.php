@@ -9,6 +9,16 @@
         header("Location: ..\index.php");
         }
 
+$edit_class_id = "NOT_SET";
+
+if (isset($_GET["class_id"]))
+    $edit_class_id = $_GET["class_id"];   //Get the edit class id
+
+include("../lib/php/confirmClassOwnership.php");
+
+if ( $edit_class_id != "NOT_SET" && (! confirmClassOwnership($edit_class_id,$_SESSION['id'])) )  //make sure the teacher owns this class
+     header("Location: manage_class.php");
+
 ?>
 
 <!doctype html>
@@ -94,6 +104,26 @@
 
     </div>
       
+      
+      <div id="modifyClassModal" class="modal">
+
+          <!-- Modal content -->
+          <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Class</h2>
+              <span class="close">&times;</span>
+              
+            </div>
+            <div class="modal-body">
+              <?php
+                if ($edit_class_id != "NOT_SET")
+                    include("editClassFragment.php"); ?>
+            </div>
+
+          </div>
+
+    </div>
+      
       <script>
         // Get the modal
         var modal = document.getElementById('myModal');
@@ -118,6 +148,40 @@
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
+            }
+        }
+        
+        var class_id_php = "<?php echo $edit_class_id; ?>";
+        var editMode = false;
+        if (class_id_php != "NOT_SET")
+            editMode = true;
+        
+        // Get the modal
+        var modalEdit = document.getElementById('modifyClassModal');
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("editClassButton");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[1];
+
+        if (editMode) {
+            modalEdit.style.display = "block";
+        }
+        else
+            modalEdit.style.display = "none";
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modalEdit.style.display = "none";
+            window.location = "manage_class.php";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modalEdit) {
+                modalEdit.style.display = "none";
+                window.location = "manage_class.php";
             }
         }
       </script>
@@ -146,9 +210,9 @@
           echo
             "<div class=\" clickBox card bg-secondary text-white mb-3\" id=\"$class_id\" onclick=\"toggleActive($class_id)\"> 
             <div class=\"card-header\">
-              <button type=\"button\" class=\"btn btn-warning btn-sm float-right\" onclick=\"toggleActive($class_id);editClass($class_id)\">
-                <span class=\"fas fa-pencil-alt\"></span>
-              </button>
+              <a  href=\"manage_class.php?class_id=$class_id\"> <button style=\"text-decoration: none\" type=\"button\" class=\"btn btn-warning btn-sm float-right\" \">
+                <span style= \"color:black\" class=\"fas fa-pencil-alt\"></span>
+              </button></a>
               <h2 class=\"my-0 font-weight-normal text-truncate\">$title</h2>
             </div>
             <div class=\"card-body\">
@@ -159,7 +223,7 @@
               <li>$offering</li>
             </ul>
             </div>";     
-        }                               //TODO: link poll class to the class poll using the proper parameter send structure
+        }                               
             
         if (empty($removeZerothIndex)) {
             echo "<br><h3 class=\"display-5 text-center\">You have no classes! Create one!</h3>";
@@ -185,54 +249,30 @@
               }
           }
           
-          function editClass(class_id)
-          {
-              
-          }
+
           
           function deleteClassSet() {
-              var name = document.getElementById("description");
-              var error = document.getElementById("error");
-              //var Classes = JSON.stringify(Array.from(activeClasses));
-              if (name.value === "") {
-                  error.innerHTML = "<p style=\"color:red\">Please provide a name for your question set.</p>";
-              }
-              else { //send the request to the server
+
                   console.log(activeClasses);
 
-                  var send = new Object();
+                  for (let class_id of activeClasses) { 
                   
-                  //LOOP THROUGH ACTIVE CLASSES AND POST DELETE FOR EACH
+                    post('../lib/php/deleteClassCourseSection.php',"class_id="+class_id);
+                      document.getElementById(class_id).style.display = "none";
                   
-                  post('../lib/php/deleteClassCourseSection.php',send);
-              }
+                  
+                  }
           }
 
 
 
-          function post(path, params, method) { // method: https://stackoverflow.com/querstions/133925/javascript-post-request-like-a-form-submit
-              method = method || "post"; // Set method to post by default if not specified.
-
-              // The rest of this code assumes you are not using a library.
-              // It can be made less wordy if you use one.
-              var form = document.createElement("form");
-              form.setAttribute("method", method);
-              form.setAttribute("action", path);
-
-              for(var key in params) {
-                  if(params.hasOwnProperty(key)) {
-                      var hiddenField = document.createElement("input");
-                      hiddenField.setAttribute("type", "hidden");
-                      hiddenField.setAttribute("name", key);
-                      hiddenField.setAttribute("value", params[key]);
-
-                      form.appendChild(hiddenField);
-                  }
-              }
-
-              document.body.appendChild(form);
-              form.submit();
-          } 
+          function post(url,params) {
+               var xhttp = new XMLHttpRequest();
+               
+                xhttp.open("POST", url, true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send(params);
+            } 
         </script> 
     </div>
 

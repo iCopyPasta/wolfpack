@@ -53,6 +53,7 @@
     var potential_answers = <?php echo $edit_potential_answers ?>;
     var correct_answers = <?php echo $edit_correct_answers ?>;
     
+    
  
     document.getElementById('type').value = question_type;
 
@@ -91,9 +92,9 @@
       
         var parent = document.getElementById("newChoice");
         if (isTrueFalse)
-            var newChild = "<div class=\"form-group\"><label for=\"Answer "+numberOfChoices+"\">Answer "+numberOfChoices+"</label><input type=\"text\" class=\"form-control\"rows=\"3\" value="+value+" required disabled><input id=\""+numberOfChoices+"\" type=\"checkbox\">This item is a correct answer</div>";
+            var newChild = "<div class=\"form-group\"><label for=\"Answer "+numberOfChoices+"\">Answer "+numberOfChoices+"</label><input type=\"text\" class=\"form-control\"rows=\"3\" value=\""+value+"\" required disabled><input id=\""+numberOfChoices+"\" type=\"checkbox\">This item is a correct answer</div>";
         else
-            var newChild = "<div class=\"form-group\"><label for=\"Answer "+numberOfChoices+"\">Answer "+numberOfChoices+"</label><input type=\"text\" class=\"form-control\"rows=\"3\" value="+value+" required><input id=\""+numberOfChoices+"\" type=\"checkbox\">This item is a correct answer</div>";
+            var newChild = "<div class=\"form-group\"><label for=\"Answer "+numberOfChoices+"\">Answer "+numberOfChoices+"</label><input type=\"text\" class=\"form-control\"rows=\"3\" value=\""+value+"\" required><input id=\""+numberOfChoices+"\" type=\"checkbox\">This item is a correct answer</div>";
         
         parent.insertAdjacentHTML('beforeend', newChild);
         

@@ -187,11 +187,13 @@
         error_log("delete invoked");
       $connection = new Connection;
       $pdo = $connection->getConnection();
+        
+        //Changes 4/14/18 below based on dereferencing questions instead of deleting
 
-      $sql = "DELETE
-              FROM question
+      $sql = "UPDATE question 
+              SET teacher_id = -1
               WHERE question_id = :question_id";
-        //TODO: remove this question from all question sets that it is in (Question_Is_In), along with Question_History, Answers?
+        
    
       $stmt = $pdo->prepare($sql);
       $stmt->bindValue(':question_id', $this->question_id);
