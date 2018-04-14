@@ -125,7 +125,7 @@
    <div id="modifyQuestionModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Modify Question</h2>
+                <h2>Modify Question</h2>     <h5 style="color:indianred">     Warning: Modifications of questions already used in polling may adversely affect history.</h3>
                 <span class="close">&times;</span>
             </div>
             
