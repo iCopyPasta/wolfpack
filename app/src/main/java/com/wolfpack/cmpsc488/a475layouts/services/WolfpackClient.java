@@ -14,6 +14,7 @@ import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.ClassListRes
 import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.ClassResult;
 import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.SearchClassResult;
 import com.wolfpack.cmpsc488.a475layouts.services.pagination.models.SearchResultSection;
+import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveCombinationResults;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveQuestionInfo;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveSessionInfo;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.PollingResults;
@@ -175,7 +176,6 @@ public interface WolfpackClient{
             @Field("inputMethodName") String methodName
     );
 
-
     @FormUrlEncoded
     @POST(FEED)
     Call<BasicWolfpackResponse> submitAnswer(
@@ -196,6 +196,16 @@ public interface WolfpackClient{
             @Field("inputQuestionHistoryId") String inputQuestionHistoryId,
             @Field("inputMethodName") String methodName
     );
+
+    @FormUrlEncoded
+    @POST(FEED)
+    Call<ActiveCombinationResults> searchActiveSessionAndQuestion(
+            @Field("inputClassId") String  inputClassId,
+            @Field("inputQuestionSetId") String  inputQuestionSetId,
+            @Field("inputMethodName") String methodName
+    );
+
+
 
 
 }

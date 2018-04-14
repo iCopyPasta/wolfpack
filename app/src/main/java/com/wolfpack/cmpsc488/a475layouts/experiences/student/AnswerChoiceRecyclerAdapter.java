@@ -98,15 +98,22 @@ public class AnswerChoiceRecyclerAdapter
 
     public void onQuestionCompleted(){
 
+        Log.d(TAG, "itemViews = " + itemViews);
+        Log.d(TAG, "correctAnswers = " + correctAnswers);
+
+        Log.d(TAG, "starting\n\n");
+
         int i = 0;
         for (AnswerChoiceRecyclerViewHolder holder : itemViews){
+            Log.d(TAG, "holder(" + i + ") text: " + holder.answerItem.getText() + " || isCorrect? " + correctAnswers.contains(i));
             holder.answerItem.setClickable(false);
-            holder.setIsCorrectAnswer(correctAnswers.contains(i++));
+            holder.setIsCorrectAnswer(correctAnswers.contains(i));
+            i++;
         }
 
         itemChoiceClickListener = null;
 
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
 
     }
 
@@ -139,9 +146,12 @@ public class AnswerChoiceRecyclerAdapter
 
         public void setIsCorrectAnswer(boolean isCorrectAnswer) {
             if (isCorrectAnswer)
-                answerItem.setBackgroundColor(answerItem.getContext().getResources().getColor(R.color.colorCorrectAnswer));
+                //answerItem.setBackgroundColor(answerItem.getContext().getResources().getColor(R.color.colorCorrectAnswer));
+                answerItem.setTextColor(answerItem.getContext().getResources().getColor(R.color.colorCorrectAnswer));
             else
-                answerItem.setBackgroundColor(answerItem.getContext().getResources().getColor(R.color.colorWrongAnswer));
+                //answerItem.setBackgroundColor(answerItem.getContext().getResources().getColor(R.color.colorWrongAnswer));
+                answerItem.setTextColor(answerItem.getContext().getResources().getColor(R.color.colorWrongAnswer));
+
 
 //        answerItem.setBackgroundColor((isCorrectAnswer) ?
 //                answerItem.getContext().getResources().getColor(R.color.colorCorrectAnswer):
