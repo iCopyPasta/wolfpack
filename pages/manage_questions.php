@@ -82,7 +82,12 @@
       .clickBox
       {
         cursor: pointer;
-      } 
+      }
+      .selected-box
+      {
+        background: #138496;
+        border-width: thick;
+      }
 
       .border-top { border-top: 1px solid #e5e5e5; }
       .border-bottom { border-bottom: 1px solid #e5e5e5; }
@@ -267,7 +272,7 @@
                   activeQuestions.delete(question_id);
               }
               else {
-                  document.getElementById(question_id).className = "clickBox card mb-3 text-white selected-box";
+                  document.getElementById(question_id).className = "clickBox card mb-3 text-white selected-box border-danger";
                   activeQuestions.add(question_id);
               }
           }

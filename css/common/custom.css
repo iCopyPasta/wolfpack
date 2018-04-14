@@ -38,6 +38,7 @@ body
 .selected-box
 {
   background: #138496;
+  border-width: thick!important;
 }
 
 /* Cards */

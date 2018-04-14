@@ -385,7 +385,7 @@
                 function updateBarChart(questionData)
                 {
                     console.log("updateBarChart called.");
-                    
+                    console.log(questionData);
                     
                     //Generate a new data object to insert into chart
                     for(var i = 0; i< questionData.length; i++)
@@ -409,6 +409,7 @@
                     if(typeof liveResults[1] === 'string')
                     {
                         //Wait for answers
+                        console.log("Waiting for answers");
                     }
                     else
                     {
