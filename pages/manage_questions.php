@@ -157,13 +157,7 @@
             modal.style.display = "none";
         }
 
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-        
+
         var question_id_php = "<?php echo $edit_question_id; ?>";
         var editMode = false;
         if (question_id_php != "NOT_SET")
@@ -191,6 +185,11 @@
 
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
+            
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+            
             if (event.target == modalEdit) {
                 modalEdit.style.display = "none";
                 window.location = "manage_questions.php";

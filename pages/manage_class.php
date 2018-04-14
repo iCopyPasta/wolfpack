@@ -144,12 +144,6 @@ if ( $edit_class_id != "NOT_SET" && (! confirmClassOwnership($edit_class_id,$_SE
             modal.style.display = "none";
         }
 
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
         
         var class_id_php = "<?php echo $edit_class_id; ?>";
         var editMode = false;
@@ -179,6 +173,12 @@ if ( $edit_class_id != "NOT_SET" && (! confirmClassOwnership($edit_class_id,$_SE
 
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
+            
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+            
+            
             if (event.target == modalEdit) {
                 modalEdit.style.display = "none";
                 window.location = "manage_class.php";
