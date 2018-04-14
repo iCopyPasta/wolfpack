@@ -77,7 +77,8 @@
       }
       .card-deck .card
       {
-        min-width: 500px;
+        min-width: 250px;
+        max-width: 700px;
       }
       .clickBox
       {
@@ -87,6 +88,10 @@
       {
         background: #138496;
         border-width: thick;
+      }
+      .btn
+      {
+        
       }
 
       .border-top { border-top: 1px solid #e5e5e5; }
@@ -105,9 +110,9 @@
     </div>
      
     <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:960px">
-        <a style="text-decoration: none" href ="create_question_set.php"> <button class="btn btn-info btn-lg btn-block" >Create New Question Set</button></a><br>
-        <a style="text-decoration: none"> <button id="createQuestionButton" class="btn btn-info btn-lg btn-block">Create New Question</button></a><br>
-        <a style="text-decoration: none"> <button id="deleteQuestionButton" class="btn btn-danger btn-lg btn-block" onclick="deleteQuestionSet()">Delete Selected Questions</button></a>
+        <a style="text-decoration: none"> <button id="createQuestionButton" class="btn btn-info btn-lg">New Question</button></a>
+        <a style="text-decoration: none" href ="create_question_set.php"> <button class="btn btn-info btn-lg" >New Question Set</button></a><br><br>
+        <a style="text-decoration: none"> <button id="deleteQuestionButton" class="btn btn-danger btn-lg" onclick="deleteQuestionSet()">Delete Selected Questions</button></a>
     </div>
       
     <div id="createQuestionModal" class="modal">
@@ -252,7 +257,7 @@
           }                               
 
           if (empty($removeZerothIndex)) {
-              echo "<h3 class=\"display-5 text-center\">Get started by creating some questions!</h3>";
+              echo "<h3 class=\"display-5 text-center\">Get started by creating some questions!<br><a href=\"..\index.php\"> <button type=\"button\" class=\"btn btn-primary\" >Return back to Dashboard</button></a></h3>";
           }
 
           ?>

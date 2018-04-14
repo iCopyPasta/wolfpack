@@ -10,7 +10,7 @@
         </select>
         <div class="form-group" id="questionForm">
         <label  for="Question Description">
-          Question Description</label>
+          Question Body</label>
         <input type="text" class="form-control" id="description" rows="3" name="description" required>
       </div>
         <div id="dynamicArea">        

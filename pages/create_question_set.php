@@ -53,7 +53,8 @@
       }
       .card-deck .card
       {
-        min-width: 500px;
+        min-width: 250px;
+        max-width: 500px;
       }
       .clickBox
       {
@@ -92,8 +93,8 @@
             
     </div>
 
-    <div class="flex-box">
     <h1 class="display-5 text-center">Current Questions</h1>
+    <div class="flex-box">
         <div class="card-deck mb-3 text-center">
         <?php
         
@@ -134,7 +135,7 @@
         }                               
             
         if (empty($removeZerothIndex)) {
-            echo "<br><H3 class=\"display-5 text-center\">You have no questions! Create one!</H3>";
+            echo "<br><H3 class=\"display-5 text-center\">You have no questions! Create one!<br><a href=\"..\index.php\"> <button type=\"button\" class=\"btn btn-primary\" >Return back to Question Manager</button></a></H3>";
         }
         
         ?>

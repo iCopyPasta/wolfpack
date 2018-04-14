@@ -34,9 +34,9 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="..\css\special\modalcss.css" media="screen" />  
-    <!-- Custom styles for this template -->
-    <link rel="stylesheet" type="text/css" href="..\css\common\custom.css">
+    <!-- Custom styles for this template -->  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+    <link rel="stylesheet" type="text/css" href="..\css\common\custom.css">
     <style>
     html {
   font-size: 14px;
@@ -113,7 +113,7 @@
           $question_type = $value['question_type'];
           $description = $value['description'];
           $question_id= $value['question_id'];
-          echo "<div class=\"card mb-4\">
+          echo "<div class=\"card bg-secondary text-white mb-3\">
           <div class=\"card-header\">
             <h4 class=\"my-0 font-weight-normal\">Question Type: $question_type</h4>
           </div>

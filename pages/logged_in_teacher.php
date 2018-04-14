@@ -68,8 +68,8 @@
     </div>
      
     <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:960px">
-      <a style="text-decoration: none" href ="manage_questions.php"> <button class="btn btn-info btn-lg btn-block" >Manage My Questions</button></a><br>
-      <a style="text-decoration: none" href ="manage_class.php"> <button id="manageClassButton" class="btn btn-info btn-lg btn-block" >Manage My Classes</button></a><br>
+      <a style="text-decoration: none" href ="manage_questions.php"> <button class="btn btn-info btn-lg" >Manage My Questions</button></a>
+      <a style="text-decoration: none" href ="manage_class.php"> <button id="manageClassButton" class="btn btn-info btn-lg" >Manage My Classes</button></a><br>
     </div>
     
     <div class="container">
