@@ -75,7 +75,6 @@ public class PollatoDB extends SQLiteOpenHelper {
     }
 
 
-
     public void getWritableDatabase(OnDBReadyListener listener) {
         new OpenDBAsyncTask(listener, true).execute();
     }
@@ -98,10 +97,8 @@ public class PollatoDB extends SQLiteOpenHelper {
 
         @Override
         protected SQLiteDatabase doInBackground(Void... params) {
-            if (isGetWritable)
-                return PollatoDB.instance.getWritableDatabase();
-            else
-                return PollatoDB.instance.getReadableDatabase();
+            if (isGetWritable) return PollatoDB.instance.getWritableDatabase();
+            else               return PollatoDB.instance.getReadableDatabase();
         }
 
         @Override

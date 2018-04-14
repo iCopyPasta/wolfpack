@@ -8,6 +8,7 @@ import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -39,6 +40,11 @@ import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyJobService;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
 import com.wolfpack.cmpsc488.a475layouts.services.sqlite_database.PollatoDB;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 // given our class id, we ask if there is an active session here!
 public class StudentClassPageTab1Sessionlist extends Fragment {
 
@@ -46,8 +52,8 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
     private StudentClassPage activity;
 
-    private String className;
     private String classId;
+    private String className;
 
     private SQLiteDatabase db;
     private ListView mListViewSessions;
@@ -89,7 +95,7 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
             if(info != null){
 
-                ActiveSessionDialog activeSessionDialog= new ActiveSessionDialog();
+                ActiveSessionDialog activeSessionDialog = new ActiveSessionDialog();
                 activeSessionDialog.setInfo(info);
 
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
@@ -126,7 +132,7 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
                         @Override
                         public void onDBReady(SQLiteDatabase db) {
                             StudentClassPageTab1Sessionlist.this.db = db;
-                            loadSessions();
+                            loadSessionList();
                         }
                     }
             );
@@ -143,22 +149,27 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
 
     private void onCreateSetupListAdapter(){
-        adapter = new SimpleCursorAdapter(getContext(), R.layout.listview_session_list, null,
-                new String[] {"sessionName", "sessionDate"},
-                new int[] {R.id.sessionNameTextView, R.id.sessionDateTextView}, 0);
+        adapter = new SimpleCursorAdapter(getContext(),
+                R.layout.listview_session_list,
+                null,
+                new String[] {"name", "start_date"},
+                new int[] {R.id.sessionNameTextView, R.id.sessionDateTextView},
+                0);
 
-        adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+        /*adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
             @Override
             public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
                 if (columnIndex == 1){
-                    ((TextView) view).setText(cursor.getColumnIndex("sessionName"));
+                    ((TextView) view).setText(cursor.getColumnIndex("name"));
+                    return true;
                 }
                 else if (columnIndex == 2){
-                    ((TextView) view).setText(cursor.getColumnIndex("sessionDate"));
+                    ((TextView) view).setText(cursor.getColumnIndex("start_date"));
+                    return true;
                 }
-                return true;
+                return false;
             }
-        });
+        });*/
 
 
 
@@ -184,8 +195,6 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-
-
     }
 
     @Override
@@ -225,7 +234,7 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
 
     @SuppressLint("StaticFieldLeak")
-    private void loadSessions(){
+    public void loadSessionList(){
         new AsyncTask<Void, Void, Cursor>(){
 
             @Override
@@ -255,6 +264,44 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
     }
 
 
+
+
+    @SuppressLint("StaticFieldLeak")
+    public void addSession(final String sessionId, final String sessionName){
+        new AsyncTask<Void, Void, Boolean>(){
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                int _id = Integer.parseInt(sessionId);
+                int _class_id = Integer.parseInt(classId);
+
+                String _date = new SimpleDateFormat("MM-dd-yyyy, hh:mm", Locale.US)
+                        .format(Calendar.getInstance().getTime());
+
+                String table = getString(R.string.TABLE_SESSION);
+
+                ContentValues values = new ContentValues();
+                values.put("_id", _id);
+                values.put("class_id", _class_id);
+                values.put("name", sessionName);
+                values.put("start_date", _date);
+
+                long result = db.insert(table, null, values);
+                if (result == -1){
+                    Log.i(TAG, "row already exists");
+                }
+
+                return result != -1;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean wasInserted) {
+                if (wasInserted) loadSessionList();
+            }
+
+        }.execute();
+
+    }
 
 
 

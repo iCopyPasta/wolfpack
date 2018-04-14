@@ -1,6 +1,7 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -27,10 +28,7 @@ import com.wolfpack.cmpsc488.a475layouts.services.sqlite_database.PollatoDB;
 import java.io.IOException;
 
 import retrofit2.Call;
-//import android.widget.Toolbar;
 
-
-// TODO: pass class name and change toolbar name
 
 
 public class StudentClassPage extends AppCompatActivity
@@ -53,6 +51,9 @@ public class StudentClassPage extends AppCompatActivity
 
     private TabAdapter mTabAdapter;
     private ViewPager mViewPage;
+
+    private StudentClassPageTab1Sessionlist sessionListTab;
+    private StudentClassPageTab2Classinfo classInfoTab;
 
 
     // TODO: set to false and assign activeSession based on if there is an active session currently
@@ -119,10 +120,10 @@ public class StudentClassPage extends AppCompatActivity
     }
 
     private void setupViewPager(ViewPager viewPager){
-        TabAdapter adapter = new TabAdapter(getSupportFragmentManager());
-        adapter.addFragment(new StudentClassPageTab1Sessionlist(), getResources().getString(R.string.student_class_page_tab1_session));
-        adapter.addFragment(new StudentClassPageTab2Classinfo(), getResources().getString(R.string.student_class_page_tab2_classinfo));
-        viewPager.setAdapter(adapter);
+        mTabAdapter = new TabAdapter(getSupportFragmentManager());
+        mTabAdapter.addFragment(sessionListTab = new StudentClassPageTab1Sessionlist(), getResources().getString(R.string.student_class_page_tab1_session));
+        mTabAdapter.addFragment(classInfoTab = new StudentClassPageTab2Classinfo(), getResources().getString(R.string.student_class_page_tab2_classinfo));
+        viewPager.setAdapter(mTabAdapter);
     }
 
 
@@ -156,6 +157,10 @@ public class StudentClassPage extends AppCompatActivity
         intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_NAME,
             info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_NAME));
 
+        //insert new session into database and reload adapter
+        sessionListTab.addSession(
+                info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID),
+                info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_NAME));
 
         startActivity(intent);
 
@@ -175,6 +180,7 @@ public class StudentClassPage extends AppCompatActivity
     @Override
     public void onDropNegativeClick() {}
 
+    @SuppressLint("StaticFieldLeak")
     public class DropBackgroundTask extends AsyncTask<String, Void, Boolean>{
 
         String student_id = null;
@@ -202,6 +208,10 @@ public class StudentClassPage extends AppCompatActivity
                     class_id,
                     "dropClass");
 
+
+            //TODO: drop all links in SQLiteDatabase here
+
+
             try {
                  response = result.execute().body();
             } catch (IOException e) {
@@ -217,11 +227,14 @@ public class StudentClassPage extends AppCompatActivity
 
         @Override
         protected void onPostExecute(final Boolean result){
+            //TODO: update list in StudentPageTab1Classlist
+
             if(result){
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra(getString(R.string.KEY_CLASS_DELETED), true);
+                setResult(Activity.RESULT_OK, returnIntent);
                 finish();
             }
-
-
         }
     }
 
