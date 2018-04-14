@@ -1,5 +1,6 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
@@ -11,6 +12,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PersistableBundle;
@@ -25,21 +29,29 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyJobService;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
+import com.wolfpack.cmpsc488.a475layouts.services.sqlite_database.PollatoDB;
+
 // given our class id, we ask if there is an active session here!
 public class StudentClassPageTab1Sessionlist extends Fragment {
 
     private static final String TAG = "TCPTab1Sessionlist";
 
+    private StudentClassPage activity;
+
     private String className;
     private String classId;
 
+    private SQLiteDatabase db;
     private ListView mListViewSessions;
-    private static String[] sessionlistTemp = {"Session 01", "Session 02", "Session XD"};
+    private SimpleCursorAdapter adapter;
 
     private MyStartedService mService;
 
@@ -96,39 +108,29 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        classId = ((StudentClassPage) getActivity()).getClassId();
-
         View rootView = inflater.inflate(R.layout.fragment_student_class_page_tab1_sessionlist, container, false);
 
         try {
-            //populate list view
-            // TODO: Use database to find classes that the student is enrolled
-            //       Currently it is displaying a hard coded list for demonstrating purposes
+            activity = (StudentClassPage) getActivity();
+            classId = activity.getClassId();
+            className = activity.getClassName();
 
-            className = ((StudentClassPage) getActivity()).getClassName();
+            mListViewSessions = rootView.findViewById(R.id.studentSessionListView);
 
-            mListViewSessions = (ListView) rootView.findViewById(R.id.studentSessionListView);
+            onCreateSetupListAdapter();
+            onCreateSetupListView();
 
-            ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
-                    getActivity(),
-                    android.R.layout.simple_list_item_1,
-                    sessionlistTemp);
+            //get writable database
+            PollatoDB.getInstance(activity).getWritableDatabase(
+                    new PollatoDB.OnDBReadyListener() {
+                        @Override
+                        public void onDBReady(SQLiteDatabase db) {
+                            StudentClassPageTab1Sessionlist.this.db = db;
+                            loadSessions();
+                        }
+                    }
+            );
 
-            mListViewSessions.setAdapter(mAdapter);
-
-            mListViewSessions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    //go to a completed session (no constant checking done on StudentSessionActivePage)
-                    Intent intent = new Intent(getActivity(), StudentSessionCompletePage.class);
-                    intent.putExtra("className", className);
-                    intent.putExtra("sessionName", mListViewSessions.getItemAtPosition(position).toString());
-                    intent.putExtra("isActive", false);
-                    Log.d(TAG, "starting StudentSessionCompletePage Activity");
-                    startActivity(intent);
-                }
-            });
         }
         catch (NullPointerException e){
             Log.i(TAG, e.toString());
@@ -137,6 +139,47 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
         return rootView;
     }
+
+
+
+    private void onCreateSetupListAdapter(){
+        adapter = new SimpleCursorAdapter(getContext(), R.layout.listview_session_list, null,
+                new String[] {"sessionName", "sessionDate"},
+                new int[] {R.id.sessionNameTextView, R.id.sessionDateTextView}, 0);
+
+        adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+                if (columnIndex == 1){
+                    ((TextView) view).setText(cursor.getColumnIndex("sessionName"));
+                }
+                else if (columnIndex == 2){
+                    ((TextView) view).setText(cursor.getColumnIndex("sessionDate"));
+                }
+                return true;
+            }
+        });
+
+
+
+    }
+
+
+    private void onCreateSetupListView(){
+        mListViewSessions.setAdapter(adapter);
+
+        mListViewSessions.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                // go to complete page
+            }
+        });
+
+    }
+
+
+
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
@@ -162,7 +205,7 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
         getContext().bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
 
         LocalBroadcastManager.getInstance(
-                getActivity().getApplicationContext())
+                activity.getApplicationContext())
                 .registerReceiver(mReceiver, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_SESSION));
 
     }
@@ -174,8 +217,52 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
         getContext().unbindService(mServiceConn);
 
         LocalBroadcastManager.getInstance(
-                getActivity().getApplicationContext())
+                activity.getApplicationContext())
                 .unregisterReceiver(mReceiver);
     }
+
+
+
+
+    @SuppressLint("StaticFieldLeak")
+    private void loadSessions(){
+        new AsyncTask<Void, Void, Cursor>(){
+
+            @Override
+            protected Cursor doInBackground(Void... params) {
+                String[] projection = {"_id", "name", "start_date"};
+                String table = getString(R.string.TABLE_SESSION);
+                String selection = "class_id = ?";
+                String[] selectionArgs = {String.valueOf(classId)};
+                String sortOrder = "_id DESC";
+                return db.query(
+                        table,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+            }
+
+            @Override
+            protected void onPostExecute(Cursor cursor){
+                adapter.swapCursor(cursor);
+            }
+
+        }.execute();
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 }

@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -13,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import android.support.design.widget.TabLayout;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
@@ -20,6 +22,7 @@ import com.wolfpack.cmpsc488.a475layouts.TabAdapter;
 import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
 import com.wolfpack.cmpsc488.a475layouts.services.data_retrieval.BasicWolfpackResponse;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
+import com.wolfpack.cmpsc488.a475layouts.services.sqlite_database.PollatoDB;
 
 import java.io.IOException;
 
@@ -107,7 +110,6 @@ public class StudentClassPage extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
     @Override
@@ -125,11 +127,8 @@ public class StudentClassPage extends AppCompatActivity
 
 
 
-    public String getClassName() {
-        return classTitle;
-    }
-
-    public String getClassId(){ return classId; }
+    public String getClassId()   { return classId; }
+    public String getClassName() { return classTitle; }
 
 
 
@@ -154,7 +153,7 @@ public class StudentClassPage extends AppCompatActivity
         intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID,
                 info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID));
 
-    intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_NAME,
+        intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_NAME,
             info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_NAME));
 
 

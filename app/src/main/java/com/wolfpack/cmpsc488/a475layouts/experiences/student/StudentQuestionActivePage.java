@@ -376,7 +376,9 @@ public class StudentQuestionActivePage extends QuestionPage {
             choiceAdapter.onQuestionCompleted();
         }
         else if (answerType.startsWith("True")){
-            boolean correctAnswer = Boolean.parseBoolean(questionInformation.getCorrectAnswers());
+            //boolean correctAnswer = Boolean.parseBoolean(questionInformation.getCorrectAnswers());
+            boolean correctAnswer = questionInformation.getCorrectAnswers().equals("[\"1\"]");
+
             RadioButton trueButton= (RadioButton) mRadioGroupTrueFalse.getChildAt(0);
             RadioButton falseButton = (RadioButton) mRadioGroupTrueFalse.getChildAt(1);
 

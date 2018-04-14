@@ -146,4 +146,11 @@
     <string name="drop_class">DROP CLASS</string>
 
 
+    <!-- Database Strings -->
+    <string name="TABLE_SESSION">session</string>
+    <string name="TABLE_QUESTION">question</string>
+    <string name="TABLE_Q_IS_IN">question_is_in</string>
+
+
+
 </resources>
