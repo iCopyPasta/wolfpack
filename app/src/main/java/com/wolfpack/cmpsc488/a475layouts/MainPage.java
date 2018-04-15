@@ -54,13 +54,10 @@ public class MainPage extends AppCompatActivity {
         Log.i(TAG, "loggedIn = " + loggedIn);
 
         if(loggedIn){
-            if(mode.equals(USER_MODE_TEACHER))
-                //TODO: add link to teacher landing page for android
-                //Intent intent = new Intent(this, SOMETHING.class);
-                //startActivity(intent);
-                ;
+
             if(mode.equals(USER_MODE_STUDENT)){
                 Intent intent = new Intent(this, StudentPage.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
             }
@@ -99,7 +96,6 @@ public class MainPage extends AppCompatActivity {
         startActivity(intent);
     }
 
-
     public void onNADemo(View view){
         Log.i("Main Page", "onNADemo is called");
         Intent intent = new Intent(this, CameraExample.class);
@@ -112,5 +108,4 @@ public class MainPage extends AppCompatActivity {
         Intent intent = new Intent(this, CameraExample.class);
         startActivity(intent);
     }
-
 }

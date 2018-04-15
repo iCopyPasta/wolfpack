@@ -32,7 +32,7 @@ import retrofit2.Call;
 public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface onClassSelectToEnrollListener{
-        void onClassSelected(String student_id, String class_id);
+        void onClassSelected(String student_id, String class_id, String title, String description);
     }
 
     private static final int VIEW_TYPE_ITEM = 0, VIEW_TYPE_LOADING = 1;
@@ -65,19 +65,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Log.i(TAG, "onScrolled called");
                 super.onScrolled(recyclerView, dx, dy);
 
-                /*totalItemCount = linearLayoutManager.getItemCount();
-                Log.i(TAG, "onScrollState: totalItemCount = " + totalItemCount);
-                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                Log.i(TAG, "onScrolledState: lastVisibleItem = " + lastVisibleItem);
 
-                if(!isLoading && getLastPageNumber() < serverTotal){
-                    if(loadmore != null){
-                        Log.i(TAG, "onScrolled: " + serverTotal);
-                        Log.i(TAG, "calling onLoadMore");
-                        loadmore.onLoadMore();
-                        isLoading = true;
-                    }
-                }*/
 
             }
 
@@ -206,7 +194,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     class ItemViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
-        Boolean isRunning = false;
         String class_id;
         TextView title;
         TextView description;
@@ -228,19 +215,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @Override
         public void onClick(View view){
 
-            //TODO: get student_id from shared preferences
             SharedPreferences sharedPref = view.getContext().getSharedPreferences(
                     view.getContext().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
             String student_id = sharedPref.getString(view.getContext().getString(R.string.STUDENT_ID), "");
 
-            mListener.onClassSelected(student_id,class_id);
-
-
-            /*if(!isRunning){
-                isRunning = true;
-                new AsyncEnrollBackgroundTask().execute(student_id,class_id);
-            }*/
+            mListener.onClassSelected(student_id,class_id, title.getText().toString(), description.getText().toString());
 
         }
 

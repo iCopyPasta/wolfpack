@@ -1,6 +1,11 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
@@ -23,8 +28,9 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 public class StudentPage extends AppCompatActivity implements
-        PaginationAdapter.onClassSelectToEnrollListener//,
-        //ClasslistPaginationAdapter.onClassClickedToEnterListener
+        PaginationAdapter.onClassSelectToEnrollListener,
+        AlertEnrollDialog.AlertEnrollDialogListener
+
 {
 
     private static final String TAG = "StudentPage";
@@ -46,7 +52,7 @@ public class StudentPage extends AppCompatActivity implements
         SharedPreferences sharedPref = this.getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-        studentId = sharedPref.getString(getString(R.string.STUDENT_ID),"7502");
+        studentId = sharedPref.getString(getString(R.string.STUDENT_ID),"0");
         studentEmail = sharedPref.getString(getString(R.string.USER_EMAIL), "<<default>>");
 
         //set up the viewpager with the sections adapter
@@ -77,12 +83,17 @@ public class StudentPage extends AppCompatActivity implements
 
     }
 
-    public synchronized boolean  isRunning(){
-        return isRunning;
+    @Override
+    public void onEnrollPositiveClick(String class_id) {
+        if(!isRunning){
+            isRunning = true;
+            new AsyncEnrollBackgroundTask().execute(studentId,class_id);
+        }
     }
 
-    public synchronized void setIsRunning(boolean status){
-        isRunning = status;
+    @Override
+    public void onEnrollNegativeClick() {
+
     }
 
     class AsyncEnrollBackgroundTask extends AsyncTask<String, Void, Boolean> {
@@ -91,9 +102,7 @@ public class StudentPage extends AppCompatActivity implements
         protected Boolean doInBackground(String... strings) {
             BasicWolfpackResponse answer;
             try{
-                Log.i(TAG, "doInBackground: " + "oh he's trying");
                 WolfpackClient client = WolfpackClient.retrofit.create(WolfpackClient.class);
-                Call<ResponseBody> call = client.testEnrollInClass(strings[0], strings[1],"enrollForClass");
                 Call<BasicWolfpackResponse> callback = client.enrollForClass(
                         strings[0],
                         strings[1],
@@ -128,6 +137,7 @@ public class StudentPage extends AppCompatActivity implements
             if(status){
                 isRunning = false;
                 Toast.makeText(StudentPage.this, "enrolled!", Toast.LENGTH_SHORT).show();
+
             }
         }
     }
@@ -141,12 +151,18 @@ public class StudentPage extends AppCompatActivity implements
      */
 
     @Override
-    public void onClassSelected(String student_id, String class_id) {
+    public void onClassSelected(String student_id, String class_id, String title, String description) {
         Log.i(TAG, "onClassSelected: " + student_id + " " + class_id);
-        if(!isRunning){
-            isRunning = true;
-            new AsyncEnrollBackgroundTask().execute(student_id,class_id);
-        }
+
+        AlertEnrollDialog dialog = new AlertEnrollDialog();
+        Bundle info = new Bundle();
+        info.putString("student_id", student_id);
+        info.putString("class_id", class_id);
+        info.putString("title", title);
+        info.putString("description", description);
+
+        dialog.setInfo(info);
+        dialog.show(getFragmentManager(),"AlertEnrollDialog");
     }
 
 

@@ -39,6 +39,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/title_hint"
+                    android:imeOptions="normal"
+                    android:nextFocusRight="@id/firstName"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -55,7 +57,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/first_name"
                     android:inputType="textEmailAddress"
+                    android:imeOptions="normal"
                     android:maxLines="1"
+                    android:nextFocusRight="@id/lastName"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
@@ -70,7 +74,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/last_name"
                     android:inputType="textEmailAddress"
+                    android:imeOptions="normal"
                     android:maxLines="1"
+                    android:nextFocusRight="@id/email"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
@@ -85,7 +91,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress"
+                    android:imeOptions="normal"
                     android:maxLines="1"
+                    android:nextFocusRight="@id/password"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
@@ -99,11 +107,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
-                    android:imeActionId="6"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
+                    android:imeOptions="normal"
                     android:maxLines="1"
+                    android:nextFocusRight="@id/confirmPassword"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>

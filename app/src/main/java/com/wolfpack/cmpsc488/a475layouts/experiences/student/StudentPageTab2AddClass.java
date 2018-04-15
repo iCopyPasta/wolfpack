@@ -151,26 +151,7 @@ public class StudentPageTab2AddClass extends Fragment {
                         "findClassesToAdd"
                 );
 
-                //HTML debugging
-                /*Call<ResponseBody> call = client.testFindClassesToAdd(
-                        params[0],
-                        params[1],
-                        params[2],
-                        1,
-                        5,
-                        "findClassesToAdd");
 
-                Log.i(TAG, "waiting on potential values");
-
-                Response<ResponseBody> xd = call.execute();
-                System.out.println("response code: " + xd.headers());
-                System.out.println("BODY: " + xd.body().string());
-
-
-                        //response = call.execute();
-                Log.i(TAG, "execution finished, returning body");
-
-                return response.body();*/
                 response = call.execute();
                 return response.body();
 
