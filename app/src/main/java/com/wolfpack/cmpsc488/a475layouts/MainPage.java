@@ -107,36 +107,10 @@ public class MainPage extends AppCompatActivity {
     }
 
     /* MUST REMOVE LATER */
-    public void onToStudent(View view){
-        Log.i("Main Page", "onToStudent is called");
-        Intent intent = new Intent(this, StudentPage.class);
-        startActivity(intent);
-    }
-
-    /*public void onToTeacher(View view){
-        Log.i("Main Page", "on??is called");
-        Intent intent = new Intent(MainPage.this, StudentClassPage.class);
-        intent.putExtra("className", "Formal Languages");
-        //TODO: USED ONLY FOR TESTING
-        intent.putExtra("classId", "336");
-
-        startActivity(intent);
-
-    }*/
-
     public void onCameraExample(View view){
         Log.i("Main Page", "onCameraExample is called");
         Intent intent = new Intent(this, CameraExample.class);
         startActivity(intent);
     }
-
-
-    /*public void onToClassPage(View view){
-        Log.i("Main Page", "onToClassPage is called");
-        Intent intent = new Intent(this, StudentClassPage.class);
-        intent.putExtra("className", "AI");
-        startActivity(intent);
-    }*/
-
 
 }
