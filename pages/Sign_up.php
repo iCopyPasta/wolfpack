@@ -71,7 +71,7 @@
             $response = array();
             $response["message"] = "ERROR: password doesn't match confirmPassword";
             $response["success"] = 0;
-            echo json_encode($response);
+            return json_encode($response);
           }
         }
       }
@@ -90,7 +90,7 @@
           $response = array();
           $response["message"] = "ERROR: email already exists";
           $response["success"] = 0;
-          echo json_encode($response);
+          return json_encode($response);
         }
       }
     } // email,pw1,pw2 null
@@ -108,7 +108,7 @@
         $response = array();
         $response["message"] = "ERROR: fields cannot be null";
         $response["success"] = 0;
-        echo json_encode($response);
+//        echo json_encode($response);
         $matchPWString = '<div class="alert alert-danger">
                         <strong>Error: </strong> Email and pw cannot be null
                         </div>';
