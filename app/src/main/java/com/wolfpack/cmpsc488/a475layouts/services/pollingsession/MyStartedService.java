@@ -62,6 +62,8 @@ public class MyStartedService extends Service {
 
     private ServiceJobAsyncTask ourTask;
 
+    private final Object lock = new Object();
+
     public MyStartedService() {
         Log.i(TAG, "MyStartedService: ");
     }
@@ -100,13 +102,22 @@ public class MyStartedService extends Service {
         return super.onUnbind(intent);
     }
 
+    public void killRunningTask(){
+        if(ourTask != null)
+            ourTask.cancel(true);
+
+        ourTask = null;
+    }
+
     // methods to use in order to invoke our background task
 
      public synchronized void searchActiveSession(String inputClassId, String firstTime){
          Log.i(TAG, "searchActiveSession: " + "searching for active session for classId: " + inputClassId);
-         if(!isRunning()){
-             ourTask = new ServiceJobAsyncTask();
-             ourTask.execute("searchActiveSession", inputClassId, firstTime);
+         synchronized (lock){
+             if(!isRunning()){
+                 ourTask = new ServiceJobAsyncTask();
+                 ourTask.execute("searchActiveSession", inputClassId, firstTime);
+             }
          }
      }
 
@@ -164,6 +175,8 @@ public class MyStartedService extends Service {
                               String inputAnswerType,
                               String inputAnswer,
                               String isFinal){
+         Log.i(TAG, "submitAnswer: SUBMITTING ANSWER");
+
          if(!isRunning() && isFinal.equals("false")){
              ourTask = new ServiceJobAsyncTask();
              ourTask.execute("submitAnswer",
@@ -267,7 +280,7 @@ public class MyStartedService extends Service {
 
                     case "submitAnswer": {
                         id = 4;
-                        if(!params[6].equals("true")){
+                        if(params[6].equals("false")){
                             Log.i(TAG, "doInBackground: sleeping in submitAnswer");
                             Thread.sleep(3000);
                         }
@@ -331,7 +344,9 @@ public class MyStartedService extends Service {
 
             } catch (InterruptedException e){
                 setRunning(false);
+                ourTask.cancel(true);
                 Log.e(TAG, e.getMessage());
+                e.printStackTrace();
                 return null;
             }
             catch(java.net.ConnectException e){
@@ -347,6 +362,7 @@ public class MyStartedService extends Service {
             } catch (Exception e){
                 setRunning(false);
                 Log.e(TAG, e.getClass().toString() + e.getMessage());
+                e.printStackTrace();
                 return null;
             }
 
@@ -660,6 +676,7 @@ public class MyStartedService extends Service {
                 } break;
 
             }
+            ourTask = null;
 
         }
     }

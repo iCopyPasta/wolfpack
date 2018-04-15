@@ -58,6 +58,8 @@
     <string name="KEY_CLASS_LOCATION">KEY_CLASS_LOCATION</string>
     <string name="KEY_CLASS_TEACHER_NAME">KEY_CLASS_TEACHER_NAME</string>
 
+    <string name="KEY_CLASS_DELETED">KEY_CLASS_DELETED</string>
+
     <!-- Strings for Student Page -->
     <string name="title_activity_student_page">Home</string>
     <string name="student_page_tab_classes">Classes</string>
@@ -142,6 +144,14 @@
     <string name="classTitle">Class Title</string>
     <string name="Teacher_Name">Teacher Name</string>
     <string name="drop_class">DROP CLASS</string>
+
+
+    <!-- Database Strings -->
+    <string name="DATABASE_NAME">pollato.db</string>
+    <string name="TABLE_SESSION">session</string>
+    <string name="TABLE_QUESTION">question</string>
+    <string name="TABLE_Q_IS_IN">question_is_in</string>
+
 
 
 </resources>

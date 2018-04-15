@@ -3,6 +3,7 @@ package com.wolfpack.cmpsc488.a475layouts;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,7 @@ import com.wolfpack.cmpsc488.a475layouts.experiences.teacher.TeacherPage;
 
 import com.wolfpack.cmpsc488.a475layouts.services.authentication.LoginPage;
 import com.wolfpack.cmpsc488.a475layouts.services.authentication.SignUp;
+import com.wolfpack.cmpsc488.a475layouts.services.sqlite_database.PollatoDB;
 
 
 public class MainPage extends AppCompatActivity {
@@ -41,6 +43,7 @@ public class MainPage extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Context context = this;
+        //context.deleteDatabase(getString(R.string.DATABASE_NAME));
 
         SharedPreferences sharedPref = context.getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
@@ -105,7 +108,4 @@ public class MainPage extends AppCompatActivity {
         Intent intent = new Intent(this, CameraExample.class);
         startActivity(intent);
     }
-
-
-
 }
