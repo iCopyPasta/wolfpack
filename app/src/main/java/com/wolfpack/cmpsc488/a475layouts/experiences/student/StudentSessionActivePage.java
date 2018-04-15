@@ -195,7 +195,7 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
             //set misc (text & visibility)
             mTextViewSessionName.setText(sessionName);
             mTextViewActiveQuestionNotice.setVisibility(View.VISIBLE);
-            mRecyclerViewQuestionList.setVisibility(View.GONE);
+            mListViewQuestionList.setVisibility(View.GONE);
 
 
 
@@ -229,6 +229,11 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
             throw e;
         }
 
+
+    }
+
+    @Override
+    protected void loadQuestionList() {
 
     }
 
