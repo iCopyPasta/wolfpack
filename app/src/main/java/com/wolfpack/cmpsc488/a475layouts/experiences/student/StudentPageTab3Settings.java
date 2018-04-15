@@ -23,7 +23,8 @@ public class StudentPageTab3Settings extends Fragment {
 
     private ListView mListViewSettings;
     //TODO: we could move settingsListTemp array into the strings.xml file as it is a static list pertaining to the particular page
-    private static String[] settingsListTemp = {"User Information", "Help", "About", "Logout"};
+    private static String[] settingsListTemp = {"Logout"};
+    //private static String[] settingsListTemp = {"User Information", "Help", "About", "Logout"};
 
 
     @Override
