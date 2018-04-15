@@ -9,7 +9,7 @@ import android.os.AsyncTask;
 
 public class PollatoDB extends SQLiteOpenHelper {
 
-    interface OnDBReadyListener{
+    public interface OnDBReadyListener{
         void onDBReady(SQLiteDatabase db);
     }
 
@@ -36,8 +36,7 @@ public class PollatoDB extends SQLiteOpenHelper {
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT,"+
                     "class_id INTEGER NOT NULL,"+
                     "name TEXT NOT NULL,"+
-                    "start_time TEXT"+
-                    "end_time TEXT);"+
+                    "start_date TEXT);"+
             "CREATE TABLE question ("+
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT,"+
                     "teacher_id INTEGER NOT NULL,"+
@@ -76,7 +75,6 @@ public class PollatoDB extends SQLiteOpenHelper {
     }
 
 
-
     public void getWritableDatabase(OnDBReadyListener listener) {
         new OpenDBAsyncTask(listener, true).execute();
     }
@@ -99,10 +97,8 @@ public class PollatoDB extends SQLiteOpenHelper {
 
         @Override
         protected SQLiteDatabase doInBackground(Void... params) {
-            if (isGetWritable)
-                return PollatoDB.instance.getWritableDatabase();
-            else
-                return PollatoDB.instance.getReadableDatabase();
+            if (isGetWritable) return PollatoDB.instance.getWritableDatabase();
+            else               return PollatoDB.instance.getReadableDatabase();
         }
 
         @Override
