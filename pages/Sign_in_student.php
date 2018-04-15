@@ -98,7 +98,6 @@
           $response = array();
           $response["message"] = "ERROR: incorrect email";
           $response["success"] = 0;
-          echo json_encode($response);
           $alertString = '<div class="alert alert-danger">
           <strong>Error: </strong> Incorrect Email
           </div>';
@@ -119,7 +118,6 @@
           $response = array();
           $response["message"] = "ERROR: incorrect password";
           $response["success"] = 0;
-          echo json_encode($response);
           $alertString = '<div class="alert alert-danger">
           <strong>Error: </strong> Incorrect Password
           </div>';
@@ -142,7 +140,6 @@
         $response = array();
         $response["message"] = "ERROR: no email + password found";
         $response["success"] = 0;
-        echo json_encode($response);
         $alertString = '<div class="alert alert-danger">
           <strong>Error: </strong> Username does not exist
           </div>';
