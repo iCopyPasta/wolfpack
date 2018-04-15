@@ -1,0 +1,48 @@
+/* Background */
+body
+{
+  background-color: #E8DDCB;
+}
+
+/* Create Buttons */
+.btn-info
+{
+  background-color: #036564;
+}
+
+/* Poll Buttons */
+.btn-primary
+{
+  background-color: #036564;
+}
+
+.btn-warning
+{
+  background-color: #DF6E21!important;
+  border-color: #DF6E21!important;
+}
+
+/* Header */
+.bg-dark
+{
+  background-color: #031634!important;
+}
+
+/* Dark Cards */
+.bg-secondary
+{
+  background-color: #033649!important;
+}
+
+/* Selected Card */
+.selected-box
+{
+  background: #138496;
+  border-width: thick!important;
+}
+
+/* Cards */
+.card
+{
+  /*background-color: #CDB380!important;*/
+}
