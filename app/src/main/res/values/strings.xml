@@ -84,11 +84,15 @@
 
     <!-- KEYS -->
     <string name="KEY_TEACHER_ID">KEY_TEACHER_ID</string>
+    <string name="KEY_SESSION_ID">KEY_SESSION_ID</string>
+    <string name="KEY_SESSION_NAME">KEY_SESSION_NAME</string>
+    <string name="KEY_SESSION_START_DATE">KEY_SESSION_START_DATE</string>
     <string name="KEY_QUESTION_ID">KEY_QUESTION_ID</string>
     <string name="KEY_QUESTION_DESCRIPTION">KEY_QUESTION_DESCRIPTION</string>
     <string name="KEY_QUESTION_TYPE">KEY_QUESTION_TYPE</string>
     <string name="KEY_QUESTION_POTENTIAL_ANSWERS">KEY_QUESTION_POTENTIAL_ANSWERS</string>
     <string name="KEY_QUESTION_CORRECT_ANSWERS">KEY_QUESTION_CORRECT_ANSWERS</string>
+    <string name="KEY_QUESTION_STUDENT_ANSWERS">KEY_QUESTION_STUDENT_ANSWERS</string>
 
 
 

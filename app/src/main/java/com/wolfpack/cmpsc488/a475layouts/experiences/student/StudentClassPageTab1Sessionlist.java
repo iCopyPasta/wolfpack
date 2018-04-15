@@ -123,8 +123,8 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
             mListViewSessions = rootView.findViewById(R.id.studentSessionListView);
 
-            onCreateSetupListAdapter();
-            onCreateSetupListView();
+            setupListAdapter();
+            setupListView();
 
             //get writable database
             PollatoDB.getInstance(activity).getWritableDatabase(
@@ -148,7 +148,7 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
 
 
-    private void onCreateSetupListAdapter(){
+    private void setupListAdapter(){
         adapter = new SimpleCursorAdapter(getContext(),
                 R.layout.listview_session_list,
                 null,
@@ -176,13 +176,26 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
     }
 
 
-    private void onCreateSetupListView(){
+    private void setupListView(){
         mListViewSessions.setAdapter(adapter);
 
         mListViewSessions.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-                // go to complete page
+                Cursor c = adapter.getCursor();
+
+                if (c.moveToPosition(position)) {
+                    Intent intent = new Intent(activity, StudentSessionCompletePage.class);
+
+                    intent.putExtra(getString(R.string.KEY_CLASS_DESCRIPTION), className);
+
+                    intent.putExtra(getString(R.string.KEY_SESSION_ID), c.getColumnIndex("_id"));
+                    intent.putExtra(getString(R.string.KEY_SESSION_NAME), c.getColumnIndex("name"));
+                    intent.putExtra(getString(R.string.KEY_SESSION_START_DATE), c.getColumnIndex("start_date"));
+
+                    startActivity(intent);
+                }
+
             }
         });
 
