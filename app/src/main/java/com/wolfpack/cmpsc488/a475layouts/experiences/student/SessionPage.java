@@ -53,6 +53,9 @@ public abstract class SessionPage extends AppCompatActivity {
             classId = bundle.getString(getString(R.string.KEY_CLASS_ID));
             className = bundle.getString(getString(R.string.KEY_CLASS_TITLE));
 
+            Log.i(TAG, "classId = " + classId);
+            Log.i(TAG, "className = " + className);
+
             mTextViewSessionName = findViewById(R.id.sessionNameTextView);
             mListViewQuestionList = findViewById(R.id.questionListListView);
             mTextViewActiveQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);

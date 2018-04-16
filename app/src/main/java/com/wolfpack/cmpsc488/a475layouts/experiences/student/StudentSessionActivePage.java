@@ -32,7 +32,7 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
 
     //private String className = "";
     //private String sessionName = "";
-    private String classId = null;
+    //private String classId = null;
 
     //private TextView mTextViewSessionName;
     //private TextView mTextViewQuestionNotice;
@@ -178,15 +178,17 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
             isActiveSession = (boolean) bundle.get("isActive");
             foundQuestion = false;
 
+
+            //set misc (text & visibility)
+            mTextViewSessionName.setText(sessionName);
+            mListViewQuestionList.setVisibility(View.GONE);
+            mTextViewActiveQuestionNotice.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.VISIBLE);
+
+
             //our app was killed and should be restored
             if(savedInstanceState != null){
                 onRestoreInstanceState(savedInstanceState);
-
-                //set misc (text & visibility)
-                //mTextViewSessionName.setText(sessionName);
-                mTextViewActiveQuestionNotice.setVisibility(View.VISIBLE);
-                mListViewQuestionList.setVisibility(View.GONE);
-
             }
             else{ //grab info from our calling intent
 
@@ -194,12 +196,10 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
                 questionSetId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID));
                 sessionId = questionSessionId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID));
 
-
                 //is this THE active session?
                 isActiveSession = (boolean) bundle.get("isActive");
 
-                //mTextViewSessionName.setText(sessionName);
-
+                mTextViewSessionName.setText(sessionName);
             }
 
             Log.i(TAG, "className = "+className);
@@ -210,7 +210,6 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
             Log.i(TAG, e.getMessage());
             throw e;
         }
-
 
     }
 
