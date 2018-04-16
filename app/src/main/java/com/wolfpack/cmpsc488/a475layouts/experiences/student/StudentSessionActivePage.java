@@ -32,7 +32,7 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
 
     //private String className = "";
     //private String sessionName = "";
-    private String classId = null;
+    //private String classId = null;
 
     //private TextView mTextViewSessionName;
     //private TextView mTextViewQuestionNotice;
@@ -107,8 +107,9 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
                         questionSetId);
 
                 //extras to get back
-                activeQuestionIntent.putExtra("classId", classId);
-                activeQuestionIntent.putExtra("className", className);
+                activeQuestionIntent.putExtra(getString(R.string.KEY_CLASS_ID), classId);
+                activeQuestionIntent.putExtra(getString(R.string.KEY_CLASS_DESCRIPTION), className);
+                activeQuestionIntent.putExtra(getString(R.string.KEY_SESSION_ID), sessionId);
 
                 startActivity(activeQuestionIntent);
 
@@ -176,57 +177,38 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_session_page);
-
-        Bundle bundle = getIntent().getExtras();
-
 
         try{
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorStudentPrimary)));
 
-
-            classId = bundle.getString("classId");
-            className = bundle.getString("className");
-            sessionName = bundle.getString("sessionName");
+            Bundle bundle = getIntent().getExtras();
 
             //is this THE active session?
             isActiveSession = (boolean) bundle.get("isActive");
-
-            //get all the views
-            //mTextViewSessionName = findViewById(R.id.sessionNameTextView);
-            //mTextViewQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
             foundQuestion = false;
+
+
+            //set misc (text & visibility)
+            mTextViewSessionName.setText(sessionName);
+            mListViewQuestionList.setVisibility(View.GONE);
+            mTextViewActiveQuestionNotice.setVisibility(View.VISIBLE);
+            //mProgressBar.setVisibility(View.VISIBLE);
+
 
             //our app was killed and should be restored
             if(savedInstanceState != null){
                 onRestoreInstanceState(savedInstanceState);
-
-            //set misc (text & visibility)
-            mTextViewSessionName.setText(sessionName);
-            mTextViewActiveQuestionNotice.setVisibility(View.VISIBLE);
-            mRecyclerViewQuestionList.setVisibility(View.GONE);
-
-
-
             }
             else{ //grab info from our calling intent
-                questionSetId = bundle.getString(
-                        MyStartedService.MY_SERVICE_QUESTION_SET_ID);
 
-                questionSessionId = bundle.getString(
-                        MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
-
-                sessionName = bundle.getString(
-                        MyStartedService.MY_SERVICE_QUESTION_SET_NAME);
-
-                className = (String) bundle.get("className");
-                classId = bundle.getString("classId");
+                sessionName = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SET_NAME);
+                questionSetId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID);
+                sessionId = questionSessionId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
 
                 //is this THE active session?
                 isActiveSession = (boolean) bundle.get("isActive");
 
                 mTextViewSessionName.setText(sessionName);
-
             }
 
             Log.i(TAG, "className = "+className);
@@ -237,7 +219,11 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
             Log.i(TAG, e.getMessage());
             throw e;
         }
+
     }
+
+    @Override
+    protected void loadQuestionList() { }
 
     @Override
     public void onStart(){
@@ -260,21 +246,15 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
     public void onRestoreInstanceState(Bundle inState){
         super.onRestoreInstanceState(inState);
 
-        sessionName = inState.getString(
-                MyStartedService.MY_SERVICE_QUESTION_SET_NAME,""
-        );
+        sessionName = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SET_NAME,"");
 
-        mTextViewSessionName.setText(sessionName);
+        //mTextViewSessionName.setText(sessionName);
 
-        questionSetId = inState.getString(
-                MyStartedService.MY_SERVICE_QUESTION_SET_ID);
-
-        questionSessionId = inState.getString(
-                MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
-
-        className = inState.getString("className");
+        questionSetId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID);
+        questionSessionId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
 
         classId = inState.getString("classId");
+        className = inState.getString("className");
 
         isActiveQuestion = inState.getBoolean("isActive");
 

@@ -1,12 +1,16 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteConstraintException;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -26,32 +30,39 @@ import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveCo
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 
 // given
 // we ask for the current question
 // we submit from here
-public class StudentQuestionActivePage extends QuestionPage
-implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
+public class StudentQuestionActivePage extends QuestionPage 
+    implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
         AlertNewQuestionDialog.AlertNewQuestionDialogListener{
-    private String studentId = null;
-    private String questionId = null;
+
+    public static final String TAG = "QuestionActivePage";
+
+    //private String studentId = null;
+    //private String classId = null;
+    //private String className = null;
+
+    private String questionSetId = null;
+    //private String questionId = null;
+
     private String questionSessionId = null;
     private String questionHistoryId = null;
     private String questionStringJSON = null;
-    private ArrayList<String> potentialAnswers = null;
-    private ArrayList<String> correctAnswers = null;
-    private QuestionInformation questionInformation = null;
+    //private QuestionInformation questionInformation = null;
     private String answerType = null;
     private String answer = null;
-    private final String TAG = "QuestionActivePage";
+    private boolean[] studentAnswers = null;
     private Gson gson = null;
-    private String classId = null;
-    //private String className = null;
-    private String questionSetId = null;
+
     private int errorCount = 0;
     private boolean submittedFinalAnswer = false;
     private boolean isShowing = false;
@@ -114,20 +125,20 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
                             QuestionInformation.class);
 
                     //https://stackoverflow.com/questions/18544133/parsing-json-array-into-java-util-list-with-gson
-                    Type listType = new TypeToken<List<String>>(){}.getType();
-                    Type listType2 = new TypeToken<List<String>>(){}.getType();
-
-                    potentialAnswers = gson.fromJson(questionInformation.getPotentialAnswers(), listType);
-
-                    /*for(String el: potentialAnswers){
-                        Log.i(TAG, "onReceive: POTENTIAL ANSWERS: "  + el);
-                    }*/
-
-                    correctAnswers = gson.fromJson(questionInformation.getCorrectAnswers(), listType2);
-
-                    /*for(String el: correctAnswers){
-                        Log.i(TAG, "onReceive: CORRECT KEY(S): "  + el);
-                    }*/
+//                    Type listType = new TypeToken<List<String>>(){}.getType();
+//                    Type listType2 = new TypeToken<List<String>>(){}.getType();
+//
+//                    potentialAnswerList = gson.fromJson(questionInformation.getPotentialAnswers(), listType);
+//
+//                    for(String el: potentialAnswerList){
+//                        Log.i(TAG, "onReceive: POTENTIAL ANSWERS: "  + el);
+//                    }
+//
+//                    correctAnswerList = gson.fromJson(questionInformation.getCorrectAnswers(), listType2);
+//
+//                    for(Integer el: correctAnswerList){
+//                        Log.i(TAG, "onReceive: CORRECT KEY(S): "  + el);
+//                    }
 
                     answerType = questionInformation.getQuestionType();
 
@@ -136,8 +147,8 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
 
                     mService.searchActiveSandQ(classId, questionSetId, "false");
 
-                    handleActiveQuestion(questionInformation);
 
+                    handleActiveQuestion(questionInformation);
                 }
             }
             else{
@@ -246,24 +257,20 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
 
         }
     };
-    
-    private RecyclerView.LayoutManager recyclerLayoutManager;
-    private AnswerChoiceRecyclerAdapter choiceAdapter;
 
-    private boolean[] studentAnswers = null;
 
     protected void handleActiveQuestion(QuestionInformation info){
+        addQuestion(info, sessionId);
 
         questionDesc = info.getDescription();
         mTextViewQuestion.setText(info.getDescription());
-
 
         Log.i("handleActiveQuestion", "teacher id = " + info.getTeacherId() + "\n" +
                 "question id = " + info.getQuestionId() + "\n" +
                 "question desc = " + info.getDescription() + "\n" +
                 "question type = " + info.getQuestionType() + "\n" +
                 "potential answers = " + info.getPotentialAnswers() + "\n" +
-                "correct answers = " + info.getCorrectAnswers() + "\n");
+                "correct answers = " + info.getCorrectAnswers() + "\n\n");
 
 
         if (info.getQuestionType().equals(getString(R.string.QUESTION_TYPE_TRUE_FALSE))){
@@ -277,40 +284,40 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
 
 
     protected void handleQuestionChoice(QuestionInformation info){
+        //TODO: Something is wrong with this. It randomly checks and unchecks boxes (no idea why)
+
         mRecyclerViewChoice.setVisibility(View.VISIBLE);
 
-        ArrayList<Integer> correctAnswers = new ArrayList<>();
-
-
+        //getting potential answers
         String answerString = info.getPotentialAnswers();
         answerString = answerString.substring(2, answerString.length() - 2);
-        ArrayList<String> answerList = new ArrayList<>(Arrays.asList(answerString.split("\",\"")));
+        potentialAnswerList = new ArrayList<>(Arrays.asList(answerString.split("\",\"")));
 
-
+        //getting correct answers
         String correctString = info.getCorrectAnswers();
         correctString = correctString.substring(2, correctString.length() - 2);
+        correctAnswerList = new ArrayList<>();
         for (String s : correctString.split("\",\"")){
-            correctAnswers.add(Integer.parseInt(s) - 1);
+            correctAnswerList.add(Integer.parseInt(s) - 1);
         }
 
-        studentAnswers = new boolean[answerList.size()];
+        studentAnswers = new boolean[potentialAnswerList.size()];
 
 
         Log.i("handleActiveQuestion", "teacher id = " + info.getTeacherId() + "\n" +
                 "question id = " + info.getQuestionId() + "\n" +
                 "question desc = " + info.getDescription() + "\n" +
                 "question type = " + info.getQuestionType() + "\n" +
-                "potential answers = " + answerList + "\n" +
-                "correct answers = " + correctAnswers
-                + "\n");
+                "potential answers = " + potentialAnswerList + "\n" +
+                "correct answers = " + correctAnswerList + "\n\n");
 
 
         mRecyclerViewChoice.setHasFixedSize(false);
         recyclerLayoutManager = new LinearLayoutManager(this);
         mRecyclerViewChoice.setLayoutManager(recyclerLayoutManager);
         choiceAdapter = new AnswerChoiceRecyclerAdapter(getApplicationContext(),
-                answerList,
-                correctAnswers,
+                potentialAnswerList,
+                correctAnswerList,
                 true);
 
 
@@ -358,6 +365,84 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
         });
 
     }
+
+
+    @SuppressLint("StaticFieldLeak")
+    private void addQuestion(final QuestionInformation info, final String sessionId){
+
+        new AsyncTask<Void, Void, Boolean> (){
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+
+                questionId = info.getQuestionId();
+                questionDesc = info.getDescription();
+                questionType = info.getQuestionType();
+                questionPotentialAnswers = info.getPotentialAnswers();
+                questionCorrectAnswers = info.getCorrectAnswers();
+                questionStudentAnswers = "";
+
+                int question_id = Integer.parseInt(questionId);
+                int session_id = Integer.parseInt(sessionId);
+
+                String table = getString(R.string.TABLE_QUESTION);
+
+                ContentValues values = new ContentValues();
+                values.put("_id", question_id);
+                values.put("question_type", questionType);
+                values.put("description", questionDesc);
+                values.put("potential_answers", questionPotentialAnswers);
+                values.put("correct_answers", questionCorrectAnswers);
+                values.put("student_answers", questionStudentAnswers);
+
+                long questionInsertResult = 0;
+
+                Log.w(TAG, "inserting question");
+                try {
+                    questionInsertResult = db.insert(table, null, values);
+                }
+                catch (SQLiteConstraintException e){
+                    Log.i(TAG, "row already exists: questionInsertResult = " + questionInsertResult);
+                    Log.d(TAG, "message: " + e.getMessage());
+                    questionInsertResult = 1;
+                }
+
+                table = getString(R.string.TABLE_Q_IS_IN);
+
+                values = new ContentValues();
+                values.put("session_id", session_id);
+                values.put("question_id", question_id);
+
+                long qIsInInsertResult = 0;
+                Log.w(TAG, "inserting question is in");
+                try {
+                    qIsInInsertResult = db.insert(table, null, values);
+                }
+                catch (SQLiteConstraintException e){
+                    Log.i(TAG, "row already exists: qIsInInsertResult = " + qIsInInsertResult);
+                    Log.d(TAG, "message: " + e.getMessage());
+                    qIsInInsertResult = 1;
+                }
+
+                return questionInsertResult == 1 && qIsInInsertResult == 1;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result){
+                if (result) {
+                    Log.i(TAG, "success: rows inserted");
+                    Toast.makeText(StudentQuestionActivePage.this,
+                            "question was inserted successfully!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
+        }.execute();
+
+    }
+
+
 
 
     //receiver for validating the active question
@@ -415,14 +500,13 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
             trueButton.setClickable(false);
             falseButton.setClickable(false);
 
-            if (correctAnswer){
-                trueButton.setTextColor(getResources().getColor(R.color.colorCorrectAnswer));
-                falseButton.setTextColor(getResources().getColor(R.color.colorWrongAnswer));
-            }
-            else {
-                trueButton.setTextColor(getResources().getColor(R.color.colorWrongAnswer));
-                falseButton.setTextColor(getResources().getColor(R.color.colorCorrectAnswer));
-            }
+            trueButton.setTextColor(
+                    (correctAnswer) ? getResources().getColor(R.color.colorCorrectAnswer)
+                            : getResources().getColor(R.color.colorWrongAnswer));
+
+            falseButton.setTextColor(
+                    (!correctAnswer) ? getResources().getColor(R.color.colorCorrectAnswer)
+                            : getResources().getColor(R.color.colorWrongAnswer));
 
 
         }
@@ -452,28 +536,26 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        Intent caller = getIntent();
-        Bundle callerInfo = caller.getExtras();
+        Bundle bundle = getIntent().getExtras();
 
-        if(callerInfo != null){
-            questionId = callerInfo.getString(MyStartedService.MY_SERVICE_QUESTION_ID,
-                    "");
-
-            questionSessionId = callerInfo.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID,
-                    "");
-            questionHistoryId = callerInfo.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID,
-                    "");
-
-            questionSetId = callerInfo.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
-                    "");
+        if(bundle != null){
+            questionId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_ID, "");
+            questionSessionId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, "");
+            questionHistoryId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, "");
+            questionSetId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, "");
 
             SharedPreferences sharedPref = getSharedPreferences(
                     getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
             studentId = sharedPref.getString(getString(R.string.STUDENT_ID),"");
 
-            classId = callerInfo.getString("classId");
-            className = callerInfo.getString("className");
+            classId = bundle.getString("classId");
+            className = bundle.getString("className");
+
+            sessionId = questionSessionId;
+
+
+
 
         }
 
@@ -580,10 +662,10 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
             );
             Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
 
+            updateQuestion(answer);
+
             answer = null;
         }
-
-
     }
 
     private void submitPeriodicAnswer(){
@@ -649,6 +731,39 @@ implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
     public void onLeaveNegativeClick() {
 
     }
+    
+
+    @SuppressLint("StaticFieldLeak")
+    private void updateQuestion(final String studentAnswer){
+
+        new AsyncTask<Void, Void, Void>(){
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                String table = getString(R.string.TABLE_QUESTION);
+                ContentValues values = new ContentValues();
+                values.put("student_answers", studentAnswer);
+
+                String selection = "_id = ?";
+                String[] selectionArgs = { String.valueOf(questionId) };
+
+                Log.w(TAG, "starting update question in database");
+                db.update(table, values, selection, selectionArgs);
+                Log.w(TAG, "finished updating question in database");
+
+                return null;
+            }
+
+        }.execute();
+
+
+
+
+
+
+    }
+    
 
     @Override
     public void onNewQPositiveClick() {

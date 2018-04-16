@@ -1,13 +1,18 @@
 package com.wolfpack.cmpsc488.a475layouts.services.sqlite_database;
 
+import android.annotation.SuppressLint;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
+import android.util.Log;
 
 
 public class PollatoDB extends SQLiteOpenHelper {
+
+    public static final String TAG = "PollatoDB";
 
     public interface OnDBReadyListener{
         void onDBReady(SQLiteDatabase db);
@@ -31,47 +36,114 @@ public class PollatoDB extends SQLiteOpenHelper {
     }
 
 
-    private static final String SQL_CREATE_TABLES =
+    private static final String SQL_CREATE_TABLE_SESSION =
             "CREATE TABLE session (" +
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT,"+
                     "class_id INTEGER NOT NULL,"+
                     "name TEXT NOT NULL,"+
-                    "start_date TEXT);"+
+                    "start_date TEXT)";
+
+    private static final String SQL_CREATE_TABLE_QUESTION =
             "CREATE TABLE question ("+
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT,"+
-                    "teacher_id INTEGER NOT NULL,"+
                     "question_type TEXT NOT NULL,"+
                     "description TEXT NOT NULL,"+
                     "potential_answers BLOB NOT NULL,"+
                     "correct_answers BLOB NOT NULL,"+
-                    "student_answers BLOB);"+
+                    "student_answers BLOB)";
+
+    private static final String SQL_CREATE_TABLE_QUESTION_IS_IN =
             "CREATE TABLE question_is_in (" +
-                    "question_id INTEGER PRIMARY KEY,"+
                     "session_id INTEGER,"+
-                    "FOREIGN KEY (question_id) REFERENCES question (_id)"+
-                    "FOREIGN KEY (session_id) REFERENCES session (_id));";
+                    "question_id INTEGER PRIMARY KEY,"+
+                    "FOREIGN KEY (session_id) REFERENCES session (_id),"+
+                    "FOREIGN KEY (question_id) REFERENCES question (_id))";
 
 
-    private static final String SQL_DROP_TABLES =
-            "DROP TABLE IF EXISTS question_is_in;"+
-            "DROP TABLE IF EXISTS question;"+
-            "DROP TABLE IF EXISTS session;";
+    private static final String SQL_DROP_TABLE_SESSION =
+            "DROP TABLE IF EXISTS session";
+
+    private static final String SQL_DROP_TABLE_QUESTION =
+            "DROP TABLE IF EXISTS question";
+
+    private static final String SQL_DROP_TABLE_QUESTION_IS_IN =
+            "DROP TABLE question_is_in";
 
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_TABLES);
+        db.execSQL(SQL_CREATE_TABLE_SESSION);
+        db.execSQL(SQL_CREATE_TABLE_QUESTION);
+        db.execSQL(SQL_CREATE_TABLE_QUESTION_IS_IN);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_DROP_TABLES);
+        db.execSQL(SQL_DROP_TABLE_QUESTION_IS_IN);
+        db.execSQL(SQL_DROP_TABLE_QUESTION);
+        db.execSQL(SQL_DROP_TABLE_SESSION);
         onCreate(db);
     }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
+    }
+
+
+    @SuppressLint("StaticFieldLeak")
+    public static void printDatabase(){
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                SQLiteDatabase db = PollatoDB.instance.getWritableDatabase();
+
+                Log.w(TAG, "displaying db contents");
+                Cursor c1 = db.rawQuery("SELECT * FROM session", new String[]{});
+                Cursor c2 = db.rawQuery("SELECT * FROM question", new String[]{});
+                Cursor c3 = db.rawQuery("SELECT * FROM question_is_in", new String[]{});
+                Log.w(TAG, " ");
+                Log.w(TAG, "session: _id | class_id | name | start_date");
+                while (c1.moveToNext())
+                {
+                    Log.w(TAG,
+                            c1.getInt(0) + " | " +
+                                    c1.getString(1) + " | " +
+                                    c1.getString(2) + " | " +
+                                    c1.getString(3));
+                }
+
+                Log.w(TAG, " ");
+                Log.w(TAG, "question: _id | question_type | description | potential_answers | correct_answers | student_answers");
+                while (c2.moveToNext())
+                {
+                    Log.w(TAG,
+                            c2.getInt(0) + " | " +
+                                    c2.getString(1) + " | " +
+                                    c2.getString(2) + " | " +
+                                    c2.getString(3) + " | " +
+                                    c2.getString(4) + " | " +
+                                    c2.getString(5));
+                }
+                Log.w(TAG, " ");
+                Log.w(TAG, "question_is_in: question_id | session_id");
+                while (c3.moveToNext())
+                {
+                    Log.w(TAG,
+                            c3.getInt(0) + " | " +
+                                    c3.getInt(1));
+                }
+                Log.w(TAG, " ");
+
+                c1.close();
+                c2.close();
+                c3.close();
+
+                return null;
+            }
+        }.execute();
     }
 
 
