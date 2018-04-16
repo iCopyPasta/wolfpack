@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wolfpack.cmpsc488.a475layouts.MainPage;
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.experiences.student.StudentPage;
 import com.wolfpack.cmpsc488.a475layouts.services.WolfpackClient;
@@ -58,6 +59,10 @@ public class SignUp extends AppCompatActivity {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private AutoCompleteTextView mTitle;
+    private AutoCompleteTextView mFirstName;
+    private AutoCompleteTextView mLastName;
+    private EditText mConfirmPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +70,13 @@ public class SignUp extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+        mTitle = (AutoCompleteTextView) findViewById(R.id.user_title);
+        mFirstName = (AutoCompleteTextView) findViewById(R.id.firstName);
+        mLastName = (AutoCompleteTextView) findViewById(R.id.lastName);
+        mConfirmPassword = (EditText) findViewById(R.id.confirmPassword);
+        mConfirmPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
@@ -111,6 +120,20 @@ public class SignUp extends AppCompatActivity {
         boolean cancel = false;
         View focusView = null;
 
+        // Check for empty fields
+
+        if (TextUtils.isEmpty(mConfirmPassword.getText().toString())) {
+            mConfirmPassword.setError(getString(R.string.error_field_required));
+            focusView = mConfirmPassword;
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty(mPasswordView.getText().toString())) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
@@ -128,6 +151,34 @@ public class SignUp extends AppCompatActivity {
             focusView = mEmailView;
             cancel = true;
         }
+
+        if (TextUtils.isEmpty(mTitle.getText().toString())) {
+            mTitle.setError(getString(R.string.error_field_required));
+            focusView = mTitle;
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty(mLastName.getText().toString())) {
+            mLastName.setError(getString(R.string.error_field_required));
+            focusView = mLastName;
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty(mFirstName.getText().toString())) {
+            mFirstName.setError(getString(R.string.error_field_required));
+            focusView = mFirstName;
+            cancel = true;
+        }
+
+
+
+
+
+
+
+
+
+
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -160,7 +211,7 @@ public class SignUp extends AppCompatActivity {
             Log.i("SignUp", "about to send data over");
 
             if (!hasPermissions(this, REQUIRED_PERMISSIONS)) {
-                Log.i("SignUp", "We dont have permissions!!");
+                Log.i("SignUp", "We don't have permissions!!");
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_REQUIRED_PERMISSIONS);
                 }
@@ -233,7 +284,6 @@ public class SignUp extends AppCompatActivity {
 
             try {
                 Log.i(TAG, "About to try network request out");
-                // TODO: attempt authentication against a network service.
 
                 WolfpackClient webService =
                         WolfpackClient.retrofit.create(WolfpackClient.class);
@@ -252,14 +302,12 @@ public class SignUp extends AppCompatActivity {
 
                 Log.i(TAG, "waiting on potential values");
 
-
-                //TODO: ADD SECURE TRY-CATCH BLOCKS FOR VARIOUS POSSIBILITIES!
                 response = call.execute();
-                Log.i(TAG, response.body().toString());
-                loginDetails = response.body();
-                Log.i("SignUp", "Finished");
 
-                return loginDetails != null;
+                loginDetails = response.body();
+
+
+                return loginDetails != null && loginDetails.getSuccess() > 0;
             } catch(java.net.ConnectException e){
                 Log.e(TAG, e.getMessage());
                 return null;
@@ -280,26 +328,20 @@ public class SignUp extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
-                //TODO: Logic to jump into login b/c we are assuming an email is returned
 
-                String message = loginDetails.getMessage();
-
-                Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), LoginPage.class);
-                startActivity(intent);
 
-                //Do NOT add to the backstack!
+                //Do NOT add to the back-stack!
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(MainPage.BUTTON_CALLED, MainPage.USER_MODE_STUDENT);
+                startActivity(intent);
                 finish();
 
-            } else {
-                if(loginDetails == null)
-                    Toast.makeText(SignUp.this, "Null Val", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(SignUp.this, loginDetails.toString(), Toast.LENGTH_SHORT).show();
 
+            } else {
                 //String message = loginDetails[0].getMessage();
-                mPasswordView.setError(getString(R.string.error_authentication_failure));
-                mPasswordView.requestFocus();
+                mFirstName.setError(getString(R.string.error_sign_up_failed));
+                mFirstName.requestFocus();
             }
         }
 

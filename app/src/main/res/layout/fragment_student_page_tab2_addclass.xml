@@ -17,7 +17,10 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:imeOptions="normal"
+        android:nextFocusRight="@id/classTeacherFirstNameEditText"
+        android:layout_marginRight="8dp" />
 
     <EditText
         android:id="@+id/classTeacherFirstNameEditText"
@@ -27,6 +30,8 @@
         android:ems="10"
         android:hint="@string/first_name"
         android:inputType="textPersonName"
+        android:imeOptions="normal"
+        android:nextFocusRight="@id/classTeacherLastNameEditText"
         app:layout_constraintEnd_toStartOf="@+id/classTeacherLastNameEditText"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

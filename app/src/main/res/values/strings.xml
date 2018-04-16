@@ -32,9 +32,15 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+    <string name = "error_sign_up_failed">SignUp failed</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="error_authentication_failure">Login failed</string>
+    <string name="title_hint">Title</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+
     <string name="register">Register for an Account</string>
     <string name="results_go">Results</string>
     <string name="pending_invites">Pending Invites</string>
@@ -142,18 +148,13 @@
     <string name="teacher_class_page_tab_manage">Manage</string>
     <string name="teacher_class_page_tab_classinfo">Settings</string>
     <string name="manage_sessions">Manage Sessions</string>
-
     <string name="manage_questions">Manage Questions</string>
-
-
 
 
     <string name="action_settings">what?</string>
     <string name="signup">Sign Up</string>
     <string name="title_activity_sign_up">Sign up</string>
     <string name="create_account">Create Account</string>
-    <string name="first_name">First Name</string>
-    <string name="last_name">Last Name</string>
     <string name="error_missing_permissions">Cannot start without required permissions</string>
     <string name="preference_file_key">com.wolfpack.cmpsc488.a475layouts</string>
     <string name="SKIP_LOGIN">SKIP_LOGIN</string>
@@ -162,13 +163,10 @@
     <string name="STUDENT_ID">STUDENT_ID</string>
 
 
-
     <string name="CameraUpload">Upload</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="classTitle">Class Title</string>
     <string name="Teacher_Name">Teacher Name</string>
-    <string name="error_authentication_failure">Login failed</string>
-    <string name="title_hint">Title</string>
     <string name="drop_class">DROP CLASS</string>
 
 
