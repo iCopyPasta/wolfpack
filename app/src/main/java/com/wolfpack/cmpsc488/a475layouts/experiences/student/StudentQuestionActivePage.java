@@ -230,6 +230,8 @@ public class StudentQuestionActivePage extends QuestionPage {
 
 
     protected void handleQuestionChoice(QuestionInformation info){
+        //TODO: Something is wrong with this. It randomly checks and unchecks boxes (no idea why)
+
         mRecyclerViewChoice.setVisibility(View.VISIBLE);
 
         //getting potential answers
