@@ -172,11 +172,7 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
         try{
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorStudentPrimary)));
 
-
             Bundle bundle = getIntent().getExtras();
-            /*classId = bundle.getString("classId");
-            className = bundle.getString("className");
-            sessionName = bundle.getString("sessionName");*/
 
             //is this THE active session?
             isActiveSession = (boolean) bundle.get("isActive");
@@ -187,23 +183,22 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
                 onRestoreInstanceState(savedInstanceState);
 
                 //set misc (text & visibility)
-                mTextViewSessionName.setText(sessionName);
+                //mTextViewSessionName.setText(sessionName);
                 mTextViewActiveQuestionNotice.setVisibility(View.VISIBLE);
                 mListViewQuestionList.setVisibility(View.GONE);
 
             }
             else{ //grab info from our calling intent
-                questionSetId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID));
-                questionSessionId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID));
-                sessionName = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_NAME));
 
-                classId = bundle.getString("classId");
-                className = (String) bundle.get("className");
+                sessionName = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_NAME));
+                questionSetId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID));
+                sessionId = questionSessionId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID));
+
 
                 //is this THE active session?
                 isActiveSession = (boolean) bundle.get("isActive");
 
-                mTextViewSessionName.setText(sessionName);
+                //mTextViewSessionName.setText(sessionName);
 
             }
 
@@ -245,7 +240,7 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
 
         sessionName = inState.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_NAME),"");
 
-        mTextViewSessionName.setText(sessionName);
+        //mTextViewSessionName.setText(sessionName);
 
         questionSetId = inState.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID));
         questionSessionId = inState.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID));

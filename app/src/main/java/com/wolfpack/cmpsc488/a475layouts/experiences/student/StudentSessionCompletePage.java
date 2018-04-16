@@ -25,26 +25,35 @@ public class StudentSessionCompletePage extends SessionPage {
 
     public static final String TAG = "SSeshCmplt";
 
-    @SuppressLint("SetTextI18n")
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_session_page);
+        //setContentView(R.layout.activity_session_page);
 
+        Log.d(TAG, "onCreate StudentSessionCompletePage");
 
         try{
-            /*Bundle bundle = getIntent().getExtras();
 
-            className = bundle.getString(getString(R.string.KEY_CLASS_DESCRIPTION));
+            Bundle bundle = getIntent().getExtras();
+
             sessionId = bundle.getString(getString(R.string.KEY_SESSION_ID));
             sessionName = bundle.getString(getString(R.string.KEY_SESSION_NAME));
-            sessionStartDate = bundle.getString(getString(R.string.KEY_SESSION_START_DATE));*/
+            sessionStartDate = bundle.getString(getString(R.string.KEY_SESSION_START_DATE));
 
+            Log.i(TAG, "classId = " + classId + "\n" +
+                    "className = " + className + "\n" +
+                    "sessionId = " + sessionId + "\n" +
+                    "sessionName = " + sessionName + "\n" +
+                    "sessionStartDate = " + sessionStartDate);
 
-            getSupportActionBar().setTitle(className);
-            mTextViewSessionName.setText(sessionName + " - " + sessionStartDate);
+            Log.i("I'm not crazy:", sessionName + " - " + sessionStartDate);
+            String titleText = sessionName + " - " + sessionStartDate;
+
+            mTextViewSessionName.setText(titleText);
             mListViewQuestionList.setVisibility(View.VISIBLE);
             mTextViewActiveQuestionNotice.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.VISIBLE);
 
             setupListAdapter();
             setupListView();
@@ -64,9 +73,10 @@ public class StudentSessionCompletePage extends SessionPage {
                 R.layout.listview_question_list,
                 null,
                 new String[] {"description", "question_type"},
-                new int[] {1, 2},
+                new int[] {R.id.questionDescriptionTextView, R.id.questionTypeTextView},
                 0);
     }
+
 
     private void setupListView(){
         mListViewQuestionList.setAdapter(adapter);
@@ -80,22 +90,21 @@ public class StudentSessionCompletePage extends SessionPage {
                     Intent intent = new Intent(getApplicationContext(), StudentQuestionCompletePage.class);
 
                     intent.putExtra(getString(R.string.KEY_CLASS_ID), classId);
-                    intent.putExtra(getString(R.string.KEY_CLASS_DESCRIPTION), className);
+                    intent.putExtra(getString(R.string.KEY_CLASS_TITLE), className);
 
                     intent.putExtra(getString(R.string.KEY_SESSION_ID), sessionId);
                     intent.putExtra(getString(R.string.KEY_SESSION_NAME), sessionName);
                     intent.putExtra(getString(R.string.KEY_SESSION_START_DATE), sessionStartDate);
 
-                    intent.putExtra(getString(R.string.KEY_QUESTION_ID), c.getColumnIndex("question_id"));
-                    intent.putExtra(getString(R.string.KEY_QUESTION_TYPE), c.getColumnIndex("question_type"));
-                    intent.putExtra(getString(R.string.KEY_QUESTION_DESCRIPTION), c.getColumnIndex("description"));
-                    intent.putExtra(getString(R.string.KEY_QUESTION_POTENTIAL_ANSWERS), c.getColumnIndex("potential_answers"));
-                    intent.putExtra(getString(R.string.KEY_QUESTION_CORRECT_ANSWERS), c.getColumnIndex("correct_answers"));
-                    intent.putExtra(getString(R.string.KEY_QUESTION_STUDENT_ANSWERS), c.getColumnIndex("student_answers"));
+                    intent.putExtra(getString(R.string.KEY_QUESTION_ID), String.valueOf(c.getInt(0)));
+                    intent.putExtra(getString(R.string.KEY_QUESTION_TYPE), c.getString(1));
+                    intent.putExtra(getString(R.string.KEY_QUESTION_DESCRIPTION), c.getString(2));
+                    intent.putExtra(getString(R.string.KEY_QUESTION_POTENTIAL_ANSWERS), c.getString(3));
+                    intent.putExtra(getString(R.string.KEY_QUESTION_CORRECT_ANSWERS), c.getString(4));
+                    intent.putExtra(getString(R.string.KEY_QUESTION_STUDENT_ANSWERS), c.getString(5));
 
                     startActivity(intent);
                 }
-
             }
         });
 
@@ -109,25 +118,25 @@ public class StudentSessionCompletePage extends SessionPage {
 
             @Override
             protected Cursor doInBackground(Void... params) {
-                String[] projection = {"question_id", "description", "question_type", "potential_answers", "correct_answers", "student_answers"};
-                String table = getString(R.string.TABLE_Q_IS_IN) + ", " + getString(R.string.TABLE_QUESTION);
-                String selection = "session_id = ? AND question_id = _id";
+                String projection = "_id, question_type, description, potential_answers, correct_answers, student_answers";
+                //String table = getString(R.string.TABLE_Q_IS_IN) + " " + getString(R.string.TABLE_QUESTION) + " ON " + ;
+                //String selection = "session_id = ? AND question_id = _id";
                 String[] selectionArgs = {String.valueOf(sessionId)};
-                String sortOrder = "question_id DESC";
-                return db.query(
-                        table,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
+                //String sortOrder = "question_id DESC";
+
+                return db.rawQuery(
+                        "WITH question_link as (SELECT * FROM question_is_in WHERE session_id = ?) " +
+                                " SELECT " + projection +
+                                " FROM " + " question_link CROSS JOIN question " +
+                                " WHERE " + " question_link.question_id = question._id " +
+                                " ORDER BY question_id DESC ",
+                        selectionArgs);
             }
 
             @Override
-            protected void onPostExecute(Cursor cursor){
+            protected void onPostExecute(Cursor cursor) {
                 adapter.swapCursor(cursor);
+                mProgressBar.setVisibility(View.GONE);
             }
 
         }.execute();

@@ -142,11 +142,13 @@ public class StudentClassPage extends AppCompatActivity
         Log.i(TAG, "onPositiveClick called, moving to StudentSessionPage" );
 
         Intent intent = new Intent(StudentClassPage.this, StudentSessionActivePage.class);
-        intent.putExtra("classTitle", "Test Class");
-        intent.putExtra("sessionName", "Active Session");
+        //intent.putExtra("classTitle", "Test Class");
+        //intent.putExtra("sessionName", "Active Session");
         intent.putExtra("isActive", true);
         intent.putExtra("classId", classId);
 
+        intent.putExtra(getString(R.string.KEY_CLASS_ID), classId);
+        intent.putExtra(getString(R.string.KEY_CLASS_TITLE), classTitle);
 
         intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID),
                 info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID)));

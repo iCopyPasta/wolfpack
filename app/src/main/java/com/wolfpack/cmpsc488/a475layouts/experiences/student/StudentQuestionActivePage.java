@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -239,6 +240,7 @@ public class StudentQuestionActivePage extends QuestionPage {
         //getting correct answers
         String correctString = info.getCorrectAnswers();
         correctString = correctString.substring(2, correctString.length() - 2);
+        correctAnswerList = new ArrayList<>();
         for (String s : correctString.split("\",\"")){
             correctAnswerList.add(Integer.parseInt(s) - 1);
         }
@@ -335,11 +337,17 @@ public class StudentQuestionActivePage extends QuestionPage {
                 values.put("description", questionDesc);
                 values.put("potential_answers", questionPotentialAnswers);
                 values.put("correct_answers", questionCorrectAnswers);
-                values.put("questionStudentAnswers", questionStudentAnswers);
+                values.put("student_answers", questionStudentAnswers);
 
-                long questionInsertResult = db.insert(table, null, values);
-                if (questionInsertResult == -1){
-                    Log.i(TAG, "row already exists");
+                long questionInsertResult = 0;
+
+                try {
+                    questionInsertResult = db.insert(table, null, values);
+                }
+                catch (SQLiteConstraintException e){
+                    Log.i(TAG, "row already exists: questionInsertResult = " + questionInsertResult);
+                    Log.d(TAG, "message: " + e.getMessage());
+                    questionInsertResult = 1;
                 }
 
                 table = getString(R.string.TABLE_Q_IS_IN);
@@ -348,20 +356,28 @@ public class StudentQuestionActivePage extends QuestionPage {
                 values.put("session_id", session_id);
                 values.put("question_id", question_id);
 
-                long qIsInInsertResult = db.insert(table, null, values);
-                if (qIsInInsertResult == -1){
-                    Log.i(TAG, "row already exists");
+                long qIsInInsertResult = 0;
+
+                try {
+                    qIsInInsertResult = db.insert(table, null, values);
+                }
+                catch (SQLiteConstraintException e){
+                    Log.i(TAG, "row already exists: qIsInInsertResult = " + qIsInInsertResult);
+                    Log.d(TAG, "message: " + e.getMessage());
+                    qIsInInsertResult = 1;
                 }
 
-                return questionInsertResult != -1 && qIsInInsertResult != -1;
+                return questionInsertResult == 1 && qIsInInsertResult == 1;
             }
 
             @Override
             protected void onPostExecute(Boolean result){
-                Log.i(TAG, "success: rows inserted");
-                Toast.makeText(StudentQuestionActivePage.this,
-                        "question was inserted successfully!",
-                        Toast.LENGTH_SHORT).show();
+                if (result) {
+                    Log.i(TAG, "success: rows inserted");
+                    Toast.makeText(StudentQuestionActivePage.this,
+                            "question was inserted successfully!",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
 
 
@@ -445,11 +461,11 @@ public class StudentQuestionActivePage extends QuestionPage {
             trueButton.setClickable(false);
             falseButton.setClickable(false);
 
-            trueButton.setBackgroundColor(
+            trueButton.setTextColor(
                     (correctAnswer) ? getResources().getColor(R.color.colorCorrectAnswer)
                             : getResources().getColor(R.color.colorWrongAnswer));
 
-            falseButton.setBackgroundColor(
+            falseButton.setTextColor(
                     (!correctAnswer) ? getResources().getColor(R.color.colorCorrectAnswer)
                             : getResources().getColor(R.color.colorWrongAnswer));
 
@@ -478,7 +494,6 @@ public class StudentQuestionActivePage extends QuestionPage {
             }
             else{
                 Log.i(TAG, "onReceive: " + "our question was not uploaded");
-
             }
 
             if(submittedFinalAnswer){
@@ -620,6 +635,8 @@ public class StudentQuestionActivePage extends QuestionPage {
         );
         Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
 
+        updateQuestion(answer);
+
         answer = null;
     }
 
@@ -667,5 +684,43 @@ public class StudentQuestionActivePage extends QuestionPage {
         answer = null;
 
     }
+
+
+
+
+    @SuppressLint("StaticFieldLeak")
+    private void updateQuestion(final String studentAnswer){
+
+        new AsyncTask<Void, Void, Void>(){
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                String table = getString(R.string.TABLE_QUESTION);
+                ContentValues values = new ContentValues();
+                values.put("student_answers", studentAnswer);
+
+                String selection = "_id = ?";
+                String[] selectionArgs = { String.valueOf(questionId) };
+
+                db.update(table, values, selection, selectionArgs);
+
+                return null;
+            }
+
+        }.execute();
+
+
+
+
+
+
+    }
+
+
+
+
+
+
 
 }

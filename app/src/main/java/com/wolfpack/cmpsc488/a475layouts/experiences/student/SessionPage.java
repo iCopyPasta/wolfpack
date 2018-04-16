@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -26,6 +27,7 @@ public abstract class SessionPage extends AppCompatActivity {
     protected TextView mTextViewSessionName;
     protected ListView mListViewQuestionList;
     protected TextView mTextViewActiveQuestionNotice;
+    protected ProgressBar mProgressBar;
     protected SimpleCursorAdapter adapter;
 
     //Information elements
@@ -41,24 +43,23 @@ public abstract class SessionPage extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_page);
+        Log.i(TAG, "super class onCreate");
 
         try{
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorStudentPrimary)));
 
-            Log.i(TAG, "super class onCreate");
-
             Bundle bundle = getIntent().getExtras();
 
             classId = bundle.getString(getString(R.string.KEY_CLASS_ID));
-            className = bundle.getString(getString(R.string.KEY_CLASS_DESCRIPTION));
-
-            sessionId = bundle.getString(getString(R.string.KEY_SESSION_ID));
-            sessionName = bundle.getString(getString(R.string.KEY_SESSION_NAME));
-            sessionStartDate = bundle.getString(getString(R.string.KEY_SESSION_START_DATE));
+            className = bundle.getString(getString(R.string.KEY_CLASS_TITLE));
 
             mTextViewSessionName = findViewById(R.id.sessionNameTextView);
             mListViewQuestionList = findViewById(R.id.questionListListView);
             mTextViewActiveQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
+
+            mProgressBar = findViewById(R.id.sessionPageProgressBar);
+
+            getSupportActionBar().setTitle(className);
 
             //TODO: maybe we only need a readable database
             //  because session active page does not get the question information

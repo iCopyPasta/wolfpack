@@ -16,13 +16,8 @@ import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.Question
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class StudentQuestionCompletePage extends QuestionPage {//implements ActiveSessionDialog.ActiveSessionDialogListener {
+public class StudentQuestionCompletePage extends QuestionPage {
     public static final String TAG = "SQuestionCompletePage";
-
-    private RecyclerView.LayoutManager recyclerLayoutManager;
-    private AnswerChoiceRecyclerAdapter choiceAdapter;
-    //private AnswerChoiceOLDRecyclerAdapter choiceAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +27,7 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
             Bundle bundle = getIntent().getExtras();
             studentId = bundle.getString(getString(R.string.KEY_STUDENT_ID));
             classId = bundle.getString(getString(R.string.KEY_CLASS_ID));
-            className = bundle.getString(getString(R.string.KEY_CLASS_DESCRIPTION));
+            className = bundle.getString(getString(R.string.KEY_CLASS_TITLE));
 
             sessionId = bundle.getString(getString(R.string.KEY_SESSION_ID));
             sessionName = bundle.getString(getString(R.string.KEY_SESSION_NAME));
@@ -69,13 +64,12 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
         questionDesc = info.getDescription();
         mTextViewQuestion.setText(info.getDescription());
 
-        Log.i("handleActiveQuestion", "teacher id = " + info.getTeacherId() + "\n" +
-                "question id = " + info.getQuestionId() + "\n" +
+        Log.i("handleCompleteQuestion", "question id = " + info.getQuestionId() + "\n" +
                 "question desc = " + info.getDescription() + "\n" +
                 "question type = " + info.getQuestionType() + "\n" +
                 "potential answers = " + info.getPotentialAnswers() + "\n" +
-                "correct answers = " + info.getCorrectAnswers() + "\n");
-
+                "correct answers = " + info.getCorrectAnswers() + "\n" +
+                "questionStudentAnswer = " + questionStudentAnswer);
 
         if (info.getQuestionType().equals(getString(R.string.QUESTION_TYPE_TRUE_FALSE))){
             handleQuestionTrueFalse(info, questionStudentAnswer);
@@ -98,12 +92,14 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
         //getting correct answers
         String correctString = info.getCorrectAnswers();
         correctString = correctString.substring(2, correctString.length() - 2);
+        correctAnswerList = new ArrayList<>();
         for (String s : correctString.split("\",\"")){
             correctAnswerList.add(Integer.parseInt(s) - 1);
         }
 
         //getting student answers
         String studentString = questionStudentAnswer.substring(2, questionStudentAnswer.length() - 2);
+        studentAnswerList = new ArrayList<>();
         for (String s : studentString.split("\",\"")){
             studentAnswerList.add(Integer.parseInt(s) - 1);
         }
@@ -133,7 +129,6 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
 
 
     protected void handleQuestionTrueFalse(QuestionInformation info, String questionStudentAnswer) {
-
         mRadioGroupTrueFalse.setVisibility(View.VISIBLE);
 
         boolean correctAnswer = info.getCorrectAnswers().equals("[\"1\"]");
@@ -146,11 +141,11 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
         trueButton.setClickable(false);
         falseButton.setClickable(false);
 
-        trueButton.setBackgroundColor(
+        trueButton.setTextColor(
                 (correctAnswer) ? getResources().getColor(R.color.colorCorrectAnswer)
                         : getResources().getColor(R.color.colorWrongAnswer));
 
-        falseButton.setBackgroundColor(
+        falseButton.setTextColor(
                 (!correctAnswer) ? getResources().getColor(R.color.colorCorrectAnswer)
                         : getResources().getColor(R.color.colorWrongAnswer));
 

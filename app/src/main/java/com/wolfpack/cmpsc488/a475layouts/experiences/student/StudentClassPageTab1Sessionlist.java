@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -30,6 +31,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -57,6 +59,7 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
     private SQLiteDatabase db;
     private ListView mListViewSessions;
+    private ProgressBar mProgressBar;
     private SimpleCursorAdapter adapter;
 
     private MyStartedService mService;
@@ -122,6 +125,8 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
             className = activity.getClassName();
 
             mListViewSessions = rootView.findViewById(R.id.studentSessionListView);
+            mProgressBar = rootView.findViewById(R.id.studentPageProgressBar);
+            mProgressBar.setVisibility(View.VISIBLE);
 
             setupListAdapter();
             setupListView();
@@ -156,23 +161,6 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
                 new int[] {R.id.sessionNameTextView, R.id.sessionDateTextView},
                 0);
 
-        /*adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-            @Override
-            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-                if (columnIndex == 1){
-                    ((TextView) view).setText(cursor.getColumnIndex("name"));
-                    return true;
-                }
-                else if (columnIndex == 2){
-                    ((TextView) view).setText(cursor.getColumnIndex("start_date"));
-                    return true;
-                }
-                return false;
-            }
-        });*/
-
-
-
     }
 
 
@@ -188,15 +176,14 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
                     Intent intent = new Intent(activity, StudentSessionCompletePage.class);
 
                     intent.putExtra(getString(R.string.KEY_CLASS_ID), classId);
-                    intent.putExtra(getString(R.string.KEY_CLASS_DESCRIPTION), className);
+                    intent.putExtra(getString(R.string.KEY_CLASS_TITLE), className);
 
-                    intent.putExtra(getString(R.string.KEY_SESSION_ID), c.getColumnIndex("_id"));
-                    intent.putExtra(getString(R.string.KEY_SESSION_NAME), c.getColumnIndex("name"));
-                    intent.putExtra(getString(R.string.KEY_SESSION_START_DATE), c.getColumnIndex("start_date"));
+                    intent.putExtra(getString(R.string.KEY_SESSION_ID), String.valueOf(c.getInt(0)));
+                    intent.putExtra(getString(R.string.KEY_SESSION_NAME), c.getString(1));
+                    intent.putExtra(getString(R.string.KEY_SESSION_START_DATE), c.getString(2));
 
                     startActivity(intent);
                 }
-
             }
         });
 
@@ -259,6 +246,8 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
                 String[] selectionArgs = {String.valueOf(classId)};
                 String sortOrder = "_id DESC";
 
+                PollatoDB.printDatabase();
+
                 return db.query(
                         table,
                         projection,
@@ -271,8 +260,9 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
             }
 
             @Override
-            protected void onPostExecute(Cursor cursor){
+            protected void onPostExecute(Cursor cursor) {
                 adapter.swapCursor(cursor);
+                mProgressBar.setVisibility(View.GONE);
             }
 
         }.execute();
@@ -301,12 +291,17 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
                 values.put("name", sessionName);
                 values.put("start_date", _date);
 
-                long result = db.insert(table, null, values);
-                if (result == -1){
-                    Log.i(TAG, "row already exists");
+                long result = 0;
+                try {
+                    result = db.insert(table, null, values);
+                }
+                catch (SQLiteConstraintException e){
+                    Log.i(TAG, "row already exists: result = " + result);
+                    Log.d(TAG, "message: " + e.getMessage());
+                    result = 1;
                 }
 
-                return result != -1;
+                return result == -1;
             }
 
             @Override
