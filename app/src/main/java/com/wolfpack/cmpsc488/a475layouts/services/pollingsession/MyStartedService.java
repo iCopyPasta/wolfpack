@@ -36,20 +36,20 @@ public class MyStartedService extends Service {
 
     
     //KEYS
-    public static final String MY_SERVICE_ACTIVE_SESSION = "SERVICE_ACTIVE_SESSION";
-    public static final String MY_SERVICE_ACTIVE_QUESTION = "SERVICE_ACTIVE_QUESTION";
-    public static final String MY_SERVICE_QUESTION_INFO = "SERVICE_QUESTION_INFO";
-    public static final String MY_SERVICE_SUBMIT_ANSWER = "SERVICE_SUBMIT_ANSWER";
-    public static final String MY_SERVICE_QUESTION_SET_ID = "SERVICE_QUESTION_SET_ID";
-    public static final String MY_SERVICE_QUESTION_SESSION_ID = "SERVICE_QUESTION_SESSION_ID";
-    public static final String MY_SERVICE_QUESTION_ID = "SERVICE_QUESTION_ID";
-    public static final String MY_SERVICE_QUESTION_HISTORY_ID = "SERVICE_QUESTION_HISTORY_ID";
-    public static final String MY_SERVICE_QUESTION_INFO_JSON = "SERVICE_QUESTION_INFO_JSON";
-    public static final String MY_SERVICE_ANSWER_STATUS = "SERVICE_ANSWER_STATUS";
-    public static final String MY_SERVICE_ANSWER_MESSAGE = "SERVICE_ANSWER_MESSAGE";
-    public static final String MY_SERVICE_QUESTION_SET_NAME = "SERVICE_QUESTION_SET_NAME";
-    public static final String MY_SERVICE_VALIDATE_ANSWER = "SERVICE_VALIDATE_ANSWER";
-    public static final String MY_SERVICE_VALIDATE_COMBO = "SERVICE_VALIDATE_COMBO";
+    public static final String MY_SERVICE_ACTIVE_SESSION = "MY_SERVICE_ACTIVE_SESSION";
+    public static final String MY_SERVICE_ACTIVE_QUESTION = "MY_SERVICE_ACTIVE_QUESTION";
+    public static final String MY_SERVICE_QUESTION_INFO = "MY_SERVICE_QUESTION_INFO";
+    public static final String MY_SERVICE_SUBMIT_ANSWER = "MY_SERVICE_SUBMIT_ANSWER";
+    public static final String MY_SERVICE_QUESTION_SET_ID = "MY_SERVICE_QUESTION_SET_ID";
+    public static final String MY_SERVICE_QUESTION_SESSION_ID = "MY_SERVICE_QUESTION_SESSION_ID";
+    public static final String MY_SERVICE_QUESTION_ID = "MY_SERVICE_QUESTION_ID";
+    public static final String MY_SERVICE_QUESTION_HISTORY_ID = "MY_SERVICE_QUESTION_HISTORY_ID";
+    public static final String MY_SERVICE_QUESTION_INFO_JSON = "MY_SERVICE_QUESTION_INFO_JSON";
+    public static final String MY_SERVICE_ANSWER_STATUS = "MY_SERVICE_ANSWER_STATUS";
+    public static final String MY_SERVICE_ANSWER_MESSAGE = "MY_SERVICE_ANSWER_MESSAGE";
+    public static final String MY_SERVICE_QUESTION_SET_NAME = "MY_SERVICE_QUESTION_SET_NAME";
+    public static final String MY_SERVICE_VALIDATE_ANSWER = "MY_SERVICE_VALIDATE_ANSWER";
+    public static final String MY_SERVICE_VALIDATE_COMBO = "MY_SERVICE_VALIDATE_COMBO";
 
 
 

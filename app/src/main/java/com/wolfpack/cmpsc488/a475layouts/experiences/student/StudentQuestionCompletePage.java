@@ -132,12 +132,21 @@ public class StudentQuestionCompletePage extends QuestionPage {
         mRadioGroupTrueFalse.setVisibility(View.VISIBLE);
 
         boolean correctAnswer = info.getCorrectAnswers().equals("[\"1\"]");
-        boolean studentAnswer = questionStudentAnswer.equals("[\"1\"]");
+        Boolean studentAnswer = null;
+
+        if (questionStudentAnswer.equals("[\"0\"]")){
+            studentAnswer = true;
+        }
+        else if (questionStudentAnswer.equals("[\"1\"]")){
+            studentAnswer = false;
+        }
 
         RadioButton trueButton= (RadioButton) mRadioGroupTrueFalse.getChildAt(0);
         RadioButton falseButton = (RadioButton) mRadioGroupTrueFalse.getChildAt(1);
 
-        mRadioGroupTrueFalse.check((studentAnswer) ? trueButton.getId() : falseButton.getId());
+        if (studentAnswer != null) {
+            mRadioGroupTrueFalse.check((studentAnswer) ? trueButton.getId() : falseButton.getId());
+        }
         trueButton.setClickable(false);
         falseButton.setClickable(false);
 
@@ -149,9 +158,10 @@ public class StudentQuestionCompletePage extends QuestionPage {
                 (!correctAnswer) ? getResources().getColor(R.color.colorCorrectAnswer)
                         : getResources().getColor(R.color.colorWrongAnswer));
 
-
-        trueButton.setChecked(studentAnswer);
-        falseButton.setChecked(!studentAnswer);
+        if (studentAnswer != null) {
+            trueButton.setChecked(studentAnswer);
+            falseButton.setChecked(!studentAnswer);
+        }
 
         Log.i(TAG, "true = " + trueButton+ "\nfalse = " + falseButton);
         Log.i(TAG, "finished handleQuestionTrueFalse");

@@ -143,7 +143,7 @@ public class StudentQuestionActivePage extends QuestionPage
                     answerType = questionInformation.getQuestionType();
 
 
-                    //Log.i(TAG, "onReceive: " + questionInformation.getDescription());
+                    Log.i(TAG, "onReceive: " + questionInformation.getDescription());
 
                     mService.searchActiveSandQ(classId, questionSetId, "false");
 
@@ -253,6 +253,9 @@ public class StudentQuestionActivePage extends QuestionPage
 
                 }
 
+            }
+            else{
+                Log.w(TAG, "onReceive: info was null :(" );
             }
 
         }
@@ -549,8 +552,8 @@ public class StudentQuestionActivePage extends QuestionPage
 
             studentId = sharedPref.getString(getString(R.string.STUDENT_ID),"");
 
-            classId = bundle.getString("classId");
-            className = bundle.getString("className");
+            classId = bundle.getString(getString(R.string.KEY_CLASS_ID));
+            className = bundle.getString(getString(R.string.KEY_CLASS_TITLE));
 
             sessionId = questionSessionId;
 
@@ -769,8 +772,8 @@ public class StudentQuestionActivePage extends QuestionPage
     public void onNewQPositiveClick() {
 
         Intent newQuestion = new Intent(StudentQuestionActivePage.this, StudentQuestionActivePage.class);
-        newQuestion.putExtra("className", className);
-        newQuestion.putExtra("classId", classId);
+        newQuestion.putExtra(getString(R.string.KEY_CLASS_ID), classId);
+        newQuestion.putExtra(getString(R.string.KEY_CLASS_TITLE), className);
         newQuestion.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID, newQuestionSetId);
         newQuestion.putExtra(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, newQuestionHistoryId);
         newQuestion.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, newQuestionSessionId);
