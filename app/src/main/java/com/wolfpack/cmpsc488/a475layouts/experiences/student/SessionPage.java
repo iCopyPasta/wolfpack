@@ -29,7 +29,9 @@ public abstract class SessionPage extends AppCompatActivity {
     protected SimpleCursorAdapter adapter;
 
     //Information elements
+    protected String classId = "";
     protected String className = "";
+
     protected String sessionId = "";
     protected String sessionName = "";
     protected String sessionStartDate = "";
@@ -45,10 +47,23 @@ public abstract class SessionPage extends AppCompatActivity {
 
             Log.i(TAG, "super class onCreate");
 
+            Bundle bundle = getIntent().getExtras();
+
+            classId = bundle.getString(getString(R.string.KEY_CLASS_ID));
+            className = bundle.getString(getString(R.string.KEY_CLASS_DESCRIPTION));
+
+            sessionId = bundle.getString(getString(R.string.KEY_SESSION_ID));
+            sessionName = bundle.getString(getString(R.string.KEY_SESSION_NAME));
+            sessionStartDate = bundle.getString(getString(R.string.KEY_SESSION_START_DATE));
+
             mTextViewSessionName = findViewById(R.id.sessionNameTextView);
             mListViewQuestionList = findViewById(R.id.questionListListView);
             mTextViewActiveQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
 
+            //TODO: maybe we only need a readable database
+            //  because session active page does not get the question information
+            //  (question active does) so we cannot insert into the question table
+            //  And session complete does not need a writable database
             PollatoDB.getInstance(this).getWritableDatabase(
                     new PollatoDB.OnDBReadyListener() {
                         @Override
@@ -69,9 +84,6 @@ public abstract class SessionPage extends AppCompatActivity {
 
 
     protected abstract void loadQuestionList();
-
-
-
 
 
 

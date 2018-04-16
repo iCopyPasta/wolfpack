@@ -1,12 +1,15 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -25,30 +28,36 @@ import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveCo
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 
 // given
 // we ask for the current question
 // we submit from here
 public class StudentQuestionActivePage extends QuestionPage {
-    private String studentId = null;
-    private String questionId = null;
+
+    public static final String TAG = "QuestionActivePage";
+
+    //private String studentId = null;
+    //private String classId = null;
+    //private String className = null;
+
+    private String questionSetId = null;
+    //private String questionId = null;
     private String questionSessionId = null;
     private String questionHistoryId = null;
     private String questionStringJSON = null;
-    private ArrayList<String> potentialAnswers = null;
-    private ArrayList<String> correctAnswers = null;
-    private QuestionInformation questionInformation = null;
+    //private QuestionInformation questionInformation = null;
     private String answerType = null;
     private String answer = null;
-    private final String TAG = "QuestionActivePage";
+    private boolean[] studentAnswers = null;
     private Gson gson = null;
-    private String classId = null;
-    //private String className = null;
-    private String questionSetId = null;
+
     private int errorCount = 0;
     private boolean submittedFinalAnswer = false;
 
@@ -95,7 +104,7 @@ public class StudentQuestionActivePage extends QuestionPage {
                 // only need to set values once, in case of multiple requests due to timing
                 if(questionInformation == null){
                     questionStringJSON = info.getString(
-                            MyStartedService.MY_SERVICE_QUESTION_INFO_JSON,""
+                            getString(R.string.KEY_MY_SERVICE_QUESTION_INFO_JSON),""
                     );
 
                     //Log.i(TAG, "OUR QUESTION JSON: " + questionStringJSON);
@@ -105,20 +114,20 @@ public class StudentQuestionActivePage extends QuestionPage {
                             QuestionInformation.class);
 
                     //https://stackoverflow.com/questions/18544133/parsing-json-array-into-java-util-list-with-gson
-                    Type listType = new TypeToken<List<String>>(){}.getType();
-                    Type listType2 = new TypeToken<List<String>>(){}.getType();
-
-                    potentialAnswers = gson.fromJson(questionInformation.getPotentialAnswers(), listType);
-
-                    for(String el: potentialAnswers){
-                        Log.i(TAG, "onReceive: POTENTIAL ANSWERS: "  + el);
-                    }
-
-                    correctAnswers = gson.fromJson(questionInformation.getCorrectAnswers(), listType2);
-
-                    for(String el: correctAnswers){
-                        Log.i(TAG, "onReceive: CORRECT KEY(S): "  + el);
-                    }
+//                    Type listType = new TypeToken<List<String>>(){}.getType();
+//                    Type listType2 = new TypeToken<List<String>>(){}.getType();
+//
+//                    potentialAnswerList = gson.fromJson(questionInformation.getPotentialAnswers(), listType);
+//
+//                    for(String el: potentialAnswerList){
+//                        Log.i(TAG, "onReceive: POTENTIAL ANSWERS: "  + el);
+//                    }
+//
+//                    correctAnswerList = gson.fromJson(questionInformation.getCorrectAnswers(), listType2);
+//
+//                    for(Integer el: correctAnswerList){
+//                        Log.i(TAG, "onReceive: CORRECT KEY(S): "  + el);
+//                    }
 
                     answerType = questionInformation.getQuestionType();
 
@@ -134,8 +143,8 @@ public class StudentQuestionActivePage extends QuestionPage {
                             questionHistoryId,
                             "true");
 
-                    handleActiveQuestion(questionInformation);
 
+                    handleActiveQuestion(questionInformation);
                 }
             }
             else{
@@ -162,13 +171,13 @@ public class StudentQuestionActivePage extends QuestionPage {
 
             if(info != null){
                 String newQuestionId =
-                        info.getString(MyStartedService.MY_SERVICE_QUESTION_ID, "");
+                        info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_ID), "");
                 String newQuestionSessionId =
-                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, "");
+                        info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID), "");
                 String newQuestionHistoryId =
-                        info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, "");
+                        info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_HISTORY_ID), "");
                 String newQuestionSetId =
-                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, "");
+                        info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID), "");
 
                 Log.i(TAG, "onReceive: questionId: " + newQuestionId);
                 Log.i(TAG, "onReceive: newQuestionSessionId " + newQuestionSessionId);
@@ -193,24 +202,20 @@ public class StudentQuestionActivePage extends QuestionPage {
 
         }
     };
-    
-    private RecyclerView.LayoutManager recyclerLayoutManager;
-    private AnswerChoiceRecyclerAdapter choiceAdapter;
 
-    private boolean[] studentAnswers = null;
 
     protected void handleActiveQuestion(QuestionInformation info){
+        addQuestion(info, sessionId);
 
         questionDesc = info.getDescription();
         mTextViewQuestion.setText(info.getDescription());
-
 
         Log.i("handleActiveQuestion", "teacher id = " + info.getTeacherId() + "\n" +
                 "question id = " + info.getQuestionId() + "\n" +
                 "question desc = " + info.getDescription() + "\n" +
                 "question type = " + info.getQuestionType() + "\n" +
                 "potential answers = " + info.getPotentialAnswers() + "\n" +
-                "correct answers = " + info.getCorrectAnswers() + "\n");
+                "correct answers = " + info.getCorrectAnswers() + "\n\n");
 
 
         if (info.getQuestionType().equals(getString(R.string.QUESTION_TYPE_TRUE_FALSE))){
@@ -226,38 +231,35 @@ public class StudentQuestionActivePage extends QuestionPage {
     protected void handleQuestionChoice(QuestionInformation info){
         mRecyclerViewChoice.setVisibility(View.VISIBLE);
 
-        ArrayList<Integer> correctAnswers = new ArrayList<>();
-
-
+        //getting potential answers
         String answerString = info.getPotentialAnswers();
         answerString = answerString.substring(2, answerString.length() - 2);
-        ArrayList<String> answerList = new ArrayList<>(Arrays.asList(answerString.split("\",\"")));
+        potentialAnswerList = new ArrayList<>(Arrays.asList(answerString.split("\",\"")));
 
-
+        //getting correct answers
         String correctString = info.getCorrectAnswers();
         correctString = correctString.substring(2, correctString.length() - 2);
         for (String s : correctString.split("\",\"")){
-            correctAnswers.add(Integer.parseInt(s) - 1);
+            correctAnswerList.add(Integer.parseInt(s) - 1);
         }
 
-        studentAnswers = new boolean[answerList.size()];
+        studentAnswers = new boolean[potentialAnswerList.size()];
 
 
         Log.i("handleActiveQuestion", "teacher id = " + info.getTeacherId() + "\n" +
                 "question id = " + info.getQuestionId() + "\n" +
                 "question desc = " + info.getDescription() + "\n" +
                 "question type = " + info.getQuestionType() + "\n" +
-                "potential answers = " + answerList + "\n" +
-                "correct answers = " + correctAnswers
-                + "\n");
+                "potential answers = " + potentialAnswerList + "\n" +
+                "correct answers = " + correctAnswerList + "\n\n");
 
 
         mRecyclerViewChoice.setHasFixedSize(false);
         recyclerLayoutManager = new LinearLayoutManager(this);
         mRecyclerViewChoice.setLayoutManager(recyclerLayoutManager);
         choiceAdapter = new AnswerChoiceRecyclerAdapter(getApplicationContext(),
-                answerList,
-                correctAnswers,
+                potentialAnswerList,
+                correctAnswerList,
                 true);
 
 
@@ -305,6 +307,69 @@ public class StudentQuestionActivePage extends QuestionPage {
         });
 
     }
+
+
+    @SuppressLint("StaticFieldLeak")
+    private void addQuestion(final QuestionInformation info, final String sessionId){
+
+        new AsyncTask<Void, Void, Boolean> (){
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+
+                questionId = info.getQuestionId();
+                questionDesc = info.getDescription();
+                questionType = info.getQuestionType();
+                questionPotentialAnswers = info.getPotentialAnswers();
+                questionCorrectAnswers = info.getCorrectAnswers();
+                questionStudentAnswers = "";
+
+                int question_id = Integer.parseInt(questionId);
+                int session_id = Integer.parseInt(sessionId);
+
+                String table = getString(R.string.TABLE_QUESTION);
+
+                ContentValues values = new ContentValues();
+                values.put("_id", question_id);
+                values.put("question_type", questionType);
+                values.put("description", questionDesc);
+                values.put("potential_answers", questionPotentialAnswers);
+                values.put("correct_answers", questionCorrectAnswers);
+                values.put("questionStudentAnswers", questionStudentAnswers);
+
+                long questionInsertResult = db.insert(table, null, values);
+                if (questionInsertResult == -1){
+                    Log.i(TAG, "row already exists");
+                }
+
+                table = getString(R.string.TABLE_Q_IS_IN);
+
+                values = new ContentValues();
+                values.put("session_id", session_id);
+                values.put("question_id", question_id);
+
+                long qIsInInsertResult = db.insert(table, null, values);
+                if (qIsInInsertResult == -1){
+                    Log.i(TAG, "row already exists");
+                }
+
+                return questionInsertResult != -1 && qIsInInsertResult != -1;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result){
+                Log.i(TAG, "success: rows inserted");
+                Toast.makeText(StudentQuestionActivePage.this,
+                        "question was inserted successfully!",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+
+        }.execute();
+
+    }
+
+
 
 
     //receiver for validating the active question
@@ -380,14 +445,13 @@ public class StudentQuestionActivePage extends QuestionPage {
             trueButton.setClickable(false);
             falseButton.setClickable(false);
 
-            if (correctAnswer){
-                trueButton.setTextColor(getResources().getColor(R.color.colorCorrectAnswer));
-                falseButton.setTextColor(getResources().getColor(R.color.colorWrongAnswer));
-            }
-            else {
-                trueButton.setTextColor(getResources().getColor(R.color.colorWrongAnswer));
-                falseButton.setTextColor(getResources().getColor(R.color.colorCorrectAnswer));
-            }
+            trueButton.setBackgroundColor(
+                    (correctAnswer) ? getResources().getColor(R.color.colorCorrectAnswer)
+                            : getResources().getColor(R.color.colorWrongAnswer));
+
+            falseButton.setBackgroundColor(
+                    (!correctAnswer) ? getResources().getColor(R.color.colorCorrectAnswer)
+                            : getResources().getColor(R.color.colorWrongAnswer));
 
 
         }
@@ -428,28 +492,26 @@ public class StudentQuestionActivePage extends QuestionPage {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        Intent caller = getIntent();
-        Bundle callerInfo = caller.getExtras();
+        Bundle bundle = getIntent().getExtras();
 
-        if(callerInfo != null){
-            questionId = callerInfo.getString(MyStartedService.MY_SERVICE_QUESTION_ID,
-                    "");
-
-            questionSessionId = callerInfo.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID,
-                    "");
-            questionHistoryId = callerInfo.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID,
-                    "");
-
-            questionSetId = callerInfo.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
-                    "");
+        if(bundle != null){
+            questionId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_ID), "");
+            questionSessionId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID), "");
+            questionHistoryId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_HISTORY_ID), "");
+            questionSetId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID), "");
 
             SharedPreferences sharedPref = getSharedPreferences(
                     getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
             studentId = sharedPref.getString(getString(R.string.STUDENT_ID),"");
 
-            classId = callerInfo.getString("classId");
-            className = callerInfo.getString("className");
+            classId = bundle.getString("classId");
+            className = bundle.getString("className");
+
+            sessionId = questionSessionId;
+
+
+
 
         }
 
@@ -474,22 +536,22 @@ public class StudentQuestionActivePage extends QuestionPage {
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .registerReceiver(questionInfoReceiver, new IntentFilter(
-                        MyStartedService.MY_SERVICE_QUESTION_INFO));
+                        getString(R.string.KEY_MY_SERVICE_QUESTION_INFO)));
 
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .registerReceiver(validateQuestionReceiver,
-                        new IntentFilter(MyStartedService.MY_SERVICE_VALIDATE_ANSWER));
+                        new IntentFilter(getString(R.string.KEY_MY_SERVICE_VALIDATE_ANSWER)));
 
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .registerReceiver(submitAnswerReceiver, new IntentFilter(
-                        MyStartedService.MY_SERVICE_SUBMIT_ANSWER));
+                        getString(R.string.KEY_MY_SERVICE_SUBMIT_ANSWER)));
 
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .registerReceiver(combinationQuery, new IntentFilter(
-                        MyStartedService.MY_SERVICE_VALIDATE_COMBO));
+                        getString(R.string.KEY_MY_SERVICE_VALIDATE_COMBO)));
 
     }
 

@@ -95,21 +95,22 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
                 Intent activeQuestionIntent = new Intent(StudentSessionActivePage.this,
                         StudentQuestionActivePage.class);
 
-                activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_ID,
-                        info.getString(MyStartedService.MY_SERVICE_QUESTION_ID));
+                activeQuestionIntent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_ID),
+                        info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_ID)));
 
-                activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID,
-                        info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID));
+                activeQuestionIntent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_HISTORY_ID),
+                        info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_HISTORY_ID)));
 
-                activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID,
+                activeQuestionIntent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID),
                         questionSessionId);
 
-                activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
+                activeQuestionIntent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID),
                         questionSetId);
 
                 //extras to get back
-                activeQuestionIntent.putExtra("classId", classId);
-                activeQuestionIntent.putExtra("className", className);
+                activeQuestionIntent.putExtra(getString(R.string.KEY_CLASS_ID), classId);
+                activeQuestionIntent.putExtra(getString(R.string.KEY_CLASS_DESCRIPTION), className);
+                activeQuestionIntent.putExtra(getString(R.string.KEY_SESSION_ID), sessionId);
 
                 startActivity(activeQuestionIntent);
 
@@ -141,7 +142,7 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
                     Log.i(TAG, "onReceive: " + "Looking for active question again");
 
                     if(!questionSessionId.equals(
-                            info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID))){
+                            info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID)))){
                         //we have a new session!
                         Toast.makeText(StudentSessionActivePage.this,
                                 "NEW SESSION",
@@ -167,51 +168,37 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_session_page);
-
-        Bundle bundle = getIntent().getExtras();
-
 
         try{
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorStudentPrimary)));
 
 
-            classId = bundle.getString("classId");
+            Bundle bundle = getIntent().getExtras();
+            /*classId = bundle.getString("classId");
             className = bundle.getString("className");
-            sessionName = bundle.getString("sessionName");
+            sessionName = bundle.getString("sessionName");*/
 
             //is this THE active session?
             isActiveSession = (boolean) bundle.get("isActive");
-
-            //get all the views
-            //mTextViewSessionName = findViewById(R.id.sessionNameTextView);
-            //mTextViewQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
             foundQuestion = false;
 
             //our app was killed and should be restored
             if(savedInstanceState != null){
                 onRestoreInstanceState(savedInstanceState);
 
-            //set misc (text & visibility)
-            mTextViewSessionName.setText(sessionName);
-            mTextViewActiveQuestionNotice.setVisibility(View.VISIBLE);
-            mListViewQuestionList.setVisibility(View.GONE);
-
-
+                //set misc (text & visibility)
+                mTextViewSessionName.setText(sessionName);
+                mTextViewActiveQuestionNotice.setVisibility(View.VISIBLE);
+                mListViewQuestionList.setVisibility(View.GONE);
 
             }
             else{ //grab info from our calling intent
-                questionSetId = bundle.getString(
-                        MyStartedService.MY_SERVICE_QUESTION_SET_ID);
+                questionSetId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID));
+                questionSessionId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID));
+                sessionName = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_NAME));
 
-                questionSessionId = bundle.getString(
-                        MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
-
-                sessionName = bundle.getString(
-                        MyStartedService.MY_SERVICE_QUESTION_SET_NAME);
-
-                className = (String) bundle.get("className");
                 classId = bundle.getString("classId");
+                className = (String) bundle.get("className");
 
                 //is this THE active session?
                 isActiveSession = (boolean) bundle.get("isActive");
@@ -233,9 +220,7 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
     }
 
     @Override
-    protected void loadQuestionList() {
-
-    }
+    protected void loadQuestionList() { }
 
     @Override
     public void onStart(){
@@ -246,9 +231,9 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
 
-        outState.putString(MyStartedService.MY_SERVICE_QUESTION_SET_NAME, sessionName);
-        outState.putString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, questionSetId);
-        outState.putString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, questionSessionId);
+        outState.putString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_NAME), sessionName);
+        outState.putString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID), questionSetId);
+        outState.putString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID), questionSessionId);
         outState.putString("className", className);
         outState.putString("classId", classId);
         outState.putBoolean("isActive",isActiveQuestion);
@@ -258,21 +243,15 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
     public void onRestoreInstanceState(Bundle inState){
         super.onRestoreInstanceState(inState);
 
-        sessionName = inState.getString(
-                MyStartedService.MY_SERVICE_QUESTION_SET_NAME,""
-        );
+        sessionName = inState.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_NAME),"");
 
         mTextViewSessionName.setText(sessionName);
 
-        questionSetId = inState.getString(
-                MyStartedService.MY_SERVICE_QUESTION_SET_ID);
-
-        questionSessionId = inState.getString(
-                MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
-
-        className = inState.getString("className");
+        questionSetId = inState.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID));
+        questionSessionId = inState.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID));
 
         classId = inState.getString("classId");
+        className = inState.getString("className");
 
         isActiveQuestion = inState.getBoolean("isActive");
 
@@ -307,11 +286,11 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
 
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
-                .registerReceiver(mReceiver, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_QUESTION));
+                .registerReceiver(mReceiver, new IntentFilter(getString(R.string.KEY_MY_SERVICE_ACTIVE_QUESTION)));
 
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
-                .registerReceiver(mReceiver2, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_SESSION));
+                .registerReceiver(mReceiver2, new IntentFilter(getString(R.string.KEY_MY_SERVICE_ACTIVE_SESSION)));
     }
 
 

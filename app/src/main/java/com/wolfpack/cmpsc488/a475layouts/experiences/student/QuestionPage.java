@@ -1,5 +1,6 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,7 +16,9 @@ import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
+import com.wolfpack.cmpsc488.a475layouts.services.sqlite_database.PollatoDB;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,26 +26,40 @@ public abstract class QuestionPage extends AppCompatActivity {
 
     public static final String TAG = "QuestionPage";
 
-    public static final int QUESTION_TYPE_CHOICE = 1;
-    public static final int QUESTION_TYPE_TRUE_FALSE = 2;
-    public static final int QUESTION_TYPE_CHOICE_OLD = 3;
+    //database
+    protected SQLiteDatabase db;
 
-
+    //ui elements
     protected TextView mTextViewQuestion;
     protected RecyclerView mRecyclerViewChoice;
     protected RadioGroup mRadioGroupTrueFalse;
-    protected RadioGroup mRadioGroupChoiceOLD;
-    protected RecyclerView mRecyclerViewChoiceOLD;
+    //protected RadioGroup mRadioGroupChoiceOLD;
+    //protected RecyclerView mRecyclerViewChoiceOLD;
 
+    protected RecyclerView.LayoutManager recyclerLayoutManager;
+    protected AnswerChoiceRecyclerAdapter choiceAdapter;
 
-    protected String className = null;
-    protected String sessionName = null;
-    protected String questionDesc = null;
-    protected int questionType = 0;
+    //information
+    protected String studentId = "";
+    protected String classId = "";
+    protected String className = "";
 
-    //protected List<String> answerList;
+    protected String sessionId = "";
+    protected String sessionName = "";
+    protected String sessionStartDate = "";
 
+    protected String questionId = "";
+    protected String questionDesc = "";
+    protected String questionType = "";
+    protected String questionPotentialAnswers = "";
+    protected String questionCorrectAnswers = "";
+    protected String questionStudentAnswers = "";
 
+    protected QuestionInformation questionInformation;
+
+    protected ArrayList<String> potentialAnswerList = null;
+    protected ArrayList<Integer> correctAnswerList = null;
+    protected ArrayList<Integer> studentAnswerList = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +81,15 @@ public abstract class QuestionPage extends AppCompatActivity {
             Log.i(TAG, "mRecyclerViewChoice = " + mRecyclerViewChoice);
             Log.i(TAG, "mRadioGroupTrueFalse= " + mRadioGroupTrueFalse);
 
+            PollatoDB.getInstance(this).getWritableDatabase(
+                    new PollatoDB.OnDBReadyListener() {
+                        @Override
+                        public void onDBReady(SQLiteDatabase db) {
+                            QuestionPage.this.db = db;
+                        }
+                    }
+            );
+
         }
         catch (NullPointerException e){
             Log.i(TAG, e.getMessage());
@@ -74,39 +100,6 @@ public abstract class QuestionPage extends AppCompatActivity {
 
 
     }
-
-
-
-
-
-
-    protected void handleCompleteQuestion(QuestionInformation info){
-
-    }
-
-
-    protected void handleActiveQuestion(QuestionInformation info){
-        questionDesc = info.getDescription();
-        mTextViewQuestion.setText(questionDesc);
-
-
-        Log.i("handleActiveQuestion",
-                "teacher id = " + info.getTeacherId() + "\n" +
-                "question id = " + info.getQuestionId() + "\n" +
-                "question desc = " + info.getDescription() + "\n" +
-                "question type = " + info.getQuestionType() + "\n" +
-                "potential answers = " + info.getPotentialAnswers() + "\n" +
-                "correct answers = " + info.getCorrectAnswers() + "\n");
-
-
-        if (info.getQuestionType().equals(getString(R.string.QUESTION_TYPE_TRUE_FALSE))){
-            handleQuestionTrueFalse(info);
-        }
-        else if (info.getQuestionType().equals(getString(R.string.QUESTION_TYPE_CHOICE))){
-            handleQuestionChoice(info);
-        }
-    }
-
 
     protected abstract void handleQuestionChoice(QuestionInformation info);
     protected abstract void handleQuestionTrueFalse(QuestionInformation info);

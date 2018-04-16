@@ -148,19 +148,19 @@ public class StudentClassPage extends AppCompatActivity
         intent.putExtra("classId", classId);
 
 
-        intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
-                info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID));
+        intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID),
+                info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID)));
 
-        intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID,
-                info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID));
+        intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID),
+                info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID)));
 
-        intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_NAME,
-            info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_NAME));
+        intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_NAME),
+            info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_NAME)));
 
         //insert new session into database and reload adapter
         sessionListTab.addSession(
-                info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID),
-                info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_NAME));
+                info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID)),
+                info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_NAME)));
 
         startActivity(intent);
 

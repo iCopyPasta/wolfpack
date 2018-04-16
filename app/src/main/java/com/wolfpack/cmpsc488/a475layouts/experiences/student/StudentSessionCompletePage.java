@@ -33,12 +33,12 @@ public class StudentSessionCompletePage extends SessionPage {
 
 
         try{
-            Bundle bundle = getIntent().getExtras();
+            /*Bundle bundle = getIntent().getExtras();
 
             className = bundle.getString(getString(R.string.KEY_CLASS_DESCRIPTION));
             sessionId = bundle.getString(getString(R.string.KEY_SESSION_ID));
             sessionName = bundle.getString(getString(R.string.KEY_SESSION_NAME));
-            sessionStartDate = bundle.getString(getString(R.string.KEY_SESSION_START_DATE));
+            sessionStartDate = bundle.getString(getString(R.string.KEY_SESSION_START_DATE));*/
 
 
             getSupportActionBar().setTitle(className);
@@ -79,6 +79,7 @@ public class StudentSessionCompletePage extends SessionPage {
                 if (c.moveToPosition(position)) {
                     Intent intent = new Intent(getApplicationContext(), StudentQuestionCompletePage.class);
 
+                    intent.putExtra(getString(R.string.KEY_CLASS_ID), classId);
                     intent.putExtra(getString(R.string.KEY_CLASS_DESCRIPTION), className);
 
                     intent.putExtra(getString(R.string.KEY_SESSION_ID), sessionId);

@@ -1,16 +1,20 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class StudentQuestionCompletePage extends QuestionPage {//implements ActiveSessionDialog.ActiveSessionDialogListener {
     public static final String TAG = "SQuestionCompletePage";
@@ -20,44 +24,35 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
     //private AnswerChoiceOLDRecyclerAdapter choiceAdapter;
 
 
-    private String defaultQuestion = "Rick Astley's never gonna:";
-    private String[] defaultAnswers = {"Give you up", "Let you down", "Make you cry", "Hurt you"};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle bundle = getIntent().getExtras();
-
         try {
-            sessionName = bundle.getString("sessionName");
-            questionDesc = bundle.getString("questionDesc");
+            Bundle bundle = getIntent().getExtras();
+            studentId = bundle.getString(getString(R.string.KEY_STUDENT_ID));
+            classId = bundle.getString(getString(R.string.KEY_CLASS_ID));
+            className = bundle.getString(getString(R.string.KEY_CLASS_DESCRIPTION));
 
-            questionType = bundle.getInt("questionType");
+            sessionId = bundle.getString(getString(R.string.KEY_SESSION_ID));
+            sessionName = bundle.getString(getString(R.string.KEY_SESSION_NAME));
+            sessionStartDate = bundle.getString(getString(R.string.KEY_SESSION_START_DATE));
 
-            mTextViewQuestion.setText(questionDesc);
-
-            Log.i(TAG, "mTextViewQuestion = " + mTextViewQuestion);
-            Log.i(TAG, "mTextViewQuestion text = " + mTextViewQuestion.getText().toString());
+            questionId = bundle.getString(getString(R.string.KEY_QUESTION_ID));
+            questionDesc = bundle.getString(getString(R.string.KEY_QUESTION_DESCRIPTION));
+            questionType = bundle.getString(getString(R.string.KEY_QUESTION_TYPE));
+            questionPotentialAnswers = bundle.getString(getString(R.string.KEY_QUESTION_POTENTIAL_ANSWERS));
+            questionCorrectAnswers = bundle.getString(getString(R.string.KEY_QUESTION_CORRECT_ANSWERS));
+            questionStudentAnswers = bundle.getString(getString(R.string.KEY_QUESTION_STUDENT_ANSWERS));
 
             QuestionInformation info = new QuestionInformation();
-            //info.setQuestionId();
+            info.setQuestionId(questionId);
+            info.setDescription(questionDesc);
+            info.setQuestionType(questionType);
+            info.setPotentialAnswers(questionPotentialAnswers);
+            info.setCorrectAnswers(questionCorrectAnswers);
 
-            switch (questionType){
-                case QUESTION_TYPE_CHOICE:
-                    handleQuestionChoice(info);
-                    break;
-                case QUESTION_TYPE_TRUE_FALSE:
-                    handleQuestionTrueFalse(info);
-                    break;
-                /*//TODO: must look for solution to problem (posted below)
-                case QUESTION_TYPE_CHOICE_OLD:
-                    //handleQuestionChoice(bundle);
-                    break;*/
-                default:
-                    throw new RuntimeException("questionType is out of range");
-            }
-
+            handleCompleteQuestion(info, questionStudentAnswers);
         }
         catch(NullPointerException e){
             Log.i(TAG, e.getMessage());
@@ -67,6 +62,108 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
         Log.i(TAG, "finished onCreate");
 
     }
+
+
+
+    protected void handleCompleteQuestion(QuestionInformation info, String questionStudentAnswer){
+        questionDesc = info.getDescription();
+        mTextViewQuestion.setText(info.getDescription());
+
+        Log.i("handleActiveQuestion", "teacher id = " + info.getTeacherId() + "\n" +
+                "question id = " + info.getQuestionId() + "\n" +
+                "question desc = " + info.getDescription() + "\n" +
+                "question type = " + info.getQuestionType() + "\n" +
+                "potential answers = " + info.getPotentialAnswers() + "\n" +
+                "correct answers = " + info.getCorrectAnswers() + "\n");
+
+
+        if (info.getQuestionType().equals(getString(R.string.QUESTION_TYPE_TRUE_FALSE))){
+            handleQuestionTrueFalse(info, questionStudentAnswer);
+        }
+        else if (info.getQuestionType().equals(getString(R.string.QUESTION_TYPE_CHOICE))){
+            handleQuestionChoice(info, questionStudentAnswer);
+        }
+
+    }
+
+
+    protected void handleQuestionChoice(QuestionInformation info, String questionStudentAnswer){
+        mRecyclerViewChoice.setVisibility(View.VISIBLE);
+
+        //getting potential answers
+        String answerString = info.getPotentialAnswers();
+        answerString = answerString.substring(2, answerString.length() - 2);
+        potentialAnswerList = new ArrayList<>(Arrays.asList(answerString.split("\",\"")));
+
+        //getting correct answers
+        String correctString = info.getCorrectAnswers();
+        correctString = correctString.substring(2, correctString.length() - 2);
+        for (String s : correctString.split("\",\"")){
+            correctAnswerList.add(Integer.parseInt(s) - 1);
+        }
+
+        //getting student answers
+        String studentString = questionStudentAnswer.substring(2, questionStudentAnswer.length() - 2);
+        for (String s : studentString.split("\",\"")){
+            studentAnswerList.add(Integer.parseInt(s) - 1);
+        }
+
+        Log.i("handleActiveQuestion", "teacher id = " + info.getTeacherId() + "\n" +
+                "question id = " + info.getQuestionId() + "\n" +
+                "question desc = " + info.getDescription() + "\n" +
+                "question type = " + info.getQuestionType() + "\n" +
+                "potential answers = " + potentialAnswerList + "\n" +
+                "correct answers = " + correctAnswerList + "\n" +
+                "student answers = " + studentAnswerList + "\n\n");
+
+
+        mRecyclerViewChoice.setHasFixedSize(false);
+        recyclerLayoutManager = new LinearLayoutManager(this);
+        mRecyclerViewChoice.setLayoutManager(recyclerLayoutManager);
+        choiceAdapter = new AnswerChoiceRecyclerAdapter(this,
+                potentialAnswerList,
+                correctAnswerList,
+                studentAnswerList,
+                false);
+
+        mRecyclerViewChoice.setAdapter(choiceAdapter);
+
+        Log.i(TAG, "finished handleQuestionChoice");
+    }
+
+
+    protected void handleQuestionTrueFalse(QuestionInformation info, String questionStudentAnswer) {
+
+        mRadioGroupTrueFalse.setVisibility(View.VISIBLE);
+
+        boolean correctAnswer = info.getCorrectAnswers().equals("[\"1\"]");
+        boolean studentAnswer = questionStudentAnswer.equals("[\"1\"]");
+
+        RadioButton trueButton= (RadioButton) mRadioGroupTrueFalse.getChildAt(0);
+        RadioButton falseButton = (RadioButton) mRadioGroupTrueFalse.getChildAt(1);
+
+        mRadioGroupTrueFalse.check((studentAnswer) ? trueButton.getId() : falseButton.getId());
+        trueButton.setClickable(false);
+        falseButton.setClickable(false);
+
+        trueButton.setBackgroundColor(
+                (correctAnswer) ? getResources().getColor(R.color.colorCorrectAnswer)
+                        : getResources().getColor(R.color.colorWrongAnswer));
+
+        falseButton.setBackgroundColor(
+                (!correctAnswer) ? getResources().getColor(R.color.colorCorrectAnswer)
+                        : getResources().getColor(R.color.colorWrongAnswer));
+
+
+        trueButton.setChecked(studentAnswer);
+        falseButton.setChecked(!studentAnswer);
+
+        Log.i(TAG, "true = " + trueButton+ "\nfalse = " + falseButton);
+        Log.i(TAG, "finished handleQuestionTrueFalse");
+
+    }
+
+
 
     /**
      * handleQuestionSelection handle the case that the question being displayed is a selection question
@@ -181,29 +278,6 @@ public class StudentQuestionCompletePage extends QuestionPage {//implements Acti
         Log.i(TAG, "finished handleQuestionChoiceOLD");
     }*/
 
-
-
-
-
-
-
-
-
-
-
-//    /**
-//     * ActiveSessionDialog.ActiveSessionDialogListener function implementation
-//     */
-//
-//    @Override
-//    public void onPositiveClick() {
-//
-//    }
-//
-//    @Override
-//    public void onNegativeClick() {
-//
-//    }
 
 
 }

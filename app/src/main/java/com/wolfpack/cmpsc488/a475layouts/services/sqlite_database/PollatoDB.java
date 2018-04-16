@@ -39,7 +39,6 @@ public class PollatoDB extends SQLiteOpenHelper {
                     "start_date TEXT);"+
             "CREATE TABLE question ("+
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT,"+
-                    "teacher_id INTEGER NOT NULL,"+
                     "question_type TEXT NOT NULL,"+
                     "description TEXT NOT NULL,"+
                     "potential_answers BLOB NOT NULL,"+

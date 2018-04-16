@@ -187,6 +187,7 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
                 if (c.moveToPosition(position)) {
                     Intent intent = new Intent(activity, StudentSessionCompletePage.class);
 
+                    intent.putExtra(getString(R.string.KEY_CLASS_ID), classId);
                     intent.putExtra(getString(R.string.KEY_CLASS_DESCRIPTION), className);
 
                     intent.putExtra(getString(R.string.KEY_SESSION_ID), c.getColumnIndex("_id"));
@@ -228,7 +229,7 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
         LocalBroadcastManager.getInstance(
                 activity.getApplicationContext())
-                .registerReceiver(mReceiver, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_SESSION));
+                .registerReceiver(mReceiver, new IntentFilter(getString(R.string.KEY_MY_SERVICE_ACTIVE_SESSION)));
 
     }
 
@@ -257,6 +258,7 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
                 String selection = "class_id = ?";
                 String[] selectionArgs = {String.valueOf(classId)};
                 String sortOrder = "_id DESC";
+
                 return db.query(
                         table,
                         projection,
