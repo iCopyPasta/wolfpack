@@ -105,7 +105,7 @@ public class StudentQuestionActivePage extends QuestionPage {
                 // only need to set values once, in case of multiple requests due to timing
                 if(questionInformation == null){
                     questionStringJSON = info.getString(
-                            getString(R.string.KEY_MY_SERVICE_QUESTION_INFO_JSON),""
+                            MyStartedService.MY_SERVICE_QUESTION_INFO_JSON,""
                     );
 
                     //Log.i(TAG, "OUR QUESTION JSON: " + questionStringJSON);
@@ -172,13 +172,13 @@ public class StudentQuestionActivePage extends QuestionPage {
 
             if(info != null){
                 String newQuestionId =
-                        info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_ID), "");
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_ID, "");
                 String newQuestionSessionId =
-                        info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID), "");
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, "");
                 String newQuestionHistoryId =
-                        info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_HISTORY_ID), "");
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, "");
                 String newQuestionSetId =
-                        info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID), "");
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, "");
 
                 Log.i(TAG, "onReceive: questionId: " + newQuestionId);
                 Log.i(TAG, "onReceive: newQuestionSessionId " + newQuestionSessionId);
@@ -343,6 +343,7 @@ public class StudentQuestionActivePage extends QuestionPage {
 
                 long questionInsertResult = 0;
 
+                Log.w(TAG, "inserting question");
                 try {
                     questionInsertResult = db.insert(table, null, values);
                 }
@@ -359,7 +360,7 @@ public class StudentQuestionActivePage extends QuestionPage {
                 values.put("question_id", question_id);
 
                 long qIsInInsertResult = 0;
-
+                Log.w(TAG, "inserting question is in");
                 try {
                     qIsInInsertResult = db.insert(table, null, values);
                 }
@@ -512,10 +513,10 @@ public class StudentQuestionActivePage extends QuestionPage {
         Bundle bundle = getIntent().getExtras();
 
         if(bundle != null){
-            questionId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_ID), "");
-            questionSessionId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID), "");
-            questionHistoryId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_HISTORY_ID), "");
-            questionSetId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID), "");
+            questionId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_ID, "");
+            questionSessionId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, "");
+            questionHistoryId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, "");
+            questionSetId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, "");
 
             SharedPreferences sharedPref = getSharedPreferences(
                     getString(R.string.preference_file_key), Context.MODE_PRIVATE);
@@ -553,22 +554,22 @@ public class StudentQuestionActivePage extends QuestionPage {
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .registerReceiver(questionInfoReceiver, new IntentFilter(
-                        getString(R.string.KEY_MY_SERVICE_QUESTION_INFO)));
+                        MyStartedService.MY_SERVICE_QUESTION_INFO));
 
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .registerReceiver(validateQuestionReceiver,
-                        new IntentFilter(getString(R.string.KEY_MY_SERVICE_VALIDATE_ANSWER)));
+                        new IntentFilter(MyStartedService.MY_SERVICE_VALIDATE_ANSWER));
 
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .registerReceiver(submitAnswerReceiver, new IntentFilter(
-                        getString(R.string.KEY_MY_SERVICE_SUBMIT_ANSWER)));
+                        MyStartedService.MY_SERVICE_SUBMIT_ANSWER));
 
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .registerReceiver(combinationQuery, new IntentFilter(
-                        getString(R.string.KEY_MY_SERVICE_VALIDATE_COMBO)));
+                        MyStartedService.MY_SERVICE_VALIDATE_COMBO));
 
     }
 
@@ -624,6 +625,7 @@ public class StudentQuestionActivePage extends QuestionPage {
             }
             sb.append("]");
             answer = sb.toString();
+
         }
 
 
@@ -705,7 +707,9 @@ public class StudentQuestionActivePage extends QuestionPage {
                 String selection = "_id = ?";
                 String[] selectionArgs = { String.valueOf(questionId) };
 
+                Log.w(TAG, "starting update question in database");
                 db.update(table, values, selection, selectionArgs);
+                Log.w(TAG, "finished updating question in database");
 
                 return null;
             }

@@ -34,6 +34,25 @@ public class MyStartedService extends Service {
 
     private final String TAG = "MyStartedService";
 
+    
+    //KEYS
+    public static final String MY_SERVICE_ACTIVE_SESSION = "SERVICE_ACTIVE_SESSION";
+    public static final String MY_SERVICE_ACTIVE_QUESTION = "SERVICE_ACTIVE_QUESTION";
+    public static final String MY_SERVICE_QUESTION_INFO = "SERVICE_QUESTION_INFO";
+    public static final String MY_SERVICE_SUBMIT_ANSWER = "SERVICE_SUBMIT_ANSWER";
+    public static final String MY_SERVICE_QUESTION_SET_ID = "SERVICE_QUESTION_SET_ID";
+    public static final String MY_SERVICE_QUESTION_SESSION_ID = "SERVICE_QUESTION_SESSION_ID";
+    public static final String MY_SERVICE_QUESTION_ID = "SERVICE_QUESTION_ID";
+    public static final String MY_SERVICE_QUESTION_HISTORY_ID = "SERVICE_QUESTION_HISTORY_ID";
+    public static final String MY_SERVICE_QUESTION_INFO_JSON = "SERVICE_QUESTION_INFO_JSON";
+    public static final String MY_SERVICE_ANSWER_STATUS = "SERVICE_ANSWER_STATUS";
+    public static final String MY_SERVICE_ANSWER_MESSAGE = "SERVICE_ANSWER_MESSAGE";
+    public static final String MY_SERVICE_QUESTION_SET_NAME = "SERVICE_QUESTION_SET_NAME";
+    public static final String MY_SERVICE_VALIDATE_ANSWER = "SERVICE_VALIDATE_ANSWER";
+    public static final String MY_SERVICE_VALIDATE_COMBO = "SERVICE_VALIDATE_COMBO";
+
+
+
     public synchronized boolean isRunning() {
         return isRunning;
     }
@@ -346,7 +365,7 @@ public class MyStartedService extends Service {
 
             switch (id){
                 case 1:{
-                    Intent intent = new Intent(getString(R.string.KEY_MY_SERVICE_ACTIVE_SESSION));
+                    Intent intent = new Intent(MyStartedService.MY_SERVICE_ACTIVE_SESSION);
 
                     try{
 
@@ -364,9 +383,9 @@ public class MyStartedService extends Service {
                             String questionSetName = ((PollingResults<ActiveSessionInfo>) result).getResults()
                                     .get(0).getQuestionSetName();
 
-                            intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID), questionSetId);
-                            intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID), questionSessionId);
-                            intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_NAME), questionSetName);
+                            intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID, questionSetId);
+                            intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, questionSessionId);
+                            intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_NAME, questionSetName);
 
                         }
                         else{
@@ -394,7 +413,7 @@ public class MyStartedService extends Service {
                 } break;
 
                 case 2:{
-                    Intent intent = new Intent(getString(R.string.KEY_MY_SERVICE_ACTIVE_QUESTION));
+                    Intent intent = new Intent(MyStartedService.MY_SERVICE_ACTIVE_QUESTION);
                     try{
 
                         if(result != null)
@@ -406,8 +425,8 @@ public class MyStartedService extends Service {
                             @SuppressWarnings("unchecked")
                             String getQuestionHistoryId = ((PollingResults<ActiveQuestionInfo>) result).getResults()
                                     .get(0).getQuestionHistoryId();
-                            intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_ID), questionId);
-                            intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_HISTORY_ID), getQuestionHistoryId);
+                            intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_ID, questionId);
+                            intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, getQuestionHistoryId);
 
                         }
                         else{
@@ -435,7 +454,7 @@ public class MyStartedService extends Service {
                 } break;
 
                 case 3:{
-                    Intent intent = new Intent(getString(R.string.KEY_MY_SERVICE_QUESTION_INFO));
+                    Intent intent = new Intent(MyStartedService.MY_SERVICE_QUESTION_INFO);
                     try{
 
                         if(result != null)
@@ -452,7 +471,7 @@ public class MyStartedService extends Service {
 
                             //Log.i(TAG, "QUESTION INFO JSON = " + questionJSON);
                             //perform conversation later on
-                            intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_INFO_JSON), questionJSON);
+                            intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_INFO_JSON, questionJSON);
 
                         }
                         else{
@@ -482,7 +501,7 @@ public class MyStartedService extends Service {
 
                     break;
                 case 4:{
-                    Intent intent = new Intent(getString(R.string.KEY_MY_SERVICE_SUBMIT_ANSWER));
+                    Intent intent = new Intent(MyStartedService.MY_SERVICE_SUBMIT_ANSWER);
                     try{
 
                         if(result != null)
@@ -493,8 +512,8 @@ public class MyStartedService extends Service {
 
                             Log.i(TAG, "SUBMISSION OF ANSWER = " + message);
                             //perform conversation later on
-                            intent.putExtra(getString(R.string.KEY_MY_SERVICE_ANSWER_MESSAGE), message);
-                            intent.putExtra(getString(R.string.KEY_MY_SERVICE_ANSWER_STATUS), sukmoonChang);
+                            intent.putExtra(MyStartedService.MY_SERVICE_ANSWER_MESSAGE, message);
+                            intent.putExtra(MyStartedService.MY_SERVICE_ANSWER_STATUS, sukmoonChang);
                         }
                         else{
                             Log.e(TAG, "onPostExecute: " + "result was null" );
@@ -519,7 +538,7 @@ public class MyStartedService extends Service {
                 } break;
 
                 case 5:{
-                    Intent intent = new Intent(getString(R.string.KEY_MY_SERVICE_VALIDATE_ANSWER));
+                    Intent intent = new Intent(MyStartedService.MY_SERVICE_VALIDATE_ANSWER);
                     try{
 
                         if(result != null)
@@ -545,10 +564,10 @@ public class MyStartedService extends Service {
                                     .get(0).getQuestionSetId();
 
 
-                            intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_ID), getQuestionId);
-                            intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_HISTORY_ID), getQuestionHistoryId);
-                            intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID), getQuesitonSessionId);
-                            intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID),getQuestionSetId);
+                            intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_ID, getQuestionId);
+                            intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, getQuestionHistoryId);
+                            intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, getQuesitonSessionId);
+                            intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID,getQuestionSetId);
                         }
                         else{
                             Log.e(TAG, "onPostExecute: " + "result was null" );
@@ -575,7 +594,7 @@ public class MyStartedService extends Service {
                 case 6: {
                     Log.i(TAG, "onPostExecute: using the combination method");
 
-                    Intent intent = new Intent(getString(R.string.KEY_MY_SERVICE_VALIDATE_COMBO));
+                    Intent intent = new Intent(MyStartedService.MY_SERVICE_VALIDATE_COMBO);
                     try{
 
                         if(result != null)
@@ -619,10 +638,10 @@ public class MyStartedService extends Service {
                             }
 
 
-                            intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_ID), getQuestionId);
-                            intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_HISTORY_ID), getQuestionHistoryId);
-                            intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID), getQuestionSessionId);
-                            intent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID),getQuestionSetId);
+                            intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_ID, getQuestionId);
+                            intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, getQuestionHistoryId);
+                            intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, getQuestionSessionId);
+                            intent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID,getQuestionSetId);
                         }
                         else{
                             Log.e(TAG, "onPostExecute: " + "result was null" );

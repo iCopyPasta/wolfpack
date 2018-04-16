@@ -101,7 +101,7 @@ public class StudentQuestionCompletePage extends QuestionPage {
         String studentString = questionStudentAnswer.substring(2, questionStudentAnswer.length() - 2);
         studentAnswerList = new ArrayList<>();
         for (String s : studentString.split("\",\"")){
-            studentAnswerList.add(Integer.parseInt(s) - 1);
+            studentAnswerList.add(Integer.parseInt(s));
         }
 
         Log.i("handleActiveQuestion", "teacher id = " + info.getTeacherId() + "\n" +

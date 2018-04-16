@@ -95,16 +95,16 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
                 Intent activeQuestionIntent = new Intent(StudentSessionActivePage.this,
                         StudentQuestionActivePage.class);
 
-                activeQuestionIntent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_ID),
-                        info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_ID)));
+                activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_ID,
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_ID));
 
-                activeQuestionIntent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_HISTORY_ID),
-                        info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_HISTORY_ID)));
+                activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID,
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID));
 
-                activeQuestionIntent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID),
+                activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID,
                         questionSessionId);
 
-                activeQuestionIntent.putExtra(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID),
+                activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
                         questionSetId);
 
                 //extras to get back
@@ -142,7 +142,7 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
                     Log.i(TAG, "onReceive: " + "Looking for active question again");
 
                     if(!questionSessionId.equals(
-                            info.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID)))){
+                            info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID))){
                         //we have a new session!
                         Toast.makeText(StudentSessionActivePage.this,
                                 "NEW SESSION",
@@ -183,7 +183,7 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
             mTextViewSessionName.setText(sessionName);
             mListViewQuestionList.setVisibility(View.GONE);
             mTextViewActiveQuestionNotice.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.VISIBLE);
+            //mProgressBar.setVisibility(View.VISIBLE);
 
 
             //our app was killed and should be restored
@@ -192,9 +192,9 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
             }
             else{ //grab info from our calling intent
 
-                sessionName = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_NAME));
-                questionSetId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID));
-                sessionId = questionSessionId = bundle.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID));
+                sessionName = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SET_NAME);
+                questionSetId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID);
+                sessionId = questionSessionId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
 
                 //is this THE active session?
                 isActiveSession = (boolean) bundle.get("isActive");
@@ -225,9 +225,9 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
 
-        outState.putString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_NAME), sessionName);
-        outState.putString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID), questionSetId);
-        outState.putString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID), questionSessionId);
+        outState.putString(MyStartedService.MY_SERVICE_QUESTION_SET_NAME, sessionName);
+        outState.putString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, questionSetId);
+        outState.putString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, questionSessionId);
         outState.putString("className", className);
         outState.putString("classId", classId);
         outState.putBoolean("isActive",isActiveQuestion);
@@ -237,12 +237,12 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
     public void onRestoreInstanceState(Bundle inState){
         super.onRestoreInstanceState(inState);
 
-        sessionName = inState.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_NAME),"");
+        sessionName = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SET_NAME,"");
 
         //mTextViewSessionName.setText(sessionName);
 
-        questionSetId = inState.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SET_ID));
-        questionSessionId = inState.getString(getString(R.string.KEY_MY_SERVICE_QUESTION_SESSION_ID));
+        questionSetId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID);
+        questionSessionId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
 
         classId = inState.getString("classId");
         className = inState.getString("className");
@@ -280,11 +280,11 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
 
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
-                .registerReceiver(mReceiver, new IntentFilter(getString(R.string.KEY_MY_SERVICE_ACTIVE_QUESTION)));
+                .registerReceiver(mReceiver, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_QUESTION));
 
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
-                .registerReceiver(mReceiver2, new IntentFilter(getString(R.string.KEY_MY_SERVICE_ACTIVE_SESSION)));
+                .registerReceiver(mReceiver2, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_SESSION));
     }
 
 

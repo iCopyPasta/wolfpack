@@ -126,7 +126,7 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
             mListViewSessions = rootView.findViewById(R.id.studentSessionListView);
             mProgressBar = rootView.findViewById(R.id.studentPageProgressBar);
-            mProgressBar.setVisibility(View.VISIBLE);
+            //mProgressBar.setVisibility(View.VISIBLE);
 
             setupListAdapter();
             setupListView();
@@ -209,6 +209,9 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
     public void onResume(){
         super.onResume();
 
+        if (db != null)
+            loadSessionList();
+
         //bind to custom service
         Intent serviceIntent = new Intent(getContext() , MyStartedService.class);
         getContext().startService(serviceIntent);
@@ -216,7 +219,7 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
         LocalBroadcastManager.getInstance(
                 activity.getApplicationContext())
-                .registerReceiver(mReceiver, new IntentFilter(getString(R.string.KEY_MY_SERVICE_ACTIVE_SESSION)));
+                .registerReceiver(mReceiver, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_SESSION));
 
     }
 
@@ -239,12 +242,20 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
         new AsyncTask<Void, Void, Cursor>(){
 
             @Override
+            protected void onPreExecute(){
+                Log.w(TAG, "is this being called????");
+                mProgressBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
             protected Cursor doInBackground(Void... params) {
                 String[] projection = {"_id", "name", "start_date"};
                 String table = getString(R.string.TABLE_SESSION);
                 String selection = "class_id = ?";
                 String[] selectionArgs = {String.valueOf(classId)};
                 String sortOrder = "_id DESC";
+
+                Log.w(TAG, "we are here my fuzzy friend");
 
                 PollatoDB.printDatabase();
 

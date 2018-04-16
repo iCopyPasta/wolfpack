@@ -53,7 +53,7 @@ public class StudentSessionCompletePage extends SessionPage {
             mTextViewSessionName.setText(titleText);
             mListViewQuestionList.setVisibility(View.VISIBLE);
             mTextViewActiveQuestionNotice.setVisibility(View.GONE);
-            mProgressBar.setVisibility(View.VISIBLE);
+            //mProgressBar.setVisibility(View.VISIBLE);
 
             setupListAdapter();
             setupListView();
@@ -115,6 +115,11 @@ public class StudentSessionCompletePage extends SessionPage {
     @SuppressLint("StaticFieldLeak")
     public void loadQuestionList(){
         new AsyncTask<Void, Void, Cursor>(){
+
+            @Override
+            protected void onPreExecute(){
+                mProgressBar.setVisibility(View.VISIBLE);
+            }
 
             @Override
             protected Cursor doInBackground(Void... params) {
