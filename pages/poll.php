@@ -134,15 +134,18 @@
         
         </div>
       
-      <div class="container">
+      <div class="container" style="width:inherit">
         <div id="LiveStatsWidget"class="px-3 py-3 pt-md-1 pb-md-4 mx-auto text-center" style="display:none">
             <h1 class="display-4">Live Stats</h1>
         </div>
           
         <div id="LiveStatsZone">
             <canvas id="LiveStatsCanvas"></canvas>  
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         </div>
+        
       </div>
+        
       <?php
 
         include("../lib/php/footer.php");
@@ -338,14 +341,20 @@
           
           
           
-            function liveStats(interval=5000)
+            function liveStats(interval=3000)
             { //TODO: change these default values
                 console.log("liveStats called.");
-                interval = interval || 1000,
                 canPoll = true;
                 var params = "session_id="+questionSessionID+"&question_history_id="+currentQuestionHistoryID;  //create the session object
                 var liveResults;
                 liveResults = JSON.parse(postSync('../lib/php/liveStatistics.php',params));
+                var params2 = "inputQuestionId="+activeQuestionId;
+                
+                var questionInfo;
+
+                questionInfo = JSON.parse(JSON.parse(postSync('../lib/php/polling/searchLiveQuestionInfo.php',params2)).results[0].potential_answers);
+                    
+                console.log("second pass: " + questionInfo);
                 
                 var counter = 0;
                 
@@ -357,12 +366,12 @@
 
                     //Data for the chart
                     data: {
-                        labels: ["1", "2", "3", "4", "5", "6", "7"],
+                        labels: questionInfo,
                         datasets: [{
                             label:"Answers",
-                            backgroundColor: 'rgb(255, 99, 132)',
-                            borderColor: 'rgb(255, 99, 132)',
-                            data: [0, 10, 5, 2, 20, 30, 45],
+                            backgroundColor: 'rgb(0, 0, 255)',
+                            borderColor: 'rgb(0, 255, 0)',
+                            data: liveResults,
                         }]
                     },
 
@@ -385,21 +394,18 @@
                 function updateBarChart(questionData)
                 {
                     console.log("updateBarChart called.");
-                    console.log(questionData);
+                    console.log(JSON.stringify(questionData));
                     
-                    //Generate a new data object to insert into chart
-                    for(var i = 0; i< questionData.length; i++)
-                    {
-                        liveStatsChart.config.data.labels.push(i+1);    //dOESN'T WORK
-                        liveStatsChart.data.datasets[0].data[i] = questionData[i];
-                    }
+
+                    liveStatsChart.data.datasets[0].data = questionData;
+                    
                     
                     liveStatsChart.update();
                 }
                 
                 function updatePoll()
                 {
-                    counter = counter + 1;
+                    liveResults = JSON.parse(postSync('../lib/php/liveStatistics.php',params));
                     console.log("updatePoll");
                     if (activeQuestionId == null)
                     {
@@ -408,11 +414,14 @@
                     
                     if(typeof liveResults[1] === 'string')
                     {
-                        //Wait for answers
-                        console.log("Waiting for answers");
+                        
+                        console.log("Waiting for answers. Live results:");
+                        console.log(JSON.stringify(liveResults[1]));
+                        
                     }
                     else
                     {
+                        // magic happens here
                         document.getElementById('LiveStatsCanvas').display = "block";
                         updateBarChart(liveResults[1]);
                     }
