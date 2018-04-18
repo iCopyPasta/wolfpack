@@ -639,6 +639,7 @@ public class StudentQuestionActivePage extends QuestionPage
         isShowing = inState.getBoolean(ACTIVE_PAGE_IS_SHOWING, false);
         questionOver = inState.getBoolean(ACTIVE_PAGE_QUETSION_OVER, false);
         submittedFinalAnswer = inState.getBoolean(ACTIVE_PAGE_SUBMITTED_ANSWER, false);
+        sessionId = questionSessionId;
     }
 
     @Override
