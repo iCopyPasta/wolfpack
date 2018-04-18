@@ -158,6 +158,8 @@ public class StudentQuestionActivePage extends QuestionPage
 
 
                     handleActiveQuestion(questionInformation);
+                } else{
+                    mService.searchActiveSandQ(classId,questionSetId, "false");
                 }
             }
             else{
@@ -603,6 +605,8 @@ public class StudentQuestionActivePage extends QuestionPage
                 getApplicationContext())
                 .registerReceiver(combinationQuery, new IntentFilter(
                         MyStartedService.MY_SERVICE_VALIDATE_COMBO));
+
+
 
     }
 
