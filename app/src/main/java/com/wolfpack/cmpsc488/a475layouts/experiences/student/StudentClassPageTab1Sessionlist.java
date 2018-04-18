@@ -1,11 +1,7 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.app.FragmentManager;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
@@ -19,7 +15,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.PersistableBundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -38,7 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wolfpack.cmpsc488.a475layouts.R;
-import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyJobService;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
 import com.wolfpack.cmpsc488.a475layouts.services.sqlite_database.PollatoDB;
 
@@ -110,8 +104,6 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
                 Log.i(TAG, "onReceive: " + "no poll found for class " + classId);
                 mService.searchActiveSession(classId, "false");
             }
-
-
         }
     };
 
@@ -188,10 +180,6 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
         });
 
     }
-
-
-
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
@@ -323,14 +311,4 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
         }.execute();
 
     }
-
-
-
-
-
-
-
-
-
-
 }

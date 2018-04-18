@@ -46,6 +46,15 @@ public class StudentQuestionActivePage extends QuestionPage
         AlertNewQuestionDialog.AlertNewQuestionDialogListener{
 
     public static final String TAG = "QuestionActivePage";
+    public static final String ACTIVE_PAGE_OLD_QUESTION_ID = "ACTIVE_PAGE_OLD_QUESTION_ID";
+    public static final String ACTIVE_PAGE_NEW_QUESTION_ID = "ACTIVE_PAGE_NEW_QUESTION_ID";
+    public static final String ACTIVE_PAGE_NEW_QUESTION_SESSION_ID= "ACTIVE_PAGE_NEW_QUESTION_SESSION_ID";
+    public static final String ACTIVE_PAGE_NEW_QUESTION_HISTORY_ID= "ACTIVE_PAGE_NEW_QUESTION_HISTORY_ID";
+    public static final String ACTIVE_PAGE_NEW_QUESTION_SET_ID= "ACTIVE_PAGE_NEW_QUESTION_SET_ID";
+    public static final String ACTIVE_PAGE_QUETSION_OVER = "ACTIVE_PAGE_QUESTION_OVER";
+    public static final String ACTIVE_PAGE_IS_SHOWING = "ACTIVE_PAGE_IS_SHOWING";
+    public static final String ACTIVE_PAGE_SUBMITTED_ANSWER= "ACTIVE_PAGE_SUBMITTED_ANSWER";
+    private static final String ACTIVE_PAGE_ANSWER = "ACTIVE_PAGE_ANSWER ";
 
     //private String studentId = null;
     //private String classId = null;
@@ -54,11 +63,11 @@ public class StudentQuestionActivePage extends QuestionPage
     private String questionSetId = null;
     //private String questionId = null;
 
-    private String questionSessionId = null;
-    private String questionHistoryId = null;
-    private String questionStringJSON = null;
+    private String questionSessionId = "";
+    private String questionHistoryId = "";
+    private String questionStringJSON = "";
     //private QuestionInformation questionInformation = null;
-    private String answerType = null;
+    private String answerType = "";
     private String answer = null;
     private boolean[] studentAnswers = null;
     private Gson gson = null;
@@ -67,10 +76,10 @@ public class StudentQuestionActivePage extends QuestionPage
     private boolean submittedFinalAnswer = false;
     private boolean isShowing = false;
     private boolean questionOver = false;
-    String newQuestionId;
-    String newQuestionSessionId;
-    String newQuestionHistoryId;
-    String newQuestionSetId;
+    String newQuestionId = "";
+    String newQuestionSessionId = "";
+    String newQuestionHistoryId = "";
+    String newQuestionSetId = "";
 
     private MyStartedService mService;
 
@@ -539,6 +548,10 @@ public class StudentQuestionActivePage extends QuestionPage
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
+        if(savedInstanceState != null){
+            onRestoreInstanceState(savedInstanceState);
+        }
+
         Bundle bundle = getIntent().getExtras();
 
         if(bundle != null){
@@ -556,10 +569,6 @@ public class StudentQuestionActivePage extends QuestionPage
             className = bundle.getString(getString(R.string.KEY_CLASS_TITLE));
 
             sessionId = questionSessionId;
-
-
-
-
         }
 
         gson = new Gson();
@@ -585,11 +594,6 @@ public class StudentQuestionActivePage extends QuestionPage
                 .registerReceiver(questionInfoReceiver, new IntentFilter(
                         MyStartedService.MY_SERVICE_QUESTION_INFO));
 
-        /*LocalBroadcastManager.getInstance(
-                getApplicationContext())
-                .registerReceiver(validateQuestionReceiver,
-                        new IntentFilter(MyStartedService.MY_SERVICE_VALIDATE_ANSWER));*/
-
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .registerReceiver(submitAnswerReceiver, new IntentFilter(
@@ -600,6 +604,41 @@ public class StudentQuestionActivePage extends QuestionPage
                 .registerReceiver(combinationQuery, new IntentFilter(
                         MyStartedService.MY_SERVICE_VALIDATE_COMBO));
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        outState.putString(ACTIVE_PAGE_OLD_QUESTION_ID, questionId);
+        outState.putString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, questionSetId);
+        outState.putString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, questionSessionId);
+        outState.putString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, questionHistoryId);
+        outState.putString(MyStartedService.MY_SERVICE_QUESTION_INFO_JSON, questionStringJSON);
+        outState.putString(ACTIVE_PAGE_NEW_QUESTION_HISTORY_ID, newQuestionHistoryId);
+        outState.putString(ACTIVE_PAGE_NEW_QUESTION_SESSION_ID, newQuestionSessionId);
+        outState.putString(ACTIVE_PAGE_NEW_QUESTION_SET_ID, newQuestionSetId);
+        outState.putString(ACTIVE_PAGE_NEW_QUESTION_ID, newQuestionId);
+        outState.putString(ACTIVE_PAGE_ANSWER, answer);
+        outState.putBoolean(ACTIVE_PAGE_IS_SHOWING, isShowing);
+        outState.putBoolean(ACTIVE_PAGE_QUETSION_OVER, questionOver);
+        outState.putBoolean(ACTIVE_PAGE_SUBMITTED_ANSWER, submittedFinalAnswer);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle inState){
+        super.onRestoreInstanceState(inState);
+        questionId = inState.getString(ACTIVE_PAGE_OLD_QUESTION_ID, "");
+        questionSetId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, "");
+        questionSessionId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, "");
+        questionHistoryId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, "");
+        questionStringJSON = inState.getString(MyStartedService.MY_SERVICE_QUESTION_INFO_JSON, "");
+        newQuestionHistoryId = inState.getString(ACTIVE_PAGE_NEW_QUESTION_HISTORY_ID, "");
+        newQuestionSessionId = inState.getString(ACTIVE_PAGE_NEW_QUESTION_SESSION_ID, "");
+        newQuestionId = inState.getString(ACTIVE_PAGE_NEW_QUESTION_ID);
+        answer = inState.getString(ACTIVE_PAGE_ANSWER, "");
+        isShowing = inState.getBoolean(ACTIVE_PAGE_IS_SHOWING, false);
+        questionOver = inState.getBoolean(ACTIVE_PAGE_QUETSION_OVER, false);
+        submittedFinalAnswer = inState.getBoolean(ACTIVE_PAGE_SUBMITTED_ANSWER, false);
     }
 
     @Override
