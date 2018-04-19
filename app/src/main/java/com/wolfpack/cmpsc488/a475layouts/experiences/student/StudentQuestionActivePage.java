@@ -347,6 +347,12 @@ public class StudentQuestionActivePage extends QuestionPage
 
         Log.i(TAG, "finished handleQuestionChoice");
     }
+    
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.i(TAG, "onDestroy: STUDENT QUESTION ACTIVE PAGE DESTROYED");
+    }
 
 
     protected void handleQuestionTrueFalse(QuestionInformation info) {
@@ -650,6 +656,7 @@ public class StudentQuestionActivePage extends QuestionPage
     public void onStop(){
         super.onStop();
 
+        Log.i(TAG, "onStop: UNBINDING FROM SERVICE");
         unbindService(mServiceConn);
 
         LocalBroadcastManager.getInstance(
@@ -677,41 +684,46 @@ public class StudentQuestionActivePage extends QuestionPage
 
         if(answer == null || answer.equals(""))
         {
-            for(boolean el: studentAnswers){
-                if(el)
-                    count++;
-            }
+            if(studentAnswers != null){
+                for(boolean el: studentAnswers){
+                    if(el)
+                        count++;
+                }
 
-            StringBuilder sb = new StringBuilder();
-            sb.append("[");
-            //Log.i(TAG, "submitFinalAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
-            for (int i = 0; i < studentAnswers.length; i++){
-                if(studentAnswers[i]){
-                    sb.append("\"");
-                    sb.append(i);
-                    sb.append("\"");
-                    if (count > 1){
-                        sb.append(",");
-                        count--;
+                StringBuilder sb = new StringBuilder();
+                sb.append("[");
+                //Log.i(TAG, "submitFinalAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
+                for (int i = 0; i < studentAnswers.length; i++){
+                    if(studentAnswers[i]){
+                        sb.append("\"");
+                        sb.append(i);
+                        sb.append("\"");
+                        if (count > 1){
+                            sb.append(",");
+                            count--;
+                        }
                     }
                 }
+                sb.append("]");
+                answer = sb.toString();
+
+                mService.submitAnswer(
+                        studentId,
+                        questionSessionId,
+                        questionHistoryId,
+                        answerType,
+                        answer,
+                        "true"
+                );
+                Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
+
+                updateQuestion(answer);
+
+                answer = null;
             }
-            sb.append("]");
-            answer = sb.toString();
-
-            mService.submitAnswer(
-                    studentId,
-                    questionSessionId,
-                    questionHistoryId,
-                    answerType,
-                    answer,
-                    "true"
-            );
-            Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
-
-            updateQuestion(answer);
-
-            answer = null;
+            else{
+                Log.i(TAG, "submitFinalAnswer: STUDENT ANSWERS ARRAY WAS NULL");
+            }
         }
     }
 
@@ -721,39 +733,41 @@ public class StudentQuestionActivePage extends QuestionPage
         int count = 0;
         if(answer == null || answer.equals(""))
         {
-            for(boolean el: studentAnswers){
-                if(el)
-                    count++;
-            }
+            if(studentAnswers != null){
+                for(boolean el: studentAnswers){
+                    if(el)
+                        count++;
+                }
 
-            StringBuilder sb = new StringBuilder();
-            sb.append("[");
-            //Log.i(TAG, "submitPeriodicAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
-            for (int i = 0; i < studentAnswers.length; i++){
-                if(studentAnswers[i]){
-                    sb.append("\"");
-                    sb.append(i);
-                    sb.append("\"");
-                    if (count > 1){
-                        sb.append(",");
-                        count--;
+                StringBuilder sb = new StringBuilder();
+                sb.append("[");
+                //Log.i(TAG, "submitPeriodicAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
+                for (int i = 0; i < studentAnswers.length; i++){
+                    if(studentAnswers[i]){
+                        sb.append("\"");
+                        sb.append(i);
+                        sb.append("\"");
+                        if (count > 1){
+                            sb.append(",");
+                            count--;
+                        }
                     }
                 }
+                sb.append("]");
+                answer = sb.toString();
+
+                Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
+                mService.submitAnswer(
+                        studentId,
+                        questionSessionId,
+                        questionHistoryId,
+                        answerType,
+                        answer,
+                        "false"
+                );
+
+                answer = null;
             }
-            sb.append("]");
-            answer = sb.toString();
-
-            Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
-            mService.submitAnswer(
-                    studentId,
-                    questionSessionId,
-                    questionHistoryId,
-                    answerType,
-                    answer,
-                    "false"
-            );
-
-            answer = null;
         }
     }
 
@@ -815,6 +829,7 @@ public class StudentQuestionActivePage extends QuestionPage
     @Override
     public void onNewQPositiveClick() {
 
+        Log.i(TAG, "onNewQPositiveClick: STARTING ACTIVITY OVER WITH NEW INFORMATION");
         Intent newQuestion = new Intent(StudentQuestionActivePage.this, StudentQuestionActivePage.class);
         newQuestion.putExtra(getString(R.string.KEY_CLASS_ID), classId);
         newQuestion.putExtra(getString(R.string.KEY_CLASS_TITLE), className);

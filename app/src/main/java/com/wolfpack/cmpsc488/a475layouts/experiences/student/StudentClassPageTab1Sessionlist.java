@@ -97,7 +97,8 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
 
-                activeSessionDialog.show(fragmentManager, TAG);
+                if(!activeSessionDialog.isVisible())
+                    activeSessionDialog.show(fragmentManager, TAG);
 
             }
             else{
