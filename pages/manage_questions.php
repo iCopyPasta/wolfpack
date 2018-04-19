@@ -89,9 +89,9 @@
         background: #138496;
         border-width: thick;
       }
-      .btn
+      .btn-info
       {
-        
+        width: 193px;
       }
 
       .border-top { border-top: 1px solid #e5e5e5; }
