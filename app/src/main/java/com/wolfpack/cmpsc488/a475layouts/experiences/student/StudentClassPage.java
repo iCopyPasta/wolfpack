@@ -122,7 +122,7 @@ public class StudentClassPage extends AppCompatActivity
         outState.putString(getString(R.string.KEY_CLASS_OFFERING), classOffering);
         outState.putString(getString(R.string.KEY_CLASS_LOCATION), classLocation);
         outState.putString(getString(R.string.KEY_CLASS_TEACHER_NAME), teacherName);
-        outState.putBoolean(IS_SHOWING, sessionListTab.isShowing());
+        outState.putBoolean(IS_SHOWING, isShowing);
     }
 
     @Override
@@ -136,6 +136,7 @@ public class StudentClassPage extends AppCompatActivity
         classLocation = inState.getString(getString(R.string.KEY_CLASS_LOCATION), "");
         teacherName = inState.getString(getString(R.string.KEY_CLASS_TEACHER_NAME), "");
         isShowing = inState.getBoolean(IS_SHOWING, false);
+        Log.i(TAG, "ON RESTORE INSTANCE STATE --> IS SHOWING IS "+ isShowing);
     }
 
 
@@ -148,6 +149,7 @@ public class StudentClassPage extends AppCompatActivity
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        isShowing = false;
         Log.i(TAG, "ON DESTROY CALLED FROM STUDENT CLASS PAGE");
         stopService(new Intent(StudentClassPage.this, MyStartedService.class));
     }
@@ -165,6 +167,12 @@ public class StudentClassPage extends AppCompatActivity
     /**
      * ActiveSessionDialog.ActiveSessionDialogListener function implementation
      */
+
+    @Override
+    public void onPause(){
+        super.onPause();
+
+    }
 
     @Override
     public void onPositiveClick(Bundle info){
@@ -214,6 +222,11 @@ public class StudentClassPage extends AppCompatActivity
 
     @Override
     public void onDropNegativeClick() {}
+
+    @Override
+    public void onStop(){
+        super.onStop();
+    }
 
     @SuppressLint("StaticFieldLeak")
     public class DropBackgroundTask extends AsyncTask<String, Void, Boolean>{

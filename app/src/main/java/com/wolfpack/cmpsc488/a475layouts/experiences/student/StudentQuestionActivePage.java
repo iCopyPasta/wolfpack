@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 
 // given
@@ -63,11 +64,11 @@ public class StudentQuestionActivePage extends QuestionPage
     private String questionSetId = null;
     //private String questionId = null;
 
-    private String questionSessionId = "";
-    private String questionHistoryId = "";
-    private String questionStringJSON = "";
+    private String questionSessionId = null;
+    private String questionHistoryId = null;
+    private String questionStringJSON = null;
     //private QuestionInformation questionInformation = null;
-    private String answerType = "";
+    private String answerType = null;
     private String answer = null;
     private boolean[] studentAnswers = null;
     private Gson gson = null;
@@ -185,13 +186,13 @@ public class StudentQuestionActivePage extends QuestionPage
 
             if(info != null){
                 newQuestionId =
-                        info.getString(MyStartedService.MY_SERVICE_QUESTION_ID, "");
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_ID, newQuestionId);
                 newQuestionSessionId =
-                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, "");
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, newQuestionSessionId);
                 newQuestionHistoryId =
-                        info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, "");
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, newQuestionHistoryId);
                 newQuestionSetId =
-                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, "");
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, newQuestionSetId);
 
                 Log.i(TAG, "onReceive: QuestionId: " + questionId + " versus " + newQuestionId);
                 Log.i(TAG, "onReceive: QuestionHistoryId: " + questionHistoryId + " versus " + newQuestionHistoryId);
@@ -390,7 +391,9 @@ public class StudentQuestionActivePage extends QuestionPage
     @SuppressLint("StaticFieldLeak")
     private void addQuestion(final QuestionInformation info, final String sessionId){
 
-        /*new AsyncTask<Void, Void, Boolean> (){
+        try{
+
+        new AsyncTask<Void, Void, Boolean> (){
 
             @Override
             protected Boolean doInBackground(Void... params) {
@@ -458,43 +461,12 @@ public class StudentQuestionActivePage extends QuestionPage
             }
 
 
-        }.execute();*/
-
+        }.execute();
+        } catch (Exception e){
+            Log.e(TAG, "addQuestion: " + e.getMessage() );
+        }
     }
 
-
-
-
-    //receiver for validating the active question
-    /*private BroadcastReceiver validateQuestionReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bundle info = intent.getExtras();
-
-            //only get structure if our status is the exact same
-            if(info != null){
-                Log.i(TAG, "onReceive: " + "activeQuestionReceiver -> message received");
-
-                if(questionInformation != null){
-
-                    Log.i(TAG, "onReceive: android sees same exact question ");
-
-                    submitPeriodicAnswer();
-                    Log.i(TAG, "onReceive: submitPeriodicAnswers called from validateQuestionReceiver");
-                }
-                //you may not have gotten an answer for your lifetime info, yet, try up to 3 times
-                else{
-                    mService.searchLiveQuestionInfo(questionId,"false");
-                }
-
-            }
-            else{
-
-            }
-
-
-        }
-    };*/
 
 
 
@@ -557,6 +529,7 @@ public class StudentQuestionActivePage extends QuestionPage
         super.onCreate(savedInstanceState);
 
         if(savedInstanceState != null){
+            Log.i(TAG, "onCreate: savedInstanceState was NOT NULL");
             onRestoreInstanceState(savedInstanceState);
         } else {
 
@@ -618,7 +591,7 @@ public class StudentQuestionActivePage extends QuestionPage
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
-        Log.i(TAG, "ON SAVE INSTANCE STATE called!");
+        Log.i(TAG, "ON SAVE INSTANCE STATE FOR STUDENT QUESTION ACTIVE PAGE");
         outState.putString(MyStartedService.MY_SERVICE_QUESTION_ID, questionId);
         outState.putString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, questionSetId);
         outState.putString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, questionSessionId);
@@ -629,15 +602,23 @@ public class StudentQuestionActivePage extends QuestionPage
         outState.putString(ACTIVE_PAGE_NEW_QUESTION_SET_ID, newQuestionSetId);
         outState.putString(ACTIVE_PAGE_NEW_QUESTION_ID, newQuestionId);
         outState.putString(ACTIVE_PAGE_ANSWER, answer);
+        outState.putString(getString(R.string.STUDENT_ID), studentId);
+        outState.putString(getString(R.string.KEY_CLASS_ID), classId);
+        outState.putString(getString(R.string.KEY_CLASS_TITLE), className);
+
         outState.putBoolean(ACTIVE_PAGE_IS_SHOWING, isShowing);
         outState.putBoolean(ACTIVE_PAGE_QUETSION_OVER, questionOver);
         outState.putBoolean(ACTIVE_PAGE_SUBMITTED_ANSWER, submittedFinalAnswer);
+
+
+
+
     }
 
     @Override
     public void onRestoreInstanceState(Bundle inState){
         super.onRestoreInstanceState(inState);
-        Log.i(TAG, "ON RESTORE INSTANCE STATE");
+        Log.i(TAG, "ON RESTORE INSTANCE STATE FOR STUDENT QUESTION ACTIVE PAGE");
         questionId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_ID, "");
         questionSetId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, "");
         questionSessionId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, "");
@@ -651,6 +632,10 @@ public class StudentQuestionActivePage extends QuestionPage
         questionOver = inState.getBoolean(ACTIVE_PAGE_QUETSION_OVER, false);
         submittedFinalAnswer = inState.getBoolean(ACTIVE_PAGE_SUBMITTED_ANSWER, false);
         sessionId = questionSessionId;
+
+        studentId = inState.getString(getString(R.string.STUDENT_ID));
+        classId = inState.getString(getString(R.string.KEY_CLASS_ID));
+        className = inState.getString(getString(R.string.KEY_CLASS_TITLE));
     }
 
     @Override
@@ -800,26 +785,31 @@ public class StudentQuestionActivePage extends QuestionPage
     @SuppressLint("StaticFieldLeak")
     private void updateQuestion(final String studentAnswer){
 
-        /*new AsyncTask<Void, Void, Void>(){
+        try{
+            new AsyncTask<Void, Void, Void>(){
 
-            @Override
-            protected Void doInBackground(Void... voids) {
+                @Override
+                protected Void doInBackground(Void... voids) {
 
-                String table = getString(R.string.TABLE_QUESTION);
-                ContentValues values = new ContentValues();
-                values.put("student_answers", studentAnswer);
+                    String table = getString(R.string.TABLE_QUESTION);
+                    ContentValues values = new ContentValues();
+                    values.put("student_answers", studentAnswer);
 
-                String selection = "_id = ?";
-                String[] selectionArgs = { String.valueOf(questionId) };
+                    String selection = "_id = ?";
+                    String[] selectionArgs = { String.valueOf(questionId) };
 
-                Log.w(TAG, "starting update question in database");
-                db.update(table, values, selection, selectionArgs);
-                Log.w(TAG, "finished updating question in database");
+                    Log.w(TAG, "starting update question in database");
+                    db.update(table, values, selection, selectionArgs);
+                    Log.w(TAG, "finished updating question in database");
 
-                return null;
-            }
+                    return null;
+                }
 
-        }.execute();*/
+            }.execute();
+        }
+        catch (Exception e){
+            Log.e(TAG, "updateQuestion: " + e.getMessage());
+        }
     }
     
 

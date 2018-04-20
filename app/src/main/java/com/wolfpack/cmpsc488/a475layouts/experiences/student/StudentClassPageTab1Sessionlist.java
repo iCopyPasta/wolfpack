@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -40,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 // given our class id, we ask if there is an active session here!
 public class StudentClassPageTab1Sessionlist extends Fragment {
@@ -97,12 +99,30 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
                 if(!StudentClassPage.isShowing){
                     activeSessionDialog = new ActiveSessionDialog();
+                    activeSessionDialog.setCancelable(false);
                     activeSessionDialog.setInfo(info);
 
+                    activeSessionDialog.onCancel(new DialogInterface() {
+                        @Override
+                        public void cancel() {
+                            Log.i(TAG, "onCancel: cancel");
+                            StudentClassPage.isShowing = false;
+                        }
+
+                        @Override
+                        public void dismiss() {
+                            Log.i(TAG, "onCancel: dismiss");
+                            StudentClassPage.isShowing = false;
+
+                        }
+                    });
+
+                    Log.i(TAG, "onReceive: SETTING ACTIVE SESSION DIALOG INFORMATION");
                     FragmentManager fragmentManager = getActivity().getFragmentManager();
-                    StudentClassPage.isShowing = true;
                     activeSessionDialog.show(fragmentManager, TAG);
-                    Log.i(TAG, "isShowing: IS HIDDEN RETURNS " + activeSessionDialog.isHidden());
+                    StudentClassPage.isShowing = true;
+                    Log.i(TAG, "onReceive: SHOWING ACTIVE SESSION DIALOG! :)");
+
                 } else{
                     Log.i(TAG, "onReceive: WE ARE SHOWING A DIALOG?");
                 }
@@ -113,12 +133,6 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
             }
         }
     };
-
-    public boolean isShowing() {
-        Log.i(TAG, "isShowing: IS NOT HIDDEN RETURNS " + !activeSessionDialog.isHidden());
-        StudentClassPage.isShowing = activeSessionDialog != null && !activeSessionDialog.isHidden();
-        return activeSessionDialog != null && !activeSessionDialog.isHidden();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -240,44 +254,51 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
     @SuppressLint("StaticFieldLeak")
     public void loadSessionList(){
-        new AsyncTask<Void, Void, Cursor>(){
+        try{
+            new AsyncTask<Void, Void, Cursor>(){
 
-            @Override
-            protected void onPreExecute(){
-                Log.w(TAG, "is this being called????");
-                mProgressBar.setVisibility(View.VISIBLE);
-            }
+                @Override
+                protected void onPreExecute(){
+                    Log.w(TAG, "is this being called????");
+                    mProgressBar.setVisibility(View.VISIBLE);
+                }
 
-            @Override
-            protected Cursor doInBackground(Void... params) {
-                String[] projection = {"_id", "name", "start_date"};
-                String table = getString(R.string.TABLE_SESSION);
-                String selection = "class_id = ?";
-                String[] selectionArgs = {String.valueOf(classId)};
-                String sortOrder = "_id DESC";
+                @Override
+                protected Cursor doInBackground(Void... params) {
+                    String[] projection = {"_id", "name", "start_date"};
+                    String table = getString(R.string.TABLE_SESSION);
+                    String selection = "class_id = ?";
+                    String[] selectionArgs = {String.valueOf(classId)};
+                    String sortOrder = "_id DESC";
 
-                Log.w(TAG, "we are here my fuzzy friend");
+                    Log.w(TAG, "we are here my fuzzy friend");
 
-                PollatoDB.printDatabase();
+                    PollatoDB.printDatabase();
 
-                return db.query(
-                        table,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
-            }
+                    return db.query(
+                            table,
+                            projection,
+                            selection,
+                            selectionArgs,
+                            null,
+                            null,
+                            sortOrder
+                    );
+                }
 
-            @Override
-            protected void onPostExecute(Cursor cursor) {
-                adapter.swapCursor(cursor);
-                mProgressBar.setVisibility(View.GONE);
-            }
+                @Override
+                protected void onPostExecute(Cursor cursor) {
+                    adapter.swapCursor(cursor);
+                    mProgressBar.setVisibility(View.GONE);
+                }
 
-        }.execute();
+            }.execute();
+
+        }
+        catch (Exception e){
+            Log.e(TAG, "loadSessionList: " + e.getMessage() );
+        }
+
     }
 
 
@@ -285,43 +306,47 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
     @SuppressLint("StaticFieldLeak")
     public void addSession(final String sessionId, final String sessionName){
-        new AsyncTask<Void, Void, Boolean>(){
+        try{
+            new AsyncTask<Void, Void, Boolean>(){
 
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                int _id = Integer.parseInt(sessionId);
-                int _class_id = Integer.parseInt(classId);
+                @Override
+                protected Boolean doInBackground(Void... params) {
+                    int _id = Integer.parseInt(sessionId);
+                    int _class_id = Integer.parseInt(classId);
 
-                String _date = new SimpleDateFormat("MM-dd-yyyy, hh:mm", Locale.US)
-                        .format(Calendar.getInstance().getTime());
+                    String _date = new SimpleDateFormat("MM-dd-yyyy, hh:mm", Locale.US)
+                            .format(Calendar.getInstance().getTime());
 
-                String table = getString(R.string.TABLE_SESSION);
+                    String table = getString(R.string.TABLE_SESSION);
 
-                ContentValues values = new ContentValues();
-                values.put("_id", _id);
-                values.put("class_id", _class_id);
-                values.put("name", sessionName);
-                values.put("start_date", _date);
+                    ContentValues values = new ContentValues();
+                    values.put("_id", _id);
+                    values.put("class_id", _class_id);
+                    values.put("name", sessionName);
+                    values.put("start_date", _date);
 
-                long result = 0;
-                try {
-                    result = db.insert(table, null, values);
+                    long result = 0;
+                    try {
+                        result = db.insert(table, null, values);
+                    }
+                    catch (SQLiteConstraintException e){
+                        Log.i(TAG, "row already exists: result = " + result);
+                        Log.d(TAG, "message: " + e.getMessage());
+                        result = 1;
+                    }
+
+                    return result == -1;
                 }
-                catch (SQLiteConstraintException e){
-                    Log.i(TAG, "row already exists: result = " + result);
-                    Log.d(TAG, "message: " + e.getMessage());
-                    result = 1;
+
+                @Override
+                protected void onPostExecute(Boolean wasInserted) {
+                    if (wasInserted) loadSessionList();
                 }
 
-                return result == -1;
-            }
+            }.execute();
+        } catch(Exception e){
+            Log.e(TAG, "addSession: " + e.getMessage());
 
-            @Override
-            protected void onPostExecute(Boolean wasInserted) {
-                if (wasInserted) loadSessionList();
-            }
-
-        }.execute();
-
+        }
     }
 }

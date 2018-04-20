@@ -37,18 +37,11 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
     //private TextView mTextViewSessionName;
     //private TextView mTextViewQuestionNotice;
 
-    //activeSession refers to if there is an active session for the class (not necessarily this session)
-    private boolean activeSession = true;
-
-    //isActiveSession refers to if there the current session is STILL active
-    //isActiveQuestion refers to querying the database if there is an active question
-    private boolean isActiveSession = false;
     private boolean isActiveQuestion = false;
 
     // question set information if one is active
     private String questionSetId = null;
     private String questionSessionId = null;
-    private boolean foundQuestion;
 
     private MyStartedService mService;
 
@@ -87,8 +80,6 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
             Log.i(TAG, "onReceive: " + "service message received");
 
             if(info != null){
-
-                foundQuestion = true;
 
                 //force into StudentQuestionActivePage
                 Intent activeQuestionIntent = new Intent(StudentSessionActivePage.this,
@@ -183,11 +174,6 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
 
             Bundle bundle = getIntent().getExtras();
 
-            //is this THE active session?
-            isActiveSession = (boolean) bundle.get("isActive");
-            foundQuestion = false;
-
-
             //set misc (text & visibility)
             mTextViewSessionName.setText(sessionName);
             mListViewQuestionList.setVisibility(View.GONE);
@@ -206,7 +192,6 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
                 sessionId = questionSessionId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
 
                 //is this THE active session?
-                isActiveSession = (boolean) bundle.get("isActive");
 
                 mTextViewSessionName.setText(sessionName);
             }
@@ -240,6 +225,7 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
         outState.putString("className", className);
         outState.putString("classId", classId);
         outState.putBoolean("isActive",isActiveQuestion);
+
     }
 
     @Override
@@ -247,15 +233,10 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
         super.onRestoreInstanceState(inState);
 
         sessionName = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SET_NAME,"");
-
-        //mTextViewSessionName.setText(sessionName);
-
         questionSetId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID);
         questionSessionId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
-
         classId = inState.getString("classId");
         className = inState.getString("className");
-
         isActiveQuestion = inState.getBoolean("isActive");
 
     }
@@ -306,6 +287,8 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
                 getApplicationContext())
                 .registerReceiver(submitAnswerReceiver, temp
                 );
+
+        mTextViewSessionName.setText(sessionName);
 
     }
 
