@@ -263,6 +263,7 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
     @Override
     public void onStop(){
         super.onStop();
+        Log.i(TAG, "ON STOP, UNBINDING FROM SERVICE AND RECEIVERS");
 
         unbindService(mServiceConn);
 

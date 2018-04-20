@@ -58,6 +58,8 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
     private MyStartedService mService;
 
+    private ActiveSessionDialog activeSessionDialog;
+
     private final ServiceConnection mServiceConn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -91,15 +93,19 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
             Log.i(TAG, "onReceive: " + "service message received");
 
             if(info != null){
+                Log.i(TAG, "onReceive: " + "SHOW DIALOG");
 
-                ActiveSessionDialog activeSessionDialog = new ActiveSessionDialog();
-                activeSessionDialog.setInfo(info);
+                if(!StudentClassPage.isShowing){
+                    activeSessionDialog = new ActiveSessionDialog();
+                    activeSessionDialog.setInfo(info);
 
-                FragmentManager fragmentManager = getActivity().getFragmentManager();
-
-                if(!activeSessionDialog.isVisible())
+                    FragmentManager fragmentManager = getActivity().getFragmentManager();
+                    StudentClassPage.isShowing = true;
                     activeSessionDialog.show(fragmentManager, TAG);
-
+                    Log.i(TAG, "isShowing: IS HIDDEN RETURNS " + activeSessionDialog.isHidden());
+                } else{
+                    Log.i(TAG, "onReceive: WE ARE SHOWING A DIALOG?");
+                }
             }
             else{
                 Log.i(TAG, "onReceive: " + "no poll found for class " + classId);
@@ -107,6 +113,12 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
             }
         }
     };
+
+    public boolean isShowing() {
+        Log.i(TAG, "isShowing: IS NOT HIDDEN RETURNS " + !activeSessionDialog.isHidden());
+        StudentClassPage.isShowing = activeSessionDialog != null && !activeSessionDialog.isHidden();
+        return activeSessionDialog != null && !activeSessionDialog.isHidden();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -390,7 +390,7 @@ public class StudentQuestionActivePage extends QuestionPage
     @SuppressLint("StaticFieldLeak")
     private void addQuestion(final QuestionInformation info, final String sessionId){
 
-        new AsyncTask<Void, Void, Boolean> (){
+        /*new AsyncTask<Void, Void, Boolean> (){
 
             @Override
             protected Boolean doInBackground(Void... params) {
@@ -458,7 +458,7 @@ public class StudentQuestionActivePage extends QuestionPage
             }
 
 
-        }.execute();
+        }.execute();*/
 
     }
 
@@ -558,25 +558,27 @@ public class StudentQuestionActivePage extends QuestionPage
 
         if(savedInstanceState != null){
             onRestoreInstanceState(savedInstanceState);
-        }
+        } else {
 
-        Bundle bundle = getIntent().getExtras();
+            Bundle bundle = getIntent().getExtras();
 
-        if(bundle != null){
-            questionId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_ID, "");
-            questionSessionId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, "");
-            questionHistoryId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, "");
-            questionSetId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, "");
+            if (bundle != null) {
+                questionId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_ID);
+                questionSessionId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
+                questionHistoryId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID);
+                questionSetId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID);
 
-            SharedPreferences sharedPref = getSharedPreferences(
-                    getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                SharedPreferences sharedPref = getSharedPreferences(
+                        getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-            studentId = sharedPref.getString(getString(R.string.STUDENT_ID),"");
+                studentId = sharedPref.getString(getString(R.string.STUDENT_ID), "");
 
-            classId = bundle.getString(getString(R.string.KEY_CLASS_ID));
-            className = bundle.getString(getString(R.string.KEY_CLASS_TITLE));
+                classId = bundle.getString(getString(R.string.KEY_CLASS_ID));
+                className = bundle.getString(getString(R.string.KEY_CLASS_TITLE));
 
-            sessionId = questionSessionId;
+                sessionId = questionSessionId;
+                Log.i(TAG, "onCreate: BUNDLE IS NOT NULL!");
+            }
         }
 
         gson = new Gson();
@@ -611,15 +613,13 @@ public class StudentQuestionActivePage extends QuestionPage
                 getApplicationContext())
                 .registerReceiver(combinationQuery, new IntentFilter(
                         MyStartedService.MY_SERVICE_VALIDATE_COMBO));
-
-
-
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
-        outState.putString(ACTIVE_PAGE_OLD_QUESTION_ID, questionId);
+        Log.i(TAG, "ON SAVE INSTANCE STATE called!");
+        outState.putString(MyStartedService.MY_SERVICE_QUESTION_ID, questionId);
         outState.putString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, questionSetId);
         outState.putString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, questionSessionId);
         outState.putString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, questionHistoryId);
@@ -637,7 +637,8 @@ public class StudentQuestionActivePage extends QuestionPage
     @Override
     public void onRestoreInstanceState(Bundle inState){
         super.onRestoreInstanceState(inState);
-        questionId = inState.getString(ACTIVE_PAGE_OLD_QUESTION_ID, "");
+        Log.i(TAG, "ON RESTORE INSTANCE STATE");
+        questionId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_ID, "");
         questionSetId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, "");
         questionSessionId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, "");
         questionHistoryId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, "");
@@ -785,11 +786,13 @@ public class StudentQuestionActivePage extends QuestionPage
 
     @Override
     public void onLeavePositiveClick() {
+        isShowing = false;
         finish();
     }
 
     @Override
     public void onLeaveNegativeClick() {
+        isShowing = false;
 
     }
     
@@ -797,7 +800,7 @@ public class StudentQuestionActivePage extends QuestionPage
     @SuppressLint("StaticFieldLeak")
     private void updateQuestion(final String studentAnswer){
 
-        new AsyncTask<Void, Void, Void>(){
+        /*new AsyncTask<Void, Void, Void>(){
 
             @Override
             protected Void doInBackground(Void... voids) {
@@ -816,21 +819,17 @@ public class StudentQuestionActivePage extends QuestionPage
                 return null;
             }
 
-        }.execute();
-
-
-
-
-
-
+        }.execute();*/
     }
     
 
     @Override
     public void onNewQPositiveClick() {
+        isShowing = false;
 
         Log.i(TAG, "onNewQPositiveClick: STARTING ACTIVITY OVER WITH NEW INFORMATION");
         Intent newQuestion = new Intent(StudentQuestionActivePage.this, StudentQuestionActivePage.class);
+        newQuestion.putExtra(getString(R.string.KEY_STUDENT_ID), studentId);
         newQuestion.putExtra(getString(R.string.KEY_CLASS_ID), classId);
         newQuestion.putExtra(getString(R.string.KEY_CLASS_TITLE), className);
         newQuestion.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID, newQuestionSetId);

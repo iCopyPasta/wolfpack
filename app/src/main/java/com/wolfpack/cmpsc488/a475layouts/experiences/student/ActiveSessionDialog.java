@@ -20,6 +20,9 @@ public class ActiveSessionDialog extends DialogFragment {
 
     private Bundle info;
 
+    public void onDismiss() {
+    }
+
     public interface ActiveSessionDialogListener{
         void onPositiveClick(Bundle info);
         void onNegativeClick();

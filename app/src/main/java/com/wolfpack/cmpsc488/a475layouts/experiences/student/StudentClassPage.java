@@ -54,6 +54,10 @@ public class StudentClassPage extends AppCompatActivity
 
     private StudentClassPageTab1Sessionlist sessionListTab;
     private StudentClassPageTab2Classinfo classInfoTab;
+    public static final String IS_SHOWING = "IS_SHOWING";
+    public static boolean isShowing = false;
+
+
 
 
     // TODO: set to false and assign activeSession based on if there is an active session currently
@@ -63,8 +67,10 @@ public class StudentClassPage extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_class_page);
+        Log.i(TAG, "ON CREATE CALLED");
 
         if(savedInstanceState != null){
+            Log.i(TAG, "onCreate: calling up savedInstanceState");
             onRestoreInstanceState(savedInstanceState);
         } else {
             Bundle bundle;
@@ -116,6 +122,7 @@ public class StudentClassPage extends AppCompatActivity
         outState.putString(getString(R.string.KEY_CLASS_OFFERING), classOffering);
         outState.putString(getString(R.string.KEY_CLASS_LOCATION), classLocation);
         outState.putString(getString(R.string.KEY_CLASS_TEACHER_NAME), teacherName);
+        outState.putBoolean(IS_SHOWING, sessionListTab.isShowing());
     }
 
     @Override
@@ -128,6 +135,7 @@ public class StudentClassPage extends AppCompatActivity
         classOffering = inState.getString(getString(R.string.KEY_CLASS_OFFERING), "");
         classLocation = inState.getString(getString(R.string.KEY_CLASS_LOCATION), "");
         teacherName = inState.getString(getString(R.string.KEY_CLASS_TEACHER_NAME), "");
+        isShowing = inState.getBoolean(IS_SHOWING, false);
     }
 
 
@@ -140,6 +148,7 @@ public class StudentClassPage extends AppCompatActivity
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        Log.i(TAG, "ON DESTROY CALLED FROM STUDENT CLASS PAGE");
         stopService(new Intent(StudentClassPage.this, MyStartedService.class));
     }
 
@@ -160,6 +169,7 @@ public class StudentClassPage extends AppCompatActivity
     @Override
     public void onPositiveClick(Bundle info){
         Log.i(TAG, "onPositiveClick called, moving to StudentSessionPage" );
+        isShowing = false;
 
         Intent intent = new Intent(StudentClassPage.this, StudentSessionActivePage.class);
         //intent.putExtra("classTitle", "Test Class");
@@ -189,7 +199,10 @@ public class StudentClassPage extends AppCompatActivity
     }
 
     @Override
-    public void onNegativeClick(){}
+    public void onNegativeClick(){
+        isShowing = false;
+        Log.i(TAG, "onNegativeClick: the dialog has been removed!");
+    }
 
     @SuppressLint("StaticFieldLeak")
     @Override
