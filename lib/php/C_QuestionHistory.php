@@ -135,7 +135,7 @@
         $response["success"] = 0;
         return json_encode($response);
       }
-      
+
       $response = array();
       $response["message"] = "Success SELECTING from question_history";
       $response["success"] = 1;
