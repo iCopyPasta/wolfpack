@@ -79,7 +79,7 @@
         <h5>Set the poll as active, allowing your students to join. Then, activate a question by clicking its button to broadcast that question.</h5>
         <a style="text-decoration: none"> <button onclick="setPollActive()" id="togglePollLive" class="btn btn-success btn-lg btn-block ">Set this Poll as Active</button></a>
     </div>
-      
+      f
       
 
     <div class="container">
@@ -343,18 +343,46 @@
           
             function liveStats(interval=3000)
             { //TODO: change these default values
-                console.log("liveStats called.");
+                console.log("liveStats called. First pass.");
                 canPoll = true;
                 var params = "session_id="+questionSessionID+"&question_history_id="+currentQuestionHistoryID;  //create the session object
                 var liveResults;
                 liveResults = JSON.parse(postSync('../lib/php/liveStatistics.php',params));
                 var params2 = "inputQuestionId="+activeQuestionId;
                 
-                var questionInfo;
+                var correctColor = '#28a745';
+                var regularColor = 'rgb(0, 125, 125)';
+                var incorrectColor = '#dc3545';
+
+                var questionInfo; //contains potential answers
+                var correctAnswers; //contains indices of correct answers
+                var questionColorArray = []; //color array used for currently polling question
+                var questionFinishedColorArray = [];
+                
+                
 
                 questionInfo = JSON.parse(JSON.parse(postSync('../lib/php/polling/searchLiveQuestionInfo.php',params2)).results[0].potential_answers);
+
+                correctAnswers = JSON.parse(JSON.parse(postSync('../lib/php/polling/searchLiveQuestionInfo.php',params2)).results[0].correct_answers);
                     
                 console.log("second pass: " + questionInfo);
+                console.log("correct answers: " + correctAnswers);
+
+                var i;
+            
+                for (i=0; i < questionInfo.length; i++) {
+                    
+                    questionColorArray.push(regularColor);
+                    questionFinishedColorArray.push(incorrectColor);
+                    
+                    if (correctAnswers.includes((i+1).toString()) ) {
+                        console.log("setting " + i + " to correctColor");
+                        questionFinishedColorArray[i] = correctColor;                    
+                    }else{
+                        console.log("correctAnswers.includes(" + i + ") = " + correctAnswers.includes(i+1));
+                    }
+
+                }
                 
                 var counter = 0;
                 
@@ -369,7 +397,7 @@
                         labels: questionInfo,
                         datasets: [{
                             label:"Answers",
-                            backgroundColor: 'rgb(0, 0, 255)',
+                            backgroundColor: questionColorArray,
                             borderColor: 'rgb(0, 255, 0)',
                             data: liveResults,
                         }]
@@ -409,6 +437,8 @@
                     console.log("updatePoll");
                     if (activeQuestionId == null)
                     {
+                        liveStatsChart.data.datasets[0].backgroundColor = questionFinishedColorArray;
+                        liveStatsChart.update();
                         return;
                     }
                     
