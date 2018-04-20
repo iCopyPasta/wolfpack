@@ -109,14 +109,14 @@
           }else {
             // question history id does not exist
             $response = array();
-            $response["message"] = "ERROR INSERTING into answers table: question_history_id " . $this->question_history_id . " does not exist in class_course table";
+            $response["message"] = "ERROR INSERTING into answers table: question_history_id " . $this->question_history_id . " does not exist in question_history table";
             $response["success"] = 0;
             return json_encode($response);
           }
         }else{
           // session id does not exist
           $response = array();
-          $response["message"] = "ERROR INSERTING into answers table: session_id " . $this->session_id . " does not exist in class_course table";
+          $response["message"] = "ERROR INSERTING into answers table: session_id " . $this->session_id . " does not exist in question_session table";
           $response["success"] = 0;
           return json_encode($response);
         }
