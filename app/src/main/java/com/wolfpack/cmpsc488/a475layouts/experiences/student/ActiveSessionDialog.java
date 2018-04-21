@@ -32,26 +32,7 @@ public class ActiveSessionDialog extends DialogFragment {
 
     private static ActiveSessionDialog activeSessionDialog;
     private ActiveSessionDialogListener mListener;
-
-    boolean mIsStateAlreadySaved = false;
-    boolean mPendingShowDialog = false;
-
-    public boolean ismIsStateAlreadySaved() {
-        return mIsStateAlreadySaved;
-    }
-
-    public void setmIsStateAlreadySaved(boolean mIsStateAlreadySaved) {
-        this.mIsStateAlreadySaved = mIsStateAlreadySaved;
-    }
-
-    public boolean ismPendingShowDialog() {
-        return mPendingShowDialog;
-    }
-
-    public void setmPendingShowDialog(boolean mPendingShowDialog) {
-        this.mPendingShowDialog = mPendingShowDialog;
-    }
-
+    
     public static ActiveSessionDialog newInstance(){
         if(activeSessionDialog == null){
             activeSessionDialog = new ActiveSessionDialog();
@@ -63,19 +44,14 @@ public class ActiveSessionDialog extends DialogFragment {
     @Override
     public void onResume(){
         super.onResume();
-        Log.i(TAG, "onResume: ");
-        mIsStateAlreadySaved = false;
-        if(mPendingShowDialog){
-            mPendingShowDialog = false;
-            show(getFragmentManager(), "TAG");
-        }
+        Log.i(TAG, "onResume");
+
         onAttach(getActivity());
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mIsStateAlreadySaved = true;
     }
 
     @Override
