@@ -45,7 +45,8 @@ public class AlertDropDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         mListener.onDropNegativeClick();
                     }
-                });
+                }).setCancelable(false);
+        setCancelable(false);
 
         return builder.create();
     }
