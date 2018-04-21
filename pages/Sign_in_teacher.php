@@ -52,7 +52,7 @@
             $response = array();
             $response["message"] = "Success: email + password found";
             $response["success"] = 1;
-            //echo json_encode($response);
+            echo json_encode($response);
             $alertString = "";
             $_SESSION['user'] = $insertEmail; //saves a session variable, unaccessable to the client, identifying them
             $_SESSION['accountType'] = "teacher"; //Keeps track of the type of account

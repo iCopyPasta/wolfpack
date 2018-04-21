@@ -50,7 +50,7 @@
                                                       $title,
                                                       'undefined', // this is inserted using registerConfirmation.php code below
                                                       '0');
-          echo $selectStudentAccount->insert(); // insert method returns a json_encoded response
+          $selectStudentAccount->insert(); // insert method returns a json_encoded response
           include('../lib/php/registerConfirmation.php');
           addUniqueHash($connection,$insertEmail); //sets UniqueID and confirmed vars in db, custom function -TR
           if(boolval($android)){
