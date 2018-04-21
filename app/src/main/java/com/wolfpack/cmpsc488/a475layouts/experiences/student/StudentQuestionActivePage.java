@@ -1,10 +1,12 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.annotation.SuppressLint;
+import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -43,7 +45,8 @@ import java.util.concurrent.ExecutionException;
 // we ask for the current question
 // we submit from here
 public class StudentQuestionActivePage extends QuestionPage 
-    implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
+    implements
+        AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
         AlertNewQuestionDialog.AlertNewQuestionDialogListener{
 
     public static final String TAG = "QuestionActivePage";
@@ -83,6 +86,8 @@ public class StudentQuestionActivePage extends QuestionPage
     String newQuestionSetId = "";
 
     private MyStartedService mService;
+    AlertNewQuestionDialog newQuestionDialog;
+    AlertLeaveNewSessionDialog newSessionDialog;
 
     private final ServiceConnection mServiceConn = new ServiceConnection() {
         @Override
@@ -221,7 +226,7 @@ public class StudentQuestionActivePage extends QuestionPage
                         questionOver = true;
                         if(!isShowing){
                             isShowing = true;
-                            new AlertLeaveNewSessionDialog().show(getFragmentManager(), "Exit Session");
+                            showLeaveDialog();
                         }
                     } else if((!newQuestionId.equals("") &&
                             !newQuestionId.equals(questionId)) || (!newQuestionHistoryId.equals("") &&
@@ -236,7 +241,7 @@ public class StudentQuestionActivePage extends QuestionPage
                         if(!isShowing){
                             Log.i(TAG, "onReceive: display EXIT SESSION dialog");
                             isShowing = true;
-                            new AlertLeaveNewSessionDialog().show(getFragmentManager(), "Exit Session");
+                            showLeaveDialog();
                         }
 
 
@@ -247,14 +252,14 @@ public class StudentQuestionActivePage extends QuestionPage
 
                         if(!isShowing){
                             isShowing = true;
-                            new AlertNewQuestionDialog().show(getFragmentManager(), "New Question");
+                            showNewQDialog();
                         }
                     } else if(newQuestionSessionId.equals("") && newQuestionHistoryId.equals("") &&
                             newQuestionId.equals("") && newQuestionSetId.equals("")){
                             if(!isShowing){
                                 Log.i(TAG, "onReceive: ALL VALUES WERE EMPTY FROM RESPONSE ");
                                 isShowing = true;
-                                new AlertLeaveNewSessionDialog().show(getFragmentManager(), "Exit Session");
+                                showLeaveDialog();
                             }
 
                     }
@@ -272,6 +277,54 @@ public class StudentQuestionActivePage extends QuestionPage
 
         }
     };
+
+    private void showNewQDialog(){
+        newQuestionDialog = AlertNewQuestionDialog.newInstance();
+        newQuestionDialog.setCancelable(false);
+
+        newQuestionDialog.onCancel(new DialogInterface() {
+            @Override
+            public void cancel() {
+                Log.i(TAG, "onCancel: cancel");
+                isShowing = false;
+            }
+
+            @Override
+            public void dismiss() {
+                Log.i(TAG, "onCancel: dismiss");
+                isShowing = false;
+
+            }
+        });
+
+        newQuestionDialog.show(getFragmentManager(), "New Question");
+        isShowing = true;
+
+    }
+
+    private void showLeaveDialog(){
+        newSessionDialog= AlertLeaveNewSessionDialog.newInstance();
+        newSessionDialog.setCancelable(false);
+
+        newSessionDialog.onCancel(new DialogInterface() {
+            @Override
+            public void cancel() {
+                Log.i(TAG, "onCancel: cancel");
+                isShowing = false;
+            }
+
+            @Override
+            public void dismiss() {
+                Log.i(TAG, "onCancel: dismiss");
+                isShowing = false;
+
+            }
+        });
+
+        newSessionDialog.show(getFragmentManager(), "Exit Session");
+        isShowing = true;
+
+    }
 
 
     protected void handleActiveQuestion(QuestionInformation info){

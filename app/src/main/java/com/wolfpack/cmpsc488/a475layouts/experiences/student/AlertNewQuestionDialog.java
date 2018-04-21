@@ -6,12 +6,14 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 
 /**
  * Created by peo5032 on 4/10/18.
  */
 
 public class AlertNewQuestionDialog extends DialogFragment{
+    public static final String TAG = "NewQDialog";
 
     public Bundle getInfo() {
         return info;
@@ -28,7 +30,16 @@ public class AlertNewQuestionDialog extends DialogFragment{
         void onNewQNegativeClick();
     }
 
+    private static AlertNewQuestionDialog newQuestionDialog;
+
     AlertNewQuestionDialogListener mListener;
+
+    public static AlertNewQuestionDialog newInstance(){
+        if(newQuestionDialog == null)
+            newQuestionDialog = new AlertNewQuestionDialog();
+
+        return newQuestionDialog;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
@@ -40,6 +51,7 @@ public class AlertNewQuestionDialog extends DialogFragment{
                 .setPositiveButton("Join", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
+                        Log.i(TAG, "onClick: NEW POSITIVE CLICK");
                         mListener.onNewQPositiveClick();
                     }
                 })
@@ -48,7 +60,9 @@ public class AlertNewQuestionDialog extends DialogFragment{
                     public void onClick(DialogInterface dialog, int id) {
                         mListener.onNewQNegativeClick();
                     }
-                });
+                })
+        .setCancelable(false);
+        setCancelable(false);
 
         return builder.create();
     }
