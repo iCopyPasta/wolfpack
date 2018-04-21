@@ -208,6 +208,26 @@
         $response["success"] = 0;
         return json_encode($response);
       }
+      
+      //SQL statement below removes question from question sets that it is currently in
+      
+      $sql = "DELETE FROM question_is_in 
+              WHERE question_id = :question_id";
+        
+   
+      $stmt = $pdo->prepare($sql);
+      $stmt->bindValue(':question_id', $this->question_id);
+
+
+      try{
+        $stmt->execute();
+      }catch (Exception $e){
+        // fail JSON response
+        $response = array();
+        $response["message"] = "ERROR DELETING: ".$e->getMessage();
+        $response["success"] = 0;
+        return json_encode($response);
+      }
 
       $pdo = null;
       $response = array();

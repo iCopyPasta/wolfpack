@@ -5,7 +5,7 @@
         // logged in
         
         } else {
-        // not logged in as student
+        // not logged in as teacher
         header("Location: ..\index.php");
         }
 
@@ -15,7 +15,12 @@
         
         if (! confirmClassOwnership($class_id,$_SESSION['id'])) {
             header("Location: ../index.php");
+
         }
+
+        include("../lib/php/closeAllSessionsByTeacherId.php");    
+        closeAllSessions($_SESSION['id']); //flushes all active sessions and questions from database
+
 ?>
 
 <!doctype html>
