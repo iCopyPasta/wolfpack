@@ -114,26 +114,26 @@
 </section>
 
 <section class="contact-sec" id="contact">
-<div class="container text-center">
-<h2>Keep in Touch!</h2>
-<p>We want to explore. We’re curious people.
-<br>
-Look back over history, people have put their lives at stake to go out and explore … We believe in what we’re doing. Now it’s time to go.</p>
-
-<div class="phone-sec">
-1-800-265-3994   <span>|</span>   1-519-934-3037 
-</div>
-
-<a href="#" class="btn btn-tranparent">Request A Quote</a>
-<a href="#" class="btn btn-tranparent">Contact Us</a>
-</div>
+    <div class="container text-center">
+        <h2 class="text-center">Get in touch<br></h2>
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+              <div class="row">
+                  <div class="col-md-6"><input type="text" class="form-control" placeholder="Name"></div>
+                  <div class="col-md-6"><input type="text" class="form-control" placeholder="Email"></div><br><br><br>
+                  <div class="col-md-12"><textarea rows="5" class="form-control"></textarea></div>
+                  <a href="#" class="btn btn-success">Submit Message</a>
+              </div>
+          </div>
+        </div>
+    </div>
 </section>
   
 <footer>
     <div class="container">
         <div class="row">
             <div class="col-sm-6 col-md-3">&copy;<script type="text/javascript">document.write(new Date().getFullYear());</script> Pollato.com</div>
-            <div class="col-sm-6 col-md-3 pull-right text-right">Created with <i class="fa fa-heart"></i></div>
+            <a href="#" class="col-sm-6 col-md-3 pull-right text-right">See Our Deliverables</a>
         </div>
 
     </div> 
