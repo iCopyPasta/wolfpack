@@ -64,7 +64,7 @@
 
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-3 mx-auto text-center">
       <h1 class="display-4">Teacher Center</h1>
-      <?php echo "Welcome back, ".$_SESSION['user']."!"; ?>
+      <?php echo "Welcome back, ".$_SESSION['name']."!"; ?>
     </div>
      
     <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:960px">

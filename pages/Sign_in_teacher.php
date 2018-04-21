@@ -52,11 +52,12 @@
             $response = array();
             $response["message"] = "Success: email + password found";
             $response["success"] = 1;
-            echo json_encode($response);
+            //echo json_encode($response);
             $alertString = "";
             $_SESSION['user'] = $insertEmail; //saves a session variable, unaccessable to the client, identifying them
             $_SESSION['accountType'] = "teacher"; //Keeps track of the type of account
             $_SESSION['id'] = $qJSON[1]['teacher_id']; //Keeps track of the id of the account
+            $_SESSION['name'] = $qJSON[1]['first_name']." ".$qJSON[1]['last_name']; //Keeps track of the id of the account  
             header("Location: logged_in_teacher.php");
           }
         }else{
