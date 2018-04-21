@@ -7,8 +7,8 @@
 
         if  (isset($_SESSION['accountType']) && $_SESSION['accountType'] == "teacher") { //logged in as teacher
             
-        include("lib/php/closeAllSessionsByTeacherId.php");    
-        closeAllSessions($_SESSION['id']); //flushes all active sessions and questions from database    
+        //include("lib/php/closeAllSessionsByTeacherId.php");   //this is what you would do if you want to close all active sessions 
+        //closeAllSessions($_SESSION['id']); //flushes all active sessions and questions from database    
             
         header("Location: pages/logged_in_teacher.php");          
         }
