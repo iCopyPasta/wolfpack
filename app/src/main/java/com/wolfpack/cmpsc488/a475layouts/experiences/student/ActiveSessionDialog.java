@@ -6,29 +6,77 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
+
+import org.w3c.dom.Text;
 
 
 public class ActiveSessionDialog extends DialogFragment {
 
-    public Bundle getInfo() {
-        return info;
+    private static final String TAG = "ActiveSessionJAVA";
+
+    public static Bundle getInfo() {
+        return information;
     }
 
-    public void setInfo(Bundle info) {
-        this.info = info;
+    public static void setInfo(Bundle info) {
+        information = info;
     }
 
-    private Bundle info;
-
-    public void onDismiss() {
-    }
+    private static Bundle information;
 
     public interface ActiveSessionDialogListener{
         void onPositiveClick(Bundle info);
         void onNegativeClick();
     }
 
-    ActiveSessionDialogListener mListener;
+    private static ActiveSessionDialog activeSessionDialog;
+    private ActiveSessionDialogListener mListener;
+
+    boolean mIsStateAlreadySaved = false;
+    boolean mPendingShowDialog = false;
+
+    public boolean ismIsStateAlreadySaved() {
+        return mIsStateAlreadySaved;
+    }
+
+    public void setmIsStateAlreadySaved(boolean mIsStateAlreadySaved) {
+        this.mIsStateAlreadySaved = mIsStateAlreadySaved;
+    }
+
+    public boolean ismPendingShowDialog() {
+        return mPendingShowDialog;
+    }
+
+    public void setmPendingShowDialog(boolean mPendingShowDialog) {
+        this.mPendingShowDialog = mPendingShowDialog;
+    }
+
+    public static ActiveSessionDialog newInstance(){
+        if(activeSessionDialog == null){
+            activeSessionDialog = new ActiveSessionDialog();
+        }
+
+        return activeSessionDialog;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.i(TAG, "onResume: ");
+        mIsStateAlreadySaved = false;
+        if(mPendingShowDialog){
+            mPendingShowDialog = false;
+            show(getFragmentManager(), "TAG");
+        }
+        onAttach(getActivity());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mIsStateAlreadySaved = true;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
@@ -40,8 +88,11 @@ public class ActiveSessionDialog extends DialogFragment {
                 .setPositiveButton("Join", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        if(info != null)
-                            mListener.onPositiveClick(info);
+                        if(information != null){
+                            mListener.onPositiveClick(information);
+                        }else{
+                            Log.e(TAG, "onClick: INFO WAS NULL");
+                        }
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -49,8 +100,11 @@ public class ActiveSessionDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         mListener.onNegativeClick();
                     }
-                });
+                })
+        .setCancelable(false);
+        setCancelable(false);
 
+        //setCanceledOnTouchOutside(false);
         return builder.create();
     }
 

@@ -95,36 +95,15 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
             Log.i(TAG, "onReceive: " + "service message received");
 
             if(info != null){
-                Log.i(TAG, "onReceive: " + "SHOW DIALOG");
+                Log.i(TAG, "onReceive: " + "SHOULD SHOW DIALOG");
 
                 if(!StudentClassPage.isShowing){
-                    activeSessionDialog = new ActiveSessionDialog();
-                    activeSessionDialog.setCancelable(false);
-                    activeSessionDialog.setInfo(info);
-
-                    activeSessionDialog.onCancel(new DialogInterface() {
-                        @Override
-                        public void cancel() {
-                            Log.i(TAG, "onCancel: cancel");
-                            StudentClassPage.isShowing = false;
-                        }
-
-                        @Override
-                        public void dismiss() {
-                            Log.i(TAG, "onCancel: dismiss");
-                            StudentClassPage.isShowing = false;
-
-                        }
-                    });
-
-                    Log.i(TAG, "onReceive: SETTING ACTIVE SESSION DIALOG INFORMATION");
-                    FragmentManager fragmentManager = getActivity().getFragmentManager();
-                    activeSessionDialog.show(fragmentManager, TAG);
-                    StudentClassPage.isShowing = true;
-                    Log.i(TAG, "onReceive: SHOWING ACTIVE SESSION DIALOG! :)");
+                    showDialog(info);
 
                 } else{
                     Log.i(TAG, "onReceive: WE ARE SHOWING A DIALOG?");
+                    ActiveSessionDialog.setInfo(info);
+
                 }
             }
             else{
@@ -133,6 +112,33 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
             }
         }
     };
+
+    public void showDialog(Bundle info){
+        activeSessionDialog = ActiveSessionDialog.newInstance();
+        activeSessionDialog.setCancelable(false);
+        ActiveSessionDialog.setInfo(info);
+        
+        activeSessionDialog.onCancel(new DialogInterface() {
+            @Override
+            public void cancel() {
+                Log.i(TAG, "onCancel: cancel");
+                StudentClassPage.isShowing = false;
+            }
+
+            @Override
+            public void dismiss() {
+                Log.i(TAG, "onCancel: dismiss");
+                StudentClassPage.isShowing = false;
+
+            }
+        });
+
+        FragmentManager fragmentManager = getActivity().getFragmentManager();
+        Log.i(TAG, "showDialog: SHOWING ACTIVE SESSION DIALOG! :)");
+        activeSessionDialog.show(fragmentManager, TAG);
+        StudentClassPage.isShowing = true;
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -265,31 +271,39 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
 
                 @Override
                 protected Cursor doInBackground(Void... params) {
-                    String[] projection = {"_id", "name", "start_date"};
-                    String table = getString(R.string.TABLE_SESSION);
-                    String selection = "class_id = ?";
-                    String[] selectionArgs = {String.valueOf(classId)};
-                    String sortOrder = "_id DESC";
+                    try{
+                        String[] projection = {"_id", "name", "start_date"};
+                        String table = getString(R.string.TABLE_SESSION);
+                        String selection = "class_id = ?";
+                        String[] selectionArgs = {String.valueOf(classId)};
+                        String sortOrder = "_id DESC";
 
-                    Log.w(TAG, "we are here my fuzzy friend");
+                        Log.w(TAG, "we are here my fuzzy friend");
 
-                    PollatoDB.printDatabase();
+                        PollatoDB.printDatabase();
 
-                    return db.query(
-                            table,
-                            projection,
-                            selection,
-                            selectionArgs,
-                            null,
-                            null,
-                            sortOrder
-                    );
+                        return db.query(
+                                table,
+                                projection,
+                                selection,
+                                selectionArgs,
+                                null,
+                                null,
+                                sortOrder
+                        );
+
+                    } catch(Exception e){
+                        Log.e(TAG, "doInBackground: " + e.getMessage());
+                        return null;
+                    }
                 }
 
                 @Override
                 protected void onPostExecute(Cursor cursor) {
-                    adapter.swapCursor(cursor);
-                    mProgressBar.setVisibility(View.GONE);
+                    if(cursor != null){
+                        adapter.swapCursor(cursor);
+                        mProgressBar.setVisibility(View.GONE);
+                    }
                 }
 
             }.execute();
@@ -307,35 +321,42 @@ public class StudentClassPageTab1Sessionlist extends Fragment {
     @SuppressLint("StaticFieldLeak")
     public void addSession(final String sessionId, final String sessionName){
         try{
+
             new AsyncTask<Void, Void, Boolean>(){
 
                 @Override
                 protected Boolean doInBackground(Void... params) {
-                    int _id = Integer.parseInt(sessionId);
-                    int _class_id = Integer.parseInt(classId);
+                    try{
+                        int _id = Integer.parseInt(sessionId);
+                        int _class_id = Integer.parseInt(classId);
 
-                    String _date = new SimpleDateFormat("MM-dd-yyyy, hh:mm", Locale.US)
-                            .format(Calendar.getInstance().getTime());
+                        String _date = new SimpleDateFormat("MM-dd-yyyy, hh:mm", Locale.US)
+                                .format(Calendar.getInstance().getTime());
 
-                    String table = getString(R.string.TABLE_SESSION);
+                        String table = getString(R.string.TABLE_SESSION);
 
-                    ContentValues values = new ContentValues();
-                    values.put("_id", _id);
-                    values.put("class_id", _class_id);
-                    values.put("name", sessionName);
-                    values.put("start_date", _date);
+                        ContentValues values = new ContentValues();
+                        values.put("_id", _id);
+                        values.put("class_id", _class_id);
+                        values.put("name", sessionName);
+                        values.put("start_date", _date);
 
-                    long result = 0;
-                    try {
-                        result = db.insert(table, null, values);
+                        long result = 0;
+                        try {
+                            result = db.insert(table, null, values);
+                        }
+                        catch (SQLiteConstraintException e){
+                            Log.i(TAG, "row already exists: result = " + result);
+                            Log.d(TAG, "message: " + e.getMessage());
+                            result = 1;
+                        }
+
+                        return result == -1;
+
                     }
-                    catch (SQLiteConstraintException e){
-                        Log.i(TAG, "row already exists: result = " + result);
-                        Log.d(TAG, "message: " + e.getMessage());
-                        result = 1;
+                    catch(Exception e){
+                        return false;
                     }
-
-                    return result == -1;
                 }
 
                 @Override

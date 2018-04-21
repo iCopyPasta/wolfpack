@@ -563,6 +563,30 @@ public class StudentQuestionActivePage extends QuestionPage
     }
 
     @Override
+    public void onPause(){
+        super.onPause();
+
+        Log.i(TAG, "onPause: UNBINDING FROM SERVICE AND UNREGISTER OF RECEIVERS");
+        unbindService(mServiceConn);
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .unregisterReceiver(submitAnswerReceiver);
+
+        /*LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .unregisterReceiver(validateQuestionReceiver);*/
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .unregisterReceiver(questionInfoReceiver);
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .unregisterReceiver(combinationQuery);
+    }
+
+    @Override
     public void onResume(){
         super.onResume();
 
@@ -641,25 +665,6 @@ public class StudentQuestionActivePage extends QuestionPage
     @Override
     public void onStop(){
         super.onStop();
-
-        Log.i(TAG, "onStop: UNBINDING FROM SERVICE");
-        unbindService(mServiceConn);
-
-        LocalBroadcastManager.getInstance(
-                getApplicationContext())
-                .unregisterReceiver(submitAnswerReceiver);
-
-        /*LocalBroadcastManager.getInstance(
-                getApplicationContext())
-                .unregisterReceiver(validateQuestionReceiver);*/
-
-        LocalBroadcastManager.getInstance(
-                getApplicationContext())
-                .unregisterReceiver(questionInfoReceiver);
-
-        LocalBroadcastManager.getInstance(
-                getApplicationContext())
-                .unregisterReceiver(combinationQuery);
     }
 
     private synchronized void submitFinalAnswer(){
