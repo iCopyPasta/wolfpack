@@ -11,7 +11,7 @@
         <div class="form-group" id="questionForm">
         <label  for="Question Description">
           Question Body</label>
-        <input type="text" class="form-control" id="description" rows="3" name="description" required>
+            <textarea type="text" class="form-control" id="description" rows="3" name="description" required></textarea>
       </div>
         <div id="dynamicArea">        
       </div>
