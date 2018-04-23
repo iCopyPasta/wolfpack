@@ -22,11 +22,11 @@
 
     <title>Question Set</title>
 
+    <!-- Font Awesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="..\css\special\modalcss.css" media="screen" />  
-    <!-- Font Awesome -->
-    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="..\css\common\custom.css">
     <!-- Custom styles for this template -->
     <style>
@@ -53,8 +53,12 @@
       }
       .card-deck .card
       {
-        min-width: 250px;
-        max-width: 500px;
+        min-width: 500px;
+      }
+      .card .card-body
+      {
+        padding-top: 12px;
+        padding-bottom: 0px;
       }
       .clickBox
       {
@@ -95,7 +99,7 @@
 
     <h1 class="display-5 text-center">Current Questions</h1>
     <div class="flex-box">
-        <div class="card-deck mb-3 text-center">
+        <div class="card-deck mb-3">
         <?php
         
            $retVal = searchQuestionsByTeacherID($_SESSION['id']);
@@ -113,7 +117,6 @@
               $answers = "There are no answers!";
             else
             {
-              $answers = array_slice($answers, 0, 2);
               $answers = implode("<br>", $answers);
             }
 
@@ -124,14 +127,14 @@
               $correct_answers = implode(" ", $correct_answers);
              
             
-          echo "<div class=\" clickBox card bg-secondary text-white mb-3\" id=\"$question_id\" onclick=\"toggleActive($question_id)\"> 
-                  <div class=\"card-header\">
-                    <h4 class=\"my-0 font-weight-normal text-truncate\">$description</h4>
-                  </div>
-                  <div class=\"card-body\">
-                    <h5 class=\"card-title pricing-card-title text-truncate\">$answers</h5>
-                  </div>
-                </div>";
+            echo "<div class=\" clickBox card bg-secondary text-white mb-3\" id=\"$question_id\" onclick=\"toggleActive($question_id)\"> 
+            <div class=\"card-header\">
+              <h4 class=\"my-0 font-weight-normal text-truncate\">$description</h4>
+            </div>
+            <div class=\"card-body\">
+              <h5 class=\"card-title pricing-card-title text-truncate\">$answers</h5>
+            </div>
+            </div>";
         }                               
             
         if (empty($removeZerothIndex)) {

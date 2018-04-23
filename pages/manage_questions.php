@@ -19,11 +19,6 @@
  if ( $edit_question_id != "NOT_SET" && (! confirmQuestionOwnership($edit_question_id,$_SESSION['id'])) )
      header("Location: manage_questions.php");
                                         //make sure the teacher owns this question
-     
-     
-     
-     
-     
                                         //query and find all information about question
                                         //populate the edit question fields 
                                         //submit button calls update question with new fields
@@ -42,16 +37,17 @@
     
 
     <title>Question Manager</title>
-
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="..\css\special\modalcss.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="..\css\common\custom.css">
     
     <!-- Font Awesome -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
 
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="..\css\special\modalcss.css" media="screen">
+    
     <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="..\css\common\custom.css">
+
     <style>
       html
       {
@@ -77,8 +73,12 @@
       }
       .card-deck .card
       {
-        min-width: 250px;
-        max-width: 700px;
+        min-width: 500px;
+      }
+      .card .card-body
+      {
+        padding-top: 12px;
+        padding-bottom: 0px;
       }
       .clickBox
       {
@@ -251,6 +251,8 @@
             </div>
             <div class=\"card-body\">
               <h5 class=\"card-title pricing-card-title text-truncate\">$answers</h5>
+            </div>
+            <div class=\"card-footer\">
               <h5 class=\"card-title pricing-card-title text-truncate\">Correct Answer(s): $correct_answers</h5>
             </div>
             </div>";        
