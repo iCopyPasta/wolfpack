@@ -18,6 +18,8 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.MovementMethod;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
@@ -331,6 +333,10 @@ public class StudentQuestionActivePage extends QuestionPage
         addQuestion(info, sessionId);
 
         questionDesc = info.getDescription();
+        mTextViewQuestion.setMovementMethod(new ScrollingMovementMethod());
+        if( (info.getDescription() != null && info.getDescription().length() > 300 ))
+            mTextViewQuestion.setMaxLines(6);
+
         mTextViewQuestion.setText(info.getDescription());
 
         Log.i("handleActiveQuestion", "teacher id = " + info.getTeacherId() + "\n" +
