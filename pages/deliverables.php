@@ -50,6 +50,76 @@
     
     <div class="container">
         <h1 class="display-5 text-center">Deliverables</h1>
+        
+        <h2 class="text-left">Phase 1</h2>
+        <p>Core Requirements<p>
+        <ul>
+            <li>The Polling System is a web-based application.</li>
+            <li>There must be two different users, professors and students.</li>
+            <li>The Professor must be able to create a set of questions.</li>
+            <li>The Professor can create a set of possible answers.</li>
+            <li>The Professor can create a set of correct answers.</li>
+            <li>The Professor must be able to start a custom timer.</li>
+            <li>The question and possible answers are revealed to the students when the timer starts.</li>
+            <li>Students have until the timer completes to answer the question.</li>
+            <li>The students must be able to change their answer while the timer is running.</li>
+            <li>Only one answer per student is accepted.</li>
+            <li>When the timer ends, the students can no longer change their answer.</li>
+            <li>The system must be able to present the results to The Professor.</li>
+            <li>The system should be able to show the results in live time.</li>
+            <li>The Professor must be able to save the results.</li>
+            <li>The Professor can see which students gave answers and which didn’t.</li>
+            <li>Professor can view students’ answers; save and store</li>
+            <li>Professor can show graphic display of results of answers to class.</li>
+        </ul>
+        <p class=MsoNormal><span lang=EN>Project Glossary:</span></p>
+        <ol style='margin-top:0in' start=1 type=1>
+         <li class=MsoNormalCxSpMiddle style='mso-list:l2 level1 lfo2'><span lang=EN>Polling
+             System - A platform that allows instructors to ask questions and receive
+             anonymous answers from students</span></li>
+         <li class=MsoNormalCxSpMiddle style='mso-list:l2 level1 lfo2'><span lang=EN>User
+             - A generic placeholder for a role; will interact with the system in some
+             manner</span></li>
+         <li class=MsoNormalCxSpMiddle style='mso-list:l2 level1 lfo2'><span lang=EN>Professor
+             - A prescribed role that will present questions to be answered</span></li>
+         <li class=MsoNormalCxSpMiddle style='mso-list:l2 level1 lfo2'><span lang=EN>Student
+             - A prescribe role that provides answer to a proposed question</span></li>
+         <li class=MsoNormalCxSpMiddle style='mso-list:l2 level1 lfo2'><span lang=EN>Possible
+             Answers - This is the set of possible answers that a Professor creates for
+             a question</span></li>
+         <li class=MsoNormalCxSpMiddle style='mso-list:l2 level1 lfo2'><span lang=EN>Correct
+             Answers - This is the set of correct answers that a Professor sets for a
+             question</span></li>
+         <li class=MsoNormalCxSpMiddle style='mso-list:l2 level1 lfo2'><span lang=EN>Timer
+             - A clock that denotes that a question must be answered in a certain time.
+             Can be used to track time elapsed for a question</span></li>
+         <li class=MsoNormalCxSpMiddle style='mso-list:l2 level1 lfo2'><span lang=EN>Answer
+             - The generic answer construct that will encapsulate details for specific
+             purposes</span></li>
+         <li class=MsoNormalCxSpMiddle style='mso-list:l2 level1 lfo2'><span lang=EN>Results
+             - The generic results construct that will encapsulate details and answers,
+             given a question</span></li>
+         <li class=MsoNormalCxSpMiddle style='mso-list:l2 level1 lfo2'><span lang=EN>Database
+             - The data storage medium used to store the class lists and question
+             results</span></li>
+         <li class=MsoNormalCxSpMiddle style='mso-list:l2 level1 lfo2'><span lang=EN>Answer
+             Method - The type of submission that a question requires, (eg. selecting
+             from a pool of answers, submitting a picture, submitting a gps location)</span></li>
+         <li class=MsoNormalCxSpMiddle style='mso-list:l2 level1 lfo2'><span lang=EN>Graphic
+             Display - A visual representation of the answers.</span></li>
+         <li class=MsoNormalCxSpMiddle style='mso-list:l2 level1 lfo2'><span lang=EN>Server
+             Image - A deployable snapshot of a server that will help for local
+             intranet usage.</span></li>
+         <li class=MsoNormalCxSpMiddle style='mso-list:l2 level1 lfo2'><span lang=EN>School
+             District - An intranet that holds the clients needs</span></li>
+        </ol>
+        <img src="../img/Phase1DomainModel.svg" class="img-fluid">
+        <h2 class="text-left">Phase 2</h2>
+        <p>Stuff</p>
+        <h2 class="text-left">Phase 3</h2>
+        <p>Stuff</p>
+        <h2 class="text-left">Phase 4</h2>
+        <p>Stuff</p>
       
     </div>
 
