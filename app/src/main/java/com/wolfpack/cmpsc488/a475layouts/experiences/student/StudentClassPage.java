@@ -54,6 +54,10 @@ public class StudentClassPage extends AppCompatActivity
 
     private StudentClassPageTab1Sessionlist sessionListTab;
     private StudentClassPageTab2Classinfo classInfoTab;
+    public static final String IS_SHOWING = "IS_SHOWING";
+    public static boolean isShowing = false;
+
+
 
 
     // TODO: set to false and assign activeSession based on if there is an active session currently
@@ -63,48 +67,77 @@ public class StudentClassPage extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_class_page);
+        Log.i(TAG, "ON CREATE CALLED");
 
+        if(savedInstanceState != null){
+            Log.i(TAG, "onCreate: calling up savedInstanceState");
+            onRestoreInstanceState(savedInstanceState);
+        } else {
+            Bundle bundle;
+            try {
+                bundle = getIntent().getExtras();
 
-        Bundle bundle;
-        try {
-            bundle = getIntent().getExtras();
+                //get information
+                studentId = bundle.getString(getString(R.string.KEY_STUDENT_ID));
+                classId = bundle.getString(getString(R.string.KEY_CLASS_ID));
+                classTitle = bundle.getString(getString(R.string.KEY_CLASS_TITLE));
+                classDesc = bundle.getString(getString(R.string.KEY_CLASS_DESCRIPTION));
+                classOffering = bundle.getString(getString(R.string.KEY_CLASS_OFFERING));
+                classLocation = bundle.getString(getString(R.string.KEY_CLASS_LOCATION));
+                teacherName = bundle.getString(getString(R.string.KEY_CLASS_TEACHER_NAME));
 
-            //get information
-            studentId = bundle.getString(getString(R.string.KEY_STUDENT_ID));
-            classId = bundle.getString(getString(R.string.KEY_CLASS_ID));
-            classTitle = bundle.getString(getString(R.string.KEY_CLASS_TITLE));
-            classDesc = bundle.getString(getString(R.string.KEY_CLASS_DESCRIPTION));
-            classOffering = bundle.getString(getString(R.string.KEY_CLASS_OFFERING));
-            classLocation = bundle.getString(getString(R.string.KEY_CLASS_LOCATION));
-            teacherName = bundle.getString(getString(R.string.KEY_CLASS_TEACHER_NAME));
+                Log.d(TAG, "in try before classTitleDisplay assignment");
 
-            Log.d(TAG, "in try before classTitleDisplay assignment");
+                //displays class name (eg CMPSC 121) in the toolbar
+                classTitleDisplay = (Toolbar) findViewById(R.id.studentToolbarClassPage);
+                setSupportActionBar(classTitleDisplay);
+                classTitleDisplay.setTitle(classTitle);
 
-            //displays class name (eg CMPSC 121) in the toolbar
-            classTitleDisplay = (Toolbar) findViewById(R.id.studentToolbarClassPage);
-            setSupportActionBar(classTitleDisplay);
-            classTitleDisplay.setTitle(classTitle);
+                Log.i(TAG, "classTitle = " + classTitle);
 
-            Log.i(TAG, "classTitle = " + classTitle);
-
-            //setup up viewpager (set up transition between tabs)
-            mViewPage = (ViewPager) findViewById(R.id.studentClassPageViewPager);
-            setupViewPager(mViewPage);
-
-            TabLayout tabLayout = (TabLayout) findViewById(R.id.studentClassPageTabs);
-            tabLayout.setupWithViewPager(mViewPage);
-
-
-            Log.d(TAG, "end of onCreate");
+                Log.d(TAG, "end of onCreate");
+            } catch (NullPointerException e) {
+                Log.d(TAG, "StudentClassPage got NullPointerException");
+                Log.d(TAG, e.getMessage());
+                throw e;
+            }
         }
-        catch (NullPointerException e){
-            Log.d(TAG,"StudentClassPage got NullPointerException");
-            Log.d(TAG, e.getMessage());
-            throw e;
-        }
+
+        //setup up viewpager (set up transition between tabs)
+        mViewPage = (ViewPager) findViewById(R.id.studentClassPageViewPager);
+        setupViewPager(mViewPage);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.studentClassPageTabs);
+        tabLayout.setupWithViewPager(mViewPage);
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        outState.putString(getString(R.string.KEY_STUDENT_ID), studentId);
+        outState.putString(getString(R.string.KEY_CLASS_ID), classId);
+        outState.putString(getString(R.string.KEY_CLASS_TITLE), classTitle);
+        outState.putString(getString(R.string.KEY_CLASS_DESCRIPTION), classDesc);
+        outState.putString(getString(R.string.KEY_CLASS_OFFERING), classOffering);
+        outState.putString(getString(R.string.KEY_CLASS_LOCATION), classLocation);
+        outState.putString(getString(R.string.KEY_CLASS_TEACHER_NAME), teacherName);
+        outState.putBoolean(IS_SHOWING, isShowing);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle inState){
+        super.onRestoreInstanceState(inState);
+        studentId = inState.getString(getString(R.string.KEY_STUDENT_ID), "");
+        classId = inState.getString(getString(R.string.KEY_CLASS_ID), "");
+        classTitle = inState.getString(getString(R.string.KEY_CLASS_TITLE), "");
+        classDesc = inState.getString(getString(R.string.KEY_CLASS_DESCRIPTION), "");
+        classOffering = inState.getString(getString(R.string.KEY_CLASS_OFFERING), "");
+        classLocation = inState.getString(getString(R.string.KEY_CLASS_LOCATION), "");
+        teacherName = inState.getString(getString(R.string.KEY_CLASS_TEACHER_NAME), "");
+        isShowing = inState.getBoolean(IS_SHOWING, false);
+        Log.i(TAG, "ON RESTORE INSTANCE STATE --> IS SHOWING IS "+ isShowing);
+    }
 
 
     //TODO: move this to an async task (created in handleCompletedSession)
@@ -116,6 +149,8 @@ public class StudentClassPage extends AppCompatActivity
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        isShowing = false;
+        Log.i(TAG, "ON DESTROY CALLED FROM STUDENT CLASS PAGE");
         stopService(new Intent(StudentClassPage.this, MyStartedService.class));
     }
 
@@ -126,20 +161,23 @@ public class StudentClassPage extends AppCompatActivity
         viewPager.setAdapter(mTabAdapter);
     }
 
-
-
     public String getClassId()   { return classId; }
     public String getClassName() { return classTitle; }
-
-
 
     /**
      * ActiveSessionDialog.ActiveSessionDialogListener function implementation
      */
 
     @Override
+    public void onPause(){
+        super.onPause();
+
+    }
+
+    @Override
     public void onPositiveClick(Bundle info){
         Log.i(TAG, "onPositiveClick called, moving to StudentSessionPage" );
+        isShowing = false;
 
         Intent intent = new Intent(StudentClassPage.this, StudentSessionActivePage.class);
         //intent.putExtra("classTitle", "Test Class");
@@ -169,7 +207,10 @@ public class StudentClassPage extends AppCompatActivity
     }
 
     @Override
-    public void onNegativeClick(){}
+    public void onNegativeClick(){
+        isShowing = false;
+        Log.i(TAG, "onNegativeClick: the dialog has been removed!");
+    }
 
     @SuppressLint("StaticFieldLeak")
     @Override
@@ -181,6 +222,11 @@ public class StudentClassPage extends AppCompatActivity
 
     @Override
     public void onDropNegativeClick() {}
+
+    @Override
+    public void onStop(){
+        super.onStop();
+    }
 
     @SuppressLint("StaticFieldLeak")
     public class DropBackgroundTask extends AsyncTask<String, Void, Boolean>{

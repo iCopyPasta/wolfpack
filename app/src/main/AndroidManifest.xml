@@ -52,29 +52,35 @@
 
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".experiences.student.StudentPage"
             android:label="@string/title_activity_student_page"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".experiences.student.StudentClassPage"
             android:label="@string/title_activity_student_class_page"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".experiences.student.StudentSessionActivePage"
             android:label="@string/title_activity_student_session_page"/>
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".experiences.student.StudentSessionCompletePage"
             android:label="@string/title_activity_student_session_page"/>
 
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".experiences.student.StudentQuestionCompletePage"
             android:label="@string/title_activity_student_question_page" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".experiences.student.StudentQuestionActivePage"
             android:label="@string/title_activity_student_question_page" />
 
@@ -105,7 +111,7 @@
         <service
             android:name=".services.pollingsession.MyStartedService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
     </application>
 
 </manifest>

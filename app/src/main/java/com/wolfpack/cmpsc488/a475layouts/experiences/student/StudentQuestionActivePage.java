@@ -1,10 +1,12 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.annotation.SuppressLint;
+import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -16,6 +18,8 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.MovementMethod;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
@@ -36,16 +40,27 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 
 // given
 // we ask for the current question
 // we submit from here
 public class StudentQuestionActivePage extends QuestionPage 
-    implements AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
+    implements
+        AlertLeaveNewSessionDialog.AlertLeaveNewSessionDialogListener,
         AlertNewQuestionDialog.AlertNewQuestionDialogListener{
 
     public static final String TAG = "QuestionActivePage";
+    public static final String ACTIVE_PAGE_OLD_QUESTION_ID = "ACTIVE_PAGE_OLD_QUESTION_ID";
+    public static final String ACTIVE_PAGE_NEW_QUESTION_ID = "ACTIVE_PAGE_NEW_QUESTION_ID";
+    public static final String ACTIVE_PAGE_NEW_QUESTION_SESSION_ID= "ACTIVE_PAGE_NEW_QUESTION_SESSION_ID";
+    public static final String ACTIVE_PAGE_NEW_QUESTION_HISTORY_ID= "ACTIVE_PAGE_NEW_QUESTION_HISTORY_ID";
+    public static final String ACTIVE_PAGE_NEW_QUESTION_SET_ID= "ACTIVE_PAGE_NEW_QUESTION_SET_ID";
+    public static final String ACTIVE_PAGE_QUETSION_OVER = "ACTIVE_PAGE_QUESTION_OVER";
+    public static final String ACTIVE_PAGE_IS_SHOWING = "ACTIVE_PAGE_IS_SHOWING";
+    public static final String ACTIVE_PAGE_SUBMITTED_ANSWER= "ACTIVE_PAGE_SUBMITTED_ANSWER";
+    private static final String ACTIVE_PAGE_ANSWER = "ACTIVE_PAGE_ANSWER ";
 
     //private String studentId = null;
     //private String classId = null;
@@ -67,12 +82,14 @@ public class StudentQuestionActivePage extends QuestionPage
     private boolean submittedFinalAnswer = false;
     private boolean isShowing = false;
     private boolean questionOver = false;
-    String newQuestionId;
-    String newQuestionSessionId;
-    String newQuestionHistoryId;
-    String newQuestionSetId;
+    String newQuestionId = "";
+    String newQuestionSessionId = "";
+    String newQuestionHistoryId = "";
+    String newQuestionSetId = "";
 
     private MyStartedService mService;
+    AlertNewQuestionDialog newQuestionDialog;
+    AlertLeaveNewSessionDialog newSessionDialog;
 
     private final ServiceConnection mServiceConn = new ServiceConnection() {
         @Override
@@ -149,6 +166,8 @@ public class StudentQuestionActivePage extends QuestionPage
 
 
                     handleActiveQuestion(questionInformation);
+                } else{
+                    mService.searchActiveSandQ(classId,questionSetId, "false");
                 }
             }
             else{
@@ -174,13 +193,13 @@ public class StudentQuestionActivePage extends QuestionPage
 
             if(info != null){
                 newQuestionId =
-                        info.getString(MyStartedService.MY_SERVICE_QUESTION_ID, "");
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_ID, newQuestionId);
                 newQuestionSessionId =
-                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, "");
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, newQuestionSessionId);
                 newQuestionHistoryId =
-                        info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, "");
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, newQuestionHistoryId);
                 newQuestionSetId =
-                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, "");
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, newQuestionSetId);
 
                 Log.i(TAG, "onReceive: QuestionId: " + questionId + " versus " + newQuestionId);
                 Log.i(TAG, "onReceive: QuestionHistoryId: " + questionHistoryId + " versus " + newQuestionHistoryId);
@@ -209,7 +228,7 @@ public class StudentQuestionActivePage extends QuestionPage
                         questionOver = true;
                         if(!isShowing){
                             isShowing = true;
-                            new AlertLeaveNewSessionDialog().show(getFragmentManager(), "Exit Session");
+                            showLeaveDialog();
                         }
                     } else if((!newQuestionId.equals("") &&
                             !newQuestionId.equals(questionId)) || (!newQuestionHistoryId.equals("") &&
@@ -224,7 +243,7 @@ public class StudentQuestionActivePage extends QuestionPage
                         if(!isShowing){
                             Log.i(TAG, "onReceive: display EXIT SESSION dialog");
                             isShowing = true;
-                            new AlertLeaveNewSessionDialog().show(getFragmentManager(), "Exit Session");
+                            showLeaveDialog();
                         }
 
 
@@ -235,14 +254,14 @@ public class StudentQuestionActivePage extends QuestionPage
 
                         if(!isShowing){
                             isShowing = true;
-                            new AlertNewQuestionDialog().show(getFragmentManager(), "New Question");
+                            showNewQDialog();
                         }
                     } else if(newQuestionSessionId.equals("") && newQuestionHistoryId.equals("") &&
                             newQuestionId.equals("") && newQuestionSetId.equals("")){
                             if(!isShowing){
                                 Log.i(TAG, "onReceive: ALL VALUES WERE EMPTY FROM RESPONSE ");
                                 isShowing = true;
-                                new AlertLeaveNewSessionDialog().show(getFragmentManager(), "Exit Session");
+                                showLeaveDialog();
                             }
 
                     }
@@ -261,11 +280,63 @@ public class StudentQuestionActivePage extends QuestionPage
         }
     };
 
+    private void showNewQDialog(){
+        newQuestionDialog = AlertNewQuestionDialog.newInstance();
+        newQuestionDialog.setCancelable(false);
+
+        newQuestionDialog.onCancel(new DialogInterface() {
+            @Override
+            public void cancel() {
+                Log.i(TAG, "onCancel: cancel");
+                isShowing = false;
+            }
+
+            @Override
+            public void dismiss() {
+                Log.i(TAG, "onCancel: dismiss");
+                isShowing = false;
+
+            }
+        });
+
+        newQuestionDialog.show(getFragmentManager(), "New Question");
+        isShowing = true;
+
+    }
+
+    private void showLeaveDialog(){
+        newSessionDialog= AlertLeaveNewSessionDialog.newInstance();
+        newSessionDialog.setCancelable(false);
+
+        newSessionDialog.onCancel(new DialogInterface() {
+            @Override
+            public void cancel() {
+                Log.i(TAG, "onCancel: cancel");
+                isShowing = false;
+            }
+
+            @Override
+            public void dismiss() {
+                Log.i(TAG, "onCancel: dismiss");
+                isShowing = false;
+
+            }
+        });
+
+        newSessionDialog.show(getFragmentManager(), "Exit Session");
+        isShowing = true;
+
+    }
+
 
     protected void handleActiveQuestion(QuestionInformation info){
         addQuestion(info, sessionId);
 
         questionDesc = info.getDescription();
+        mTextViewQuestion.setMovementMethod(new ScrollingMovementMethod());
+        if( (info.getDescription() != null && info.getDescription().length() > 300 ))
+            mTextViewQuestion.setMaxLines(6);
+
         mTextViewQuestion.setText(info.getDescription());
 
         Log.i("handleActiveQuestion", "teacher id = " + info.getTeacherId() + "\n" +
@@ -336,6 +407,12 @@ public class StudentQuestionActivePage extends QuestionPage
 
         Log.i(TAG, "finished handleQuestionChoice");
     }
+    
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.i(TAG, "onDestroy: STUDENT QUESTION ACTIVE PAGE DESTROYED");
+    }
 
 
     protected void handleQuestionTrueFalse(QuestionInformation info) {
@@ -372,6 +449,8 @@ public class StudentQuestionActivePage extends QuestionPage
 
     @SuppressLint("StaticFieldLeak")
     private void addQuestion(final QuestionInformation info, final String sessionId){
+
+        try{
 
         new AsyncTask<Void, Void, Boolean> (){
 
@@ -442,42 +521,11 @@ public class StudentQuestionActivePage extends QuestionPage
 
 
         }.execute();
-
+        } catch (Exception e){
+            Log.e(TAG, "addQuestion: " + e.getMessage() );
+        }
     }
 
-
-
-
-    //receiver for validating the active question
-    /*private BroadcastReceiver validateQuestionReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bundle info = intent.getExtras();
-
-            //only get structure if our status is the exact same
-            if(info != null){
-                Log.i(TAG, "onReceive: " + "activeQuestionReceiver -> message received");
-
-                if(questionInformation != null){
-
-                    Log.i(TAG, "onReceive: android sees same exact question ");
-
-                    submitPeriodicAnswer();
-                    Log.i(TAG, "onReceive: submitPeriodicAnswers called from validateQuestionReceiver");
-                }
-                //you may not have gotten an answer for your lifetime info, yet, try up to 3 times
-                else{
-                    mService.searchLiveQuestionInfo(questionId,"false");
-                }
-
-            }
-            else{
-
-            }
-
-
-        }
-    };*/
 
 
 
@@ -539,27 +587,30 @@ public class StudentQuestionActivePage extends QuestionPage
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        Bundle bundle = getIntent().getExtras();
+        if(savedInstanceState != null){
+            Log.i(TAG, "onCreate: savedInstanceState was NOT NULL");
+            onRestoreInstanceState(savedInstanceState);
+        } else {
 
-        if(bundle != null){
-            questionId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_ID, "");
-            questionSessionId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, "");
-            questionHistoryId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, "");
-            questionSetId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, "");
+            Bundle bundle = getIntent().getExtras();
 
-            SharedPreferences sharedPref = getSharedPreferences(
-                    getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            if (bundle != null) {
+                questionId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_ID);
+                questionSessionId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
+                questionHistoryId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID);
+                questionSetId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID);
 
-            studentId = sharedPref.getString(getString(R.string.STUDENT_ID),"");
+                SharedPreferences sharedPref = getSharedPreferences(
+                        getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-            classId = bundle.getString(getString(R.string.KEY_CLASS_ID));
-            className = bundle.getString(getString(R.string.KEY_CLASS_TITLE));
+                studentId = sharedPref.getString(getString(R.string.STUDENT_ID), "");
 
-            sessionId = questionSessionId;
+                classId = bundle.getString(getString(R.string.KEY_CLASS_ID));
+                className = bundle.getString(getString(R.string.KEY_CLASS_TITLE));
 
-
-
-
+                sessionId = questionSessionId;
+                Log.i(TAG, "onCreate: BUNDLE IS NOT NULL!");
+            }
         }
 
         gson = new Gson();
@@ -571,41 +622,10 @@ public class StudentQuestionActivePage extends QuestionPage
     }
 
     @Override
-    public void onResume(){
-        super.onResume();
+    public void onPause(){
+        super.onPause();
 
-        //bind to custom service
-        Intent serviceIntent = new Intent(StudentQuestionActivePage.this ,
-                MyStartedService.class);
-        startService(serviceIntent);
-        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
-
-        LocalBroadcastManager.getInstance(
-                getApplicationContext())
-                .registerReceiver(questionInfoReceiver, new IntentFilter(
-                        MyStartedService.MY_SERVICE_QUESTION_INFO));
-
-        /*LocalBroadcastManager.getInstance(
-                getApplicationContext())
-                .registerReceiver(validateQuestionReceiver,
-                        new IntentFilter(MyStartedService.MY_SERVICE_VALIDATE_ANSWER));*/
-
-        LocalBroadcastManager.getInstance(
-                getApplicationContext())
-                .registerReceiver(submitAnswerReceiver, new IntentFilter(
-                        MyStartedService.MY_SERVICE_SUBMIT_ANSWER));
-
-        LocalBroadcastManager.getInstance(
-                getApplicationContext())
-                .registerReceiver(combinationQuery, new IntentFilter(
-                        MyStartedService.MY_SERVICE_VALIDATE_COMBO));
-
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-
+        Log.i(TAG, "onPause: UNBINDING FROM SERVICE AND UNREGISTER OF RECEIVERS");
         unbindService(mServiceConn);
 
         LocalBroadcastManager.getInstance(
@@ -625,6 +645,87 @@ public class StudentQuestionActivePage extends QuestionPage
                 .unregisterReceiver(combinationQuery);
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        //bind to custom service
+        Intent serviceIntent = new Intent(StudentQuestionActivePage.this ,
+                MyStartedService.class);
+        startService(serviceIntent);
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .registerReceiver(questionInfoReceiver, new IntentFilter(
+                        MyStartedService.MY_SERVICE_QUESTION_INFO));
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .registerReceiver(submitAnswerReceiver, new IntentFilter(
+                        MyStartedService.MY_SERVICE_SUBMIT_ANSWER));
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .registerReceiver(combinationQuery, new IntentFilter(
+                        MyStartedService.MY_SERVICE_VALIDATE_COMBO));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        Log.i(TAG, "ON SAVE INSTANCE STATE FOR STUDENT QUESTION ACTIVE PAGE");
+        outState.putString(MyStartedService.MY_SERVICE_QUESTION_ID, questionId);
+        outState.putString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, questionSetId);
+        outState.putString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, questionSessionId);
+        outState.putString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, questionHistoryId);
+        outState.putString(MyStartedService.MY_SERVICE_QUESTION_INFO_JSON, questionStringJSON);
+        outState.putString(ACTIVE_PAGE_NEW_QUESTION_HISTORY_ID, newQuestionHistoryId);
+        outState.putString(ACTIVE_PAGE_NEW_QUESTION_SESSION_ID, newQuestionSessionId);
+        outState.putString(ACTIVE_PAGE_NEW_QUESTION_SET_ID, newQuestionSetId);
+        outState.putString(ACTIVE_PAGE_NEW_QUESTION_ID, newQuestionId);
+        outState.putString(ACTIVE_PAGE_ANSWER, answer);
+        outState.putString(getString(R.string.STUDENT_ID), studentId);
+        outState.putString(getString(R.string.KEY_CLASS_ID), classId);
+        outState.putString(getString(R.string.KEY_CLASS_TITLE), className);
+
+        outState.putBoolean(ACTIVE_PAGE_IS_SHOWING, isShowing);
+        outState.putBoolean(ACTIVE_PAGE_QUETSION_OVER, questionOver);
+        outState.putBoolean(ACTIVE_PAGE_SUBMITTED_ANSWER, submittedFinalAnswer);
+
+
+
+
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle inState){
+        super.onRestoreInstanceState(inState);
+        Log.i(TAG, "ON RESTORE INSTANCE STATE FOR STUDENT QUESTION ACTIVE PAGE");
+        questionId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_ID, "");
+        questionSetId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, "");
+        questionSessionId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, "");
+        questionHistoryId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, "");
+        questionStringJSON = inState.getString(MyStartedService.MY_SERVICE_QUESTION_INFO_JSON, "");
+        newQuestionHistoryId = inState.getString(ACTIVE_PAGE_NEW_QUESTION_HISTORY_ID, "");
+        newQuestionSessionId = inState.getString(ACTIVE_PAGE_NEW_QUESTION_SESSION_ID, "");
+        newQuestionId = inState.getString(ACTIVE_PAGE_NEW_QUESTION_ID);
+        answer = inState.getString(ACTIVE_PAGE_ANSWER, "");
+        isShowing = inState.getBoolean(ACTIVE_PAGE_IS_SHOWING, false);
+        questionOver = inState.getBoolean(ACTIVE_PAGE_QUETSION_OVER, false);
+        submittedFinalAnswer = inState.getBoolean(ACTIVE_PAGE_SUBMITTED_ANSWER, false);
+        sessionId = questionSessionId;
+
+        studentId = inState.getString(getString(R.string.STUDENT_ID));
+        classId = inState.getString(getString(R.string.KEY_CLASS_ID));
+        className = inState.getString(getString(R.string.KEY_CLASS_TITLE));
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+    }
+
     private synchronized void submitFinalAnswer(){
         Log.i(TAG, "submitFinalAnswer");
 
@@ -633,41 +734,46 @@ public class StudentQuestionActivePage extends QuestionPage
 
         if(answer == null || answer.equals(""))
         {
-            for(boolean el: studentAnswers){
-                if(el)
-                    count++;
-            }
+            if(studentAnswers != null){
+                for(boolean el: studentAnswers){
+                    if(el)
+                        count++;
+                }
 
-            StringBuilder sb = new StringBuilder();
-            sb.append("[");
-            //Log.i(TAG, "submitFinalAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
-            for (int i = 0; i < studentAnswers.length; i++){
-                if(studentAnswers[i]){
-                    sb.append("\"");
-                    sb.append(i);
-                    sb.append("\"");
-                    if (count > 1){
-                        sb.append(",");
-                        count--;
+                StringBuilder sb = new StringBuilder();
+                sb.append("[");
+                //Log.i(TAG, "submitFinalAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
+                for (int i = 0; i < studentAnswers.length; i++){
+                    if(studentAnswers[i]){
+                        sb.append("\"");
+                        sb.append(i);
+                        sb.append("\"");
+                        if (count > 1){
+                            sb.append(",");
+                            count--;
+                        }
                     }
                 }
+                sb.append("]");
+                answer = sb.toString();
+
+                mService.submitAnswer(
+                        studentId,
+                        questionSessionId,
+                        questionHistoryId,
+                        answerType,
+                        answer,
+                        "true"
+                );
+                Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
+
+                updateQuestion(answer);
+
+                answer = null;
             }
-            sb.append("]");
-            answer = sb.toString();
-
-            mService.submitAnswer(
-                    studentId,
-                    questionSessionId,
-                    questionHistoryId,
-                    answerType,
-                    answer,
-                    "true"
-            );
-            Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
-
-            updateQuestion(answer);
-
-            answer = null;
+            else{
+                Log.i(TAG, "submitFinalAnswer: STUDENT ANSWERS ARRAY WAS NULL");
+            }
         }
     }
 
@@ -677,39 +783,41 @@ public class StudentQuestionActivePage extends QuestionPage
         int count = 0;
         if(answer == null || answer.equals(""))
         {
-            for(boolean el: studentAnswers){
-                if(el)
-                    count++;
-            }
+            if(studentAnswers != null){
+                for(boolean el: studentAnswers){
+                    if(el)
+                        count++;
+                }
 
-            StringBuilder sb = new StringBuilder();
-            sb.append("[");
-            //Log.i(TAG, "submitPeriodicAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
-            for (int i = 0; i < studentAnswers.length; i++){
-                if(studentAnswers[i]){
-                    sb.append("\"");
-                    sb.append(i);
-                    sb.append("\"");
-                    if (count > 1){
-                        sb.append(",");
-                        count--;
+                StringBuilder sb = new StringBuilder();
+                sb.append("[");
+                //Log.i(TAG, "submitPeriodicAnswer: LENGTH OF STUDENT ANSWERS " + studentAnswers.length);
+                for (int i = 0; i < studentAnswers.length; i++){
+                    if(studentAnswers[i]){
+                        sb.append("\"");
+                        sb.append(i);
+                        sb.append("\"");
+                        if (count > 1){
+                            sb.append(",");
+                            count--;
+                        }
                     }
                 }
+                sb.append("]");
+                answer = sb.toString();
+
+                Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
+                mService.submitAnswer(
+                        studentId,
+                        questionSessionId,
+                        questionHistoryId,
+                        answerType,
+                        answer,
+                        "false"
+                );
+
+                answer = null;
             }
-            sb.append("]");
-            answer = sb.toString();
-
-            Log.i(TAG, "submitFinalAnswer: SUBMITTING ANSWER: " + answer);
-            mService.submitAnswer(
-                    studentId,
-                    questionSessionId,
-                    questionHistoryId,
-                    answerType,
-                    answer,
-                    "false"
-            );
-
-            answer = null;
         }
     }
 
@@ -727,11 +835,13 @@ public class StudentQuestionActivePage extends QuestionPage
 
     @Override
     public void onLeavePositiveClick() {
+        isShowing = false;
         finish();
     }
 
     @Override
     public void onLeaveNegativeClick() {
+        isShowing = false;
 
     }
     
@@ -739,39 +849,41 @@ public class StudentQuestionActivePage extends QuestionPage
     @SuppressLint("StaticFieldLeak")
     private void updateQuestion(final String studentAnswer){
 
-        new AsyncTask<Void, Void, Void>(){
+        try{
+            new AsyncTask<Void, Void, Void>(){
 
-            @Override
-            protected Void doInBackground(Void... voids) {
+                @Override
+                protected Void doInBackground(Void... voids) {
 
-                String table = getString(R.string.TABLE_QUESTION);
-                ContentValues values = new ContentValues();
-                values.put("student_answers", studentAnswer);
+                    String table = getString(R.string.TABLE_QUESTION);
+                    ContentValues values = new ContentValues();
+                    values.put("student_answers", studentAnswer);
 
-                String selection = "_id = ?";
-                String[] selectionArgs = { String.valueOf(questionId) };
+                    String selection = "_id = ?";
+                    String[] selectionArgs = { String.valueOf(questionId) };
 
-                Log.w(TAG, "starting update question in database");
-                db.update(table, values, selection, selectionArgs);
-                Log.w(TAG, "finished updating question in database");
+                    Log.w(TAG, "starting update question in database");
+                    db.update(table, values, selection, selectionArgs);
+                    Log.w(TAG, "finished updating question in database");
 
-                return null;
-            }
+                    return null;
+                }
 
-        }.execute();
-
-
-
-
-
-
+            }.execute();
+        }
+        catch (Exception e){
+            Log.e(TAG, "updateQuestion: " + e.getMessage());
+        }
     }
     
 
     @Override
     public void onNewQPositiveClick() {
+        isShowing = false;
 
+        Log.i(TAG, "onNewQPositiveClick: STARTING ACTIVITY OVER WITH NEW INFORMATION");
         Intent newQuestion = new Intent(StudentQuestionActivePage.this, StudentQuestionActivePage.class);
+        newQuestion.putExtra(getString(R.string.KEY_STUDENT_ID), studentId);
         newQuestion.putExtra(getString(R.string.KEY_CLASS_ID), classId);
         newQuestion.putExtra(getString(R.string.KEY_CLASS_TITLE), className);
         newQuestion.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID, newQuestionSetId);

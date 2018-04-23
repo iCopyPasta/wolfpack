@@ -29,6 +29,10 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
     // given MY_SERVICE_QUESTION_SET_ID, MY_SERVICE_QUESTION_SESSION_ID
     // we ask if there is an active question here!
     public static final String TAG = "SSessionActivePage";
+    public static final String ACTIVE_PAGE_NEW_QUESTION_ID = "ACTIVE_PAGE_NEW_QUESTION_ID";
+    public static final String ACTIVE_PAGE_NEW_QUESTION_SESSION_ID= "ACTIVE_PAGE_NEW_QUESTION_SESSION_ID";
+    public static final String ACTIVE_PAGE_NEW_QUESTION_HISTORY_ID= "ACTIVE_PAGE_NEW_QUESTION_HISTORY_ID";
+    public static final String ACTIVE_PAGE_NEW_QUESTION_SET_ID= "ACTIVE_PAGE_NEW_QUESTION_SET_ID";
 
     //private String className = "";
     //private String sessionName = "";
@@ -37,18 +41,15 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
     //private TextView mTextViewSessionName;
     //private TextView mTextViewQuestionNotice;
 
-    //activeSession refers to if there is an active session for the class (not necessarily this session)
-    private boolean activeSession = true;
-
-    //isActiveSession refers to if there the current session is STILL active
-    //isActiveQuestion refers to querying the database if there is an active question
-    private boolean isActiveSession = false;
     private boolean isActiveQuestion = false;
 
     // question set information if one is active
     private String questionSetId = null;
     private String questionSessionId = null;
-    private boolean foundQuestion;
+    private String newQuestionId = "";
+    private String newQuestionSessionId = "";
+    private String newQuestionHistoryId = "";
+    private String newQuestionSetId = "";
 
     private MyStartedService mService;
 
@@ -65,7 +66,7 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
             } else{
                 if(questionSessionId != null && questionSetId != null){
                     Log.i(TAG, "onServiceConnected: myService and questionSetId and questionSessionId are not null");
-                    mService.searchActiveQuestion(questionSetId, "true");
+                    mService.searchActiveSandQ(classId, questionSetId, "true");
                 }
             }
 
@@ -80,15 +81,13 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
     };
 
     //receiver for an active question
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    /*private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle info = intent.getExtras();
             Log.i(TAG, "onReceive: " + "service message received");
 
             if(info != null){
-
-                foundQuestion = true;
 
                 //force into StudentQuestionActivePage
                 Intent activeQuestionIntent = new Intent(StudentSessionActivePage.this,
@@ -161,14 +160,14 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
                 finish();
             }
         }
-    };
+    };*/
 
     private BroadcastReceiver submitAnswerReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
         if(questionSessionId != null && questionSetId != null){
             Log.i(TAG, "submitAnswer allowing restart in SessionActivePage");
-            mService.searchActiveQuestion(questionSetId, "true");
+            mService.searchActiveSandQ(classId, questionSetId, "true");
         }
         }
     };
@@ -182,11 +181,6 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorStudentPrimary)));
 
             Bundle bundle = getIntent().getExtras();
-
-            //is this THE active session?
-            isActiveSession = (boolean) bundle.get("isActive");
-            foundQuestion = false;
-
 
             //set misc (text & visibility)
             mTextViewSessionName.setText(sessionName);
@@ -206,7 +200,6 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
                 sessionId = questionSessionId = bundle.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
 
                 //is this THE active session?
-                isActiveSession = (boolean) bundle.get("isActive");
 
                 mTextViewSessionName.setText(sessionName);
             }
@@ -221,6 +214,75 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
         }
 
     }
+
+    private BroadcastReceiver combinationQuery = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle info = intent.getExtras();
+            //Log.i(TAG, "onReceive: combinationQuery" );
+
+            if(info != null) {
+                newQuestionId =
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_ID, newQuestionId);
+                newQuestionSessionId =
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, newQuestionSessionId);
+                newQuestionHistoryId =
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID, newQuestionHistoryId);
+                newQuestionSetId =
+                        info.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, newQuestionSetId);
+
+                Log.i(TAG, "onReceive: NEW QuestionId: " + newQuestionId);
+                Log.i(TAG, "onReceive: NEW QuestionHistoryId: " + newQuestionHistoryId);
+                Log.i(TAG, "onReceive: QuestionSessionId: " + questionSessionId + " versus " + newQuestionSessionId);
+                Log.i(TAG, "onReceive: QuestionSetId: " + questionSetId + " versus " + newQuestionSetId);
+
+                //the same exact session that we believe to exist is still present
+                if(questionSessionId.equals(newQuestionSessionId)
+                        && questionSetId.equals(newQuestionSetId)){
+
+                    //we have a new question!
+                    if(!newQuestionId.equals("") && !newQuestionHistoryId.equals("")){
+                        //TODO: new question code
+                        Log.i(TAG, "onReceive: WE HAVE A NEW QUESTION");
+
+                        Intent activeQuestionIntent = new Intent(StudentSessionActivePage.this,
+                                StudentQuestionActivePage.class);
+
+                        activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_ID,
+                                newQuestionId);
+
+                        activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_HISTORY_ID,
+                                newQuestionHistoryId);
+
+                        activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID,
+                                newQuestionSessionId);
+
+                        activeQuestionIntent.putExtra(MyStartedService.MY_SERVICE_QUESTION_SET_ID,
+                                newQuestionSetId);
+
+                        //extras to get back
+                        activeQuestionIntent.putExtra(getString(R.string.KEY_CLASS_ID), classId);
+                        activeQuestionIntent.putExtra(getString(R.string.KEY_CLASS_DESCRIPTION), className);
+                        activeQuestionIntent.putExtra(getString(R.string.KEY_SESSION_ID), sessionId);
+
+                        startActivity(activeQuestionIntent);
+
+                    } else{ //keep trying to ask for a new question
+                        mService.searchActiveSandQ(classId, questionSetId, "false");
+                    }
+                } else{
+                    //session expired as we don't have equal values
+                    Toast.makeText(context, "Expired Session", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+            }else{
+                Log.w(TAG, "onReceive: info was null :(" );
+                finish();
+            }
+
+        }
+    };
 
     @Override
     protected void loadQuestionList() { }
@@ -237,9 +299,15 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
         outState.putString(MyStartedService.MY_SERVICE_QUESTION_SET_NAME, sessionName);
         outState.putString(MyStartedService.MY_SERVICE_QUESTION_SET_ID, questionSetId);
         outState.putString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID, questionSessionId);
+        outState.putString(ACTIVE_PAGE_NEW_QUESTION_HISTORY_ID, newQuestionHistoryId);
+        outState.putString(ACTIVE_PAGE_NEW_QUESTION_SESSION_ID, newQuestionSessionId);
+        outState.putString(ACTIVE_PAGE_NEW_QUESTION_ID, newQuestionId);
+        outState.putString(ACTIVE_PAGE_NEW_QUESTION_SET_ID, newQuestionSetId);
+
         outState.putString("className", className);
         outState.putString("classId", classId);
         outState.putBoolean("isActive",isActiveQuestion);
+
     }
 
     @Override
@@ -247,38 +315,39 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
         super.onRestoreInstanceState(inState);
 
         sessionName = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SET_NAME,"");
-
-        //mTextViewSessionName.setText(sessionName);
-
         questionSetId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SET_ID);
         questionSessionId = inState.getString(MyStartedService.MY_SERVICE_QUESTION_SESSION_ID);
-
         classId = inState.getString("classId");
         className = inState.getString("className");
-
         isActiveQuestion = inState.getBoolean("isActive");
+
+        newQuestionSetId = inState.getString(ACTIVE_PAGE_NEW_QUESTION_SET_ID, "");
+        newQuestionHistoryId = inState.getString(ACTIVE_PAGE_NEW_QUESTION_HISTORY_ID, "");
+        newQuestionSessionId = inState.getString(ACTIVE_PAGE_NEW_QUESTION_SESSION_ID, "");
+        newQuestionId = inState.getString(ACTIVE_PAGE_NEW_QUESTION_ID, "");
 
     }
 
     @Override
     public void onStop(){
         super.onStop();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        Log.i(TAG, "ON PAUSE, UNBINDING FROM SERVICE AND RECEIVERS");
 
         unbindService(mServiceConn);
 
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
-                .unregisterReceiver(mReceiver);
-
-        LocalBroadcastManager.getInstance(
-                getApplicationContext())
-                .unregisterReceiver(mReceiver2);
-
-        LocalBroadcastManager.getInstance(
-                getApplicationContext())
                 .unregisterReceiver(submitAnswerReceiver);
 
-
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+                .unregisterReceiver(combinationQuery);
     }
 
     @Override
@@ -291,20 +360,26 @@ public class StudentSessionActivePage extends SessionPage { //implements ActiveS
         startService(serviceIntent);
         bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
 
-        LocalBroadcastManager.getInstance(
+        /*LocalBroadcastManager.getInstance(
                 getApplicationContext())
                 .registerReceiver(mReceiver, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_QUESTION));
 
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
-                .registerReceiver(mReceiver2, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_SESSION));
+                .registerReceiver(mReceiver2, new IntentFilter(MyStartedService.MY_SERVICE_ACTIVE_SESSION));*/
 
-        IntentFilter temp = new IntentFilter(MyStartedService.MY_SERVICE_SUBMIT_ANSWER);
-        temp.addAction(MyStartedService.MY_SERVICE_VALIDATE_COMBO);
+
         LocalBroadcastManager.getInstance(
                 getApplicationContext())
-                .registerReceiver(submitAnswerReceiver, temp
+                .registerReceiver(submitAnswerReceiver,  new IntentFilter(MyStartedService.MY_SERVICE_SUBMIT_ANSWER)
                 );
+
+        LocalBroadcastManager.getInstance(
+                getApplicationContext())
+        .registerReceiver(combinationQuery, new IntentFilter(MyStartedService.MY_SERVICE_VALIDATE_COMBO));
+
+
+        mTextViewSessionName.setText(sessionName);
 
     }
 

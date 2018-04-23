@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 
 /**
  * Created by peo5032 on 4/10/18.
@@ -13,6 +14,7 @@ import android.os.Bundle;
 
 public class AlertLeaveNewSessionDialog extends DialogFragment{
 
+    public static final String TAG = "LeaveNewDialog";
     public Bundle getInfo() {
         return info;
     }
@@ -27,8 +29,16 @@ public class AlertLeaveNewSessionDialog extends DialogFragment{
         void onLeavePositiveClick();
         void onLeaveNegativeClick();
     }
+    private static AlertLeaveNewSessionDialog newSessionDialog;
 
     AlertLeaveNewSessionDialogListener mListener;
+
+    public static AlertLeaveNewSessionDialog newInstance(){
+        if(newSessionDialog == null)
+            newSessionDialog = new AlertLeaveNewSessionDialog();
+
+        return newSessionDialog;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
@@ -40,6 +50,7 @@ public class AlertLeaveNewSessionDialog extends DialogFragment{
                 .setPositiveButton("Leave", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
+                        Log.i(TAG, "onClick: NEW POSITIVE CLICK");
                         mListener.onLeavePositiveClick();
                     }
                 })
@@ -48,7 +59,8 @@ public class AlertLeaveNewSessionDialog extends DialogFragment{
                     public void onClick(DialogInterface dialog, int id) {
                         mListener.onLeaveNegativeClick();
                     }
-                });
+                }).setCancelable(false);
+        setCancelable(false);
 
         return builder.create();
     }

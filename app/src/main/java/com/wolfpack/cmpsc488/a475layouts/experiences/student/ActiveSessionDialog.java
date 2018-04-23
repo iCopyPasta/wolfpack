@@ -6,26 +6,53 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
+
+import org.w3c.dom.Text;
 
 
 public class ActiveSessionDialog extends DialogFragment {
 
-    public Bundle getInfo() {
-        return info;
+    private static final String TAG = "ActiveSessionJAVA";
+
+    public static Bundle getInfo() {
+        return information;
     }
 
-    public void setInfo(Bundle info) {
-        this.info = info;
+    public static void setInfo(Bundle info) {
+        information = info;
     }
 
-    private Bundle info;
+    private static Bundle information;
 
     public interface ActiveSessionDialogListener{
         void onPositiveClick(Bundle info);
         void onNegativeClick();
     }
 
-    ActiveSessionDialogListener mListener;
+    private static ActiveSessionDialog activeSessionDialog;
+    private ActiveSessionDialogListener mListener;
+    
+    public static ActiveSessionDialog newInstance(){
+        if(activeSessionDialog == null){
+            activeSessionDialog = new ActiveSessionDialog();
+        }
+
+        return activeSessionDialog;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.i(TAG, "onResume");
+
+        onAttach(getActivity());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
@@ -37,8 +64,11 @@ public class ActiveSessionDialog extends DialogFragment {
                 .setPositiveButton("Join", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        if(info != null)
-                            mListener.onPositiveClick(info);
+                        if(information != null){
+                            mListener.onPositiveClick(information);
+                        }else{
+                            Log.e(TAG, "onClick: INFO WAS NULL");
+                        }
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -46,8 +76,11 @@ public class ActiveSessionDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         mListener.onNegativeClick();
                     }
-                });
+                })
+        .setCancelable(false);
+        setCancelable(false);
 
+        //setCanceledOnTouchOutside(false);
         return builder.create();
     }
 
