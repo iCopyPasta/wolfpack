@@ -19,7 +19,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 
   $date = date('YMdHis');
-  $targetDirectory = "\"C:/wamp64/tmp/ClassReport".$date.".csv\"";
+  #$targetDirectory = "\"C:/wamp64/tmp/ClassReport".$date.".csv\"";
+  $targetDirectory = "/var/lib/mysql-files/ClassReport".$date.".csv";
   $sql = "SELECT `Date`, `Session_Id`, `Student_Id`, `First_Name`, `Last_Name`, `Score`
                 FROM(
                   (SELECT 1 as Sort_Value, 'Date', 'Session_Id', 'Student_Id', 'First_Name', 'Last_Name', 'Score')
@@ -49,15 +50,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   AND student_account.student_id = num_correct.student_id
                   ORDER BY num_correct.session_id, num_correct.student_id)) as tbl
                 ORDER BY Sort_Value, `Date`, `Last_Name`, `First_Name`
-                INTO  OUTFILE ".$targetDirectory."
-                      FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"'
-                      LINES TERMINATED BY \"\n\"
+                INTO  OUTFILE :location
+                      FIELDS TERMINATED BY ',' 
+                      LINES TERMINATED BY '\n'
                 ";
 
   $connection = new Connection;
   $pdo = $connection->getConnection();
   $stmt = $pdo->prepare($sql);
   $stmt->bindValue(':class_id', $class_id);
+  $stmt->bindValue(':location', $targetDirectory, PDO::PARAM_STR);
 
   try {
     $stmt->execute();
@@ -76,7 +78,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $response["message"] = "Success selecting";
   $response["success"] = 1;
 
-  $file = 'C:/wamp64/tmp/ClassReport' . $date . '.csv';
+
+  #echo "MyUID-IS: ".posix_getpwuid(posix_geteuid())['name'];
+  
+  #echo "<br><br>";
+  #echo exec('whoami'); 
+
+  $file = $targetDirectory;
+  #www-data --> mysql?
+  #)
   if (file_exists($file)) {
     header('Content-Description: File Transfer');
     header('Content-Type: application/octet-stream');
@@ -88,6 +98,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     flush();
     readfile($file);
     exit();
+  } else{
+     echo "rest in pieces<br>";
   }
 
 
