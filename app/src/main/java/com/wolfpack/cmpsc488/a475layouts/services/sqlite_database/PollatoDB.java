@@ -49,15 +49,22 @@ public class PollatoDB extends SQLiteOpenHelper {
                     "question_type TEXT NOT NULL,"+
                     "description TEXT NOT NULL,"+
                     "potential_answers BLOB NOT NULL,"+
-                    "correct_answers BLOB NOT NULL,"+
-                    "student_answers BLOB)";
+                    "correct_answers BLOB NOT NULL)";
+
+//    private static final String SQL_CREATE_TABLE_ANSWER =
+//            "CREATE TABLE answers ("+
+//                    "_id INTEGER PRIMARY KEY AUTOINCREMENT,"+
+//                    "student_answers BLOB)";
 
     private static final String SQL_CREATE_TABLE_QUESTION_IS_IN =
             "CREATE TABLE question_is_in (" +
+                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "session_id INTEGER,"+
-                    "question_id INTEGER PRIMARY KEY,"+
+                    "question_id INTEGER,"+
+                    "student_answer BLOB," +
                     "FOREIGN KEY (session_id) REFERENCES session (_id),"+
                     "FOREIGN KEY (question_id) REFERENCES question (_id))";
+//                    "FOREIGN KEY (answer_id) REFERENCES answer(_id))";
 
 
     private static final String SQL_DROP_TABLE_SESSION =
@@ -66,20 +73,25 @@ public class PollatoDB extends SQLiteOpenHelper {
     private static final String SQL_DROP_TABLE_QUESTION =
             "DROP TABLE IF EXISTS question";
 
+//    private static final String SQL_DROP_TABLE_ANSWER =
+//            "DROP TABLE IF EXISTS answers";
+
     private static final String SQL_DROP_TABLE_QUESTION_IS_IN =
-            "DROP TABLE question_is_in";
+            "DROP TABLE IF EXISTS question_is_in";
 
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_TABLE_SESSION);
         db.execSQL(SQL_CREATE_TABLE_QUESTION);
+//        db.execSQL(SQL_CREATE_TABLE_ANSWER);
         db.execSQL(SQL_CREATE_TABLE_QUESTION_IS_IN);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(SQL_DROP_TABLE_QUESTION_IS_IN);
+//        db.execSQL(SQL_DROP_TABLE_ANSWER);
         db.execSQL(SQL_DROP_TABLE_QUESTION);
         db.execSQL(SQL_DROP_TABLE_SESSION);
         onCreate(db);
@@ -116,7 +128,7 @@ public class PollatoDB extends SQLiteOpenHelper {
                 }
 
                 Log.w(TAG, " ");
-                Log.w(TAG, "question: _id | question_type | description | potential_answers | correct_answers | student_answers");
+                Log.w(TAG, "question: _id | question_type | description | potential_answers | correct_answers");
                 while (c2.moveToNext())
                 {
                     Log.w(TAG,
@@ -124,16 +136,17 @@ public class PollatoDB extends SQLiteOpenHelper {
                                     c2.getString(1) + " | " +
                                     c2.getString(2) + " | " +
                                     c2.getString(3) + " | " +
-                                    c2.getString(4) + " | " +
-                                    c2.getString(5));
+                                    c2.getString(4));
                 }
                 Log.w(TAG, " ");
-                Log.w(TAG, "question_is_in: question_id | session_id");
+                Log.w(TAG, "question_is_in: _id | question_id | session_id | student_answer");
                 while (c3.moveToNext())
                 {
                     Log.w(TAG,
                             c3.getInt(0) + " | " +
-                                    c3.getInt(1));
+                                    c3.getString(1) + " | " +
+                                    c3.getString(2) + " | " +
+                                    c3.getString(3));
                 }
                 Log.w(TAG, " ");
 

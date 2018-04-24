@@ -123,7 +123,7 @@ public class StudentSessionCompletePage extends SessionPage {
 
             @Override
             protected Cursor doInBackground(Void... params) {
-                String projection = "_id, question_type, description, potential_answers, correct_answers, student_answers";
+                String projection = "question._id, question_type, description, potential_answers, correct_answers, student_answer";
                 //String table = getString(R.string.TABLE_Q_IS_IN) + " " + getString(R.string.TABLE_QUESTION) + " ON " + ;
                 //String selection = "session_id = ? AND question_id = _id";
                 String[] selectionArgs = {String.valueOf(sessionId)};
@@ -134,12 +134,25 @@ public class StudentSessionCompletePage extends SessionPage {
                                 " SELECT " + projection +
                                 " FROM " + " question_link CROSS JOIN question " +
                                 " WHERE " + " question_link.question_id = question._id " +
-                                " ORDER BY question_id DESC ",
+                                " ORDER BY question_link._id DESC ",
                         selectionArgs);
             }
 
             @Override
             protected void onPostExecute(Cursor cursor) {
+
+                while(cursor.moveToNext()){
+                    Log.w(TAG, "h\n\n\n\n");
+                    Log.w(TAG, "_id = " + cursor.getInt(0));
+                    Log.w(TAG, "question_type = " + cursor.getString(1));
+                    Log.w(TAG, "description = " + cursor.getString(2));
+                    Log.w(TAG, "potential = " + cursor.getString(3));
+                    Log.w(TAG, "correct = " + cursor.getString(4));
+                    Log.w(TAG, "student = " + cursor.getString(5));
+
+                }
+
+
                 adapter.swapCursor(cursor);
                 mProgressBar.setVisibility(View.GONE);
             }

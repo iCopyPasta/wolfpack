@@ -1,7 +1,6 @@
 package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.annotation.SuppressLint;
-import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
@@ -11,14 +10,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.method.MovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -26,21 +24,12 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.wolfpack.cmpsc488.a475layouts.R;
-import com.wolfpack.cmpsc488.a475layouts.services.authentication.LoginDetails;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.MyStartedService;
-import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.ActiveCombinationResults;
 import com.wolfpack.cmpsc488.a475layouts.services.pollingsession.models.QuestionInformation;
 
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 
 
 // given
@@ -57,7 +46,7 @@ public class StudentQuestionActivePage extends QuestionPage
     public static final String ACTIVE_PAGE_NEW_QUESTION_SESSION_ID= "ACTIVE_PAGE_NEW_QUESTION_SESSION_ID";
     public static final String ACTIVE_PAGE_NEW_QUESTION_HISTORY_ID= "ACTIVE_PAGE_NEW_QUESTION_HISTORY_ID";
     public static final String ACTIVE_PAGE_NEW_QUESTION_SET_ID= "ACTIVE_PAGE_NEW_QUESTION_SET_ID";
-    public static final String ACTIVE_PAGE_QUETSION_OVER = "ACTIVE_PAGE_QUESTION_OVER";
+    public static final String ACTIVE_PAGE_QUESTION_OVER = "ACTIVE_PAGE_QUESTION_OVER";
     public static final String ACTIVE_PAGE_IS_SHOWING = "ACTIVE_PAGE_IS_SHOWING";
     public static final String ACTIVE_PAGE_SUBMITTED_ANSWER= "ACTIVE_PAGE_SUBMITTED_ANSWER";
     private static final String ACTIVE_PAGE_ANSWER = "ACTIVE_PAGE_ANSWER ";
@@ -71,6 +60,7 @@ public class StudentQuestionActivePage extends QuestionPage
 
     private String questionSessionId = null;
     private String questionHistoryId = null;
+    private String questionIsInId = null;
     private String questionStringJSON = null;
     //private QuestionInformation questionInformation = null;
     private String answerType = null;
@@ -452,75 +442,77 @@ public class StudentQuestionActivePage extends QuestionPage
 
         try{
 
-        new AsyncTask<Void, Void, Boolean> (){
+            new AsyncTask<Void, Void, Boolean> (){
 
-            @Override
-            protected Boolean doInBackground(Void... params) {
+                @Override
+                protected Boolean doInBackground(Void... params) {
 
-                questionId = info.getQuestionId();
-                questionDesc = info.getDescription();
-                questionType = info.getQuestionType();
-                questionPotentialAnswers = info.getPotentialAnswers();
-                questionCorrectAnswers = info.getCorrectAnswers();
-                questionStudentAnswers = "";
+                    questionId = info.getQuestionId();
+                    questionDesc = info.getDescription();
+                    questionType = info.getQuestionType();
+                    questionPotentialAnswers = info.getPotentialAnswers();
+                    questionCorrectAnswers = info.getCorrectAnswers();
+                    questionStudentAnswers = "";
 
-                int question_id = Integer.parseInt(questionId);
-                int session_id = Integer.parseInt(sessionId);
+                    int question_id = Integer.parseInt(questionId);
+                    int session_id = Integer.parseInt(sessionId);
 
-                String table = getString(R.string.TABLE_QUESTION);
+                    String table = getString(R.string.TABLE_QUESTION);
 
-                ContentValues values = new ContentValues();
-                values.put("_id", question_id);
-                values.put("question_type", questionType);
-                values.put("description", questionDesc);
-                values.put("potential_answers", questionPotentialAnswers);
-                values.put("correct_answers", questionCorrectAnswers);
-                values.put("student_answers", questionStudentAnswers);
+                    ContentValues values = new ContentValues();
+                    values.put("_id", question_id);
+                    values.put("question_type", questionType);
+                    values.put("description", questionDesc);
+                    values.put("potential_answers", questionPotentialAnswers);
+                    values.put("correct_answers", questionCorrectAnswers);
+                    //values.put("student_answers", questionStudentAnswers);
 
-                long questionInsertResult = 0;
+                    long questionInsertResult = 0;
 
-                Log.w(TAG, "inserting question");
-                try {
-                    questionInsertResult = db.insert(table, null, values);
+                    Log.w(TAG, "inserting question");
+                    try {
+                        questionInsertResult = db.insert(table, null, values);
+                    }
+                    catch (SQLiteConstraintException e){
+                        Log.i(TAG, "row already exists: questionInsertResult = " + questionInsertResult);
+                        Log.d(TAG, "message: " + e.getMessage());
+                        questionInsertResult = 1;
+                    }
+
+                    table = getString(R.string.TABLE_Q_IS_IN);
+
+                    values = new ContentValues();
+                    values.put("session_id", session_id);
+                    values.put("question_id", question_id);
+                    values.put("student_answer", questionStudentAnswers);
+
+                    long qIsInInsertResult = 0;
+                    Log.w(TAG, "inserting question is in");
+                    try {
+                        qIsInInsertResult = db.insert(table, null, values);
+                        questionIsInId = String.valueOf(qIsInInsertResult);
+                    }
+                    catch (SQLiteConstraintException e){
+                        Log.i(TAG, "row already exists: qIsInInsertResult = " + qIsInInsertResult);
+                        Log.d(TAG, "message: " + e.getMessage());
+                        qIsInInsertResult = 1;
+                    }
+
+                    return questionInsertResult == 1 && qIsInInsertResult == 1;
                 }
-                catch (SQLiteConstraintException e){
-                    Log.i(TAG, "row already exists: questionInsertResult = " + questionInsertResult);
-                    Log.d(TAG, "message: " + e.getMessage());
-                    questionInsertResult = 1;
+
+                @Override
+                protected void onPostExecute(Boolean result){
+                    if (result) {
+                        Log.i(TAG, "success: rows inserted");
+                        Toast.makeText(StudentQuestionActivePage.this,
+                                "question was inserted successfully!",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
 
-                table = getString(R.string.TABLE_Q_IS_IN);
 
-                values = new ContentValues();
-                values.put("session_id", session_id);
-                values.put("question_id", question_id);
-
-                long qIsInInsertResult = 0;
-                Log.w(TAG, "inserting question is in");
-                try {
-                    qIsInInsertResult = db.insert(table, null, values);
-                }
-                catch (SQLiteConstraintException e){
-                    Log.i(TAG, "row already exists: qIsInInsertResult = " + qIsInInsertResult);
-                    Log.d(TAG, "message: " + e.getMessage());
-                    qIsInInsertResult = 1;
-                }
-
-                return questionInsertResult == 1 && qIsInInsertResult == 1;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result){
-                if (result) {
-                    Log.i(TAG, "success: rows inserted");
-                    Toast.makeText(StudentQuestionActivePage.this,
-                            "question was inserted successfully!",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-
-
-        }.execute();
+            }.execute();
         } catch (Exception e){
             Log.e(TAG, "addQuestion: " + e.getMessage() );
         }
@@ -690,7 +682,7 @@ public class StudentQuestionActivePage extends QuestionPage
         outState.putString(getString(R.string.KEY_CLASS_TITLE), className);
 
         outState.putBoolean(ACTIVE_PAGE_IS_SHOWING, isShowing);
-        outState.putBoolean(ACTIVE_PAGE_QUETSION_OVER, questionOver);
+        outState.putBoolean(ACTIVE_PAGE_QUESTION_OVER, questionOver);
         outState.putBoolean(ACTIVE_PAGE_SUBMITTED_ANSWER, submittedFinalAnswer);
 
 
@@ -712,7 +704,7 @@ public class StudentQuestionActivePage extends QuestionPage
         newQuestionId = inState.getString(ACTIVE_PAGE_NEW_QUESTION_ID);
         answer = inState.getString(ACTIVE_PAGE_ANSWER, "");
         isShowing = inState.getBoolean(ACTIVE_PAGE_IS_SHOWING, false);
-        questionOver = inState.getBoolean(ACTIVE_PAGE_QUETSION_OVER, false);
+        questionOver = inState.getBoolean(ACTIVE_PAGE_QUESTION_OVER, false);
         submittedFinalAnswer = inState.getBoolean(ACTIVE_PAGE_SUBMITTED_ANSWER, false);
         sessionId = questionSessionId;
 
@@ -855,12 +847,16 @@ public class StudentQuestionActivePage extends QuestionPage
                 @Override
                 protected Void doInBackground(Void... voids) {
 
-                    String table = getString(R.string.TABLE_QUESTION);
+                    String table = getString(R.string.TABLE_Q_IS_IN);
                     ContentValues values = new ContentValues();
-                    values.put("student_answers", studentAnswer);
+                    values.put("student_answer", studentAnswer);
+
+//                    String table = getString(R.string.TABLE_QUESTION);
+//                    ContentValues values = new ContentValues();
+//                    values.put("student_answers", studentAnswer);
 
                     String selection = "_id = ?";
-                    String[] selectionArgs = { String.valueOf(questionId) };
+                    String[] selectionArgs = { String.valueOf(questionIsInId) };
 
                     Log.w(TAG, "starting update question in database");
                     db.update(table, values, selection, selectionArgs);
