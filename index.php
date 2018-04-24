@@ -198,7 +198,7 @@
                 <div class="row">
                     <div class="col-md-4">&copy;<script type="text/javascript">document.write(new Date().getFullYear());</script> Pollato.com</div>
                     <a href="https://github.com/iCopyPasta/wolfpack" class="col-md-4 text-center">GitHub</a>
-                    <a href="pages/deliverables.php" class="col-md-4 pull-right text-right">See Our Deliverables</a>
+                    <a href="https://drive.google.com/drive/folders/1XNrIPk2gDKLrvpE7XLUqg_Cw9UCHvMtM?usp=sharing" class="col-md-4 pull-right text-right">See Our Deliverables</a>
                 </div>
             </div> 
         </footer>
