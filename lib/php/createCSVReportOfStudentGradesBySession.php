@@ -19,9 +19,9 @@
 
   $alertString="";
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    include('lib/php/Connection.php');
-    include('lib/php/C_Answers.php');
-    include('lib/php/C_ClassCourseSection.php');
+    include('Connection.php');
+    include('C_Answers.php');
+    include('C_ClassCourseSection.php');
 
     //ensure $session_id is populated
     $class_id = isset($_POST['class_id']) ? $_POST['class_id'] : null;
