@@ -122,7 +122,7 @@
         }catch(PDOException $exception){
           // fail JSON response
           $response = array();
-          $response["message"] = "ERROR SELECTING: " . $e->getMessage();
+          $response["message"] = "ERROR SELECTING".$exception->getMessage();
           $response["success"] = 0;
 //          return json_encode($response);
           echo json_encode($response);
