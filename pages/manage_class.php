@@ -221,6 +221,7 @@ if ( $edit_class_id != "NOT_SET" && (! confirmClassOwnership($edit_class_id,$_SE
             </div>
             <ul class=\"list-unstyled mt-3 mb-4\">
               <li>$offering</li>
+              <li> <button onclick=\"classReport($class_id)\" id=\"$class_id.'report'\" class=\"btn btn-primary\" >Download Report</button></li>
             </ul>
             </div>";     
         }                               
@@ -263,6 +264,13 @@ if ( $edit_class_id != "NOT_SET" && (! confirmClassOwnership($edit_class_id,$_SE
                   
                   }
           }
+            
+          function classReport(class_id) {
+              console.log("classReport called with class id: " + class_id);
+            post('../lib/php/createCSVReportOfStudentGradesBySession.php',"class_id="+class_id);
+              location.reload(); 
+                  
+          }    
 
 
 
