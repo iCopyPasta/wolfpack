@@ -109,50 +109,55 @@ public class PollatoDB extends SQLiteOpenHelper {
 
             @Override
             protected Void doInBackground(Void... voids) {
+                try{
+                    SQLiteDatabase db = PollatoDB.instance.getWritableDatabase();
 
-                SQLiteDatabase db = PollatoDB.instance.getWritableDatabase();
+                    Log.w(TAG, "displaying db contents");
+                    Cursor c1 = db.rawQuery("SELECT * FROM session", new String[]{});
+                    Cursor c2 = db.rawQuery("SELECT * FROM question", new String[]{});
+                    Cursor c3 = db.rawQuery("SELECT * FROM question_is_in", new String[]{});
+                    Log.w(TAG, " ");
+                    Log.w(TAG, "session: _id | class_id | name | start_date");
+                    while (c1.moveToNext())
+                    {
+                        Log.w(TAG,
+                                c1.getInt(0) + " | " +
+                                        c1.getString(1) + " | " +
+                                        c1.getString(2) + " | " +
+                                        c1.getString(3));
+                    }
 
-                Log.w(TAG, "displaying db contents");
-                Cursor c1 = db.rawQuery("SELECT * FROM session", new String[]{});
-                Cursor c2 = db.rawQuery("SELECT * FROM question", new String[]{});
-                Cursor c3 = db.rawQuery("SELECT * FROM question_is_in", new String[]{});
-                Log.w(TAG, " ");
-                Log.w(TAG, "session: _id | class_id | name | start_date");
-                while (c1.moveToNext())
-                {
-                    Log.w(TAG,
-                            c1.getInt(0) + " | " +
-                                    c1.getString(1) + " | " +
-                                    c1.getString(2) + " | " +
-                                    c1.getString(3));
+                    Log.w(TAG, " ");
+                    Log.w(TAG, "question: _id | question_type | description | potential_answers | correct_answers");
+                    while (c2.moveToNext())
+                    {
+                        Log.w(TAG,
+                                c2.getInt(0) + " | " +
+                                        c2.getString(1) + " | " +
+                                        c2.getString(2) + " | " +
+                                        c2.getString(3) + " | " +
+                                        c2.getString(4));
+                    }
+                    Log.w(TAG, " ");
+                    Log.w(TAG, "question_is_in: _id | question_id | session_id | student_answer");
+                    while (c3.moveToNext())
+                    {
+                        Log.w(TAG,
+                                c3.getInt(0) + " | " +
+                                        c3.getString(1) + " | " +
+                                        c3.getString(2) + " | " +
+                                        c3.getString(3));
+                    }
+                    Log.w(TAG, " ");
+
+                    c1.close();
+                    c2.close();
+                    c3.close();
+                }
+                catch(Exception e){
+                    return null;
                 }
 
-                Log.w(TAG, " ");
-                Log.w(TAG, "question: _id | question_type | description | potential_answers | correct_answers");
-                while (c2.moveToNext())
-                {
-                    Log.w(TAG,
-                            c2.getInt(0) + " | " +
-                                    c2.getString(1) + " | " +
-                                    c2.getString(2) + " | " +
-                                    c2.getString(3) + " | " +
-                                    c2.getString(4));
-                }
-                Log.w(TAG, " ");
-                Log.w(TAG, "question_is_in: _id | question_id | session_id | student_answer");
-                while (c3.moveToNext())
-                {
-                    Log.w(TAG,
-                            c3.getInt(0) + " | " +
-                                    c3.getString(1) + " | " +
-                                    c3.getString(2) + " | " +
-                                    c3.getString(3));
-                }
-                Log.w(TAG, " ");
-
-                c1.close();
-                c2.close();
-                c3.close();
 
                 return null;
             }
