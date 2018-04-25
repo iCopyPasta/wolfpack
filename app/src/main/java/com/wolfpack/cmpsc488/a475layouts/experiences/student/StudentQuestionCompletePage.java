@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
@@ -62,6 +63,10 @@ public class StudentQuestionCompletePage extends QuestionPage {
 
     protected void handleCompleteQuestion(QuestionInformation info, String questionStudentAnswer){
         questionDesc = info.getDescription();
+        mTextViewQuestion.setMovementMethod(new ScrollingMovementMethod());
+        if( (info.getDescription() != null && info.getDescription().length() > 300 ))
+            mTextViewQuestion.setMaxLines(6);
+
         mTextViewQuestion.setText(info.getDescription());
 
         Log.i("handleCompleteQuestion", "question id = " + info.getQuestionId() + "\n" +
