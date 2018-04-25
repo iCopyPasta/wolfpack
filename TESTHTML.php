@@ -1,3 +1,118 @@
+<?php
+
+$alertString="";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  include('lib/php/Connection.php');
+  include('lib/php/C_Answers.php');
+  include('lib/php/C_ClassCourseSection.php');
+
+  //ensure $session_id is populated
+  $class_id = isset($_POST['class_id']) ? $_POST['class_id'] : null;
+  if (is_null($class_id) || empty($class_id)) {
+    // fail JSON response
+    $response = array();
+    $response["message"] = "ERROR, $class_id cannot be null or empty";
+    $response["success"] = 0;
+//          return json_encode($response);
+//          echo json_encode($response);
+    exit();
+  }
+
+  $date = date('YMdHis');
+  #$targetDirectory = "\"C:/wamp64/tmp/ClassReport".$date.".csv\"";
+  $targetDirectory = "/var/lib/mysql-files/ClassReport".$date.".csv";
+  $sql = "SELECT `Date`, `Session_Id`, `Student_Id`, `First_Name`, `Last_Name`, `Score`
+                FROM(
+                  (SELECT 1 as Sort_Value, 'Date', 'Session_Id', 'Student_Id', 'First_Name', 'Last_Name', 'Score')
+                  UNION ALL
+                  (SELECT 2 as Sort_Value, totalQuestionsPerSession.start_time as 'Date', num_correct.session_id as Session_Id, num_correct.student_id as Student_Id, student_account.first_name as First_Name, student_account.last_name as Last_Name, TRUNCATE(num_correct.numberCorrect / totalQuestionsPerSession.total,3) as Score
+                  FROM student_account,
+                    ( SELECT answers.student_id, question_history.session_id, count(*) AS numberCorrect
+                      FROM answers, question_history, question, student_account, student_is_in, class_course_section
+                      WHERE answers.question_history_id = question_history.id
+                      AND question_history.question_id = question.question_id
+                      AND answers.answer = question.correct_answers
+                      AND answers.student_id = student_account.student_id
+                      AND student_account.student_id = student_is_in.student_id
+                      AND student_is_in.class_id = class_course_section.class_id
+                      AND class_course_section.class_id = :class_id
+                      GROUP BY question_history.session_id, answers.student_id
+                      ORDER BY answers.student_id
+                    ) AS num_correct,
+                    ( SELECT question_session.start_time, question_history.session_id, count(*) AS total
+                      FROM question_history, question_session, class_course_section
+                      WHERE question_history.session_id = question_session.id
+                      AND question_session.class_id = class_course_section.class_id
+                      AND class_course_section.class_id = :class_id
+                      GROUP BY question_history.session_id
+                    ) AS totalQuestionsPerSession
+                  WHERE num_correct.session_id = totalQuestionsPerSession.session_id
+                  AND student_account.student_id = num_correct.student_id
+                  ORDER BY num_correct.session_id, num_correct.student_id)) as tbl
+                ORDER BY Sort_Value, `Date`, `Last_Name`, `First_Name`
+                INTO  OUTFILE :location
+                      FIELDS TERMINATED BY ',' 
+                      LINES TERMINATED BY '\n'
+                ";
+
+  $connection = new Connection;
+  $pdo = $connection->getConnection();
+  $stmt = $pdo->prepare($sql);
+  $stmt->bindValue(':class_id', $class_id);
+  $stmt->bindValue(':location', $targetDirectory, PDO::PARAM_STR);
+
+  try {
+    $stmt->execute();
+  } catch (Exception $e) {
+    // fail JSON response
+    $response = array();
+    $response["message"] = "ERROR SELECTING: " . $e->getMessage();
+    $response["success"] = 0;
+//          return json_encode($response);
+//          echo json_encode($response);
+    exit();
+  }
+
+  // success JSON response
+  $response = array();
+  $response["message"] = "Success selecting";
+  $response["success"] = 1;
+
+
+  #echo "MyUID-IS: ".posix_getpwuid(posix_geteuid())['name'];
+  
+  #echo "<br><br>";
+  #echo exec('whoami'); 
+
+  $file = $targetDirectory;
+  #www-data --> mysql?
+  #)
+  if (file_exists($file)) {
+    header('Content-Description: File Transfer');
+    header('Content-Type: application/octet-stream');
+    header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate');
+    header('Pragma: public');
+    header('Content-Length: ' . filesize($file));
+    flush();
+    readfile($file);
+    exit();
+  } else{
+     echo "rest in pieces<br>";
+  }
+
+
+//        return json_encode($response);
+  echo json_encode($response);
+  exit();
+}
+
+
+?>
+
+
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -43,97 +158,14 @@
     </style>
   </head>
 
-  <?php
-      $alertString="";
-      if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        include('lib/php/updateQuestionSet.php');
-        include('lib/php/deleteQuestionSet.php');
-        include('lib/php/C_ClassCourseSection.php');
 
-//        $question_set = new QuestionSet('%','1','testUpdateQuestionSet');
-//        var_dump($question_set->insert());
-
-        $class = new ClassCourseSection('276', '%', '%', '%', '%');
-//        var_dump($class->insert());
-
-        var_dump($class->update('testClass2', 'testClass2', 'testClass2', 'testClass2'));
-
-
-
-
-
-
-
-
-
-
-
-
-//        $retVal = searchActiveSessionByClassAndStudent('1', '1', '13', '1');
-//        var_dump($retVal);
-
-
-//        // select a course
-//        $newCourse = new ClassCourse('%', '122', 'Olmstead 100', 'whatIsOffering?', 'Object Oriented Programming');
-//        echo indent($newCourse->select());
-
-
-//
-//        // select a section
-//        $newSection = new ClassSection('thisWontMatterSinceItsThePK', '2', 'Olmstead 100', 'offering?');
-//        $newSection->select();
-//
-//        // select a "has"
-//        $aHas = new Has(1, 1);
-//        $response = $aHas->select();
-//
-//        // select a professor
-//        $newProfessor = new ProfessorAccount('%', 'Sukmoon', 'Chang', 'pw', 'schoolId', 'Chang1@psu.edu');
-//        $newProfessor->select();
-//        $newProfessor = new ProfessorAccount('%', 'Hyuntae', 'Na', 'pw', 'schoolId', 'Na1@psu.edu');
-//        $newProfessor->select();
-//        $newProfessor = new ProfessorAccount('%', 'Jeremy', 'Blum', 'pw', 'schoolId', 'Blum1@psu.edu');
-//        $newProfessor->select();
-//        $newProfessor = new ProfessorAccount('%', 'Linda', 'Kunkle', 'pw', 'schoolId', 'Kunkle1@psu.edu');
-//        $newProfessor->select();
-//
-//        // select a teaches
-//        $newTeaches = new Teaches(1, 1);
-//        $newTeaches->select();
-//
-//        // select a is_in
-//        $newIsIn = new IsIn(11, 1, 1);
-//        $response = $newIsIn->select();
-//
-//        // search for all the classes a student is in
-//        $search = searchClassesByStudent(1, 10, 11);
-//
-////        $search = searchClassesByStudent(1, 10, 11);
-//        $qJSON = json_decode($search);
-//        // var_dump($qJSON, true);
-//        // foreach($qJSON as $key => $value){
-//        //   echo "$key => $value"."<br>";
-//        // }
-//        echo json_encode($qJSON);
-      }
-
-
-  ?>
 
   <body>
 
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
       <div class="form-group">
-        <label for="class_course_number">Class Course Number:</label>
-        <input type="text" class="form-control" id="class_course_number" name="class_course_number">
-      </div>
-      <div class="form-group">
-        <label for="location">Location:</label>
-        <input type="text" class="form-control" id="location" name="location">
-      </div>
-      <div class="form-group">
-        <label for="offering">Offering:</label>
-        <input type="text" class="form-control" id="offering" name="offering">
+        <label for="class_id">class_id:</label>
+        <input type="text" class="form-control" id="class_id" name="class_id">
       </div>
       <button type="submit" class="btn btn-default">Submit</button>
     </form>
@@ -154,4 +186,5 @@
       });
     </script>
   </body>
+
 </html>
