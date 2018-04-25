@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -50,7 +51,13 @@ public class StudentSessionCompletePage extends SessionPage {
             Log.i("I'm not crazy:", sessionName + " - " + sessionStartDate);
             String titleText = sessionName + " - " + sessionStartDate;
 
-            mTextViewSessionName.setText(titleText);
+            mTextViewSessionDate.setText(sessionStartDate);
+            mTextViewSessionName.setMovementMethod(new ScrollingMovementMethod());
+            if(sessionName != null && sessionName.length() > 50) {
+                mTextViewSessionName.setMaxLines(2);
+                Log.w(TAG, "HELLOOOOOO");
+            }
+            mTextViewSessionName.setText(sessionName);
             mListViewQuestionList.setVisibility(View.VISIBLE);
             mTextViewActiveQuestionNotice.setVisibility(View.GONE);
             //mProgressBar.setVisibility(View.VISIBLE);
@@ -123,7 +130,7 @@ public class StudentSessionCompletePage extends SessionPage {
 
             @Override
             protected Cursor doInBackground(Void... params) {
-                String projection = "_id, question_type, description, potential_answers, correct_answers, student_answers";
+                String projection = "question._id AS _id, question_type, description, potential_answers, correct_answers, student_answer";
                 //String table = getString(R.string.TABLE_Q_IS_IN) + " " + getString(R.string.TABLE_QUESTION) + " ON " + ;
                 //String selection = "session_id = ? AND question_id = _id";
                 String[] selectionArgs = {String.valueOf(sessionId)};
@@ -134,13 +141,28 @@ public class StudentSessionCompletePage extends SessionPage {
                                 " SELECT " + projection +
                                 " FROM " + " question_link CROSS JOIN question " +
                                 " WHERE " + " question_link.question_id = question._id " +
-                                " ORDER BY question_id DESC ",
+                                " ORDER BY question_link._id DESC ",
                         selectionArgs);
             }
 
             @Override
             protected void onPostExecute(Cursor cursor) {
+                while(cursor.moveToNext()){
+                    Log.w(TAG, "h\n\n\n\n");
+                    Log.w(TAG, "_id = " + cursor.getInt(0));
+                    Log.w(TAG, "question_type = " + cursor.getString(1));
+                    Log.w(TAG, "description = " + cursor.getString(2));
+                    Log.w(TAG, "potential = " + cursor.getString(3));
+                    Log.w(TAG, "correct = " + cursor.getString(4));
+                    Log.w(TAG, "student = " + cursor.getString(5));
+                }
+                Log.w(TAG, "-------");
+                Log.w(TAG, "num columns = " + cursor.getColumnCount());
+                for(int i = 0; i < 6; i++)
+                    Log.w(TAG, "column " + i + " = " + cursor.getColumnName(i));
+
                 adapter.swapCursor(cursor);
+                Log.w(TAG, "we here bois");
                 mProgressBar.setVisibility(View.GONE);
             }
 

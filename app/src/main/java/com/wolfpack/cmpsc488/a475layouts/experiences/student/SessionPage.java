@@ -24,6 +24,7 @@ public abstract class SessionPage extends AppCompatActivity {
     protected SQLiteDatabase db;
 
     //UI elements
+    protected TextView mTextViewSessionDate;
     protected TextView mTextViewSessionName;
     protected ListView mListViewQuestionList;
     protected TextView mTextViewActiveQuestionNotice;
@@ -56,6 +57,7 @@ public abstract class SessionPage extends AppCompatActivity {
             Log.i(TAG, "classId = " + classId);
             Log.i(TAG, "className = " + className);
 
+            mTextViewSessionDate = findViewById(R.id.sessionDateTextView);
             mTextViewSessionName = findViewById(R.id.sessionNameTextView);
             mListViewQuestionList = findViewById(R.id.questionListListView);
             mTextViewActiveQuestionNotice = findViewById(R.id.activeQuestionNoticeTextView);
