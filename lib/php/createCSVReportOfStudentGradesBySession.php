@@ -11,11 +11,13 @@
     You can find 'secure file priv' by going to WAMP -> phpMyAdmin -> Variables.
     In order to change it, edit my.ini located in \wamp64\bin\mysql\mysql....
    */
+
   $alertString="";
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     include('Connection.php');
     include('C_Answers.php');
     include('C_ClassCourseSection.php');
+
     //ensure $session_id is populated
     $class_id = isset($_POST['class_id']) ? $_POST['class_id'] : null;
     if (is_null($class_id) || empty($class_id)) {
@@ -27,6 +29,7 @@
   //          echo json_encode($response);
 //      exit();
     }
+
     $date = date('YMdHis');
     #$targetDirectory = "\"C:/wamp64/tmp/ClassReport".$date.".csv\"";
     $targetDirectory = "/var/lib/mysql-files/ClassReport".$date.".csv";
@@ -63,11 +66,13 @@
                         FIELDS TERMINATED BY ',' 
                         LINES TERMINATED BY '\n'
                   ";
+
     $connection = new Connection;
     $pdo = $connection->getConnection();
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':class_id', $class_id);
     $stmt->bindValue(':location', $targetDirectory, PDO::PARAM_STR);
+
     try {
       $stmt->execute();
     } catch (Exception $e) {
@@ -79,13 +84,19 @@
   //          echo json_encode($response);
 //      exit();
     }
+
     // success JSON response
     $response = array();
     $response["message"] = "Success selecting";
     $response["success"] = 1;
+
+
+
     #echo "MyUID-IS: ".posix_getpwuid(posix_geteuid())['name'];
+
     #echo "<br><br>";
     #echo exec('whoami');
+
     $file = $targetDirectory;
     #www-data --> mysql?
     #)
@@ -103,8 +114,11 @@
     } else{
       echo "rest in pieces<br>";
     }
+
       return json_encode($response);
 //    echo json_encode($response);
 //    exit();
   }
+
 ?>
+
