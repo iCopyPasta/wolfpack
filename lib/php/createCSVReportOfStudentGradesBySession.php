@@ -2,19 +2,14 @@
   /*
   Arguments:
     requires $_POST['class_id']
-
   Returns:
     1. json array conveying success or error
     2. creates a file in $targetDirectory
-
     You may need to change $targetDirectory.
     WAMP restricts filepaths that you may write to.  By default, you should be able to use location is C:\wamp64\tmp\
     The location is stored in the variable: 'secure file priv'
     You can find 'secure file priv' by going to WAMP -> phpMyAdmin -> Variables.
     In order to change it, edit my.ini located in \wamp64\bin\mysql\mysql....
-
-
-
    */
 
   $alertString="";
@@ -96,6 +91,7 @@
     $response["success"] = 1;
 
 
+
     #echo "MyUID-IS: ".posix_getpwuid(posix_geteuid())['name'];
 
     #echo "<br><br>";
@@ -119,9 +115,10 @@
       echo "rest in pieces<br>";
     }
 
-
       return json_encode($response);
 //    echo json_encode($response);
 //    exit();
   }
+
 ?>
+
