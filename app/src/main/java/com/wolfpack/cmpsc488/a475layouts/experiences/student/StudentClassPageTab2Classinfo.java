@@ -2,6 +2,7 @@ package com.wolfpack.cmpsc488.a475layouts.experiences.student;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,26 @@ public class StudentClassPageTab2Classinfo extends Fragment
             mTextViewClassOfferingData = activity.findViewById(R.id.classOfferingDataTextView);
             mTextViewClassLocationData = activity.findViewById(R.id.classLocationDataTextView);
             mTextViewTeacherNameData = activity.findViewById(R.id.teacherNameDataTextView);
+
+            mTextViewClassTitleData.setMovementMethod(new ScrollingMovementMethod());
+            //if(activity.classTitle != null && activity.classTitle.length() > 300)
+            mTextViewClassTitleData.setMaxLines(3);
+
+            mTextViewClassDescData.setMovementMethod(new ScrollingMovementMethod());
+            //if(activity.classTitle != null && activity.classDesc.length() > 300)
+            mTextViewClassDescData.setMaxLines(3);
+
+            mTextViewClassOfferingData.setMovementMethod(new ScrollingMovementMethod());
+            //if(activity.classTitle != null && activity.classOffering.length() > 300)
+            mTextViewClassOfferingData.setMaxLines(3);
+
+            mTextViewClassLocationData.setMovementMethod(new ScrollingMovementMethod());
+            //if(activity.classTitle != null && activity.classLocation.length() > 300)
+            mTextViewClassLocationData.setMaxLines(3);
+
+            mTextViewTeacherNameData.setMovementMethod(new ScrollingMovementMethod());
+            //if(activity.classTitle != null && activity.teacherName.length() > 300)
+            mTextViewTeacherNameData.setMaxLines(3);
 
             mTextViewClassTitleData.setText(activity.classTitle);
             mTextViewClassDescData.setText(activity.classDesc);
