@@ -156,10 +156,10 @@
                             </div>
                             
                             <div class="item">
-                            <div class="profile-circle text-center"><img src="img/placeholder.jpg"></div>
+                            <div class="profile-circle text-center"><img src="img/scottheadshot.jpg"></div>
                                   <blockquote>
-                                    <p><em>"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, veritatis nulla eum laudantium totam tempore optio doloremque laboriosam quas, quos eaque molestias odio aut eius animi. Impedit temporibus nisi accusamus."</em></p>
-                                    <footer>Tyler Ruch</footer>
+                                      <p><em>"Scott Wilson is an Air Force veteran.  He served as a Computer Programmer and Security Forces Augmentee at the Air Force Personnel Center HQ.  He is currently a student at Penn State pursuing a B.S. in Computer Science.  Scott enjoys training and playing with his pugs.  You can find Scott at <a href="https://www.linkedin.com/in/scott-wilson-900789152/">LinkedIn</a>."</em></p>
+                                    <footer>Scott Wilson</footer>
                                   </blockquote>
                             </div>
                             
@@ -167,7 +167,7 @@
                             <div class="profile-circle text-center"><img src="img/placeholder.jpg"></div>
                                   <blockquote>
                                     <p><em>"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, veritatis nulla eum laudantium totam tempore optio doloremque laboriosam quas, quos eaque molestias odio aut eius animi. Impedit temporibus nisi accusamus."</em></p>
-                                    <footer>Scott Wilson</footer>
+                                    <footer>Tyler Ruch</footer>
                                   </blockquote>
                             </div>
                             
