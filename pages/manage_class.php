@@ -271,7 +271,7 @@ if ( $edit_class_id != "NOT_SET" && (! confirmClassOwnership($edit_class_id,$_SE
               let potato = new Object();
               potato["class_id"] = class_id;
               redirectPost('../lib/php/createCSVReportOfStudentGradesBySession.php',potato);
-              location.reload(); 
+              //location.reload(); 
                   
           }    
 
