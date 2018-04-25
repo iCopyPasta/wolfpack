@@ -267,8 +267,11 @@ if ( $edit_class_id != "NOT_SET" && (! confirmClassOwnership($edit_class_id,$_SE
             
           function classReport(class_id) {
               console.log("classReport called with class id: " + class_id);
-            post('../lib/php/createCSVReportOfStudentGradesBySession.php',"class_id="+class_id);
-             // location.reload(); 
+            
+              let potato = new Object();
+              potato["class_id"] = class_id;
+              redirectPost('../lib/php/createCSVReportOfStudentGradesBySession.php',potato);
+             
                   
           }    
 
@@ -281,6 +284,23 @@ if ( $edit_class_id != "NOT_SET" && (! confirmClassOwnership($edit_class_id,$_SE
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send(params);
             } 
+            
+            
+        function redirectPost(url, data) {
+            var form = document.createElement('form');
+            document.body.appendChild(form);
+            form.method = 'post';
+            form.action = url;
+            form.target = "_blank";
+            for (var name in data) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = name;
+                input.value = data[name];
+                form.appendChild(input);
+            }
+            form.submit();
+}
         </script> 
     </div>
 
