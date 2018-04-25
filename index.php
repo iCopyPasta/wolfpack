@@ -30,6 +30,8 @@
         <!--Bootstrap core CSS-->
         <link href="css/bootstrap.min.css" rel="stylesheet">
 
+        <!-- Font Awesome -->
+        <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
 
         <!--Custom Fonts-->
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
@@ -189,7 +191,8 @@
             <div class="container text-center">
                 <h2 class="text-center">Get in touch</h2>
                 <p>Want to let us know how much you've enjoyed our product or any concerns you may have?</p>
-                <p>Email us at: Pollato@gmail.com</p>
+                <p>Email us at: PollatoPolling@gmail.com</p>
+                <p>Need help getting started? Check out our Youtube Channel <a href="https://www.youtube.com/channel/UCpeVWImEaus0r7mGKRwa9uQ?view_as=subscriber"><i class="fab fa-youtube"></i></a></p>
             </div>
         </section>
 
