@@ -68,8 +68,8 @@ public class StudentPageTab1Classlist extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-
         Log.i(TAG, "onActivityCreated");
+        refreshClasses();
 
     }
 
@@ -77,7 +77,7 @@ public class StudentPageTab1Classlist extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         //deleted the class
         if (requestCode == FINISHED_STUDENT_PAGE && resultCode == Activity.RESULT_OK){
-            //TODO: modify classlist
+            refreshClasses();
         }
     }
 
@@ -151,7 +151,7 @@ public class StudentPageTab1Classlist extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        refreshClasses();
+        //refreshClasses();
 
     }
 
