@@ -152,7 +152,7 @@
                             <div class="item">
                             <div class="profile-circle text-center"><img src="img/davidheadshot.jpg"></div>
                                   <blockquote>
-                                    <p><em>"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, veritatis nulla eum laudantium totam tempore optio doloremque laboriosam quas, quos eaque molestias odio aut eius animi. Impedit temporibus nisi accusamus."</em></p>
+                                      <p><em>"My name is David Rowe and I have always loved coding and the outdoors. From the basement to the wilds of Maine, I've found peace in simple elegance. Kayaking and camping are my favorite ways to enjoy nature. I'm always working on improving myself and learning as much as possible. You can check out my <a href="https://www.linkedin.com/in/david-rowe-2105ba108/">LinkedIn</a> or <a href="https://www.instagram.com/codeandcake/">Instagram</a> for pictures of my cats and baked goods."</em></p>
                                     <footer>David Rowe</footer>
                                   </blockquote>
                             </div>
@@ -166,9 +166,9 @@
                             </div>
                             
                             <div class="item">
-                            <div class="profile-circle text-center"><img src="img/placeholder.jpg"></div>
+                            <div class="profile-circle text-center"><img src="img/tylerruchheadshot.jpg"></div>
                                   <blockquote>
-                                    <p><em>"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, veritatis nulla eum laudantium totam tempore optio doloremque laboriosam quas, quos eaque molestias odio aut eius animi. Impedit temporibus nisi accusamus."</em></p>
+                                    <p><em>"Tyler Ruch is an IUG student at Penn State Harrisburg at the end of his fourth academic year. In his free time he enjoys sleeping and training Brazilian Jiu Jitsu. You can connect with him at <a href="https://www.linkedin.com/in/tyler-ruch-3082aa156/">LinkedIn</a>.</em></p>
                                     <footer>Tyler Ruch</footer>
                                   </blockquote>
                             </div>
