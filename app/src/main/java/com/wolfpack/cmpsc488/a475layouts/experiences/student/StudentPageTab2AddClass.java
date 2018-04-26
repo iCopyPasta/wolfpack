@@ -35,6 +35,10 @@ public class StudentPageTab2AddClass extends Fragment {
     EditText teacherLastName;
     boolean isBackgroundTaskRunning;
 
+    interface UpdateResults{
+        void sendNotification();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_student_page_tab2_addclass, container, false);

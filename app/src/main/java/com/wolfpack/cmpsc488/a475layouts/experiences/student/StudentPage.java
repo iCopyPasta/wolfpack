@@ -29,14 +29,15 @@ import retrofit2.Call;
 
 public class StudentPage extends AppCompatActivity implements
         PaginationAdapter.onClassSelectToEnrollListener,
-        AlertEnrollDialog.AlertEnrollDialogListener
+        AlertEnrollDialog.AlertEnrollDialogListener,
+        StudentPageTab2AddClass.UpdateResults
 
 {
-
     private static final String TAG = "StudentPage";
     private static WolfpackClient wolfpackClient;
     private TabAdapter mTabAdapter;
     private ViewPager mViewPager;
+    public StudentPageTab1Classlist studentPageTab1Classlist;
     private boolean isRunning;
 
     public String studentId;
@@ -67,8 +68,9 @@ public class StudentPage extends AppCompatActivity implements
 
 
     private void setupViewPager(ViewPager viewPager){
+        studentPageTab1Classlist =new StudentPageTab1Classlist();
         TabAdapter adapter = new TabAdapter(getSupportFragmentManager());
-        adapter.addFragment(new StudentPageTab1Classlist(), getResources().getString(R.string.student_page_tab1_classlist));
+        adapter.addFragment(studentPageTab1Classlist, getResources().getString(R.string.student_page_tab1_classlist));
         adapter.addFragment(new StudentPageTab2AddClass(), getResources().getString(R.string.student_page_tab2_addclass));
         adapter.addFragment(new StudentPageTab3Settings(), getResources().getString(R.string.student_page_tab3_settings));
         viewPager.setAdapter(adapter);
@@ -94,6 +96,11 @@ public class StudentPage extends AppCompatActivity implements
     @Override
     public void onEnrollNegativeClick() {
 
+    }
+
+    @Override
+    public void sendNotification() {
+        studentPageTab1Classlist.refreshClasses();
     }
 
     class AsyncEnrollBackgroundTask extends AsyncTask<String, Void, Boolean> {
@@ -137,6 +144,7 @@ public class StudentPage extends AppCompatActivity implements
             if(status){
                 isRunning = false;
                 Toast.makeText(StudentPage.this, "enrolled!", Toast.LENGTH_SHORT).show();
+                studentPageTab1Classlist.refreshClasses();
 
             }
         }
