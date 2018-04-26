@@ -54,6 +54,10 @@
           include('../lib/php/registerConfirmation.php');
           addUniqueHash($connection,$insertEmail); //sets UniqueID and confirmed vars in db, custom function -TR
           if(boolval($android)){
+	    $response = array();
+	    $response["message"] = "successfully sent email";
+	    $response["success"] = 1;
+	    echo json_encode($response);
             exit(0);
           }
         } //pw1 != pw2
