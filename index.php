@@ -101,7 +101,7 @@
         <div class="container">
             <h2 class="intro-text">Are you a student? Then try out our Student-Focused Android App Made just for you</h2>
             <div class="action-bar text-center">
-                <a class="btn btn-transparent-dark btn-lg"><i class="fa fa-android"></i> Download Android App</a>
+                <a href="https://play.google.com/apps/testing/com.wolfpack.cmpsc488.a475layouts" class="btn btn-transparent-dark btn-lg"><i class="fa fa-android"></i> Download Android App</a>
             </div>
             <div class="mockup-block"><img class="img-responsive" src="img/info-mockup.jpg"/></div>
         </div>
@@ -174,9 +174,9 @@
                             </div>
                             
                             <div class="item">
-                            <div class="profile-circle text-center"><img src="img/placeholder.jpg"></div>
+                            <div class="profile-circle text-center"><img src="img/tylerhughesheadshot.jpg"></div>
                                   <blockquote>
-                                    <p><em>"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, veritatis nulla eum laudantium totam tempore optio doloremque laboriosam quas, quos eaque molestias odio aut eius animi. Impedit temporibus nisi accusamus."</em></p>
+                                    <p><em>"I’m Tyler Hughes. I am enrolled in the IUG program at PSH. My current interests are in the fields of deep learning, evolutionary computation, and classical AI. Outside of school work, I am Lifeguard Instructor and Water Safety Instructor certified. I am also the head coach of the Middletown Swim Team. You can learn more about me on <a href="https://github.com/tylerh111">Github</a>, <a href="https://www.linkedin.com/in/tdh5188/">LinkedIn</a>, and <a href="https://www.facebook.com/tylerh1111">Facebook</a>."</em></p>
                                     <footer>Tyler Hughes</footer>
                                   </blockquote>
                             </div>
