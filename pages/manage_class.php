@@ -58,13 +58,13 @@ if ( $edit_class_id != "NOT_SET" && (! confirmClassOwnership($edit_class_id,$_SE
 }
 
 .card-deck .card {
-  min-width: 200px;
+  min-width: 220px;
 }
 
 .clickBox
 {
   cursor: pointer;
-} 
+}
 
 .border-top { border-top: 1px solid #e5e5e5; }
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
@@ -221,8 +221,10 @@ if ( $edit_class_id != "NOT_SET" && (! confirmClassOwnership($edit_class_id,$_SE
             </div>
             <ul class=\"list-unstyled mt-3 mb-4\">
               <li>$offering</li>
-              <li> <button onclick=\"classReport($class_id)\" id=\"$class_id.'report'\" class=\"btn btn-primary\" >Download Report</button></li>
             </ul>
+            <div class=\"card-footer\">
+              <button onclick=\"classReport($class_id)\" id=\"$class_id.'report'\" class=\"btn btn-primary\" >Download Report</button>
+            </div>
             </div>";     
         }                               
             
@@ -245,7 +247,7 @@ if ( $edit_class_id != "NOT_SET" && (! confirmClassOwnership($edit_class_id,$_SE
                   activeClasses.delete(class_id);
               }
               else {
-                  document.getElementById(class_id).className = "clickBox card mb-3 text-white selected-box";
+                  document.getElementById(class_id).className = "clickBox card mb-3 text-white selected-box border-danger";
                   activeClasses.add(class_id);
               }
           }

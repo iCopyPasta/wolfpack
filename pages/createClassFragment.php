@@ -8,6 +8,11 @@
           Class Title</label>
         <input type="text" class="form-control" id="title" name="title" required>
       </div>
+      <div class="form-group">
+        <label for="Class Location">
+          Class Location</label>
+        <input type="text" class="form-control" id="location" name="location" required>
+      </div>
         <div class="form-group">
         <label for="Class Description">
           Class Description</label>
@@ -17,11 +22,6 @@
         <label for="Class Offering">
           Class Offering</label>
         <input type="text" class="form-control" id="offering" name="offering" required>
-      </div>
-        <div class="form-group">
-        <label for="Class Location">
-          Class Location</label>
-        <input type="text" class="form-control" id="location" name="location" required>
       </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
