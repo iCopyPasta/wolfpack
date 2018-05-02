@@ -152,7 +152,7 @@
                             <div class="item">
                             <div class="profile-circle text-center"><img src="img/davidheadshot.jpg"></div>
                                   <blockquote>
-                                      <p><em>"My name is David Rowe and I have always loved coding and the outdoors. From the basement to the wilds of Maine, I've found peace in simple elegance. Kayaking and camping are my favorite ways to enjoy nature. I'm always working on improving myself and learning as much as possible. You can check out my <a href="https://www.linkedin.com/in/david-rowe-2105ba108/">LinkedIn</a> or <a href="https://www.instagram.com/codeandcake/">Instagram</a> for pictures of my cats and baked goods."</em></p>
+                                      <p><em>"My name is David Rowe and I have always loved coding and the outdoors. From the basement to the wilds of Maine, I've found peace in simple elegance. Kayaking and camping are my favorite ways to enjoy nature. I'm always working on improving myself and learning as much as possible. You can check out my <a href="https://www.linkedin.com/in/david-rowe-2105ba108/">LinkedIn</a> or <a href="https://www.instagram.com/codeandcake/">Instagram</a> for pictures of my cats and cookies."</em></p>
                                     <footer>David Rowe</footer>
                                   </blockquote>
                             </div>
